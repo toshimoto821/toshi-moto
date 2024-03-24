@@ -1,0 +1,18 @@
+{
+  "name": "toshi-moto",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nx dev web-ui",
+    "build": "npx nx build web-ui",
+    "build:docker": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/toshi-moto:v0.0.6 --output \"type=registry\" .",
+    "test": "npx nx test web-ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nx": "^18.0.7"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "manifest_version": 2,
+  "name": "Toshi Moto",
+  "version": "1.0",
+  "description": "Toshi Moto",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": ["tabs", "activeTab", "storage", "unlimitedStorage"]
+}

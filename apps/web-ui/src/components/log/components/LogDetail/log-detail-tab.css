@@ -1,0 +1,4 @@
+/* https://github.com/uiwjs/react-json-view/issues/33 */
+.w-rjv-line {
+  display: flex;
+}
