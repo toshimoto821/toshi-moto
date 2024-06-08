@@ -1,0 +1,68 @@
+{
+  "name": "api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/src",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api:build:development"
+        },
+        "production": {
+          "buildTarget": "api:build:production"
+        }
+      }
+    },
+
+    "build:umbrel": {
+      "builder": "@nx/js:node",
+      "options": {
+        "outputPath": "dist/apps/api",
+        "main": "apps/api/src/main.ts",
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "assets": ["apps/api/src/assets"]
+      }
+    },
+    "mongo": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "~/Downloads/mongodb-macos-x86_64-4.4.29/bin/mongod --dbpath ~/mongo/data"
+        ]
+      }
+    },
+    "build": {
+      "builder": "@nx/js:node",
+      "options": {
+        "outputPath": "dist/apps/api",
+        "main": "apps/api/src/main.ts",
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "assets": ["apps/api/src/assets"]
+      }
+    },
+    "docker": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "file": "apps/api/Dockerfile",
+        "platforms": ["linux/amd64", "linux/arm64"],
+        "load": false,
+        "tags": ["toshimoto821/toshi-moto-api:${VERSION}"],
+        "push": true,
+        "tag": "toshimoto821/toshi-moto-api:${VERSION}"
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "self"
+        }
+      ]
+    }
+  },
+  "tags": []
+}

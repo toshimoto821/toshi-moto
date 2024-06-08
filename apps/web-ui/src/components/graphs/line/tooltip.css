@@ -1,0 +1,93 @@
+#tooltip_bubble {
+  display: flex;
+  flex-direction: column;
+}
+
+#tooltip_bubble .tooltip_bubble_price {
+  display: flex;
+  justify-content: space-between;
+}
+
+#tooltip_bubble .tooltip_bubble_btc {
+  color: orange;
+}
+
+.linetooltip__header {
+  display: flex;
+  background: white;
+  border-bottom: 1px solid #d1d5db;
+  margin-bottom: 4px;
+  color: #cc4e00;
+}
+.linetooltip__header > div {
+  padding: 5px 0;
+}
+
+.linetooltip__navigation {
+  margin-right: 5px;
+  display: flex;
+}
+.linetooltip__navigation > button:disabled {
+  opacity: 0.5;
+}
+.linetooltip__navigation > * {
+  margin: 0 5px;
+}
+.linetooltip_navigation--small {
+  font-size: 10px;
+}
+
+.linetooltip__header-close {
+  margin-left: 5px;
+  display: flex;
+}
+
+.linetooltip__header-spacer {
+  flex: 1;
+}
+
+.line-tooltip__table-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.line-tooltip__subtext {
+  display: flex;
+  justify-content: space-around;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.line-tooltip__table-header-mono {
+  font-family: monospace;
+  text-align: right;
+  font-size: 10px;
+}
+
+.linetooltip__table-wrapper {
+  padding: 0 4px;
+}
+
+.linetooltip__table {
+  width: 100%;
+  /* margin: 0 2px; */
+}
+
+.line-tooltip__table-header-mono > a {
+  text-decoration: underline;
+}
+
+g.tick {
+  user-select: none;
+}
+.plot-marker {
+  z-index: 1000;
+}
+.plot-marker:hover {
+  cursor: pointer;
+}
+
+.no-select {
+  pointer-events: none;
+}

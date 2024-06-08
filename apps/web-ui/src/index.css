@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.backface-visibility-none {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.radix-themes {
+  --color-background: #f6f4fa; /* #f0f0f0 Replace with your desired background color */
+}
+/* body,
+html {
+  overflow-x: hidden;
+} */

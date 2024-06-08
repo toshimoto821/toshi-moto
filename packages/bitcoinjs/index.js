@@ -1,0 +1,9 @@
+var bitcoin_js = require("bitcoinjs-lib");
+bitcoin_js.Buffer = require("safe-buffer").Buffer;
+bitcoin_js.bip38 = require("bip38");
+bitcoin_js.bip39 = require("bip39");
+bitcoin_js.bip32 = require("bip32");
+bitcoin_js.message = require('bitcoinjs-message');
+bitcoin_js.eccrypto = require('eccrypto');
+bitcoin_js.node_crypto = require('crypto');
+module.exports = bitcoin_js;

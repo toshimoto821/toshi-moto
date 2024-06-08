@@ -1,0 +1,4 @@
+node_modules/**/*
+bitcoinjs.js
+bitcoinjs.min.js
+dist/

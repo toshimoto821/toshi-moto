@@ -1,0 +1,1 @@
+# bitcoinjs-single-file

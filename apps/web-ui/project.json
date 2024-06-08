@@ -1,0 +1,65 @@
+{
+  "name": "web-ui",
+
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "web-ui:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "web-ui:build:development"
+        },
+        "production": {
+          "buildTarget": "web-ui:build:production"
+        }
+      }
+    },
+    "build:umbrel": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "export VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}",
+          "export VITE_COINGECKO_PRICE_API_URL=/api/prices/simple",
+          "export VITE_COINGECKO_API_URL=/api/prices/range",
+          "export NODE_ENV=production",
+          "export VITE_REST_TIME_BETWEEN_REQUESTS=0",
+          "export VITE_MAX_CONCURRENT_REQUESTS=8",
+          "export VITE_BITCOIN_NETWORK=mainnet",
+          "export VITE_BITCOIN_NODE_URL=http://umbrel.local:3006",
+          "tsc",
+          "vite build"
+        ],
+        "cwd": "apps/web-ui",
+        "parallel": false
+      }
+    },
+
+    "docker": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "file": "apps/web-ui/Dockerfile",
+        "platforms": ["linux/amd64", "linux/arm64"],
+        "load": false,
+        "tags": ["toshimoto821/toshi-moto:${VERSION}"],
+        "push": true,
+        "tag": "toshimoto821/toshi-moto:${VERSION}",
+        "buildArgs": {
+          "VITE_TOSHI_MOTO_XPUB": "${VITE_TOSHI_MOTO_XPUB}"
+        }
+      },
+      "dependsOn": [
+        {
+          "target": "build:umbrel",
+          "projects": "self"
+        }
+      ]
+    }
+  },
+  "tags": []
+}
