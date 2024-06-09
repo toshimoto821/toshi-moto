@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.4...web-ui-1.2.0) (2024-06-09)
+
+
+### Features
+
+* docker ([5f2a5af](https://github.com/toshimoto821/toshi-moto/commit/5f2a5af526b23975e549bb2f69c7df8a8001bda4))
+
 ## [1.1.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.3...web-ui-1.1.4) (2024-06-09)
 
 
