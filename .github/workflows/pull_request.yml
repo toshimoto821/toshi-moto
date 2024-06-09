@@ -32,23 +32,28 @@ jobs:
 
       - name: Determine the base commit
         id: determine_base
-        run: echo "BASE=$(git merge-base origin/main HEAD~1)" >> $GITHUB_ENV
+        run: echo "BASE=$(git merge-base origin/main ${{ github.event.pull_request.head.sha }})" >> $GITHUB_ENV
 
       - name: Lint
         env:
-          BASE: ${{ env.BASE }}
+          BASE: ${{ steps.determine_base.outputs.BASE }}
         run: npx nx affected --target=lint --base=$BASE --head=$GITHUB_SHA
 
       - name: Test
         env:
-          BASE: ${{ env.BASE }}
+          BASE: ${{ steps.determine_base.outputs.BASE }}
         run: npx nx affected --target=test --base=$BASE --head=$GITHUB_SHA
 
       - name: Build
         env:
-          BASE: ${{ env.BASE }}
+          BASE: ${{ steps.determine_base.outputs.BASE }}
         run: |
           npx nx affected --target=build --base=$BASE --head=$GITHUB_SHA
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
         env:
