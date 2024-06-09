@@ -32,7 +32,7 @@ jobs:
 
       - name: Determine the base commit
         id: determine_base
-        run: echo "BASE=$(git merge-base origin/main ${{ github.event.pull_request.head.sha }})" >> $GITHUB_ENV
+        run: echo "BASE=$(git merge-base origin/main ${{ github.event.pull_request.base.sha }})" >> $GITHUB_ENV
 
       - name: Lint
         env:
