@@ -3,6 +3,7 @@
   "version": "1.1.109",
   "description": "API Backend for Toshi Moto",
   "scripts": {
+    "tsc": "tsc",
     "build:docker": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/toshi-moto-api:${VERSION} --output \"type=registry\" .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "data": "node ./src/scripts/test.js"

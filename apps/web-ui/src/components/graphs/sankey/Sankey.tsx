@@ -70,7 +70,7 @@ export const Sankey = ({
   const nodeAlign = sankeyCenter; //sankeyJustify;
   const isHoverRef = useRef(false);
 
-  const mouseover = function (_: any) {
+  const mouseover = function () {
     // was setting opacity here but the problem is
     // auto scroll can trigger mouse over with no mouse move
     // so it created an empty box
@@ -141,7 +141,7 @@ export const Sankey = ({
     const Tooltip = d3.select(hoverCardRef.current);
 
     Tooltip.style("opacity", 0);
-    // @ts-ignore
+
     // mouseleaveRect.call(this);
   };
 
@@ -172,7 +172,7 @@ export const Sankey = ({
 
     // Constructs and configures a Sankey generator.
     const sankey = d3Sankey()
-      // @ts-ignore
+      // @ts-expect-error d3 issues
       .nodeId((d) => d.name)
       .nodeAlign(nodeAlign) // d3.sankeyLeft, etc.
       .nodeWidth(15)
@@ -185,9 +185,9 @@ export const Sankey = ({
     // Applies it to the data. We make a copy of the nodes and links objects
     // so as to avoid mutating the original.
     const { nodes, links } = sankey({
-      // @ts-ignore
+      // @ts-expect-error d3 issues
       nodes: data.nodes.map((d) => Object.assign({}, d)),
-      // @ts-ignore
+      // @ts-expect-error d3 issues
       links: data.links.map((d) => Object.assign({}, d)),
     });
 
@@ -365,7 +365,7 @@ export const Sankey = ({
         .attr("transform", function (d: any) {
           // const v = d.x1 - d.x0;
           const padding = selectedTxs.has(d.name) ? 20 : 15;
-          let x = d.x1 + padding; // - v;
+          const x = d.x1 + padding; // - v;
           const y = (d.y0 + d.y1) / 2;
 
           return `translate(${x}, ${y}) rotate(90)`;

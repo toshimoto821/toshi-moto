@@ -39,7 +39,7 @@ export const ThinLine = (props: ILine) => {
     showBtcAllocation,
   } = props;
 
-  let yValueToUse: "y1SumInDollars" | "y2" = graphAssetValue
+  const yValueToUse: "y1SumInDollars" | "y2" = graphAssetValue
     ? "y1SumInDollars"
     : "y2";
 
@@ -118,7 +118,7 @@ export const ThinLine = (props: ILine) => {
         d3
           .axisBottom(x)
           .tickValues(ticks)
-          // @ts-ignore
+          // @ts-expect-error d3 issues
           .tickFormat(tickFormat) // Format the tick labels as needed
           .tickSizeOuter(0)
       )
@@ -133,7 +133,7 @@ export const ThinLine = (props: ILine) => {
       .selectAll("text") // Add this line
       .attr("opacity", 0.5)
       .select(function () {
-        // @ts-ignore
+        // @ts-expect-error d3 issues
         return this.parentNode;
       }) // Select the parent of each text element, which is the g element of the tick
       .select("line") // Select the line of each tick

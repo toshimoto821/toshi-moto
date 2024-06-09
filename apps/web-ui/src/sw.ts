@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-// @ts-ignore
+// @ts-expect-error workbox
 self.__WB_DISABLE_DEV_LOGS = true;
 
 import { precacheAndRoute } from "workbox-precaching";
@@ -32,7 +32,7 @@ self.addEventListener("activate", function () {
  * @param  {Object}  response The response object
  * @return {Boolean}          If true, cached data is valid
  */
-var hasCache = function (response: Response, ttl: number) {
+const hasCache = function (response: Response, ttl: number) {
   if (!response) return false;
   if (!ttl) return false;
   const fetched = response.headers.get("sw-fetched-on");

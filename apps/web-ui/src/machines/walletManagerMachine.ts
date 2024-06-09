@@ -259,7 +259,8 @@ export const walletManagerMachine = setup({
             // for (const xpub of event.data.wallet.listXpubs) {
             //   utxos.push(xpub.address);
             // }
-            for (const utxo of event.data?.wallet?.listManualAddresses) {
+            const addresses = event.data?.wallet?.listManualAddresses || [];
+            for (const utxo of addresses) {
               utxos.push(utxo.address);
             }
             utxos.push("");

@@ -1,0 +1,40 @@
+name: PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.event.pull_request.merged == true && (contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch'))
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: "recursive"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: npx nx affected --target=lint --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+
+      - name: Tests
+        run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+
+      # this may not be needed. the build is run when docker is built
+      - name: Build
+        run: |
+          npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA

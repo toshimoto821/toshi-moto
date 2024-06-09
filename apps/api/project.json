@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "dev": {
       "executor": "@nx/js:node",
@@ -17,16 +18,6 @@
         "production": {
           "buildTarget": "api:build:production"
         }
-      }
-    },
-
-    "build:umbrel": {
-      "builder": "@nx/js:node",
-      "options": {
-        "outputPath": "dist/apps/api",
-        "main": "apps/api/src/main.ts",
-        "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"]
       }
     },
     "mongo": {
@@ -62,7 +53,12 @@
           "projects": "self"
         }
       ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "preset": "conventionalcommits"
+      }
     }
-  },
-  "tags": []
+  }
 }

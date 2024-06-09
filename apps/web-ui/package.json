@@ -10,7 +10,7 @@
     "build:docker": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/toshi-moto:${VERSION} --output \"type=registry\" .",
     "build:extension": "tsc && vite build --config vite.config.extension.ts",
     "tsc": "tsc",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 200",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

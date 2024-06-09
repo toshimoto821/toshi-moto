@@ -28,8 +28,9 @@ const VITE_REST_TIME_BETWEEN_REQUESTS = import.meta.env
 const VITE_MAX_CONCURRENT_REQUESTS = import.meta.env
   .VITE_MAX_CONCURRENT_REQUESTS;
 
-let VITE_COINGECKO_API_URL = import.meta.env.VITE_COINGECKO_API_URL;
-let VITE_COINGECKO_PRICE_API_URL = import.meta.env.VITE_COINGECKO_PRICE_API_URL;
+const VITE_COINGECKO_API_URL = import.meta.env.VITE_COINGECKO_API_URL;
+const VITE_COINGECKO_PRICE_API_URL = import.meta.env
+  .VITE_COINGECKO_PRICE_API_URL;
 
 const TXS_LIMIT = 10;
 
@@ -478,12 +479,12 @@ export const appMachine = setup({
   }),
 
   invoke: [
-    // @ts-ignore - not sure why this started erroring in ts, but it works
+    // @ts-expect-error - not sure why this started erroring in ts, but it works
     {
       id: "utxoMachine",
       src: utxoMachine,
     },
-    // @ts-ignore - not sure why this started erroring in ts, but it works
+    // @ts-expect-error - not sure why this started erroring in ts, but it works
     {
       id: "networkMachine",
       src: networkLoggerMachine,

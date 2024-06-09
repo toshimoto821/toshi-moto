@@ -1,18 +1,13 @@
 name: Release
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
-    environment: production
-    if: github.event.pull_request.merged == true && (contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch'))
-
+    environment: Docker
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -31,32 +26,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # this may not be needed. the build is run when docker is built
+      - name: Run Lint
+        run: npx nx lint web-ui
+
+      - name: Run Test
+        run: npx nx test
+
       - name: Build
         run: |
-          npx nx run-many --target=build --all --exclude=web-ui
-          npx nx run web-ui:build:umbrel
-
-      - name: Bump version
-        run: |
-          ./scripts/bump_version.sh "$LABELS" apps/web-ui false
-          ./scripts/bump_version.sh "$LABELS" apps/api false
-          ./scripts/bump_version.sh "$LABELS" ./ false
-          echo "VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_ENV
-
-      - name: Commit files
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Release $VERSION"
-          git tag v$VERSION
-
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          tags: true
+          npx nx affected --target=build --base=origin/main --head=$GITHUB_SHA
 
       - name: Setup Docker
         env:
@@ -87,7 +65,7 @@ jobs:
 
       - name: Run Docker build
         run: |
-          export VERSION=v${VERSION}
+          export VERSION=${{ github.event.release.tag_name }}
           export VITE_TOSHI_MOTO_XPUB=${{secrets.VITE_TOSHI_MOTO_XPUB}}
           export VITE_COINGECKO_PRICE_API_URL=/api/prices/simple
           export VITE_COINGECKO_API_URL=/api/prices/range
@@ -95,4 +73,4 @@ jobs:
           export VITE_REST_TIME_BETWEEN_REQUESTS=0
           export VITE_MAX_CONCURRENT_REQUESTS=8
           export VITE_BITCOIN_NETWORK=mainnet
-          npx nx run-many --target=docker --projects=web-ui,api
+          npx nx affected--target=docker --base=origin/main --head=$GITHUB_SHA

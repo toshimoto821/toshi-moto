@@ -452,7 +452,7 @@ export const walletListUIMachine = setup({
           actions: [
             assign({
               loadingUtxos: ({ context, event }) => {
-                let loadingUtxos = new Set(Array.from(context.loadingUtxos));
+                const loadingUtxos = new Set(Array.from(context.loadingUtxos));
                 if (event.output.xpubs?.length) {
                   removeFromLoadingSet(
                     {

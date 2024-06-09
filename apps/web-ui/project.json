@@ -1,9 +1,9 @@
 {
   "name": "web-ui",
-
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "serve": {
       "executor": "@nx/js:node",
@@ -20,7 +20,7 @@
         }
       }
     },
-    "build:umbrel": {
+    "build": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -39,7 +39,6 @@
         "parallel": false
       }
     },
-
     "docker": {
       "executor": "@nx-tools/nx-container:build",
       "options": {
@@ -55,11 +54,16 @@
       },
       "dependsOn": [
         {
-          "target": "build:umbrel",
+          "target": "build",
           "projects": "self"
         }
       ]
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "preset": "conventionalcommits"
+      }
     }
-  },
-  "tags": []
+  }
 }
