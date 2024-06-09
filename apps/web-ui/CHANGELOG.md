@@ -1,6 +1,12 @@
-# Changelog
+# UI Changelog
+## [1.1.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.1...web-ui-1.1.2) (2024-06-09)
 
-This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+### Bug Fixes
+
+* changelog header ([d30be26](https://github.com/toshimoto821/toshi-moto/commit/d30be26bb941654bff872a02f31623bba2b41de9))
+* pull main ([8d97fb7](https://github.com/toshimoto821/toshi-moto/commit/8d97fb78b463c422e430f33e3eac69dd3d9ead6c))
+* webui readme ([4a7e53e](https://github.com/toshimoto821/toshi-moto/commit/4a7e53e5786a1fcc49f0969d0e7a7ac6ddc6e843))
 
 ## [1.1.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.0...web-ui-1.1.1) (2024-06-09)
 
