@@ -9,6 +9,7 @@ on:
 
 jobs:
   pull-request-merge:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: production
 
@@ -30,25 +31,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Determine the base commit
+      - name: Determine the base commit of the PR
         id: determine_base
-        run: echo "BASE=$(git merge-base origin/main ${{ github.event.pull_request.base.sha }})" >> $GITHUB_ENV
+        run: echo "BASE=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
+
+      - name: Determine the head commit of the PR
+        id: determine_head
+        run: echo "HEAD=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
 
       - name: Lint
-        env:
-          BASE: ${{ steps.determine_base.outputs.BASE }}
-        run: npx nx affected --target=lint --base=$BASE --head=$GITHUB_SHA
+        run: npx nx affected --target=lint --base=$BASE --head=$HEAD
 
       - name: Test
-        env:
-          BASE: ${{ steps.determine_base.outputs.BASE }}
-        run: npx nx affected --target=test --base=$BASE --head=$GITHUB_SHA
+        run: npx nx affected --target=test --base=$BASE --head=$HEAD
 
       - name: Build
-        env:
-          BASE: ${{ steps.determine_base.outputs.BASE }}
-        run: |
-          npx nx affected --target=build --base=$BASE --head=$GITHUB_SHA
+        run: npx nx affected --target=build --base=$BASE --head=$HEAD
 
       - name: Configure Git
         run: |
@@ -56,10 +54,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
-        env:
-          BASE: ${{ env.BASE }}
-        run: |
-          npx nx affected --target=version --base=$BASE --head=$GITHUB_SHA
+        run: npx nx affected --target=version --base=$BASE --head=$HEAD
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
