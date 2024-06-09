@@ -73,4 +73,4 @@ jobs:
           export VITE_REST_TIME_BETWEEN_REQUESTS=0
           export VITE_MAX_CONCURRENT_REQUESTS=8
           export VITE_BITCOIN_NETWORK=mainnet
-          npx nx affected--target=docker --base=origin/main --head=$GITHUB_SHA
+          npx nx affected --target=docker --base=origin/main --head=$GITHUB_SHA
