@@ -30,19 +30,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: npx nx affected --target=lint --base=origin/main --head=$GITHUB_SHA
-
-      - name: Test
-        run: npx nx affected --target=test --base=origin/main --head=$GITHUB_SHA
-
-      - name: Build
-        run: |
-          npx nx affected --target=build
-
       - name: Determine the base commit
         id: determine_base
         run: echo "BASE=$(git merge-base origin/main HEAD~1)" >> $GITHUB_ENV
+
+      - name: Lint
+        env:
+          BASE: ${{ env.BASE }}
+        run: npx nx affected --target=lint --base=$BASE --head=$GITHUB_SHA
+
+      - name: Test
+        env:
+          BASE: ${{ env.BASE }}
+        run: npx nx affected --target=test --base=$BASE --head=$GITHUB_SHA
+
+      - name: Build
+        env:
+          BASE: ${{ env.BASE }}
+        run: |
+          npx nx affected --target=build --base=$BASE --head=$GITHUB_SHA
 
       - name: Release
         env:
