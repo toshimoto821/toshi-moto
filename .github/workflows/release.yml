@@ -10,7 +10,7 @@ on:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
-    environment: umbrel
+    environment: production
     if: github.event.pull_request.merged == true && (contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch'))
 
     steps:
