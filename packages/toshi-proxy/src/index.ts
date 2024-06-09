@@ -52,7 +52,7 @@ export default {
 		if (request.method !== 'GET') return MethodNotAllowed(request);
 
 		// console.log(url.pathname, 'url.pathname');
-		if (!/^\/api\/(prices|range)/.test(url.pathname)) {
+		if (!/^\/api\/(prices|range|healthcheck)/.test(url.pathname)) {
 			return StrictPathname();
 		}
 
@@ -100,8 +100,9 @@ export default {
 			headers: response.headers,
 		});
 
-		resp.headers.set('Cache-Control', `public,max-age=${ttl}`);
-
+		if (url.pathname !== '/api/healthcheck') {
+			resp.headers.set('Cache-Control', `public,max-age=${ttl}`);
+		}
 		return resp;
 	},
 };
