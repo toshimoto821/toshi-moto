@@ -33,7 +33,7 @@ jobs:
 
       - name: Determine the base commit of the PR
         id: determine_base
-        run: echo "BASE=origin/main >> $GITHUB_ENV
+        run: echo "BASE=origin/main" >> $GITHUB_ENV
 
       - name: Determine the head commit of the PR
         id: determine_head
