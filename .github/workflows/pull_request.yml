@@ -30,19 +30,31 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Determine the base commit
+        id: determine_base
+        run: echo "BASE=$(git merge-base origin/main HEAD~1)" >> $GITHUB_ENV
+
       - name: Lint
-        run: npx nx affected --target=lint --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+        env:
+          BASE: ${{ env.BASE }}
+        run: npx nx affected --target=lint --base=$BASE --head=$GITHUB_SHA
 
       - name: Test
-        run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+        env:
+          BASE: ${{ env.BASE }}
+        run: npx nx affected --target=test --base=$BASE --head=$GITHUB_SHA
 
       - name: Build
+        env:
+          BASE: ${{ env.BASE }}
         run: |
-          npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+          npx nx affected --target=build --base=$BASE --head=$GITHUB_SHA
 
       - name: Release
+        env:
+          BASE: ${{ env.BASE }}
         run: |
-          npx nx affected --target=version --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+          npx nx affected --target=version --base=$BASE --head=$GITHUB_SHA
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
