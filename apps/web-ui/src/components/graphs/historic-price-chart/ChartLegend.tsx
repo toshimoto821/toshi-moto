@@ -93,7 +93,7 @@ export const ChartLegend = ({
       d1[1] = xDomain[1]; // Current time
     }
 
-    // @ts-ignore
+    // @ts-expect-error d3 issues
     d3.select(this).call(brush.move, d1.map(x));
   }
 
@@ -105,8 +105,7 @@ export const ChartLegend = ({
       if (!brushEvent.selection) {
         onReset();
       } else {
-        // @ts-ignore
-        const [x1, x2] = brushEvent.selection?.map(x.invert);
+        const [x1, x2] = (brushEvent.selection || []).map(x.invert);
         if (isNaN(x1.getTime()) || isNaN(x2.getTime())) {
           return;
         }
@@ -145,7 +144,7 @@ export const ChartLegend = ({
       d3
         .axisBottom(x)
         .tickValues(ticks)
-        // @ts-ignore
+        // @ts-expect-error d3 issues
         .tickFormat(tickFormat) // Format the tick labels as needed
         .tickSizeOuter(0)
     )
@@ -162,7 +161,7 @@ export const ChartLegend = ({
       .selectAll("text") // Add this line
       .attr("opacity", 0.5)
       .select(function () {
-        // @ts-ignore
+        // @ts-expect-error d3 issues
         return this.parentNode;
       }) // Select the parent of each text element, which is the g element of the tick
       .select("line") // Select the line of each tick

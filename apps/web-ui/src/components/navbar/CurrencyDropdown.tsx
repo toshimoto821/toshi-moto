@@ -5,9 +5,7 @@ import { useBtcPrice } from "@root/lib/hooks/useBtcPrice";
 import { currencyList, currencySymbols } from "@root/lib/currencies";
 import { ICurrency } from "@root/types";
 
-type ICurrencyDropdown = {};
-export const CurrencyDropdown = (props: ICurrencyDropdown) => {
-  const {} = props;
+export const CurrencyDropdown = () => {
   const { send } = AppContext.useActorRef();
   const { refresh } = useBtcPrice();
   const currency = AppContext.useSelector((current) => {

@@ -11,6 +11,12 @@
         "jestConfig": "apps/api-e2e/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'No test required'"
+      }
     }
   }
 }

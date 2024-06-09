@@ -1,0 +1,53 @@
+name: PR Merge
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.event.pull_request.merged == true && (contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch'))
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: "recursive"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: npx nx lint web-ui
+
+      - name: Test
+        run: npx nx test
+
+      - name: Build
+        run: |
+          npx nx affected--target=build --base=origin/main --head=$GITHUB_SHA
+
+      - name: Release
+        run: |
+          npx nx affected--target=version --base=origin/main --head=$GITHUB_SHA
+
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          tags: true

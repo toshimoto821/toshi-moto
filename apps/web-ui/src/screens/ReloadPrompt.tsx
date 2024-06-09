@@ -13,7 +13,6 @@ function ReloadPrompt() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
-      // eslint-disable-next-line prefer-template
       console.log(`Service Worker at: ${swUrl}`);
       r &&
         setInterval(() => {
