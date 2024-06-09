@@ -2,6 +2,13 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.1.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.0...web-ui-1.1.1) (2024-06-09)
+
+
+### Bug Fixes
+
+* actions ([2495b64](https://github.com/toshimoto821/toshi-moto/commit/2495b64bc520e08004ed30c042fc2261014c5b32))
+
 ## [1.1.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.0.9...web-ui-1.1.0) (2024-06-09)
 
 
