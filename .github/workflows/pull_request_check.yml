@@ -5,11 +5,9 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  bump-version:
+  validate-pr:
     runs-on: ubuntu-latest
     environment: production
-    if: github.event.pull_request.merged == true && (contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch'))
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
