@@ -1,4 +1,13 @@
 # UI Changelog
+## [1.1.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.2...web-ui-1.1.3) (2024-06-09)
+
+
+### Bug Fixes
+
+* actions ([dbd7bed](https://github.com/toshimoto821/toshi-moto/commit/dbd7bedcd8140b6dd99122671e1976171e63639f))
+* changes base ([a27199a](https://github.com/toshimoto821/toshi-moto/commit/a27199acc6594b490ce58638ebcd29812a5f6a8a))
+* reverts base ([bd91fc5](https://github.com/toshimoto821/toshi-moto/commit/bd91fc52ef3668a05cae64578d2271cfb46a1d6a))
+
 ## [1.1.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.1...web-ui-1.1.2) (2024-06-09)
 
 
