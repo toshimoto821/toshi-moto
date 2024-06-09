@@ -31,8 +31,8 @@ jobs:
         id: extract_vars
         run: |
           TAG_NAME=${{ github.event.release.tag_name }}
-          PROJECT=$(echo $TAG_NAME | cut -d'-' -f1)
-          VERSION=$(echo $TAG_NAME | cut -d'-' -f2)
+          PROJECT=$(echo $TAG_NAME | awk -F'-' '{OFS="-"; $NF=""; print $0}' | sed 's/[- ]$//')
+          VERSION=$(echo $TAG_NAME | awk -F'-' '{print $NF}')
           echo "PROJECT=$PROJECT" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
