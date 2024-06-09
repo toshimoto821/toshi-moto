@@ -8,6 +8,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     environment: Docker
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -26,15 +27,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Extract project and version from release
+        id: extract_vars
+        run: |
+          TAG_NAME=${{ github.event.release.tag_name }}
+          PROJECT=$(echo $TAG_NAME | cut -d'-' -f1)
+          VERSION=$(echo $TAG_NAME | cut -d'-' -f2)
+          echo "PROJECT=$PROJECT" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Run Lint
-        run: npx nx affected --target=lint --base=origin/main --head=$GITHUB_SHA
+        run: npx nx run $PROJECT:lint
 
       - name: Run Test
-        run: npx nx test
+        run: npx nx run $PROJECT:test
 
       - name: Build
-        run: |
-          npx nx affected --target=build --base=origin/main --head=$GITHUB_SHA
+        run: npx nx run $PROJECT:build
 
       - name: Setup Docker
         env:
@@ -66,11 +75,11 @@ jobs:
       - name: Run Docker build
         run: |
           export VERSION=${{ github.event.release.tag_name }}
-          export VITE_TOSHI_MOTO_XPUB=${{secrets.VITE_TOSHI_MOTO_XPUB}}
+          export VITE_TOSHI_MOTO_XPUB=${{ secrets.VITE_TOSHI_MOTO_XPUB }}
           export VITE_COINGECKO_PRICE_API_URL=/api/prices/simple
           export VITE_COINGECKO_API_URL=/api/prices/range
           export VITE_BITCOIN_NODE_URL=http://umbrel.local:3006
           export VITE_REST_TIME_BETWEEN_REQUESTS=0
           export VITE_MAX_CONCURRENT_REQUESTS=8
           export VITE_BITCOIN_NETWORK=mainnet
-          npx nx affected --target=docker --base=origin/main --head=$GITHUB_SHA
+          npx nx run $PROJECT:docker --version $VERSION
