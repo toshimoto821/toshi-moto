@@ -5,7 +5,7 @@
   "scripts": {
     "tsc": "tsc",
     "build:docker": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/toshi-moto-api:${VERSION} --output \"type=registry\" .",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "data": "node ./src/scripts/test.js"
   },
   "author": "",

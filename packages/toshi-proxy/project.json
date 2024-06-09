@@ -6,6 +6,12 @@
 			"options": {
 				"command": "echo 'No build required'"
 			}
+		},
+		"test": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "echo 'No test required'"
+			}
 		}
 	}
 }
