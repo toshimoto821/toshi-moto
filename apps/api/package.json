@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "1.1.108",
+  "version": "1.1.109",
   "description": "API Backend for Toshi Moto",
   "scripts": {
     "build:docker": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/toshi-moto-api:${VERSION} --output \"type=registry\" .",
