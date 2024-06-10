@@ -7,6 +7,7 @@ import { cn, trimAddress, padBtcZeros, formatPrice } from "@lib/utils";
 import { AppContext } from "@root/providers/AppProvider";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { ICurrency } from "@root/types";
+import { cloneDeep } from "lodash";
 import { currencySymbols } from "@root/lib/currencies";
 type ITransactionRow = {
   transaction: Transaction;
@@ -83,7 +84,12 @@ export const TransactionRow = ({
 
   const vins = getVins();
   const vouts = getVouts();
-  const data = [...vins, ...vouts];
+  const [firstVout] = vouts;
+  const fee = cloneDeep(firstVout);
+  fee.vout = "Transaction fee";
+  fee.btc = transaction.fee;
+  fee.href = "";
+  const data = [...vins, ...vouts, fee];
 
   const rows = data
     .filter((vinOrVout) => {
