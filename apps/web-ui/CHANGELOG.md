@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.0...web-ui-1.2.1) (2024-06-10)
+
+
+### Bug Fixes
+
+* transaction row - show fee ([9eae274](https://github.com/toshimoto821/toshi-moto/commit/9eae274acc4915221d150dda73dd4eaf53a70b50))
+
 ## [1.2.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.1.4...web-ui-1.2.0) (2024-06-09)
 
 
