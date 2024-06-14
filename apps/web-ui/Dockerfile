@@ -1,11 +1,14 @@
 # Nginx stage
 FROM nginx:stable-alpine AS nginx
+
 RUN mkdir -p /var/cache/nginx
 COPY apps/web-ui/config/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Builder State
 # this needs to be updated to build externally and copy into here
 FROM node:18-alpine AS builder
+ARG VITE_TOSHI_MOTO_XPUB;
+ARG VERSION;
 WORKDIR /build
 RUN apk add --no-cache git python3 build-base
 # Install pnpm
@@ -18,8 +21,7 @@ RUN npm install -g pnpm
 # WORKDIR /build/apps/web-ui/dist
 COPY ./ ./
 RUN pnpm install --frozen-lockfile
-ARG VITE_TOSHI_MOTO_XPUB;
-ARG VERSION;
+
 run echo "VERSON_COPY=${VERSION}"
 # create a .env file in /apps/web-ui
 RUN echo "VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}" >> apps/web-ui/.env
