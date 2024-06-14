@@ -37,6 +37,14 @@
           "vite build"
         ],
         "cwd": "apps/web-ui",
+        "parallel": false
+      }
+    },
+    "build:umbrel": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["tsc", "vite build"],
+        "cwd": "apps/web-ui",
         "envFile": "apps/web-ui/.env",
         "parallel": false
       }
