@@ -9,16 +9,15 @@ FROM node:18-alpine AS builder
 WORKDIR /build
 RUN apk add --no-cache git python3 build-base
 # Install pnpm
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 # Copy the package.json, pnpm-lock.yaml files
-RUN mkdir -p ./apps/web-ui/dist
-COPY package.json pnpm-lock.yaml ./apps/web-ui/dist/
+# RUN mkdir -p ./apps/web-ui/dist
+# COPY package.json pnpm-lock.yaml ./apps/web-ui/dist/
 
 # Install the dependencies
-WORKDIR /build/apps/web-ui/dist
+# WORKDIR /build/apps/web-ui/dist
+COPY ./ ./
 RUN pnpm install --frozen-lockfile
-COPY apps/web-ui/dist/ /build/apps/web-ui/dist/
-
 
 ARG VITE_TOSHI_MOTO_XPUB
 ENV VITE_TOSHI_MOTO_XPUB=$VITE_TOSHI_MOTO_XPUB
