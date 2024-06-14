@@ -61,13 +61,7 @@
         "buildArgs": {
           "VITE_TOSHI_MOTO_XPUB": "${VITE_TOSHI_MOTO_XPUB}"
         }
-      },
-      "dependsOn": [
-        {
-          "target": "build:umbrel",
-          "projects": "self"
-        }
-      ]
+      }
     },
     "version": {
       "executor": "@jscutlery/semver:version",
