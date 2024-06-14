@@ -22,16 +22,24 @@ export const useBtcPrice = () => {
   );
 
   useEffect(() => {
-    send({
-      type: "INIT",
-      data: { networkLoggerRef, walletActorRef, currency, uri: priceUrl },
-    });
+    if (priceUrl) {
+      send({
+        type: "INIT",
+        data: { networkLoggerRef, walletActorRef, currency, uri: priceUrl },
+      });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [priceUrl]);
 
   const refresh = useCallback(
     (_: Event | MouseEvent, currencyProp: ICurrency = currency) => {
-      send({ type: "FETCH", data: { currency: currencyProp, uri: priceUrl } });
+      if (priceUrl) {
+        send({
+          type: "FETCH",
+          data: { currency: currencyProp, uri: priceUrl },
+        });
+      }
     },
     [send, currency, priceUrl]
   );

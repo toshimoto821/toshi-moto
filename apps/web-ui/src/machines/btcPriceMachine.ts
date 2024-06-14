@@ -63,7 +63,7 @@ export const btcPriceMachine = setup({
     fetchBtcPrices: fromPromise(
       ({ input }: { input: { currency: ICurrency; uri: string } }) => {
         const currency = input.currency;
-        const uri = input.uri;
+        const uri = input.uri || "/api/prices/simple";
         const url = getUrl(currency, uri);
         const startTime = new Date().getTime();
         return fetch(url)
