@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.2...web-ui-1.2.3) (2024-06-14)
+
+
+### Bug Fixes
+
+* falls back on xpub ([ebea0c9](https://github.com/toshimoto821/toshi-moto/commit/ebea0c927fc84d38e6209b420c3ac37d51c12502))
+
 ## [1.2.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.1...web-ui-1.2.2) (2024-06-14)
 
 
