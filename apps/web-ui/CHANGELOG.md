@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.11...web-ui-1.2.12) (2024-06-14)
+
+
+### Bug Fixes
+
+* docker build ([5a1da73](https://github.com/toshimoto821/toshi-moto/commit/5a1da73efa3b55dac5e05fd86b5f88c1906133e6))
+
 ## [1.2.11](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.10...web-ui-1.2.11) (2024-06-14)
 
 
