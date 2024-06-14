@@ -4,3 +4,5 @@ packages/bitcoinjs/node_modules
 # not sure this is required
 # apps/umbrel-apps
 .nx
+dist
+apps/web-ui/dist
