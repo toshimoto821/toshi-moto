@@ -69,17 +69,13 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Echo VITE_TOSHI_MOTO_XPUB
-        run: echo "VITE_TOSHI_MOTO_XPUB = ${{ secrets.VITE_TOSHI_MOTO_XPUB }}"
-
       - name: Run Docker build
-        run: |
-          export VERSION=v$VERSION
-          export VITE_TOSHI_MOTO_XPUB=xpub6CmZrGaPxYM979hPaAGffsELpVQZbCBZ2GQU8YpJcu1BceeHWNeDqpgnyzganZDau4tC87jJTL97X4DUG1cQLsRrogKqB2z6vqv7bH85Lub
-          export VITE_COINGECKO_PRICE_API_URL=/api/prices/simple
-          export VITE_COINGECKO_API_URL=/api/prices/range
-          export VITE_BITCOIN_NODE_URL=http://umbrel.local:3006
-          export VITE_REST_TIME_BETWEEN_REQUESTS=0
-          export VITE_MAX_CONCURRENT_REQUESTS=8
-          export VITE_BITCOIN_NETWORK=mainnet
-          npx nx run $PROJECT:docker
+        run: npx nx run $PROJECT:docker
+        env:
+          VITE_TOSHI_MOTO_XPUB: ${{ secrets.VITE_TOSHI_MOTO_XPUB }}
+          VITE_COINGECKO_PRICE_API_URL: /api/prices/simple
+          VITE_COINGECKO_API_URL: /api/prices/range
+          VITE_BITCOIN_NODE_URL: http://umbrel.local:3006
+          VITE_REST_TIME_BETWEEN_REQUESTS: 0
+          VITE_MAX_CONCURRENT_REQUESTS: 8
+          VITE_BITCOIN_NETWORK: mainnet
