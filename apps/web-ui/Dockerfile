@@ -30,7 +30,7 @@ RUN echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NODE_URL=http://umbrel.local:3006" >> apps/web-ui/.env
 
 # ARG VITE_TOSHI_MOTO_XPUB
-RUN pnpm run build
+RUN pnpm run build:umbrel
 
 # Production stage
 FROM nginx as production
