@@ -1,5 +1,5 @@
-ARG VITE_TOSHI_MOTO_XPUB;
-ARG VERSION;
+ARG VITE_TOSHI_MOTO_XPUB
+ARG VERSION
 
 # Nginx stage
 FROM nginx:stable-alpine AS nginx
@@ -14,12 +14,7 @@ WORKDIR /build
 RUN apk add --no-cache git python3 build-base
 # Install pnpm
 RUN npm install -g pnpm
-# Copy the package.json, pnpm-lock.yaml files
-# RUN mkdir -p ./apps/web-ui/dist
-# COPY package.json pnpm-lock.yaml ./apps/web-ui/dist/
 
-# Install the dependencies
-# WORKDIR /build/apps/web-ui/dist
 COPY ./ ./
 RUN pnpm install --frozen-lockfile
 
