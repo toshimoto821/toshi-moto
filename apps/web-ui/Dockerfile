@@ -20,14 +20,14 @@ COPY ./ ./
 RUN pnpm install --frozen-lockfile
 
 # create a .env file in /apps/web-ui
-RUN echo "VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}" >> /apps/web-ui/.env
-RUN echo "VITE_COINGECKO_PRICE_API_URL=/api/prices/simple" >> /apps/web-ui/.env
-RUN echo "VITE_COINGECKO_API_URL=/api/prices/range" >> /apps/web-ui/.env
-RUN echo "NODE_ENV=production" >> /apps/web-ui/.env
-RUN echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> /apps/web-ui/.env
-RUN echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> /apps/web-ui/.env
-RUN echo "VITE_BITCOIN_NETWORK=mainnet" >> /apps/web-ui/.env
-RUN echo "VITE_BITCOIN_NODE_URL=http://umbrel.local:3006" >> /apps/web-ui/.env
+RUN echo "VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}" >> apps/web-ui/.env
+RUN echo "VITE_COINGECKO_PRICE_API_URL=/api/prices/simple" >> apps/web-ui/.env
+RUN echo "VITE_COINGECKO_API_URL=/api/prices/range" >> apps/web-ui/.env
+RUN echo "NODE_ENV=production" >> apps/web-ui/.env
+RUN echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env
+RUN echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
+RUN echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
+RUN echo "VITE_BITCOIN_NODE_URL=http://umbrel.local:3006" >> apps/web-ui/.env
 
 # ARG VITE_TOSHI_MOTO_XPUB
 RUN pnpm run build
