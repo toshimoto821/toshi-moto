@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.7...web-ui-1.2.8) (2024-06-14)
+
+
+### Bug Fixes
+
+* echo xpub ([d249c3d](https://github.com/toshimoto821/toshi-moto/commit/d249c3d2e56378edde457a8d32daad20c065a147))
+
 ## [1.2.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.6...web-ui-1.2.7) (2024-06-14)
 
 
