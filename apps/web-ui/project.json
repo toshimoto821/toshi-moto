@@ -23,20 +23,9 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "export VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}",
-          "export VITE_COINGECKO_PRICE_API_URL=/api/prices/simple",
-          "export VITE_COINGECKO_API_URL=/api/prices/range",
-          "export NODE_ENV=production",
-          "export VITE_REST_TIME_BETWEEN_REQUESTS=0",
-          "export VITE_MAX_CONCURRENT_REQUESTS=8",
-          "export VITE_BITCOIN_NETWORK=mainnet",
-          "export VITE_BITCOIN_NODE_URL=http://umbrel.local:3006",
-          "echo $VITE_TOSHI_MOTO_XPUB",
-          "tsc",
-          "vite build"
-        ],
+        "commands": ["tsc", "vite build"],
         "cwd": "apps/web-ui",
+        "envFile": "apps/web-ui/.env",
         "parallel": false
       }
     },
