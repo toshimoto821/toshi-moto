@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.25](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.24...web-ui-1.2.25) (2024-06-14)
+
+
+### Bug Fixes
+
+* arg ([06f2392](https://github.com/toshimoto821/toshi-moto/commit/06f2392dd24c9c796849fad7903b687138246a4b))
+
 ## [1.2.24](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.23...web-ui-1.2.24) (2024-06-14)
 
 
