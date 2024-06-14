@@ -18,7 +18,8 @@ RUN npm install -g pnpm
 # WORKDIR /build/apps/web-ui/dist
 COPY ./ ./
 RUN pnpm install --frozen-lockfile
-
+ARG VITE_TOSHI_MOTO_XPUB;
+ARG VERSION;
 run echo "VERSON_COPY=${VERSION}"
 # create a .env file in /apps/web-ui
 RUN echo "VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}" >> apps/web-ui/.env
