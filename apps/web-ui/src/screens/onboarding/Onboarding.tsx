@@ -10,7 +10,7 @@ import { useWallet } from "@lib/hooks/useWallet";
 import { useNavigate } from "react-router-dom";
 import { useReward } from "react-rewards";
 
-const VITE_TOSHI_MOTO_XPUB = import.meta.env.VITE_TOSHI_MOTO_XPUB;
+const VITE_TOSHI_MOTO_XPUB = import.meta.env.VITE_TOSHI_MOTO_XPUB || "";
 
 export const Onboarding = () => {
   const xpubs = VITE_TOSHI_MOTO_XPUB.split(",");
