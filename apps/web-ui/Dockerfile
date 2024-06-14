@@ -30,6 +30,8 @@ RUN echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NODE_URL=http://umbrel.local:3006" >> apps/web-ui/.env
 
+RUN echo "VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}"
+
 # ARG VITE_TOSHI_MOTO_XPUB
 RUN pnpm run build:umbrel
 
