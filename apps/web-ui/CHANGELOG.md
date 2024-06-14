@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.19](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.18...web-ui-1.2.19) (2024-06-14)
+
+
+### Bug Fixes
+
+* typo ([59be5ba](https://github.com/toshimoto821/toshi-moto/commit/59be5ba34261695ed3db12b2fe605589ccd168d1))
+
 ## [1.2.18](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.17...web-ui-1.2.18) (2024-06-14)
 
 
