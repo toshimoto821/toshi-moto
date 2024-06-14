@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.26](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.25...web-ui-1.2.26) (2024-06-14)
+
+
+### Bug Fixes
+
+* removes trailing ; ([a86f10c](https://github.com/toshimoto821/toshi-moto/commit/a86f10c1b034797738bb8020ad94ac6c02985473))
+
 ## [1.2.25](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.24...web-ui-1.2.25) (2024-06-14)
 
 
