@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.11](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.10...web-ui-1.2.11) (2024-06-14)
+
+
+### Bug Fixes
+
+* updates build:umbrel ([55390c1](https://github.com/toshimoto821/toshi-moto/commit/55390c14840423cc99bb907a7c20394d13f29cf3))
+
 ## [1.2.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.9...web-ui-1.2.10) (2024-06-14)
 
 
