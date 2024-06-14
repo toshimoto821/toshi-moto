@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.21](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.20...web-ui-1.2.21) (2024-06-14)
+
+
+### Bug Fixes
+
+* changes arg name ([c052d25](https://github.com/toshimoto821/toshi-moto/commit/c052d25e65a52be68b37e2a3d75aa1aa56705dda))
+
 ## [1.2.20](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.19...web-ui-1.2.20) (2024-06-14)
 
 
