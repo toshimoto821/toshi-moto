@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.5...web-ui-1.2.6) (2024-06-14)
+
+
+### Bug Fixes
+
+* pnpm ([099eb0a](https://github.com/toshimoto821/toshi-moto/commit/099eb0a6ccd14501db598d31f2ea84a52b6f2e2f))
+
 ## [1.2.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.4...web-ui-1.2.5) (2024-06-14)
 
 
