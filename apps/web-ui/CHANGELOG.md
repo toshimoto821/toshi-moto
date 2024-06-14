@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.2.24](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.23...web-ui-1.2.24) (2024-06-14)
+
+
+### Bug Fixes
+
+* moves arg ([38c8cdc](https://github.com/toshimoto821/toshi-moto/commit/38c8cdcbb56e658dca0414a2301207678c6f4e12))
+* removes cat ([61b004a](https://github.com/toshimoto821/toshi-moto/commit/61b004afb51bd4f98ef58ac31bb33699788c707c))
+
 ## [1.2.23](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.22...web-ui-1.2.23) (2024-06-14)
 
 
