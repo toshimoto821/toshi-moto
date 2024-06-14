@@ -57,7 +57,7 @@
         "tags": ["toshimoto821/toshi-moto:${VERSION}"],
         "push": true,
         "tag": "toshimoto821/toshi-moto:${VERSION}",
-        "buildArgs": {
+        "build-args": {
           "VITE_TOSHI_MOTO_XPUB": "${VITE_TOSHI_MOTO_XPUB}",
           "VERSION": "${VERSION}"
         }
