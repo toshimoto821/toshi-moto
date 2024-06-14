@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.27](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.26...web-ui-1.2.27) (2024-06-14)
+
+
+### Bug Fixes
+
+* local var ([76e16ee](https://github.com/toshimoto821/toshi-moto/commit/76e16ee649f6367b65580821cedde49dd33b1dc4))
+
 ## [1.2.26](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.25...web-ui-1.2.26) (2024-06-14)
 
 
