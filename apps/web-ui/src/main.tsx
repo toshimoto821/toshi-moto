@@ -8,7 +8,7 @@ import "./index.css";
 
 import "react-day-picker/dist/style.css";
 import "@radix-ui/themes/styles.css";
-console.log(`Version: __VERSION__`);
+console.log(`Version Number: __VERSION__`);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
