@@ -1,3 +1,6 @@
+ARG VITE_TOSHI_MOTO_XPUB;
+ARG VERSION;
+
 # Nginx stage
 FROM nginx:stable-alpine AS nginx
 
@@ -7,8 +10,6 @@ COPY apps/web-ui/config/nginx.conf /etc/nginx/conf.d/default.conf
 # Builder State
 # this needs to be updated to build externally and copy into here
 FROM node:18-alpine AS builder
-ARG VITE_TOSHI_MOTO_XPUB;
-ARG VERSION;
 WORKDIR /build
 RUN apk add --no-cache git python3 build-base
 # Install pnpm
