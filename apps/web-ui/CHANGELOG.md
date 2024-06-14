@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.4...web-ui-1.2.5) (2024-06-14)
+
+
+### Bug Fixes
+
+* build ([073ca45](https://github.com/toshimoto821/toshi-moto/commit/073ca45f3d0b4186e86e6a5e856c1678062ea963))
+
 ## [1.2.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.3...web-ui-1.2.4) (2024-06-14)
 
 
