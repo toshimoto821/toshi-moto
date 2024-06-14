@@ -19,7 +19,7 @@ RUN npm install -g pnpm
 COPY ./ ./
 RUN pnpm install --frozen-lockfile
 
-run echo "VERSON_COPY=${VERSON}"
+run echo "VERSON_COPY=${VERSION}"
 # create a .env file in /apps/web-ui
 RUN echo "VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}" >> apps/web-ui/.env
 RUN echo "VITE_COINGECKO_PRICE_API_URL=/api/prices/simple" >> apps/web-ui/.env
