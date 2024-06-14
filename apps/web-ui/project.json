@@ -64,7 +64,7 @@
       },
       "dependsOn": [
         {
-          "target": "build",
+          "target": "build:umbrel",
           "projects": "self"
         }
       ]

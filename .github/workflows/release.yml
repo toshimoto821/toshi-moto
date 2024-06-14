@@ -42,9 +42,6 @@ jobs:
       - name: Run Test
         run: npx nx run $PROJECT:test
 
-      - name: Build
-        run: npx nx run $PROJECT:build
-
       - name: Setup Docker
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
