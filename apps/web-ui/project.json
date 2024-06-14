@@ -32,6 +32,7 @@
           "export VITE_MAX_CONCURRENT_REQUESTS=8",
           "export VITE_BITCOIN_NETWORK=mainnet",
           "export VITE_BITCOIN_NODE_URL=http://umbrel.local:3006",
+          "echo $VITE_TOSHI_MOTO_XPUB",
           "tsc",
           "vite build"
         ],
