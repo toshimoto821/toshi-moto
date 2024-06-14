@@ -22,7 +22,8 @@ COPY apps/web-ui/dist/ /build/apps/web-ui/dist/
 
 ARG VITE_TOSHI_MOTO_XPUB
 ENV VITE_TOSHI_MOTO_XPUB=$VITE_TOSHI_MOTO_XPUB
-# RUN pnpm run build
+
+RUN pnpm run build
 
 # Production stage
 FROM nginx as production
