@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.1...web-ui-1.2.2) (2024-06-14)
+
+
+### Bug Fixes
+
+* **web-ui:** race condition for price url ([e1a1055](https://github.com/toshimoto821/toshi-moto/commit/e1a10559c286ee95983e53fadad67efdf0f18054))
+
 ## [1.2.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.0...web-ui-1.2.1) (2024-06-10)
 
 
