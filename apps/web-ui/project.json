@@ -40,6 +40,15 @@
         "parallel": false
       }
     },
+    "build:umbrel": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["tsc", "vite build"],
+        "cwd": "apps/web-ui",
+        "envFile": "apps/web-ui/.env",
+        "parallel": false
+      }
+    },
     "docker": {
       "executor": "@nx-tools/nx-container:build",
       "options": {
