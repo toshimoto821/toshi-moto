@@ -1,4 +1,14 @@
 # UI Changelog
+## [1.2.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.9...web-ui-1.2.10) (2024-06-14)
+
+
+### Bug Fixes
+
+* adds back exports for cf ([505624c](https://github.com/toshimoto821/toshi-moto/commit/505624c88068f907d41357250e48b3d3a1132c77))
+* build:umbrel ([670c66a](https://github.com/toshimoto821/toshi-moto/commit/670c66a110ca14d3a0d981be61bae53160724b8b))
+* dotenv ([b9b23c0](https://github.com/toshimoto821/toshi-moto/commit/b9b23c0e42a8864fc74584b5fb458cf42147ee9c))
+* path ([b977f2f](https://github.com/toshimoto821/toshi-moto/commit/b977f2fd8d28334e51367f1314ba140e090e1959))
+
 ## [1.2.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.8...web-ui-1.2.9) (2024-06-14)
 
 
