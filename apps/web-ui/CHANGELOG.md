@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.2.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.6...web-ui-1.2.7) (2024-06-14)
+
+
+### Bug Fixes
+
+* updates env ([a02b660](https://github.com/toshimoto821/toshi-moto/commit/a02b660767299050f887ac365e0441468e3b3e11))
+* updates env ([4ca21e7](https://github.com/toshimoto821/toshi-moto/commit/4ca21e7a139f9ca38da4336c979b4756ae42bf30))
+
 ## [1.2.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.5...web-ui-1.2.6) (2024-06-14)
 
 
