@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.12...web-ui-1.2.13) (2024-06-14)
+
+
+### Bug Fixes
+
+* removes dep ([00a013a](https://github.com/toshimoto821/toshi-moto/commit/00a013a9e3fb3a86192d07747c4361b946884b40))
+
 ## [1.2.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.11...web-ui-1.2.12) (2024-06-14)
 
 
