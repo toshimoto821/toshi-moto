@@ -247,6 +247,13 @@ export const walletManagerMachine = setup({
       target: ".idle",
       actions: assign({
         isDirty: false,
+        name: ({ event }) => {
+          assertEvent(event, "RESET_FORM");
+          if (event.data.wallet) {
+            return event.data.wallet.name;
+          }
+          return "";
+        },
         walletId: ({ event }) => {
           assertEvent(event, "RESET_FORM");
           return event.data?.wallet?.id;
@@ -256,9 +263,6 @@ export const walletManagerMachine = setup({
           let utxos = ["", ""];
           if (event.data.wallet) {
             utxos = [];
-            // for (const xpub of event.data.wallet.listXpubs) {
-            //   utxos.push(xpub.address);
-            // }
             const addresses = event.data?.wallet?.listManualAddresses || [];
             for (const utxo of addresses) {
               utxos.push(utxo.address);
