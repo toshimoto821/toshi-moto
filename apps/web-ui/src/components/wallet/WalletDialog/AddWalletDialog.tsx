@@ -48,7 +48,7 @@ export const AddWalletDialog = ({
   const isSuccess = current.matches("success");
   useEffect(() => {
     if (isSuccess) {
-      onClose(true);
+      handleClose(true);
       send({ type: "RESET_FORM", data: {} });
     }
   }, [isSuccess, wallet]);
@@ -73,8 +73,12 @@ export const AddWalletDialog = ({
       });
     }
 
-    onClose(false);
+    handleClose(false);
   };
+
+  function handleClose(success: boolean) {
+    onClose(success);
+  }
 
   const onOpenChange = () => {
     send({ type: "RESET_FORM", data: { wallet: wallet } });
@@ -126,7 +130,11 @@ export const AddWalletDialog = ({
             )}
           </Flex>
           <Flex gap="3">
-            <Button variant="soft" color="gray" onClick={() => onClose(false)}>
+            <Button
+              variant="soft"
+              color="gray"
+              onClick={() => handleClose(false)}
+            >
               Cancel
             </Button>
 
