@@ -1,4 +1,10 @@
 # UI Changelog
+## [1.2.28](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.27...web-ui-1.2.28) (2024-06-15)
+
+
+### Bug Fixes
+
+* wallet dialog reset ([19a8ccf](https://github.com/toshimoto821/toshi-moto/commit/19a8ccf38a7b704650b0c51d5cf148ade82dec53))
 
 ## [1.2.27](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.26...web-ui-1.2.27) (2024-06-14)
 
