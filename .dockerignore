@@ -6,3 +6,5 @@ packages/bitcoinjs/node_modules
 .nx
 dist
 apps/web-ui/dist
+.notes
+.nx
