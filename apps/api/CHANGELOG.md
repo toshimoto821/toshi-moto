@@ -1,4 +1,11 @@
 # API Changelog
+## [1.2.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.2.0...api-1.2.1) (2024-06-17)
+
+
+### Bug Fixes
+
+* docker build ([100cc60](https://github.com/toshimoto821/toshi-moto/commit/100cc60ec53888438103a18c18a85100fc0cb8aa))
+
 ## [1.2.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.1.0...api-1.2.0) (2024-06-17)
 
 
