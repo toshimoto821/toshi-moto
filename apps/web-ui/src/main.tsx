@@ -10,6 +10,10 @@ import "react-day-picker/dist/style.css";
 import "@radix-ui/themes/styles.css";
 console.log(`Version Number: __VERSION__`);
 
+if (window.location.pathname !== "/") {
+  window.location.href = "/";
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
