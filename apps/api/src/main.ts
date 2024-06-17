@@ -16,7 +16,7 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(
-    `🚀 Toshi Moto is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Toshi Moto App is running on: http://localhost:${port}/${globalPrefix}`
   );
 }
 
