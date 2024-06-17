@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.29](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.28...web-ui-1.2.29) (2024-06-17)
+
+
+### Bug Fixes
+
+* restricts paths to / ([c6cb832](https://github.com/toshimoto821/toshi-moto/commit/c6cb8320a14997e3af6981f79870a27b845e5168))
+
 ## [1.2.28](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.27...web-ui-1.2.28) (2024-06-15)
 
 
