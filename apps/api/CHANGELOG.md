@@ -1,4 +1,11 @@
 # API Changelog
+## [1.2.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.1.0...api-1.2.0) (2024-06-17)
+
+
+### Features
+
+* testing feat ([92d3d83](https://github.com/toshimoto821/toshi-moto/commit/92d3d83033f1f732e1c41631f5d5552663654d2f))
+
 ## [1.1.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.0.9...api-1.1.0) (2024-06-17)
 
 
