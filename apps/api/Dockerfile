@@ -10,17 +10,17 @@ RUN apk add --no-cache git python3 build-base
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy the package.json, pnpm-lock.yaml files
-COPY package.json pnpm-lock.yaml ./
+# Copy the rest of the application files
+COPY . .
 
 # Install the dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the application files
-COPY . .
 
 # Build the application
-RUN pnpm run build
+RUN pnpm run build:api
+
+# CMD [ "tail", "-f", "/dev/null" ]
 
 # Use a lightweight image for running the app
 FROM node:18-alpine
