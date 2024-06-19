@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.30](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.29...web-ui-1.2.30) (2024-06-19)
+
+
+### Bug Fixes
+
+* wallet scanning ([96d18dd](https://github.com/toshimoto821/toshi-moto/commit/96d18dd05f70ec06a8fd8bc0a298ec8fd84c1e6e))
+
 ## [1.2.29](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.28...web-ui-1.2.29) (2024-06-17)
 
 
