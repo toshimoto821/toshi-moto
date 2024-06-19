@@ -175,7 +175,8 @@ export const getLastAddressIndex = async (
   change: boolean,
   bitcoinNodeUrl?: string
 ) => {
-  let index = 0;
+  // some wallets (aqua) start at 1
+  let index = 1;
   let running = true;
   const SKIP_BY = 5;
   let lastAddressWithNoTxs = -1;

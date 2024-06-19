@@ -100,6 +100,7 @@ export const walletListUIMachine = setup({
             receiveStart?: number;
             addressType?: "RECEIVE" | "CHANGE";
             accountType: "MULTI_SIG" | "SINGLE_SIG";
+            bitcoinNodeUrl?: string;
           };
         }
       | {
@@ -283,6 +284,7 @@ export const walletListUIMachine = setup({
     ),
   },
 }).createMachine({
+  /** @xstate-layout N4IgpgJg5mDOIC5QHcCGAbdYAuAZAlrNgLKoDGAFvgHZgDEA4rgPIBCAgrgPoBKAogEUAqnwDKAFQDaABgC6iUAAcA9rHzZ8y6gpAAPRAE4AbAA4AdABYAzAFYD9mwEYDVgOxGLAGhABPQ6-NpE3tbGytpN2kLAF9o7zRMHAIiUkoaegB1Tlw+cS5cAEkJLnYAEVKuLNwcqTkdFTUNLR19BEdncwsAJiMuxz7nC1dHbz8EV1cLM2knawsIiyMbZdj4jCw8QhJyKlo6cWYGJj5eZgyZeSQQBvVNbSvW12MzYYsTYK631ytrUcMLGyWEyOEwWAyOZZBAwmVYgBIbZLbNJ7A5HHJccT8PjEdgABXyhy4ogAwpw+Bd6qpbs0HogflNHNIDE9oQYLBC7H8EC4ui8mQCDNIjEEIbD4UktqldvRiTl2DwiXwcsTxHwKlUaqIKVcbk17qBWjZJmYjcCrEYrGyXBYvL5EEZ2mZ+sEomzpF13TC4nD1hKUjt0vtDsdFcq8hrctqlFS9S1EDYTFYzL12l1PjyhTYuU5Ad8oqYhjYjBaumLfZt-cj6KiQ2VSvxRFq6jqY3c4whhQYXsFXHYbOyrGms3aEN1pGYrIOIh72v1zWXEhWkdK6HwABq49gAOQqdYbTcu0cabdpHaZZhMEwtjle0mGXMHUxctgMy0WCZi3vFS6lgeJzGqPFRBOPcxAPSljxpA17WkccXWkZxiyNaETC5NMuzCHNBRMD0bU-NZF0RX89mAvJCi3E5SnYcR2Cja5WygvR7T6CdeyiFlYM7LlHB+J1zVcNMHTYt4FwRSUAxI3JQz4FU1QJPIqJorgCh3dc6N1E9oIQN8JyMaFJ3eAFXDvbjSy-csiIksAzEUAAnMACmodQ6BUgpakPejIP1JiOzCaYISWHlPkWW0xmdIxk3mB0PBfS8vQIsTK2lMx8AgLA6AAMVyYkAAlKmyKShHENdmHUhjvNaaFeX7KIZnsLo3CMVxuOFQErBBBN2hMJY9IMUS-WXdIUrS+gSW3fLqikjchFYMqvPbJYkwQos7EHYKPG4kEuxBdCAQaj1i36n8rLMAAzHBkSgIRsF0ZQ6Dm6kKsQWcIoibqEz00EQWakdHDBXlJgCLp3HeFZzMI8Sqxs+zFFQeyMuUWzRDIVBqDXRQAFcACN7ubI9HvbLoEzMV92rcG9lkvdwWsdMIPCLcIfh+I7LKhuywFh+HEeR1H0ex+7HA8jTGNaH4uwCEwEImIZTBwqxuJtVwzCJ7qDCJz4nF7FnIeS2AUeoJzqCgPmcYgLRrJoAA3ZQAGtrO-Vndf1w3jcxrGECt5QUb1C4HtjU8BIByJXw8HCbCiFq7GTdxgfsUFwTCWJvWoZQIDgHQHZ19IIIJ08AFoRl+xlHAvVbpZvNN53BxLBtoaGHKc7Ac-9rTll5RY02MiF2VZbjwgw18ZnD4Zw5vbWkqG1KsGbzSfJ7F4i0rwUmXa7inHHKW2KiTq2XH2vrPO7BLuu26Z5F56NZND0cO6SW9O+NebWV0w7yZGY9NsPfiOs9nObABGkb6xNmfJ6o4fphQBOOLobJ0wNUZO8L+J09aoxdsAls81TzdCTCFS8TgbxMneGvb40xLQzGgbBGwwNPyxCAA */
   id: "walletListMachine",
   context: {
     networkActorRef: null,
@@ -361,7 +363,6 @@ export const walletListUIMachine = setup({
       ],
       always: "idle",
     },
-    fetching: {},
     prepareForScanXpub: {
       always: [
         {
@@ -432,6 +433,7 @@ export const walletListUIMachine = setup({
             receiveStart,
             addressType,
             accountType,
+            bitcoinNodeUrl,
           } = event.data;
           return {
             xpub,
@@ -445,6 +447,7 @@ export const walletListUIMachine = setup({
             receiveStart,
             addressType,
             accountType,
+            bitcoinNodeUrl,
           };
         },
         onDone: {
