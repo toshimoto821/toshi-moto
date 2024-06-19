@@ -28,6 +28,16 @@ export interface Env {
 	MY_RATE_LIMITER: any;
 	API_KEY: string;
 }
+//
+const NO_STORE_PATHNAMES = ['/api/healthcheck'] as string[];
+
+function getTTl(pathname: string) {
+	if (NO_STORE_PATHNAMES.includes(pathname)) return 0;
+
+	if (pathname.includes('simple')) return 300;
+
+	return 86400;
+}
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
@@ -70,17 +80,18 @@ export default {
 
 		const newHeaders = new Headers(request.headers);
 		newHeaders.append('x-api-key', env.API_KEY);
-		console.log(env.API_KEY, 'api');
+
 		const newRequest = new Request(requestUrl, {
 			method: request.method,
 			headers: newHeaders,
 			body: request.body,
 		});
+
 		// const resp = await
 		// console.log(newRequest);
 		// Fetch the response from the new URL
 		const someCustomKey = `http://${url.hostname}${url.pathname}?${url.search}`;
-		const ttl = url.pathname.includes('simple') ? 300 : 86400;
+		const ttl = getTTl(url.pathname);
 		const response = await fetch(newRequest, {
 			headers: newHeaders,
 			cf: {
@@ -100,9 +111,8 @@ export default {
 			headers: response.headers,
 		});
 
-		if (url.pathname !== '/api/healthcheck') {
-			resp.headers.set('Cache-Control', `public,max-age=${ttl}`);
-		}
+		resp.headers.set('Cache-Control', `public,max-age=${ttl}`);
+
 		return resp;
 	},
 };
