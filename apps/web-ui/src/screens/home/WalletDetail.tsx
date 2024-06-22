@@ -46,6 +46,7 @@ export const WalletDetail = () => {
       change: true,
       receive: false,
       addresses: address ? [address] : undefined,
+      sort: "asc",
     }) || [];
 
   const receiveAddresses =
@@ -180,7 +181,7 @@ export const WalletDetail = () => {
           return (
             <AddressRow
               key={index + address.address}
-              isLoading={ui.isLoadingAddress(address.address)}
+              isLoading={ui.isLoadingAddress(address.address, wallet)}
               address={address}
               isUtxoExpanded={isUtxoExpanded(address.address)}
               onClickExpandUtxo={handleToggleAddress(address.address)}
@@ -197,6 +198,11 @@ export const WalletDetail = () => {
             />
           );
         })}
+        {receiveAddresses.length === 0 && (
+          <div className="h-48 flex items-center justify-center">
+            <Text>Loading receive addresses...</Text>
+          </div>
+        )}
         <div className="p-2 bg-gray-50 border-b border-t">
           <Popover
             text={(classNames) => (
@@ -217,7 +223,7 @@ export const WalletDetail = () => {
           return (
             <AddressRow
               key={index + address.address}
-              isLoading={ui.isLoadingAddress(address.address)}
+              isLoading={ui.isLoadingAddress(address.address, wallet)}
               address={address}
               isUtxoExpanded={isUtxoExpanded(address.address)}
               onClickExpandUtxo={handleToggleAddress(address.address)}
@@ -234,6 +240,11 @@ export const WalletDetail = () => {
             />
           );
         })}
+        {changeAddresses.length === 0 && (
+          <div className="h-48 flex items-center justify-center">
+            <Text>Loading change addresses...</Text>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -414,8 +414,10 @@ export const useWallets = () => {
     selectedTxs,
     addressFilters,
     balanceVisible,
-    isLoadingAddress: (address: string) => {
-      return !!addresses[address]?.loading;
+    isLoadingAddress: (address: string, wallet: Wallet) => {
+      if (addresses[address]?.loading) return true;
+
+      return !wallet.isAddressLoaded(address);
     },
     btcPriceLoading,
   };

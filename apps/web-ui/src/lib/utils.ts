@@ -178,7 +178,7 @@ export const getLastAddressIndex = async (
   // some wallets (aqua) start at 1
   let index = 1;
   let running = true;
-  const SKIP_BY = 5;
+  const SKIP_BY = 10;
   let lastAddressWithNoTxs = -1;
   while (running) {
     const address = await Xpub.getAddressAtIndex(xpub, index, change);

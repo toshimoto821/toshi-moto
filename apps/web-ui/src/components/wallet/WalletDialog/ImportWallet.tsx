@@ -181,7 +181,6 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
       if (!event.target?.result) return;
       try {
         const json = JSON.parse(event.target.result as string);
-        console.log(json);
         const data = {
           ...json,
           xpubs: new Set(json.xpubs),

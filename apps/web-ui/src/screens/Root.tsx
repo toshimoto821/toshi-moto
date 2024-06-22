@@ -83,37 +83,6 @@ export const Root = () => {
       Xpub.preload();
     }, 3000);
   }, []);
-  // useEffect(() => {
-  //   if (currentVersion !== storedVersion && storedVersion) {
-  //     toastActorRef.send({
-  //       type: "TOAST",
-  //       data: {
-  //         message: {
-  //           line1: "A new version is available",
-  //           line2: `v${storedVersion} -> v${currentVersion}`,
-  //           action: {
-  //             text: "Reload",
-  //             altText: "Reload the app",
-  //             onClick: () => {
-  //               handleReload();
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-  //   }
-  // }, [currentVersion, storedVersion]);
-
-  // const handleReload = () => {
-  //   walletActorRef.send({
-  //     type: "APP_MACHINE_UPDATE_APP_VERSION",
-  //     data: { appVersion: currentVersion },
-  //   });
-  //   // wait 3 seconds for save
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, 3000);
-  // };
 
   return (
     <div className="">
