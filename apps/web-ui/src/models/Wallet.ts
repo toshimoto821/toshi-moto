@@ -513,6 +513,17 @@ export class Wallet {
     });
   }
 
+  getTxsForAddress(address: string) {
+    const addr = this.addresses[address];
+    if (!addr) return [];
+    return addr.listTransactions;
+  }
+
+  isAddressLoaded(address: string) {
+    const txs = this.getTxsForAddress(address);
+    return txs.every((tx) => !!tx.date);
+  }
+
   get orderedAddresses() {
     const addresses = this.listAddresses;
     return addresses.sort((a, b) => {

@@ -119,6 +119,7 @@ export type ICreateRequestOpts = {
   // for txs, pagination works with after_txid
   // http://umbrel.local:3006/api/address/32ixEdVJWo3kmvJGMTZq5jAQVZZeuwnqzo/txs?after_txid=e8cedac888bf131b6b0b59090afffd9d822d623061195bc863be19dc4ce6e337
   utxoAfterTxid?: string;
+  priority?: "high";
 };
 const createUtxoRequestObject = (
   data: IUtxoInput & { config: IAppMetaConfig },
@@ -149,6 +150,7 @@ const createUtxoRequestObject = (
       type,
       // cache: data.cache,
       ttl: data.ttl ?? 1000 * 60 * 60 * 24, // 1 day ttl default
+      priority: opts.priority,
     },
   } as IRequest;
 };
@@ -996,7 +998,10 @@ export const appMachine = setup({
                       config: context.meta.config,
                       ttl: request.meta.ttl ?? undefined,
                     },
-                    "txs"
+                    "txs",
+                    {
+                      priority: "high",
+                    }
                   );
                   requests.push(txRequest);
                 }

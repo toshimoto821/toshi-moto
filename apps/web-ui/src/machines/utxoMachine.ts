@@ -367,7 +367,13 @@ export const utxoMachine = createMachine(
                   return true;
                 }
               );
-              return [...context.queue, ...requests];
+              const first = requests.filter(
+                (request) => request.meta.priority === "high"
+              );
+              const last = requests.filter(
+                (request) => request.meta.priority !== "high"
+              );
+              return [...first, ...context.queue, ...last];
             },
           }),
           sendParent(({ event, context }) => {
