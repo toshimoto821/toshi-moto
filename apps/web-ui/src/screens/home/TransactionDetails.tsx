@@ -80,7 +80,10 @@ export const TransactionDetails = (props: ITransactionDetails) => {
       </div>
 
       <div className="grid grid-cols-12 gap-1 items-center text-xs px-2 py-4 font-bold top-[78px] border border-x-0">
-        <div className="text-left col-span-3 lg:col-span-5 flex items-center">
+        <div className="col-span-3 lg:col-span-4 text-left">
+          <Text className="">Adddress</Text>
+        </div>
+        <div className="text-left col-span-3 lg:col-span-2 flex items-center">
           <PinTopIcon className="mr-1" width={12} />
           <Popover title="Vector Input" text="Vin">
             <Text>
@@ -90,7 +93,7 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           </Popover>
         </div>
 
-        <div className="col-span-3 lg:col-span-5 text-right flex items-end justify-end">
+        <div className="col-span-3 lg:col-span-2 text-right flex items-end justify-end">
           <PinBottomIcon className="ml-1 mr-1" width={12} />
           <Popover title="Vector Output" text="Vout">
             <Text>
@@ -100,10 +103,7 @@ export const TransactionDetails = (props: ITransactionDetails) => {
             </Text>
           </Popover>
         </div>
-        <div className="col-span-3 lg:col-span-1  text-right">
-          <Text className="">BTC</Text>
-        </div>
-        <div className="col-span-3 lg:col-span-1  text-right">
+        <div className="col-span-4 text-right">
           <Text className="">Value</Text>
         </div>
       </div>
