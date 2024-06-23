@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.32](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.31...web-ui-1.2.32) (2024-06-23)
+
+
+### Bug Fixes
+
+* changes table for txs ([ee5f901](https://github.com/toshimoto821/toshi-moto/commit/ee5f90147b7233a42106fd5b18b09bd23504e846))
+
 ## [1.2.31](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.30...web-ui-1.2.31) (2024-06-22)
 
 
