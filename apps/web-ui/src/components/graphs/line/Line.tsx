@@ -999,6 +999,9 @@ export const Line = (props: ILine) => {
       });
 
     if (showBtcAllocation && btcPrice && lineData.length > 1) {
+      const now = new Date().getTime();
+      const pastLineData = lineData.filter((d) => d.x <= now);
+      const futureLineData = lineData.filter((d) => d.x > now);
       svg
         .append("path")
         .attr("fill", "none")
@@ -1006,7 +1009,17 @@ export const Line = (props: ILine) => {
         .attr("stroke-miterlimit", 1)
         .attr("stroke-opacity", "0.8")
         .attr("stroke-width", 1)
-        .attr("d", btcLine(lineData));
+        .attr("d", btcLine(pastLineData));
+
+      svg
+        .append("path")
+        .attr("fill", "none")
+        .attr("stroke", "orange")
+        .attr("stroke-miterlimit", 1)
+        .attr("stroke-opacity", "0.8")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "2,4")
+        .attr("d", btcLine(futureLineData));
     }
   };
 
