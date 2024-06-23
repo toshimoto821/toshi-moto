@@ -1,7 +1,7 @@
 {
   "name": "web-ui",
   "private": true,
-  "version": "1.2.32",
+  "version": "1.2.33",
   "type": "module",
   "scripts": {
     "cypress:open": "cypress open",

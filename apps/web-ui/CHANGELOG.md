@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.2.33](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.32...web-ui-1.2.33) (2024-06-23)
+
+
+### Bug Fixes
+
+* tx col header ([7a2fda8](https://github.com/toshimoto821/toshi-moto/commit/7a2fda8b4afb501cea16d9f22c3a02fd0352825f))
+
 ## [1.2.32](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.31...web-ui-1.2.32) (2024-06-23)
 
 
