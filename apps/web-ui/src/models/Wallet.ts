@@ -520,8 +520,10 @@ export class Wallet {
   }
 
   isAddressLoaded(address: string) {
-    const txs = this.getTxsForAddress(address);
-    return txs.every((tx) => !!tx.date);
+    // const txs = this.getTxsForAddress(address);
+    const addr = this.addresses[address];
+    if (!addr) return false;
+    return addr.status === "complete";
   }
 
   get orderedAddresses() {
