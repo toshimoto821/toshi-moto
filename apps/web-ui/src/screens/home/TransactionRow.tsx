@@ -121,27 +121,40 @@ export const TransactionRow = ({
             }
           )}
         >
-          <div className="col-span-3 lg:col-span-5 text-left font-mono">
-            <span className="hidden lg:inline">{vinOrVout.vin}</span>
-            <span className="inline lg:hidden">
-              {trimAddress(vinOrVout.vin, { prefix: 2 })}
-            </span>
-          </div>
-          <div className="text-right col-span-3 lg:col-span-5 font-mono">
+          <div className="col-span-3 lg:col-span-4 text-left font-mono">
             <span className="hidden lg:inline">
-              {trimAddress(vinOrVout.vout, { prefix: 6, suffix: 60 })}
+              {vinOrVout.vin || vinOrVout.vout}
             </span>
             <span className="inline lg:hidden">
-              {trimAddress(vinOrVout.vout, { prefix: 2 })}
+              {trimAddress(vinOrVout.vin || vinOrVout.vout, { prefix: 2 })}
             </span>
           </div>
-          <div className="col-span-3 lg:col-span-1 text-right font-mono">
-            <span className="hidden lg:inline">{padBtcZeros(btcAmount)}</span>
-            <span className="inline lg:hidden">
-              {padBtcZeros(btcAmount, 4)}
-            </span>
+
+          <div className="col-span-3 lg:col-span-2 text-left font-mono">
+            {vinOrVout.type === "VIN" && (
+              <>
+                <span className="hidden lg:inline">
+                  {padBtcZeros(btcAmount)}
+                </span>
+                <span className="inline lg:hidden">
+                  {padBtcZeros(btcAmount, 6)}
+                </span>
+              </>
+            )}
           </div>
-          <div className="col-span-3 lg:col-span-1 text-right font-mono">
+          <div className="col-span-3 lg:col-span-2 text-right font-mono">
+            {vinOrVout.type === "VOUT" && (
+              <>
+                <span className="hidden lg:inline">
+                  {padBtcZeros(btcAmount)}
+                </span>
+                <span className="inline lg:hidden">
+                  {padBtcZeros(btcAmount, 6)}
+                </span>
+              </>
+            )}
+          </div>
+          <div className="col-span-3 lg:col-span-4 text-right font-mono">
             <Text>
               {currencySymbols[currency]}
               <span className="hidden lg:inline">{formatPrice(btcValue)}</span>
