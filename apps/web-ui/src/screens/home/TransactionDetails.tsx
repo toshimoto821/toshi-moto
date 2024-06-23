@@ -103,7 +103,7 @@ export const TransactionDetails = (props: ITransactionDetails) => {
             </Text>
           </Popover>
         </div>
-        <div className="col-span-4 text-right">
+        <div className="col-span-3 lg:col-span-4 text-right">
           <Text className="">Value</Text>
         </div>
       </div>

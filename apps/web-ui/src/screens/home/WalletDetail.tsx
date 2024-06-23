@@ -198,9 +198,15 @@ export const WalletDetail = () => {
             />
           );
         })}
+
         {receiveAddresses.length === 0 && (
-          <div className="h-48 flex items-center justify-center">
-            <Text>Loading receive addresses...</Text>
+          <div className="h-48 flex flex-col items-center justify-center">
+            {wallet.settings.addressFilters.utxoOnly && (
+              <Text>No receive UTXO's in wallet found</Text>
+            )}
+            {!wallet.settings.addressFilters.utxoOnly && (
+              <Text>Loading receive addresses...</Text>
+            )}
           </div>
         )}
         <div className="p-2 bg-gray-50 border-b border-t">
@@ -241,8 +247,13 @@ export const WalletDetail = () => {
           );
         })}
         {changeAddresses.length === 0 && (
-          <div className="h-48 flex items-center justify-center">
-            <Text>Loading change addresses...</Text>
+          <div className="h-48 flex flex-col items-center justify-center">
+            {wallet.settings.addressFilters.utxoOnly && (
+              <Text>No change UTXO's in wallet found</Text>
+            )}
+            {!wallet.settings.addressFilters.utxoOnly && (
+              <Text>Loading change addresses...</Text>
+            )}
           </div>
         )}
       </div>
