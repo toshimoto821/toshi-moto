@@ -263,6 +263,13 @@ export const appMachine = setup({
           };
         }
       | {
+          type: "APP_MACHINE_ARCHIVE_WALLET";
+          data: {
+            walletId: string;
+            archive: boolean;
+          };
+        }
+      | {
           type: "APP_MACHINE_UPDATE_CHART_RANGE_BY_DATE";
           data: { chartStartDate: number; chartEndDate: number };
         }
@@ -1560,6 +1567,21 @@ export const appMachine = setup({
             ...meta,
           };
           // return context.meta;
+        },
+      }),
+    },
+    APP_MACHINE_ARCHIVE_WALLET: {
+      actions: assign({
+        btcWallets: ({ context, event }) => {
+          return context.btcWallets.map((wallet) => {
+            if (wallet.id === event.data.walletId) {
+              return {
+                ...wallet,
+                archived: event.data.archive,
+              };
+            }
+            return wallet;
+          });
         },
       }),
     },

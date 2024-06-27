@@ -347,6 +347,21 @@ export const useWallets = () => {
         },
       });
     },
+    archiveWallet({
+      walletId,
+      archive,
+    }: {
+      walletId: string;
+      archive: boolean;
+    }) {
+      appRef.send({
+        type: "APP_MACHINE_ARCHIVE_WALLET",
+        data: {
+          walletId,
+          archive,
+        },
+      });
+    },
   };
 
   const toRef = useRef<NodeJS.Timeout | null>(null);

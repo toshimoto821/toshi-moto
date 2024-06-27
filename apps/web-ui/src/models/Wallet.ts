@@ -9,6 +9,7 @@ export type IWalletInput = {
   name: string;
   id: string;
   color: string;
+  archived: boolean;
   utxos?: Record<string, IUtxoInput>; // @deprecated
   xpubs?: Record<string, IXpubInput>;
   addresses: Record<string, IUtxoInput>;
@@ -98,6 +99,7 @@ const defaultSettings: IWalletSettings = {
 };
 
 export class Wallet {
+  archived: boolean;
   name: string;
   id: string;
   color: string;
@@ -128,6 +130,7 @@ export class Wallet {
     this.accountType = data.accountType;
     this.refreshedAt = data.refreshedAt;
     this._earliestTxDate = data.earliestTxDate;
+    this.archived = data.archived || false;
 
     this.receiveMeta = data.receiveMeta || {
       startIndex: 0,
@@ -237,6 +240,11 @@ export class Wallet {
     const val = (this.balance / totalBalance) * 100;
     if (isNaN(val)) return "0%";
     return val.toFixed(2) + "%";
+  }
+
+  get isArchived() {
+    console.log(this, "wallet");
+    return false;
   }
 
   /**

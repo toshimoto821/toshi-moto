@@ -61,7 +61,7 @@ export const WalletDetail = () => {
 
   useEffect(() => {
     const to = setTimeout(() => {
-      if (wallet) {
+      if (wallet && !wallet.archived) {
         // @todo this needs to cancel outstanding requests for
         // the same addresses in queue
         actions.refreshWallet({
@@ -128,6 +128,9 @@ export const WalletDetail = () => {
               }}
               onClickTrim={({ change }) => {
                 actions.trimWalletAddresses({ walletId: wallet.id, change });
+              }}
+              onClickArchive={(archive: boolean) => {
+                actions.archiveWallet({ walletId: wallet.id, archive });
               }}
               onClickToggleInputAddresses={({ selected }) => {
                 actions.selectWalletInputAddresses(wallet.id, selected);
