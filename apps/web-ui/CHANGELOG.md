@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.34...web-ui-1.3.0) (2024-06-27)
+
+
+### Features
+
+* adds archive ([19f73fb](https://github.com/toshimoto821/toshi-moto/commit/19f73fbce7bd279b0d0553e88cb4125566a50233))
+
 ## [1.2.34](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.33...web-ui-1.2.34) (2024-06-23)
 
 
