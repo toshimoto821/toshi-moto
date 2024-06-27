@@ -18,6 +18,7 @@ type IAddressFilterDropdown = {
     incrementOrDecrement?: number;
   }) => void;
   onClickTrim: ({ change }: { change: boolean }) => void;
+  onClickArchive: (archive: boolean) => void;
   onClickToggleInputAddresses: ({
     selected,
     filter,
@@ -36,6 +37,7 @@ export const AddressFilterDropdown = (props: IAddressFilterDropdown) => {
     onClickLoadNextAddresses,
     onClickTrim,
     onClickToggleInputAddresses,
+    onClickArchive,
     filters,
     wallet,
   } = props;
@@ -54,7 +56,7 @@ export const AddressFilterDropdown = (props: IAddressFilterDropdown) => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.Item onClick={onClickRefresh}>
-            Verify All
+            Refresh Addresses
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onSelect={() => {
@@ -163,6 +165,14 @@ export const AddressFilterDropdown = (props: IAddressFilterDropdown) => {
             }}
           >
             Edit
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
+            shortcut={wallet.archived ? "✓" : ""}
+            onSelect={() => {
+              onClickArchive(!wallet.archived);
+            }}
+          >
+            Archive
           </DropdownMenu.Item>
           <DropdownMenu.Item color="red" onSelect={onClickDelete}>
             Delete
