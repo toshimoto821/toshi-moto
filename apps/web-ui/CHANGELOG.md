@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.0...web-ui-1.3.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* attempt 1 ([cc17543](https://github.com/toshimoto821/toshi-moto/commit/cc175432e3916b270254c6777e448f035b5c8691))
+
 ## [1.3.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.34...web-ui-1.3.0) (2024-06-27)
 
 
