@@ -42,7 +42,7 @@ export const NetworkLog = (props: INetworkLog) => {
         body.style.height = "auto";
       }
     };
-  }, [expanded, setScrollYPos, scrollYPos]);
+  }, [expanded]);
 
   const requests = NetworkContext.useSelector((current) => {
     return current.context.requests.sort((a, b) => {
