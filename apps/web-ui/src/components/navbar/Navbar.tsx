@@ -325,8 +325,8 @@ export const Navbar = () => {
             >
               <Button variant="ghost">
                 <Text size="6" color="orange" onClick={toggleBalance}>
-                  {ui.balanceVisible ? padBtcZeros(data.totalBalance) : "My "}{" "}
-                  BTC
+                  {ui.balanceVisible ? padBtcZeros(data.totalBalance) : "My "}
+                  &nbsp;BTC
                 </Text>
               </Button>
             </div>
