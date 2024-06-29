@@ -19,11 +19,7 @@ import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
 import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
 import { cn } from "@root/lib/utils";
-import {
-  WalletUIContext,
-  AppContext,
-  BtcHistoricPriceContext,
-} from "@root/providers/AppProvider";
+import { WalletUIContext, AppContext } from "@root/providers/AppProvider";
 import { AppMachineMeta } from "@root/machines/appMachine";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 const colorScale = d3
