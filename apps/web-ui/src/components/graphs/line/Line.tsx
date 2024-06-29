@@ -1003,6 +1003,7 @@ export const Line = (props: ILine) => {
       const tomorrow = addDays(new Date(), 1);
 
       // Set time to 00:00:00 (start of the day)
+      // this may cause issues
       const tomorrowStart = startOfDay(tomorrow);
       const pastLineData = lineData.filter(
         (d) => d.x <= tomorrowStart.getTime()
