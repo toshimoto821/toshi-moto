@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.3.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.4...web-ui-1.3.5) (2024-06-29)
+
+
+### Bug Fixes
+
+* spacing ([930cb4e](https://github.com/toshimoto821/toshi-moto/commit/930cb4ec6e54b6e8233778eaaa7dc7a959e15fc4))
+* title spacing ([a4d3157](https://github.com/toshimoto821/toshi-moto/commit/a4d315755f73e2b00e67812ad42a0d8a611212eb))
+
 ## [1.3.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.3...web-ui-1.3.4) (2024-06-29)
 
 ## [1.3.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.2...web-ui-1.3.3) (2024-06-29)
