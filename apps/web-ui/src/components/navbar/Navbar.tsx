@@ -79,10 +79,6 @@ export const Navbar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
 
-  const prices = BtcHistoricPriceContext.useSelector(
-    (current) => current.context.prices || []
-  );
-
   const meta = AppContext.useSelector((current) => current.context.meta);
 
   const lineData = WalletUIContext.useSelector(
@@ -202,10 +198,17 @@ export const Navbar = () => {
     actions.updateMeta({ showPlotDots, showBtcAllocation, privatePrice });
   };
 
-  const firstDateAsNumber = prices.length ? prices[0][0] : meta.chartStartDate;
-  const lastDateAsNumber = prices.length
-    ? prices[prices.length - 1][0]
-    : meta.chartEndDate;
+  // This was an attempt to better align the dates of the chart data.
+  // however it was more confusing because the user would select
+  // a particular date with the picker and the chart would not match that date
+  // const firstDateAsNumber = prices.length ? prices[0][0] : meta.chartStartDate;
+  // const lastDateAsNumber = prices.length
+  //   ? prices[prices.length - 1][0]
+  //   : meta.chartEndDate;
+
+  const firstDateAsNumber = meta.chartStartDate;
+  const lastDateAsNumber = meta.chartEndDate;
+
   const firstDate = new Date(firstDateAsNumber);
   const lastDate = new Date(lastDateAsNumber);
 
