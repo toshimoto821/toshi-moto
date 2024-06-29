@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { format } from "date-fns";
 import { jade, ruby } from "@radix-ui/colors";
 import { findLastIndex } from "lodash";
+import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { AppContext } from "@root/providers/AppProvider";
 import { IPlotData } from "@root/machines/walletListUIMachine";
@@ -999,9 +1000,17 @@ export const Line = (props: ILine) => {
       });
 
     if (showBtcAllocation && btcPrice && lineData.length > 1) {
-      const now = new Date().getTime();
-      const pastLineData = lineData.filter((d) => d.x <= now);
-      const futureLineData = lineData.filter((d) => d.x > now);
+      const tomorrow = addDays(new Date(), 1);
+
+      // Set time to 00:00:00 (start of the day)
+      // this may cause issues
+      const tomorrowStart = startOfDay(tomorrow);
+      const pastLineData = lineData.filter(
+        (d) => d.x <= tomorrowStart.getTime()
+      );
+      const futureLineData = lineData.filter(
+        (d) => d.x > tomorrowStart.getTime()
+      );
       svg
         .append("path")
         .attr("fill", "none")
