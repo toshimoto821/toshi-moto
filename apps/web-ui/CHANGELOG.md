@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.2...web-ui-1.3.3) (2024-06-29)
+
+
+### Bug Fixes
+
+* btc allocation line ([981f709](https://github.com/toshimoto821/toshi-moto/commit/981f7090bcd7601a431f737244dc639c940880c8))
+
 ## [1.3.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.1...web-ui-1.3.2) (2024-06-29)
 
 
