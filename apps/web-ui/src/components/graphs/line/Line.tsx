@@ -1012,12 +1012,16 @@ export const Line = (props: ILine) => {
       });
 
     if (showBtcAllocation && btcPrice && lineData.length > 1) {
-      const pastLineData = lineData.filter(
-        (d) => d.x <= TOMORROW_START.getTime()
+      const firstFutureIndex = lineData.findIndex(
+        (d) => d.x > new Date().getTime()
       );
-      const futureLineData = lineData.filter(
-        (d) => d.x > TOMORROW_START.getTime()
-      );
+      let lastDate = new Date().getTime();
+      if (firstFutureIndex > -1) {
+        lastDate = lineData[firstFutureIndex].x;
+      }
+
+      const pastLineData = lineData.filter((d) => d.x <= lastDate);
+      const futureLineData = lineData.filter((d) => d.x >= lastDate);
       svg
         .append("path")
         .attr("fill", "none")
