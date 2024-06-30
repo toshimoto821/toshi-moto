@@ -1,4 +1,14 @@
 # UI Changelog
+## [1.3.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.6...web-ui-1.3.7) (2024-06-30)
+
+
+### Bug Fixes
+
+* adds 256 icon ([a8742d2](https://github.com/toshimoto821/toshi-moto/commit/a8742d26b5698edd1b7f616e900b3bf32b6baf4c))
+* adds svg ([4daadda](https://github.com/toshimoto821/toshi-moto/commit/4daadda2e62b69906ab8e119a82148677622ebc6))
+* adds toshi-icon ([de7abf2](https://github.com/toshimoto821/toshi-moto/commit/de7abf2a9c755e42775d74125e56ebbae13b8a55))
+* community proxy ([ea4ada8](https://github.com/toshimoto821/toshi-moto/commit/ea4ada8f0f650a1b7206ac066874f62eba00b10e))
+
 ## [1.3.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.5...web-ui-1.3.6) (2024-06-30)
 
 
