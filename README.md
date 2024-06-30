@@ -43,7 +43,7 @@ pnpm install
 pnpm dev
 ```
 
-# Umbrel
+## Umbrel
 
 I have yet to submit this app to the official Umbrel App Store. However, you can install it on an Umbrel using the a [toshi-collection community-app store](https://github.com/toshimoto821/toshimoto-app-store).
 
