@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.8...web-ui-1.3.9) (2024-06-30)
+
+
+### Bug Fixes
+
+* chart dots ([8d8f3af](https://github.com/toshimoto821/toshi-moto/commit/8d8f3af1a2eb6110f32d53dd210a635aa3db153f))
+
 ## [1.3.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.7...web-ui-1.3.8) (2024-06-30)
 
 
