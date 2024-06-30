@@ -94,6 +94,12 @@ export const Line = (props: ILine) => {
     (current) => current.context.meta.forcastModel
   );
 
+  const tomorrow = addDays(new Date(), 1);
+
+  // Set time to 00:00:00 (start of the day)
+  // this may cause issues
+  const TOMORROW_START = startOfDay(tomorrow);
+
   // create a ref to store the circle
   const pulsingCircleRef = useRef<d3.Selection<
     SVGCircleElement,
@@ -150,14 +156,21 @@ export const Line = (props: ILine) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
     top: 70,
-    right: 20,
+    right: 0,
     bottom: 10,
-    left: 20,
+    left: 0,
   };
+
+  const last = lineData[lineData.length - 1];
+  const tomorrowStart = TOMORROW_START.getTime();
+  if (!forcastModel && last?.x > tomorrowStart) {
+    last.x = tomorrowStart;
+  }
 
   const xDomain = lineData.map((d) => new Date(d.x)) as Date[];
   const ext = d3.extent(lineData, (d) => d[yValueToUse]!) as [number, number];
   const xRange = [margin.left, width - margin.right];
+
   const x = d3
     // may need to change to time scale
     .scaleUtc()
@@ -530,7 +543,6 @@ export const Line = (props: ILine) => {
         const [xAndYPotion] = d3.pointers(event, svg.node());
         const [xVal] = xAndYPotion;
 
-        if (xVal < 20) return;
         if (xVal > width) return;
 
         const x0 = x.invert(xVal);
@@ -1000,16 +1012,11 @@ export const Line = (props: ILine) => {
       });
 
     if (showBtcAllocation && btcPrice && lineData.length > 1) {
-      const tomorrow = addDays(new Date(), 1);
-
-      // Set time to 00:00:00 (start of the day)
-      // this may cause issues
-      const tomorrowStart = startOfDay(tomorrow);
       const pastLineData = lineData.filter(
-        (d) => d.x <= tomorrowStart.getTime()
+        (d) => d.x <= TOMORROW_START.getTime()
       );
       const futureLineData = lineData.filter(
-        (d) => d.x > tomorrowStart.getTime()
+        (d) => d.x > TOMORROW_START.getTime()
       );
       svg
         .append("path")
@@ -1245,9 +1252,11 @@ export const Line = (props: ILine) => {
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "100%",
+          maxWidth: "calc(100% - 40px)",
           height: "auto",
           fontSize: 10,
+          marginLeft: "20px",
+          marginRight: "20px",
         }}
         width={width}
         ref={svgRef}
