@@ -43,6 +43,18 @@ pnpm install
 pnpm dev
 ```
 
+# Umbrel
+
+I have yet to submit this app to the official Umbrel App Store. However, you can install it on an Umbrel using the a [toshi-collection community-app store](https://github.com/toshimoto821/toshimoto-app-store).
+
+copy and paste the url below to "Add" and then select "Open"
+
+```text
+https://github.com/toshimoto821/toshimoto-app-store
+```
+
+![community-app-store](./docs/assets/community-app-store.png)
+
 ## License
 
 This software is licensed under the PolyForm Noncommercial 1.0.0 license. TL;DR — You're free to use, fork, modify, and redistribute it for personal and nonprofit use under the same license.
