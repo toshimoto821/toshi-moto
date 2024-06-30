@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.7...web-ui-1.3.8) (2024-06-30)
+
+
+### Bug Fixes
+
+* name ([d6de1ff](https://github.com/toshimoto821/toshi-moto/commit/d6de1ff7fe245bc04677bd3296bba96a74674329))
+
 ## [1.3.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.6...web-ui-1.3.7) (2024-06-30)
 
 
