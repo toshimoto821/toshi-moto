@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.5...web-ui-1.3.6) (2024-06-30)
+
+
+### Bug Fixes
+
+* chart edges ([39324ff](https://github.com/toshimoto821/toshi-moto/commit/39324ff7c337af6346d217716c6e37c9c96db424))
+
 ## [1.3.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.4...web-ui-1.3.5) (2024-06-29)
 
 
