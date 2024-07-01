@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.11](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.10...web-ui-1.3.11) (2024-07-01)
+
+
+### Bug Fixes
+
+* adds default loader ([134391b](https://github.com/toshimoto821/toshi-moto/commit/134391b9bceaff4b10838abf240bc08d21a57d6a))
+
 ## [1.3.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.9...web-ui-1.3.10) (2024-07-01)
 
 
