@@ -15,6 +15,7 @@ import {
   getGroupKey,
   addTime,
   getDatesForChartGroup,
+  getRangeFromTime,
 } from "@components/graphs/graph-utils";
 
 type IUseChartData = {
@@ -115,6 +116,24 @@ export const useChartData = (opts: IUseChartData) => {
   }
 
   chartTimeframeGroup = chartTimeFrameGroupRef.current;
+
+  // if the time difference between last two prices and first
+  // two prices is different, it means that the range needs
+  // to be set on the first because we dont have the data
+  // for the last price (which is probably smaller)
+  if (prices.length > 4) {
+    const [firstDate] = prices[0];
+    const [secondDate] = prices[1];
+    const firstDiff = secondDate - firstDate;
+
+    const [sendToLastDate] = prices[prices.length - 2];
+    const [lastDate] = prices[prices.length - 1];
+    const lastDiff = lastDate - sendToLastDate;
+    if (lastDiff !== firstDiff) {
+      const range = getRangeFromTime(firstDiff);
+      chartTimeframeGroup = range;
+    }
+  }
 
   const selectedTxs =
     AppContext.useSelector((current) => {
