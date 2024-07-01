@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="margin: 0; padding: 0">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -12,10 +12,22 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Toshi Moto</title>
   </head>
-  <body class="bg-gray-100">
+  <body style="background-color: rgb(243, 244, 246); margin: 0; padding: 0">
     <div id="root">
-      <a href="/">Loading app...</a>
+      <div
+        style="
+          display: flex;
+          height: 100vh;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div>
+          <img width="388" height="388" src="/toshi.svg" />
+        </div>
+      </div>
     </div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
