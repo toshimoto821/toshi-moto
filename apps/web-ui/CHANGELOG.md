@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.3.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.9...web-ui-1.3.10) (2024-07-01)
+
+
+### Bug Fixes
+
+* tx dots for bad time ranges ([4b3b6fc](https://github.com/toshimoto821/toshi-moto/commit/4b3b6fc4dece49f6734840280371e1e44137696c))
+
 ## [1.3.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.8...web-ui-1.3.9) (2024-06-30)
 
 
