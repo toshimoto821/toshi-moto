@@ -18,7 +18,7 @@ export const Loading = ({ isLoading, children }: ILoading) => {
       setLoadingState("animating-off");
       setTimeout(() => {
         setLoadingState("hidden");
-      }, 1000);
+      }, 3000);
     }
   }, [isLoading]);
 
@@ -27,9 +27,10 @@ export const Loading = ({ isLoading, children }: ILoading) => {
       state === "shown" || state === "animating-on" || state === "animating-off"
     );
   };
+  const isLoadingOrFadingOut = shouldShow(loadingState);
   return (
     <>
-      {shouldShow(loadingState) && (
+      {isLoadingOrFadingOut && (
         <div
           className={cn(
             "fixed z-[100] flex justify-center items-center h-screen w-screen  bg-gray-100",
@@ -48,7 +49,8 @@ export const Loading = ({ isLoading, children }: ILoading) => {
         </div>
       )}
 
-      {children}
+      {(loadingState === "hidden" || loadingState === "animating-off") &&
+        children}
     </>
   );
 };
