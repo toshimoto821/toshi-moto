@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.3.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.12...web-ui-1.3.13) (2024-07-03)
+
+
+### Bug Fixes
+
+* loading ([e83452f](https://github.com/toshimoto821/toshi-moto/commit/e83452f9e6c06304dbe41c84fdd3eeeddf4ac38e))
+* loading ([4f70557](https://github.com/toshimoto821/toshi-moto/commit/4f7055789fee3e66ea8f00297b952870cfe49d9e))
+
 ## [1.3.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.11...web-ui-1.3.12) (2024-07-03)
 
 
