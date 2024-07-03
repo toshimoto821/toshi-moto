@@ -54,8 +54,11 @@ export const AppLoader = () => {
     });
   }, [send]);
 
-  if (!willBeReady) {
-    return <Loading />;
-  }
-  return <App />;
+  return (
+    <>
+      <Loading isLoading={!willBeReady}>
+        <App />
+      </Loading>
+    </>
+  );
 };
