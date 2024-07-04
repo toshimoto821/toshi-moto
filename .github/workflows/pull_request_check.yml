@@ -37,6 +37,7 @@ jobs:
         with:
           start: npx nx run web-ui-e2e:e2e-ci
           browser: chrome
+          install: false
 
       # this may not be needed. the build is run when docker is built
       # - name: Build
