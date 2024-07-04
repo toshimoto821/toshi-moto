@@ -38,6 +38,9 @@ jobs:
         run: |
           npx nx run web-ui-e2e:e2e-ci
 
+      - name: check directory
+        run: ls -l dist/cypress/apps/web-ui-e2e/screenshots/
+
       - name: Upload Cypress Screenshots
         # if: failure() # This ensures screenshots are uploaded only if the previous step fails
         uses: actions/upload-artifact@v4
