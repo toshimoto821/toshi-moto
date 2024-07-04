@@ -1,0 +1,1 @@
+npx nx run web-ui-e2e:e2e-ci
