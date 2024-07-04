@@ -62,7 +62,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cypress-screenshots
-          path: .
+          path: screenshots
+
+      - name: Display structure of downloaded files
+        run: ls -R screenshots
 
       - name: cypress-screenshots/Post comment to PR
         uses: peter-evans/create-or-update-comment@v1
@@ -71,4 +74,4 @@ jobs:
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ![Screenshot](artifact://cypress-screenshots/web-ui-e2e%20--%20Hero.png)
+            ![Screenshot](artifact://screenshots/web-ui-e2e%20--%20Hero.png)
