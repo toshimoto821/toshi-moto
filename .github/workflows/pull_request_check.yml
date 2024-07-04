@@ -44,7 +44,7 @@ jobs:
         with:
           name: cypress-screenshots
           path: |
-            ./dist/cypress/apps/web-ui-e2e/screenshots/**/* # Update this path to where your Cypress screenshots are stored
+            dist/cypress/apps/web-ui-e2e/screenshots/ # Update this path to where your Cypress screenshots are stored
           #if-no-files-found: ignore # This option will prevent the step from failing if no screenshots are found
 
       # this may not be needed. the build is run when docker is built
