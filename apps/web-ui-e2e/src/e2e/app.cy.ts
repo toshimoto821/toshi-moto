@@ -1,11 +1,8 @@
 import { getPrice } from "../support/app.po";
 
 describe("web-ui-e2e", () => {
-  // beforeEach(() => {
-
-  // });
-
-  it("should display welcome message", () => {
+  it("pricing", () => {
+    cy.viewport(1280, 720);
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
         usd: 57482.36,
@@ -24,6 +21,8 @@ describe("web-ui-e2e", () => {
     const p = getPrice();
     // check that p equals 57482.36
     // const v = p.eq("57482.36");
+    p.should("be.visible");
     p.contains("$57,482.36");
+    p.screenshot();
   });
 });

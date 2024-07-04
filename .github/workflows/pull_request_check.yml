@@ -38,6 +38,15 @@ jobs:
         run: |
           npx nx run web-ui-e2e:e2e-ci
 
+      - name: Upload Cypress Screenshots
+        # if: failure() # This ensures screenshots are uploaded only if the previous step fails
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: |
+            dist/cypress/apps/web-ui-e2e/screenshots/**/* # Update this path to where your Cypress screenshots are stored
+          if-no-files-found: ignore # This option will prevent the step from failing if no screenshots are found
+
       # this may not be needed. the build is run when docker is built
       # - name: Build
       #   run: |

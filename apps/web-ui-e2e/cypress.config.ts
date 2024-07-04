@@ -7,12 +7,15 @@ export default defineConfig({
     ...nxE2EPreset(__filename, {
       cypressDir: "src",
       bundler: "vite",
+
       webServerCommands: {
         default: "nx run web-ui:serve:cy",
         // production: "nx run web-ui:preview",
       },
+
       ciWebServerCommand: "nx run web-ui:serve-static:cy",
     }),
+    browser: "chrome",
     baseUrl: "http://localhost:9229",
   },
 });
