@@ -32,7 +32,13 @@ jobs:
       - name: Tests
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
+      - name: Cypress Run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npx nx run web-ui-e2e:e2e-ci
+          browser: chrome
+
       # this may not be needed. the build is run when docker is built
-      - name: Build
-        run: |
-          npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+      # - name: Build
+      #   run: |
+      #     npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
