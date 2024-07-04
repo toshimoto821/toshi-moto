@@ -56,7 +56,6 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     needs: validate-pr
-
     steps:
       - name: Download screenshot artifact
         uses: actions/download-artifact@v2
