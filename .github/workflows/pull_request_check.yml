@@ -53,24 +53,3 @@ jobs:
       # - name: Build
       #   run: |
       #     npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
-  comment:
-    runs-on: ubuntu-latest
-    needs: validate-pr
-    steps:
-      - name: Download screenshot artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cypress-screenshots
-          path: .
-
-      - name: Display structure of downloaded files
-        run: ls -R .
-
-      - name: cypress-screenshots/Post comment to PR
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ![Screenshot](artifact://web-ui-e2e%20--%20Hero.png)

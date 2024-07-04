@@ -17,5 +17,6 @@ export default defineConfig({
     }),
     browser: "chrome",
     baseUrl: "http://localhost:9229",
+    screenshotsFolder: "cypress/screenshots",
   },
 });
