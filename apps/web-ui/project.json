@@ -6,40 +6,59 @@
   "tags": [],
   "targets": {
     "serve": {
-      "executor": "@nx/js:node",
+      "executor": "@nx/vite:preview-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "web-ui:build"
+        "buildTarget": "web-ui:build",
+        "envFile": "apps/web-ui/.env",
+        "port": 9229
       },
       "configurations": {
         "development": {
           "buildTarget": "web-ui:build:development"
         },
+        "cy": {
+          "buildTarget": "web-ui:build:cy"
+        },
         "production": {
           "buildTarget": "web-ui:build:production"
         }
-      }
+      },
+      "dependsOn": ["bitcoinjs:build"]
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "web-ui:build",
+        "port": 9229
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "web-ui:build:development"
+        },
+        "cy": {
+          "buildTarget": "web-ui:build:cy"
+        },
+        "production": {
+          "buildTarget": "web-ui:build:production"
+        }
+      },
+      "dependsOn": ["bitcoinjs:build"]
     },
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/vite:build",
       "options": {
-        "commands": [
-          "export VITE_TOSHI_MOTO_XPUB=${VITE_TOSHI_MOTO_XPUB}",
-          "export VITE_COINGECKO_PRICE_API_URL=/api/prices/simple",
-          "export VITE_COINGECKO_API_URL=/api/prices/range",
-          "export NODE_ENV=production",
-          "export VITE_REST_TIME_BETWEEN_REQUESTS=0",
-          "export VITE_MAX_CONCURRENT_REQUESTS=8",
-          "export VITE_BITCOIN_NETWORK=mainnet",
-          "export VITE_BITCOIN_NODE_URL=http://umbrel.local:3006",
-          "tsc",
-          "vite build"
-        ],
-        "cwd": "apps/web-ui",
-        "parallel": false
+        "outputPath": "dist/apps/web-ui",
+        "configFile": "./apps/web-ui/vite.config.ts"
+      },
+      "configurations": {
+        "cy": {
+          "envFile": "apps/web-ui/.env.cy",
+          "configFile": "./apps/web-ui/vite.config.ts"
+        }
       }
     },
-    "build:umbrel": {
+    "build-umbrel": {
       "executor": "nx:run-commands",
       "options": {
         "commands": ["tsc", "vite build"],
