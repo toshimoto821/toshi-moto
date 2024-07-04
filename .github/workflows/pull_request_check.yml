@@ -46,10 +46,29 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
-          path: dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/ # Update this path to where your Cypress screenshots are stored
+          path: dist/cypress/apps/web-ui-e2e/screenshots/**/* # Update this path to where your Cypress screenshots are stored
           #if-no-files-found: ignore # This option will prevent the step from failing if no screenshots are found
 
       # this may not be needed. the build is run when docker is built
       # - name: Build
       #   run: |
       #     npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+  comment:
+    runs-on: ubuntu-latest
+    needs: validate-pr
+
+    steps:
+      - name: Download screenshot artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: .
+
+      - name: cypress-screenshots/Post comment to PR
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ![Screenshot](artifact://cypress-screenshots/web-ui-e2e%20--%20Hero.png)
