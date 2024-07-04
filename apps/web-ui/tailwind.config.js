@@ -3,13 +3,7 @@ import { mauve, violet } from "@radix-ui/colors";
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: [
-    "./index.html",
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
+  content: ["./apps/web-ui/index.html", "./apps/web-ui/src/**/*.{ts,tsx}"],
   theme: {
     container: {
       center: true,

@@ -237,7 +237,11 @@ export const Navbar = () => {
         >
           <div className="md:container md:mx-auto flex px-6 pt-6 backface-visibility-none">
             <div className="flex flex-col text-right">
-              <Text className="font-bold" style={{ color: fontColor }}>
+              <Text
+                data-testid="btc-price"
+                className="font-bold"
+                style={{ color: fontColor }}
+              >
                 {priceToShow > 0 &&
                   currencySymbol +
                     (netAssetValue

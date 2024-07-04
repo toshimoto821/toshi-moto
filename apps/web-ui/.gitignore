@@ -29,5 +29,4 @@ storybook-static
 states/*
 
 .env
-.env.umbrel
-
+.env.*
