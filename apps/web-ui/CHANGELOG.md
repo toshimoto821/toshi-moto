@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.4.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.0...web-ui-1.4.1) (2024-07-04)
+
+
+### Bug Fixes
+
+* cypress ([579ef67](https://github.com/toshimoto821/toshi-moto/commit/579ef67e52af832810b5f491327e0faa30942776))
+
 ## [1.4.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.13...web-ui-1.4.0) (2024-07-04)
 
 
