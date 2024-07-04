@@ -6,7 +6,7 @@
   "tags": [],
   "targets": {
     "serve": {
-      "executor": "@nx/vite:preview-server",
+      "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "web-ui:build",
