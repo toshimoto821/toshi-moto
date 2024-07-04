@@ -74,4 +74,4 @@ jobs:
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ![Screenshot](artifact://screenshots/web-ui-e2e%20--%20Hero.png)
+            ![Screenshot](artifact://web-ui-e2e%20--%20Hero.png)
