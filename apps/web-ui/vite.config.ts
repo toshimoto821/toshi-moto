@@ -101,14 +101,14 @@ export default defineConfig({
   // worker: {
   //   plugins: [nxViteTsPaths()],
   // },
-  build: {
-    outDir: "../../dist/apps/web-ui",
-    emptyOutDir: true,
-    reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
+  // build: {
+  //   outDir: "../../dist/apps/web-ui",
+  //   emptyOutDir: true,
+  //   reportCompressedSize: true,
+  //   commonjsOptions: {
+  //     transformMixedEsModules: true,
+  //   },
+  // },
   test: {
     globals: true,
     environment: "happy-dom",

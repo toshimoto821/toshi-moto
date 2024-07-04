@@ -33,6 +33,8 @@ jobs:
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
       - name: Cypress Run
+        env:
+          CYPRESS_RUNNING: true
         run: |
           npx nx run web-ui-e2e:e2e-ci
 
