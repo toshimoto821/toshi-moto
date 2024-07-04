@@ -1,7 +1,7 @@
 import { getPrice } from "../support/app.po";
 
 describe("web-ui-e2e", () => {
-  it("pricing", () => {
+  it("Hero", () => {
     cy.viewport(1280, 720);
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
@@ -23,6 +23,6 @@ describe("web-ui-e2e", () => {
     // const v = p.eq("57482.36");
     p.should("be.visible");
     p.contains("$57,482.36");
-    p.screenshot();
+    cy.screenshot({ capture: "viewport" });
   });
 });
