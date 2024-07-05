@@ -11,14 +11,15 @@
       "options": {
         "buildTarget": "web-ui:build",
         "envFile": "apps/web-ui/.env",
-        "port": 9229
+        "port": 9330
       },
       "configurations": {
         "development": {
           "buildTarget": "web-ui:build:development"
         },
         "cy": {
-          "buildTarget": "web-ui:build:cy"
+          "buildTarget": "web-ui:build:cy",
+          "hmr": false
         },
         "production": {
           "buildTarget": "web-ui:build:production"
@@ -30,7 +31,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "web-ui:build",
-        "port": 9229
+        "port": 9330
       },
       "configurations": {
         "development": {
@@ -54,7 +55,8 @@
       "configurations": {
         "cy": {
           "envFile": "apps/web-ui/.env.cy",
-          "configFile": "./apps/web-ui/vite.config.ts"
+          "configFile": "./apps/web-ui/vite.config.ts",
+          "hmr": false
         }
       }
     },
