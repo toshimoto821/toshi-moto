@@ -85,8 +85,8 @@ jobs:
         run: echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${{ env.COMMIT_HASH }}" >> $GITHUB_ENV
 
       - name: Comment on PR
-        uses: ./.github/scripts/comment-on-pr
-        with:
+        run: node .github/scripts/comment-on-pr
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_BODY: "Images updated. Cypress Status: ${{ env.cypress_failed }} [Check them out](${{ env.COMMIT_URL }})!"
 
