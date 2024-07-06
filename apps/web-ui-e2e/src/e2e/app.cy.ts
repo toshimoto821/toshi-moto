@@ -17,10 +17,10 @@ describe("web-ui-e2e", () => {
         last_updated_at: 1720107348,
       },
     }).as("getPrice");
-    cy.visit("/");
+    cy.navigate("/");
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
-    cy.wait("@getPrice", { timeout: 10000 });
+    // cy.wait("@getPrice", { timeout: 20000 });
     // .then((interception) => {
     //   console.log(interception.response.body);
     // });
@@ -32,6 +32,7 @@ describe("web-ui-e2e", () => {
     p.contains("$57,482.36");
     cy.screenshot({ capture: "viewport" });
   });
+
   it.only("should import the wallet", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
@@ -48,16 +49,21 @@ describe("web-ui-e2e", () => {
     cy.intercept("GET", "**/api/prices/range*", range).as("getRange");
 
     // https://api.toshimoto.app/api/prices/range?vs_currency=usd&from=1562385600&to=1720274400&group_by=1W
+
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
 
-    cy.scrollTo(0, 120);
-    // cy.get("[data-testid=btc-wallet-balance]", {
-    //   timeout: 30000,
-    // }).should("contain", "0.00,100,000");
     cy.visit("/#/toshi-moto");
+
+    cy.scrollTo(0, 120);
+    cy.get("[data-testid=btc-wallet-balance]", {
+      timeout: 60000,
+    }).should("contain", "0.00,100,000");
+
+    cy.visit("/#/toshi-moto");
+
     // eslint-disable-next-line
-    cy.wait(30000);
-    cy.scrollTo(0, 400);
+    // cy.wait(3000);
+    cy.scrollTo(0, 500);
     cy.screenshot({ capture: "viewport" });
   });
 });
