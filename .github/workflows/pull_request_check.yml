@@ -40,6 +40,7 @@ jobs:
           echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env.cy
           echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env.cy
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env.cy
+          echo "CYPRESS_RUNNING=true" >> apps/web-ui/.env.cy
       - name: Cypress Run
         id: cypress_run
         env:
