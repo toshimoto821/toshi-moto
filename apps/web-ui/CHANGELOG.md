@@ -1,4 +1,15 @@
 # UI Changelog
+## [1.4.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.1...web-ui-1.4.2) (2024-07-06)
+
+
+### Bug Fixes
+
+* ci issues ([f32b61b](https://github.com/toshimoto821/toshi-moto/commit/f32b61bb85bc1fd980ec135a71d9d106ffb86388))
+* price ([f94e52c](https://github.com/toshimoto821/toshi-moto/commit/f94e52c4496183b43264f6da6098e94bf235281e))
+* removes env file ([6fe4d0f](https://github.com/toshimoto821/toshi-moto/commit/6fe4d0f08c91f7c5b7d75470b9ebdddd005f3f04))
+* updates ci ([f692f72](https://github.com/toshimoto821/toshi-moto/commit/f692f72a4de312a3bf2d90c4d21941e7dcb9a5db))
+* writes env ([ca30a64](https://github.com/toshimoto821/toshi-moto/commit/ca30a6458eb2c54660d7d0dd8ba06522588025aa))
+
 ## [1.4.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.0...web-ui-1.4.1) (2024-07-04)
 
 
