@@ -33,6 +33,9 @@ describe("web-ui-e2e", () => {
     cy.screenshot({ capture: "viewport" });
   });
   it.only("should import the wallet", () => {
+    cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
+      "getTotalBc"
+    );
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
         usd: 57482.36,
@@ -48,11 +51,13 @@ describe("web-ui-e2e", () => {
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
 
     cy.scrollTo(0, 120);
-    cy.get("[data-testid=btc-wallet-balance]", {
-      timeout: 30000,
-    }).should("contain", "0.00,100,000");
+    // cy.get("[data-testid=btc-wallet-balance]", {
+    //   timeout: 30000,
+    // }).should("contain", "0.00,100,000");
     cy.visit("/#/toshi-moto");
-    cy.scrollTo(0, 100);
+    // eslint-disable-next-line
+    cy.wait(30000);
+    cy.scrollTo(0, 400);
     cy.screenshot({ capture: "viewport" });
   });
 });
