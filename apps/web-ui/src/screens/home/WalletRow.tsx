@@ -48,6 +48,7 @@ export const WalletRow = ({
           </div>
           <div>
             <Text
+              data-testid="btc-wallet-balance"
               className="font-mono text-gray-400"
               color="orange"
               style={{ color: wallet.color }}

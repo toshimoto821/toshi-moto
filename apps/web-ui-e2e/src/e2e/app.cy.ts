@@ -1,6 +1,11 @@
 import { getPrice } from "../support/app.po";
+import localForage from "localforage";
 
 describe("web-ui-e2e", () => {
+  beforeEach(() => {
+    localForage.clear();
+  });
+
   it("Hero", () => {
     cy.viewport(1280, 720);
     cy.intercept("GET", "**/api/prices/simple*", {
@@ -23,6 +28,15 @@ describe("web-ui-e2e", () => {
     // const v = p.eq("57482.36");
     p.should("be.visible");
     p.contains("$57,482.36");
+    cy.screenshot({ capture: "viewport" });
+  });
+  it.only("should import the wallet", () => {
+    cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
+    cy.get("[data-testid=btc-wallet-balance]", {
+      timeout: 10000,
+    }).should("contain", "0.00,100,000");
+    cy.scrollTo(0, 100);
+
     cy.screenshot({ capture: "viewport" });
   });
 });

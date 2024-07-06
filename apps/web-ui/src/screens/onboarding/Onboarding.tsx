@@ -108,7 +108,11 @@ export const Onboarding = () => {
             <div className="my-8">
               <Separator size="4" />
             </div>
-            <Button disabled={isAnimating} onClick={handleClickImport}>
+            <Button
+              data-testid="import-toshi-moto-wallet"
+              disabled={isAnimating}
+              onClick={handleClickImport}
+            >
               <span id="rewardId" />
               Import Toshi Moto Wallet
             </Button>
