@@ -8,7 +8,7 @@ import svgr from "vite-plugin-svgr";
 import { replaceCodePlugin } from "vite-plugin-replace";
 import packageJson from "./package.json";
 
-const isCypressRunning = process.env.CYPRESS_RUNNING;
+const isCypressRunning = process.env.CI;
 // https://vitejs.dev/config/
 export default defineConfig({
   root: __dirname,

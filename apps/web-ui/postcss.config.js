@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-const isCI = process.env.CYPRESS_RUNNING === "true";
+const isCI = process.env.CI === "true";
 
 export default {
   plugins: {
