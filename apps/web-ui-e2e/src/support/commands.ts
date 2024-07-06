@@ -12,9 +12,11 @@ import { getTxsResponse } from "../fixtures/txs";
 // ***********************************************
 
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => {
-//   console.log("Custom command example: Login", email, password);
-// });
+Cypress.Commands.add("navigate", (url) => {
+  cy.window().then((win) => {
+    win.history.pushState({}, "", url);
+  });
+});
 
 Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
   // mocks
@@ -28,7 +30,6 @@ Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
     if (/txs$/.test(url.pathname)) {
       // @todo stub
       if (initAddress === address) {
-        cy.debug();
         const resp = getTxsResponse({ address, sum: 100000 });
         req.reply(resp);
       } else {
@@ -48,21 +49,11 @@ Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
       req.reply(resp);
     }
   }).as("getAddress");
-
-  cy.intercept("GET", "**/api/prices/simple*", {
-    bitcoin: {
-      usd: 57482.36,
-      usd_24h_vol: 16690539371.276321,
-      usd_24h_change: -4.674755682132398,
-      last_updated_at: 1720107348,
-    },
-  }).as("getPrice");
   cy.visit("/");
+
   cy.wait("@getPrice", { timeout: 10000 });
   const btn = getToshiBtn();
   btn.click();
-  // cy.url().debug();
-  console.log(cy.url());
 
   // .then((interception) => {
   //   console.log(interception.response.body);
