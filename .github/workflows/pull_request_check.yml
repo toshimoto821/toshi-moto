@@ -63,11 +63,14 @@ jobs:
             echo "cypress_failed=false" >> $GITHUB_ENV
           fi
 
+      - name: Git status
+        run: |
+          git status
+
       - name: Configure git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git status
 
       - name: Updating screenshots
         run: |
@@ -85,7 +88,7 @@ jobs:
         run: echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${{ env.COMMIT_HASH }}" >> $GITHUB_ENV
 
       - name: Comment on PR
-        run: node .github/scripts/comment-on-pr
+        run: node .github/scripts/comment-on-pr.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_BODY: "Images updated. Cypress Status: ${{ env.cypress_failed }} [Check them out](${{ env.COMMIT_URL }})!"
