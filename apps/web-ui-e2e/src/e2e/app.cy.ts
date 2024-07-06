@@ -33,7 +33,7 @@ describe("web-ui-e2e", () => {
     cy.screenshot({ capture: "viewport" });
   });
 
-  it.only("should import the wallet", () => {
+  it("should import the wallet", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
