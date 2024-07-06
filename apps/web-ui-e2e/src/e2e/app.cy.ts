@@ -33,7 +33,7 @@ describe("web-ui-e2e", () => {
   it.only("should import the wallet", () => {
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
     cy.get("[data-testid=btc-wallet-balance]", {
-      timeout: 20000,
+      timeout: 10000,
     }).should("contain", "0.00,100,000");
     cy.scrollTo(0, 100);
 
