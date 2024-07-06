@@ -22,6 +22,7 @@ import { cn } from "@root/lib/utils";
 import { WalletUIContext, AppContext } from "@root/providers/AppProvider";
 import { AppMachineMeta } from "@root/machines/appMachine";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
+
 const colorScale = d3
   .scaleLinear<string>()
   .domain([-5, 0, 5])
