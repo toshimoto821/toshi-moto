@@ -1,4 +1,11 @@
 # UI Changelog
+## [1.4.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.2...web-ui-1.4.3) (2024-07-06)
+
+
+### Bug Fixes
+
+* build umbrel ([99d0b9d](https://github.com/toshimoto821/toshi-moto/commit/99d0b9d7b9db04f06b28ca8daf8d374045bbdc59))
+
 ## [1.4.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.1...web-ui-1.4.2) (2024-07-06)
 
 
