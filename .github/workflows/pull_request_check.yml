@@ -66,6 +66,14 @@ jobs:
       - name: Git status
         run: |
           git status
+      - name: Check if files have changed in the specified directory
+        id: file_check
+        run: |
+          if [[ -n $(git status --porcelain apps/web-ui-e2e/cypress/screenshots/) ]]; then
+            echo "CHANGED=true" >> $GITHUB_ENV
+          else
+            echo "CHANGED=false" >> $GITHUB_ENV
+          fi
 
       - name: Configure git
         run: |
@@ -73,12 +81,14 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Updating screenshots
+        if: env.CHANGED == 'true'
         run: |
           git add apps/web-ui-e2e/cypress/screenshots
           git commit -m "chore(pipeline): update images"
           echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: GitHub Push
+        if: env.CHANGED == 'true'
         uses: ad-m/github-push-action@v0.8.0
         with:
           branch: ${{ github.head_ref }}
@@ -87,12 +97,21 @@ jobs:
       - name: Construct Commit URL
         run: echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${{ env.COMMIT_HASH }}" >> $GITHUB_ENV
 
+      - name: Set COMMENT_BODY based on condition
+        id: set_comment
+        run: |
+          if [ "$CHANGED" = "true" ]; then
+            echo "COMMENT_BODY=Images updated. Cypress Status: ${{ env.cypress_failed }} [Check them out](${{ env.COMMIT_URL }})!" >> $GITHUB_ENV
+          else
+            echo "COMMENT_BODY=No image changes" >> $GITHUB_ENV
+          fi
+
       - name: Comment on PR
         run: node .github/scripts/comment-on-pr.mjs
         env:
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_BODY: "Images updated. Cypress Status: ${{ env.cypress_failed }} [Check them out](${{ env.COMMIT_URL }})!"
+          COMMENT_BODY: "${{ env.COMMENT_BODY }}"
 
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
