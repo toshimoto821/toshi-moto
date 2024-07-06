@@ -8,7 +8,9 @@ describe("web-ui-e2e", () => {
   });
 
   it("Hero", () => {
-    cy.viewport(1280, 720);
+    cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
+      "getTotalBc"
+    );
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
         usd: 57482.36,
@@ -16,15 +18,16 @@ describe("web-ui-e2e", () => {
         usd_24h_change: -4.674755682132398,
         last_updated_at: 1720107348,
       },
-    }).as("getPrice");
-    cy.navigate("/");
+    }).as("getPrice1");
+    cy.intercept("GET", "**/api/prices/range*", range).as("getRange1");
+    cy.visit("/");
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
-    cy.wait("@getPrice", { timeout: 20000 });
+    cy.wait("@getPrice1", { timeout: 20000 });
     // .then((interception) => {
     //   console.log(interception.response.body);
     // });
-    // Function helper example, see `../support/app.po.ts` file
+
     const p = getPrice();
 
     p.should("be.visible");
@@ -47,8 +50,6 @@ describe("web-ui-e2e", () => {
 
     cy.intercept("GET", "**/api/prices/range*", range).as("getRange");
 
-    // https://api.toshimoto.app/api/prices/range?vs_currency=usd&from=1562385600&to=1720274400&group_by=1W
-
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
 
     cy.visit("/#/toshi-moto");
@@ -60,9 +61,6 @@ describe("web-ui-e2e", () => {
 
     cy.visit("/#/toshi-moto");
 
-    // eslint-disable-next-line
-    // cy.wait(3000);
-    cy.scrollTo(0, 500);
     cy.screenshot({ capture: "viewport" });
   });
 });

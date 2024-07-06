@@ -5,6 +5,5 @@
 declare namespace Cypress {
   interface Chainable<Subject = any> {
     actAsToshi(address?: string): Chainable<Subject>;
-    navigate(url: string): Chainable<Subject>;
   }
 }

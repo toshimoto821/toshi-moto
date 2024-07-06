@@ -11,13 +11,6 @@ import { getTxsResponse } from "../fixtures/txs";
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-// -- This is a parent command --
-Cypress.Commands.add("navigate", (url) => {
-  cy.window().then((win) => {
-    win.history.pushState({}, "", url);
-  });
-});
-
 Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
   // mocks
   // https://mempool.space/api/address/bc1qaql0jc6v3qutqkge38wynzr39xfdk7jeet6eeh?ttl=86400000
