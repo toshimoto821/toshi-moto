@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "18"
 
+      - name: List Files (Debug)
+        run: ls -R .github/workflows
+
       - name: Install pnpm
         run: npm install -g pnpm
 
