@@ -57,7 +57,7 @@ jobs:
       - name: Updating screenshots
         run: |
           git add .
-          git commit -m "chore(pipeline): Update images"
+          git commit -m "chore(pipeline): update images"
           echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: GitHub Push
