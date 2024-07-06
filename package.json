@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@actions/github": "^6.0.0",
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
     "@jscutlery/semver": "^5.2.2",
