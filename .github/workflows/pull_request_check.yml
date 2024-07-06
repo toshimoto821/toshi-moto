@@ -23,12 +23,6 @@ jobs:
       - name: List Files (Debug)
         run: ls -R .github/workflows
 
-      - name: Call cypress workflow
-        uses: ./.github/workflows/cypress_screenshots.yml
-        with:
-          branch: ${{ github.head_ref }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Install pnpm
         run: npm install -g pnpm
 
@@ -40,6 +34,12 @@ jobs:
 
       - name: Tests
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+
+      - name: Call cypress workflow
+        uses: ./.github/actions/cypress_screenshots
+        with:
+          branch: ${{ github.head_ref }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
