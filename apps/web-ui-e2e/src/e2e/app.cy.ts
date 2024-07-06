@@ -40,7 +40,7 @@ describe("web-ui-e2e", () => {
       },
     }).as("getPrice");
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
-    cy.scrollTo(0, 100);
+    cy.scrollTo(0, 120);
     cy.get("[data-testid=btc-wallet-balance]", {
       timeout: 20000,
     }).should("contain", "0.00,100,000");
