@@ -2,13 +2,12 @@
 import { getOctokit, context } from "@actions/github";
 import * as core from "@actions/core";
 
-const githubToken = core.getInput("github-token");
+const githubToken = process.env.GITHUB_TOKEN;
 const octokit = getOctokit(githubToken);
 
 const issueComment = context.issue;
 const commentBody =
-  core.getInput("comment-body") ||
-  "Automated comment from GitHub Actions workflow.";
+  process.env.COMMENT_BODY || "Automated comment from GitHub Actions workflow.";
 
 await octokit.rest.issues.createComment({
   ...issueComment,
