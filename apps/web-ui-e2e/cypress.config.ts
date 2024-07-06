@@ -9,7 +9,7 @@ export default defineConfig({
       bundler: "vite",
 
       webServerCommands: {
-        default: "nx run web-ui:serve:cy",
+        default: "npm run dev",
         // production: "nx run web-ui:preview",
       },
 
