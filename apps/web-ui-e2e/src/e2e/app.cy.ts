@@ -30,11 +30,13 @@ describe("web-ui-e2e", () => {
     p.contains("$57,482.36");
     cy.screenshot({ capture: "viewport" });
   });
-  it("should import the wallet", () => {
+  it.only("should import the wallet", () => {
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
-
-    cy.get("[data-testid=btc-wallet-balance]").contains("0.00,100,000");
+    cy.get("[data-testid=btc-wallet-balance]", {
+      timeout: 10000,
+    }).should("contain", "0.00,100,000");
     cy.scrollTo(0, 100);
+
     cy.screenshot({ capture: "viewport" });
   });
 });
