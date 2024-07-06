@@ -1,1 +1,0 @@
-npx nx run web-ui-e2e:e2e-ci && git add apps/web-ui-e2e/cypress/screenshots
