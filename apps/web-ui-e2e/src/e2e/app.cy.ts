@@ -20,7 +20,7 @@ describe("web-ui-e2e", () => {
     cy.navigate("/");
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
-    // cy.wait("@getPrice", { timeout: 20000 });
+    cy.wait("@getPrice", { timeout: 20000 });
     // .then((interception) => {
     //   console.log(interception.response.body);
     // });
