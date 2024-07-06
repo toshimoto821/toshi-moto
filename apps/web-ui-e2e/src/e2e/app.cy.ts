@@ -26,8 +26,7 @@ describe("web-ui-e2e", () => {
     // });
     // Function helper example, see `../support/app.po.ts` file
     const p = getPrice();
-    // check that p equals 57482.36
-    // const v = p.eq("57482.36");
+
     p.should("be.visible");
     p.contains("$57,482.36");
     cy.screenshot({ capture: "viewport" });
