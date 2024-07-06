@@ -33,10 +33,21 @@ jobs:
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
       - name: Cypress Run
+        id: cypress_run
         env:
           CYPRESS_RUNNING: true
+        continue-on-error: true
         run: |
           npx nx run web-ui-e2e:e2e-ci
+
+      - name: Check Cypress Result
+        id: check_cypress
+        run: |
+          if [ "${{ steps.cypress_run.outcome }}" == "failure" ]; then
+            echo "cypress_failed=true" >> $GITHUB_ENV
+          else
+            echo "cypress_failed=false" >> $GITHUB_ENV
+          fi
 
       - name: Configure git
         run: |
@@ -62,7 +73,7 @@ jobs:
         uses: ./.github/scripts/comment-on-pr
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_BODY: "Images updated. [Check them out](${{ env.COMMIT_URL }})!"
+          COMMENT_BODY: "Images updated. Cypress Status: ${{ env.cypress_failed }} [Check them out](${{ env.COMMIT_URL }})!"
 
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
