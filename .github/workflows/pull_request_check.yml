@@ -42,6 +42,7 @@ jobs:
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env.cy
           echo "CYPRESS_RUNNING=true" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
+          echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
 
       - name: Debug dir
         run: |
@@ -51,6 +52,7 @@ jobs:
         id: cypress_run
         env:
           CYPRESS_RUNNING: true
+          VITE_BITCOIN_NODE_URL: https://mempool.space
           VITE_COINGECKO_API_URL: https://api.toshimoto.app/api/prices/range
           VITE_COINGECKO_PRICE_API_URL: https://api.toshimoto.app/api/prices/simple
           VITE_TOSHI_MOTO_XPUB: ${{ secrets.VITE_TOSHI_MOTO_XPUB }}
