@@ -41,6 +41,11 @@ jobs:
           echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env.cy
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env.cy
           echo "CYPRESS_RUNNING=true" >> apps/web-ui/.env.cy
+
+      - name: Debug dir
+        run: |
+          cat apps/web-ui/.env.cy
+
       - name: Cypress Run
         id: cypress_run
         env:
@@ -53,7 +58,7 @@ jobs:
           VITE_MAX_CONCURRENT_REQUESTS: 8
         continue-on-error: true
         run: |
-          npx nx run web-ui-e2e:e2e-ci
+          CYPRESS_RUNNING=true && npx nx run web-ui-e2e:e2e-ci
 
       - name: Check Cypress Result
         id: check_cypress
