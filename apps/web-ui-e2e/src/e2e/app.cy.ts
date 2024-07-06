@@ -19,9 +19,10 @@ describe("web-ui-e2e", () => {
     cy.visit("/");
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
-    cy.wait("@getPrice", { timeout: 10000 }).then((interception) => {
-      console.log(interception.response.body);
-    });
+    cy.wait("@getPrice", { timeout: 10000 });
+    // .then((interception) => {
+    //   console.log(interception.response.body);
+    // });
     // Function helper example, see `../support/app.po.ts` file
     const p = getPrice();
     // check that p equals 57482.36
@@ -40,6 +41,7 @@ describe("web-ui-e2e", () => {
       },
     }).as("getPrice");
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
+    cy.visit("/#/toshi-moto");
     cy.scrollTo(0, 120);
     cy.get("[data-testid=btc-wallet-balance]", {
       timeout: 20000,
