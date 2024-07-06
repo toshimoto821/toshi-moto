@@ -263,3 +263,5 @@ export const WalletDetail = () => {
     </div>
   );
 };
+
+export default WalletDetail;
