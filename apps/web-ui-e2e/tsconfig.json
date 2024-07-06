@@ -6,7 +6,8 @@
     "module": "commonjs",
     "types": ["cypress", "node", "./src/support/index.d.ts"],
     "sourceMap": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
   "include": [
     "**/*.ts",

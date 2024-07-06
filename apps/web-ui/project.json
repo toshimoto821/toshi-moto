@@ -55,8 +55,7 @@
       "configurations": {
         "cy": {
           "envFile": "apps/web-ui/.env.cy",
-          "configFile": "./apps/web-ui/vite.config.ts",
-          "hmr": false
+          "configFile": "./apps/web-ui/vite.config.ts"
         }
       }
     },
