@@ -40,7 +40,7 @@ jobs:
           echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env.cy
           echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env.cy
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env.cy
-          echo "CYPRESS_RUNNING=true" >> apps/web-ui/.env.cy
+          echo "CI=true" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
 

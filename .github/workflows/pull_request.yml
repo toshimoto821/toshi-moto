@@ -12,7 +12,8 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: production
-
+    env:
+      CI: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
