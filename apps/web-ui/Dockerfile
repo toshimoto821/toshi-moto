@@ -31,7 +31,7 @@ RUN echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NODE_URL=http://umbrel.local:3006" >> apps/web-ui/.env
 
-RUN pnpm run build-umbrel
+RUN pnpm run build:umbrel
 
 # Production stage
 FROM nginx as production

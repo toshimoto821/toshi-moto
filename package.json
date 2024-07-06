@@ -10,7 +10,7 @@
     "dev:mongo": "npx nx run api:mongo",
     "build": "npx nx build web-ui",
     "build:api": "npx nx build api",
-    "build:umbrel": "npx nx build:umbrel web-ui",
+    "build:umbrel": "npx nx build-umbrel web-ui",
     "build:docker": "VERSION=$(node -p \"require('./package.json').version\") nx run-many --target=docker:build --projects=web-ui,api",
     "docker:build:web-ui": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/web-ui:${VERSION} --output \"type=registry\" .",
     "docker:build:api": "docker buildx build --platform linux/arm64,linux/amd64 --tag toshimoto821/api:${VERSION} --output \"type=registry\" .",
