@@ -1,9 +1,12 @@
 import { mauve, violet } from "@radix-ui/colors";
+// eslint-disable-next-line
+const isCI = process.env.CYPRESS_RUNNING === "true";
 
+const path = isCI ? "apps/web-ui/" : "./";
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: ["./apps/web-ui/index.html", "./apps/web-ui/src/**/*.{ts,tsx}"],
+  content: [`${path}index.html`, `${path}src/**/*.{ts,tsx}`],
   theme: {
     container: {
       center: true,
