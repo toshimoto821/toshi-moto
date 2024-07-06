@@ -62,7 +62,7 @@ jobs:
 
       - name: Updating screenshots
         run: |
-          git add .
+          git add apps/web-ui-e2e/cypress/screenshots
           git commit -m "chore(pipeline): update images"
           echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
