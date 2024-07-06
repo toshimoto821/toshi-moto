@@ -32,6 +32,14 @@ jobs:
       - name: Tests
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
+      - name: Write env file
+        run: |
+          echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env.cy
+          echo "VITE_COINGECKO_PRICE_API_URL=https://api.toshimoto.app/api/prices/simple" >> apps/web-ui/.env.cy
+          echo "VITE_TOSHI_MOTO_XPUB=${{ secrets.VITE_TOSHI_MOTO_XPUB }}" >> apps/web-ui/.env.cy
+          echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env.cy
+          echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env.cy
+          echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env.cy
       - name: Cypress Run
         id: cypress_run
         env:
