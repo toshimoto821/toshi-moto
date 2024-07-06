@@ -61,8 +61,6 @@ Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
   cy.wait("@getPrice", { timeout: 10000 });
   const btn = getToshiBtn();
   btn.click();
-  // cy.url().debug();
-  console.log(cy.url());
 
   // .then((interception) => {
   //   console.log(interception.response.body);
