@@ -1,4 +1,6 @@
 # UI Changelog
+## [1.4.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.3...web-ui-1.4.4) (2024-07-07)
+
 ## [1.4.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.2...web-ui-1.4.3) (2024-07-06)
 
 
