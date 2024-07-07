@@ -1,4 +1,16 @@
 # UI Changelog
+## [1.5.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.4...web-ui-1.5.0) (2024-07-07)
+
+
+### Features
+
+* lazy imports ([14c3b9c](https://github.com/toshimoto821/toshi-moto/commit/14c3b9c1c4476ec192d7e27a850f102966df8adf))
+
+
+### Bug Fixes
+
+* bundle size ([b3b60c6](https://github.com/toshimoto821/toshi-moto/commit/b3b60c698152ec71d815a5af2ae0576871ef8ce5))
+
 ## [1.4.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.3...web-ui-1.4.4) (2024-07-07)
 
 ## [1.4.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.2...web-ui-1.4.3) (2024-07-06)
