@@ -32,7 +32,7 @@ export const Home = () => {
             width={dimensions.width}
           />
         </div>
-        <div className="md:container md:mx-auto min-h-[400px]">
+        <div className="mx-4 min-h-[400px]">
           <Outlet />
 
           {pathname === "/" && (
