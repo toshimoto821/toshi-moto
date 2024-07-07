@@ -30,7 +30,7 @@ console.log(data, "data");
 if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
   Cypress Testing Results:
-  [Image Commit][${process.env.COMMIT_URL}]
+  [Image Commit](${process.env.COMMIT_URL})
   |BASE|HEAD|
   | --- | --- |
   ${data.map((img) => {
