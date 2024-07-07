@@ -13,7 +13,7 @@ describe("web-ui-e2e", () => {
     );
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
-        usd: 57482.36,
+        usd: 97482.36,
         usd_24h_vol: 16690539371.276321,
         usd_24h_change: -4.674755682132398,
         last_updated_at: 1720107348,
@@ -31,7 +31,7 @@ describe("web-ui-e2e", () => {
     const p = getPrice();
 
     p.should("be.visible");
-    p.contains("$57,482.36");
+    p.contains("$97,482.36");
     cy.screenshot({ capture: "viewport" });
   });
 
