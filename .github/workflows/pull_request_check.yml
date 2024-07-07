@@ -121,7 +121,7 @@ jobs:
         id: check_affected
         run: |
           echo "Checking if web-ui is affected..."
-          OUTPUT=$(npx nx show projects --affected --exclude web-ui-e2e --base=${{github.event.pull_request.base.ref}} --head=${{github.sha}})
+          OUTPUT=$(npx nx show projects --affected --exclude web-ui-e2e --base=${{github.event.pull_request.base.ref}} --head=${{github.event.pull_request.head_ref}})
           echo "Affected apps: $OUTPUT"
           if [[ "$OUTPUT" == *"web-ui"* ]]; then
             echo "::set-output name=web_ui_affected::true"
