@@ -115,7 +115,7 @@ jobs:
           GIT_STATUS_OUTPUT: "${{ env.GIT_STATUS_OUTPUT }}"
           BASE: "${{ github.event.pull_request.base.ref }}"
           HEAD: "$GITHUB_SHA"
-          IMAGE_CHANGES: "${{ env.CHANGED}}"
+          IMAGE_CHANGES: "${{ env.CHANGED }}"
 
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
