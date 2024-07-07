@@ -22,7 +22,7 @@
     "baseUrl": ".",
 
     "paths": {
-      "bitcoinjs-lib": ["bitcoinjs"],
+      "bitcoinjs-lib": ["@toshimoto821/bitcoinjs"],
       "@root/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@lib/*": ["src/lib/*"],

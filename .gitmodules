@@ -1,6 +1,3 @@
-[submodule "packages/bitcoinjs"]
-	path = packages/bitcoinjs
-	url = git@github.com:toshimoto821/bitcoinjs-single-file.git
 [submodule "apps/umbrel-apps"]
 	path = apps/umbrel-apps
 	url = git@github.com:toshimoto821/umbrel-apps.git
