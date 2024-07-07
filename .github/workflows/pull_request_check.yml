@@ -20,18 +20,6 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: npx nx affected --target=lint --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
-
-      - name: Tests
-        run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
-
       - name: Write env file
         run: |
           echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env.cy
@@ -43,6 +31,18 @@ jobs:
           echo "CI=true" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: npx nx affected --target=lint --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
+
+      - name: Tests
+        run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
       - name: Debug dir
         run: |
@@ -113,6 +113,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_BODY: "${{ env.COMMENT_BODY }}"
 
+      - name: Send bundle stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
       #   uses: actions/upload-artifact@v4

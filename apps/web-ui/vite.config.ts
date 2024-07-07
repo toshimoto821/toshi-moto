@@ -7,6 +7,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import svgr from "vite-plugin-svgr";
 import { replaceCodePlugin } from "vite-plugin-replace";
 // import { visualizer } from "rollup-plugin-visualizer";
+import webpackStatsPlugin from "rollup-plugin-webpack-stats";
 import packageJson from "./package.json";
 
 const isCypressRunning = process.env.CI;
@@ -17,7 +18,17 @@ export default defineConfig({
   server: {
     hmr: !isCypressRunning,
   },
-
+  build: {
+    rollupOptions: {
+      output: {
+        // Use a supported file pattern for Vite 5/Rollup 4
+        // @doc https://relative-ci.com/documentation/guides/vite-config
+        assetFileNames: "assets/[name].[hash][extname]",
+        chunkFileNames: "assets/[name].[hash].js",
+        entryFileNames: "assets/[name].[hash].js",
+      },
+    },
+  },
   resolve: {
     alias: {
       "bitcoinjs-lib": "@toshimoto821/bitcoinjs",
@@ -31,6 +42,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    webpackStatsPlugin(),
     replaceCodePlugin({
       replacements: [
         {
@@ -97,7 +109,7 @@ export default defineConfig({
       : []),
     svgr(),
     nxViteTsPaths(),
-    // visualizer(),
+    // visualizer({ template: "raw-data", filename: "apps/web-ui/stats.json" }),
   ],
   // worker: {
   //   plugins: [nxViteTsPaths()],
