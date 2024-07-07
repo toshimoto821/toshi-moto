@@ -1,4 +1,16 @@
 # UI Changelog
+## [1.6.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.5.0...web-ui-1.6.0) (2024-07-07)
+
+
+### Features
+
+* webpack stats ([702e190](https://github.com/toshimoto821/toshi-moto/commit/702e190ac08e31f35083f2677f45da23f03b0caf))
+
+
+### Bug Fixes
+
+* stats ([ea37ca3](https://github.com/toshimoto821/toshi-moto/commit/ea37ca3e3102cfeebb517ea61aff6fd328b7e682))
+
 ## [1.5.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.4...web-ui-1.5.0) (2024-07-07)
 
 
