@@ -75,3 +75,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           tags: true
+
+      - name: Send bundle stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        with:
+          webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
