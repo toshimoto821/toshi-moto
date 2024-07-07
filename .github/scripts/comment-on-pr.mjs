@@ -33,8 +33,12 @@ if (process.env.IMAGE_CHANGES === "true") {
   [Image Commit][${process.env.COMMIT_URL}]
   |BASE|HEAD|
   ${data.map((img) => {
-    const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${path}`;
-    const headUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${head}/${path}`;
+    const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${encodeURIComponent(
+      img.path
+    )}`;
+    const headUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${head}/${encodeURIComponent(
+      img.path
+    )}`;
     if (img.type === "M") {
       return `![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
     }
