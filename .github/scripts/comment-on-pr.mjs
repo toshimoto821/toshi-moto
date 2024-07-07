@@ -13,7 +13,7 @@ const head = process.env.HEAD;
 const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
 
 const images = GIT_STATUS_OUTPUT.trim().split("\n");
-const data = parts
+const data = images
   .map((part) => {
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
     if (!pieces) return null;
