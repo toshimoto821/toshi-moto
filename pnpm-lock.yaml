@@ -25,7 +25,7 @@ importers:
         version: 4.0.2(@nestjs/common@10.3.8)(@nestjs/core@10.3.8)
       '@toshimoto821/bitcoinjs':
         specifier: ^1.0.0
-        version: 1.0.0
+        version: registry.npmjs.org/@toshimoto821/bitcoinjs@1.0.0
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
@@ -8334,22 +8334,6 @@ packages:
     dependencies:
       '@testing-library/dom': 9.3.4
     dev: true
-
-  /@toshimoto821/bitcoinjs@1.0.0:
-    resolution: {integrity: sha512-Ka3KnSzpdBQBo+zT5L1A1zM6uM0XZUDTkU32usP6G5UkMOwnBpPBxRhLqbYr1N53kkLY8+KtWpBTffS2Y8c9zw==, tarball: https://npm.pkg.github.com/download/@toshimoto821/bitcoinjs/1.0.0/93bd55c0ec266cc773a797b4ccfef0b5977ee576}
-    dependencies:
-      bip32: 2.0.6
-      bip38: 3.1.1
-      bip39: 3.1.0
-      bitcoinjs-lib: 6.1.6
-      bitcoinjs-message: 2.2.0
-      browserify: 17.0.0
-      eccrypto: 1.1.6
-      i: 0.3.7
-      npm: 8.19.4
-      rollup: 4.18.0
-      uglify-es: 3.3.9
-    dev: false
 
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -22122,3 +22106,21 @@ packages:
   /zod@3.23.0:
     resolution: {integrity: sha512-OFLT+LTocvabn6q76BTwVB0hExEBS0IduTr3cqZyMqEDbOnYmcU+y0tUAYbND4uwclpBGi4I4UUBGzylWpjLGA==}
     dev: true
+
+  registry.npmjs.org/@toshimoto821/bitcoinjs@1.0.0:
+    resolution: {integrity: sha512-H8mIrqnFXaikzXiTHLHUBfBAgkCRfnRVz4xiT5uf5pJDUmWTX1BUOzBfSkt0sOFquF1RPs14Qs23hZmbrZSDKA==, tarball: https://registry.npmjs.org/@toshimoto821/bitcoinjs/-/bitcoinjs-1.0.0.tgz}
+    name: '@toshimoto821/bitcoinjs'
+    version: 1.0.0
+    dependencies:
+      bip32: 2.0.6
+      bip38: 3.1.1
+      bip39: 3.1.0
+      bitcoinjs-lib: 6.1.6
+      bitcoinjs-message: 2.2.0
+      browserify: 17.0.0
+      eccrypto: 1.1.6
+      i: 0.3.7
+      npm: 8.19.4
+      rollup: 4.18.0
+      uglify-es: 3.3.9
+    dev: false
