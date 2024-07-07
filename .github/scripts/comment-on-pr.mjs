@@ -32,6 +32,7 @@ if (process.env.IMAGE_CHANGES === "true") {
   Cypress Testing Results:
   [Image Commit][${process.env.COMMIT_URL}]
   |BASE|HEAD|
+  | --- | --- |
   ${data.map((img) => {
     const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${encodeURIComponent(
       img.path
@@ -40,10 +41,10 @@ if (process.env.IMAGE_CHANGES === "true") {
       img.path
     )}`;
     if (img.type === "M") {
-      return `![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
+      return `|![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
     }
     if (img.type === "D") {
-      return `![${img.type}](${baseUrl})|Deleted|`;
+      return `|![${img.type}](${baseUrl})|Deleted|`;
     }
 
     return `|Added|![${img.type}](${headUrl})`;
