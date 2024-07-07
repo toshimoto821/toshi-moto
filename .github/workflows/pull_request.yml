@@ -43,6 +43,12 @@ jobs:
         id: determine_head
         run: echo "HEAD=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
 
+      - name: Define BASE and HEAD
+        run: |
+          echo "BASE=${{ github.event.before }}" >> $GITHUB_ENV
+          echo "HEAD=${{ github.event.after }}" >> $GITHUB_ENV
+        if: github.event_name == 'push'
+
       - name: Lint
         run: npx nx affected --target=lint --base=$BASE --head=$HEAD
 
@@ -57,12 +63,6 @@ jobs:
           echo "CI=true" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
-
-      - name: Define BASE and HEAD
-        run: |
-          echo "BASE=${{ github.event.before }}" >> $GITHUB_ENV
-          echo "HEAD=${{ github.event.after }}" >> $GITHUB_ENV
-        if: github.event_name == 'push'
 
       - name: Test
         run: npx nx affected --target=test --base=$BASE --head=$HEAD
