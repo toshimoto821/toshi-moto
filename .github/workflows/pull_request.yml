@@ -1,5 +1,11 @@
 name: PR Merge
-
+# This runs twice on merge to main.
+# once for versioning from merge
+# once for pushing to relative ci
+# dont think relative ci is configure properly
+# i was expecting the merge alone would work
+# but since it runs from the merged branch it
+# doesnt sync with relative ci
 on:
   push:
     branches:

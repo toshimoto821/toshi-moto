@@ -87,6 +87,13 @@
         "preset": "conventionalcommits",
         "changelogHeader": "# UI Changelog"
       }
+    },
+    "changelog": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/changelog.js ${SHA} \"${FILES}\""
+      },
+      "dependsOn": ["web-ui:version"]
     }
   }
 }
