@@ -18,7 +18,7 @@ export const Loading = ({ isLoading, children }: ILoading) => {
       setLoadingState("animating-off");
       setTimeout(() => {
         setLoadingState("hidden");
-      }, 3000);
+      }, 1500);
     }
   }, [isLoading]);
 

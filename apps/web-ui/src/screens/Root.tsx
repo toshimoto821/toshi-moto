@@ -6,7 +6,7 @@ import {
   ToastContext,
 } from "@providers/AppProvider";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { throttle } from "lodash";
+import throttle from "lodash/throttle";
 import localForage from "localforage";
 import { Toast } from "@components/toast/Toast";
 import { Navbar } from "@components/navbar/Navbar";

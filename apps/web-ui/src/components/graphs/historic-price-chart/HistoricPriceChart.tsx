@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef } from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { Flex, Separator, Button } from "@radix-ui/themes";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { Line } from "../line/Line";

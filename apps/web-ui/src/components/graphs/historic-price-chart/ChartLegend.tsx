@@ -1,7 +1,7 @@
 import { useRef, useEffect, useMemo, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection } from "d3";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { AppContext } from "@root/providers/AppProvider";
 import { type IChartTimeFrameRange } from "@root/machines/appMachine";
 import { BtcHistoricPriceContext } from "@root/providers/AppProvider";
