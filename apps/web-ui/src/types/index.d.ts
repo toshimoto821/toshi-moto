@@ -1,4 +1,4 @@
-declare module "bitcoinjs-lib";
+declare module "@toshimoto821/bitcoinjs";
 
 export type ICurrency =
   | "btc"

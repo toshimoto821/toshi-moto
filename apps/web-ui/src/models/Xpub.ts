@@ -78,7 +78,7 @@ export class Xpub {
   }
 
   static async getBitcoinjs() {
-    const { default: bitcoin } = await import("bitcoinjs");
+    const { default: bitcoin } = await import("@toshimoto821/bitcoinjs");
 
     return bitcoin;
   }

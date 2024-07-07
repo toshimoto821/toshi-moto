@@ -1,6 +1,5 @@
 node_modules
 apps/web-ui/node_modules
-packages/bitcoinjs/node_modules
 # not sure this is required
 # apps/umbrel-apps
 .nx

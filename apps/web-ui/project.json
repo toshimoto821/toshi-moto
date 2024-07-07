@@ -24,8 +24,7 @@
         "production": {
           "buildTarget": "web-ui:build:production"
         }
-      },
-      "dependsOn": ["bitcoinjs:build"]
+      }
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
@@ -43,8 +42,7 @@
         "production": {
           "buildTarget": "web-ui:build:production"
         }
-      },
-      "dependsOn": ["bitcoinjs:build"]
+      }
     },
     "build": {
       "executor": "@nx/vite:build",
