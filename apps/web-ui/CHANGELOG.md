@@ -1,4 +1,6 @@
 # UI Changelog
+## [1.6.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.0...web-ui-1.6.1) (2024-07-07)
+
 ## [1.6.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.5.0...web-ui-1.6.0) (2024-07-07)
 
 
