@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import { type Html5Qrcode } from "html5-qrcode";
 import { Button, Separator, Text, Callout } from "@radix-ui/themes";
 import { CameraIcon, UploadIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { type IWalletManagerEvents } from "@root/machines/walletManagerMachine";
@@ -98,7 +98,8 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
 
   const scan = async () => {
     if (!previewRef.current) return;
-    const html5QrcodeScanner = new Html5Qrcode(previewRef.current.id);
+    const qr = await import("html5-qrcode");
+    const html5QrcodeScanner = new qr.Html5Qrcode(previewRef.current.id);
     ref.current = html5QrcodeScanner;
     if (!html5QrcodeScanner) return;
     const data = {

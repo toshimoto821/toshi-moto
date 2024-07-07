@@ -1,5 +1,7 @@
 import { IRequest } from "@root/machines/network.types";
-import { transform, assign, isObject } from "lodash";
+import transform from "lodash/transform";
+import assign from "lodash/assign";
+import isObject from "lodash/isObject";
 
 function flattenObject(
   obj: Record<string, any>,
