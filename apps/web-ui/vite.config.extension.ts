@@ -11,7 +11,7 @@ process.env.VITE_CONFIG_CHROME_EXTNSION = "true";
 export default defineConfig({
   resolve: {
     alias: {
-      "bitcoinjs-lib": "/src/lib/bitcoinjs/bitcoin.mjs",
+      "bitcoinjs-lib": "@toshimoto821/bitcoinjs",
       "@root": "/src",
       "@components": "/src/components",
       "@lib": "/src/lib",

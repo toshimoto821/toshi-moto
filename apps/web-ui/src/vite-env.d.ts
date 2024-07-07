@@ -11,6 +11,6 @@ declare module "virtual:pwa-register" {
   ): (reloadPage?: boolean) => Promise<void>;
 }
 
-declare module "bitcoinjs";
+declare module "@toshimoto821/bitcoinjs";
 
 declare module "react-day-picker";
