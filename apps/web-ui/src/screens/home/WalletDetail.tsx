@@ -82,7 +82,7 @@ export const WalletDetail = () => {
   }
 
   return (
-    <div className="mx-4 md:mx-0 px-2 border rounded bg-white drop-shadow-lg">
+    <div className="px-2 border rounded bg-white drop-shadow-lg">
       <div className="sticky top-[140px] bg-white z-50">
         <div className="flex items-center">
           <div className="mr-4 h-full ml-2">
