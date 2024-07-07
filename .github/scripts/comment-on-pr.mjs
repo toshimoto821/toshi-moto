@@ -13,6 +13,7 @@ const head = process.env.HEAD;
 const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
 
 const images = GIT_STATUS_OUTPUT.trim().split("\n");
+console.log(images, "images");
 const data = images
   .map((part) => {
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
@@ -25,7 +26,8 @@ const data = images
   .filter((v) => !!v);
 
 let commentBody = "No screenshot changes detected";
-if (process.env.IMAGE_CHANGES) {
+console.log(data, "data");
+if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
   Cypress Testing Results:
   [Image Commit][${process.env.COMMIT_URL}]
@@ -44,7 +46,7 @@ if (process.env.IMAGE_CHANGES) {
   })}
   `;
 }
-
+console.log(commentBody);
 await octokit.rest.issues.createComment({
   ...issueComment,
   body: commentBody,
