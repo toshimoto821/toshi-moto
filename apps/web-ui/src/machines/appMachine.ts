@@ -5,7 +5,7 @@ import { sub, add } from "date-fns";
 import dotProp from "dot-prop-immutable";
 import { utxoMachine } from "./utxoMachine";
 import { ICurrency } from "@root/types";
-import { merge } from "lodash";
+import merge from "lodash/merge";
 import {
   ITxLite,
   type IWalletInput,

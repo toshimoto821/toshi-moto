@@ -1,10 +1,15 @@
+import { lazy, Suspense } from "react";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import { Root } from "@screens/Root.tsx";
 import { Error } from "@screens/error/Error.tsx";
-import { WalletDetail } from "@root/screens/home/WalletDetail";
+// import { WalletDetail } from "@root/screens/home/WalletDetail";
 import { Home } from "@screens/home/Home.tsx";
 import { WalletRows } from "@screens/home/WalletRows";
 import { Onboarding } from "@screens/onboarding/Onboarding";
+
+const WalletDetail = lazy(
+  () => import(/* webpackPrefetch: true */ "@root/screens/home/WalletDetail")
+);
 
 export const App = () => {
   const router = createHashRouter([
@@ -19,7 +24,11 @@ export const App = () => {
           children: [
             {
               path: ":walletId/:address?",
-              element: <WalletDetail />,
+              element: (
+                <Suspense fallback={<div>Loading...</div>}>
+                  <WalletDetail />
+                </Suspense>
+              ),
             },
             {
               path: "",

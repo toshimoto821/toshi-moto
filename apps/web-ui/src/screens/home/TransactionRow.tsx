@@ -7,7 +7,7 @@ import { cn, trimAddress, padBtcZeros, formatPrice } from "@lib/utils";
 import { AppContext } from "@root/providers/AppProvider";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { ICurrency } from "@root/types";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import { currencySymbols } from "@root/lib/currencies";
 type ITransactionRow = {
   transaction: Transaction;

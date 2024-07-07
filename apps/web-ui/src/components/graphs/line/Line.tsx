@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { format } from "date-fns";
 import { jade, ruby } from "@radix-ui/colors";
-import { findLastIndex } from "lodash";
+import findLastIndex from "lodash/findLastIndex";
 import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { AppContext } from "@root/providers/AppProvider";
