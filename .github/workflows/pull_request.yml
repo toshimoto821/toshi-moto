@@ -1,6 +1,9 @@
 name: PR Merge
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types:
       - closed
@@ -67,9 +70,11 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
+        if: github.event_name == 'pull_request'
         run: npx nx affected --target=version --base=$BASE --head=$HEAD
 
       - name: GitHub Push
+        if: github.event_name == 'pull_request'
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
