@@ -14,7 +14,7 @@ export const WalletRows = () => {
     (wallet) => wallet.archived === true
   );
   return (
-    <div className="mx-4 md:mx-0 px-2 border rounded bg-white drop-shadow-lg">
+    <div className="px-2 border rounded bg-white drop-shadow-lg">
       {wallets.map((wallet, index) => {
         return (
           <div key={index} className="">
