@@ -6,7 +6,7 @@ import { nxViteTsPaths } from "@nx/vite/plugins/nx-tsconfig-paths.plugin";
 import { VitePWA } from "vite-plugin-pwa";
 import svgr from "vite-plugin-svgr";
 import { replaceCodePlugin } from "vite-plugin-replace";
-// import { visualizer } from "rollup-plugin-visualizer";
+import { visualizer } from "rollup-plugin-visualizer";
 import packageJson from "./package.json";
 
 const isCypressRunning = process.env.CI;
@@ -97,7 +97,7 @@ export default defineConfig({
       : []),
     svgr(),
     nxViteTsPaths(),
-    // visualizer(),
+    visualizer({ template: "raw-data", filename: "apps/web-ui/stats.json" }),
   ],
   // worker: {
   //   plugins: [nxViteTsPaths()],
