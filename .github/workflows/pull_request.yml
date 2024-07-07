@@ -12,7 +12,7 @@ on:
 
 jobs:
   pull-request-merge:
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -70,7 +70,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         run: npx nx affected --target=version --base=$BASE --head=$HEAD
 
       - name: GitHub Push
