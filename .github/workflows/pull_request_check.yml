@@ -117,6 +117,18 @@ jobs:
           HEAD: ${{ github.sha }}
           IMAGE_CHANGES: "${{ env.CHANGED }}"
 
+      - name: Check if web-ui is affected
+        id: check_affected
+        run: |
+          echo "Checking if web-ui is affected..."
+          OUTPUT=$(npx nx show projects --affected --exclude web-ui-e2e --base=${{github.event.pull_request.base.ref}} --head=$GITHUB_SHA)
+          echo "Affected apps: $OUTPUT"
+          if [[ "$OUTPUT" == *"web-ui"* ]]; then
+            echo "::set-output name=web_ui_affected::true"
+          else
+            echo "::set-output name=web_ui_affected::false"
+          fi
+
       - name: Send bundle stats to RelativeCI
         uses: relative-ci/agent-action@v2
         if: steps.check_affected.outputs.web_ui_affected == 'true'
