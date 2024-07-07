@@ -117,6 +117,14 @@ jobs:
           HEAD: ${{ github.sha }}
           IMAGE_CHANGES: "${{ env.CHANGED }}"
 
+      - name: Send bundle stats to RelativeCI
+        uses: relative-ci/agent-action@v2
+        if: steps.check_affected.outputs.web_ui_affected == 'true'
+        with:
+          webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
       #   uses: actions/upload-artifact@v4
