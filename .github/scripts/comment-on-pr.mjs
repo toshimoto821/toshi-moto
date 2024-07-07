@@ -8,9 +8,42 @@ const octokit = getOctokit(githubToken);
 const issue_number = process.env.PULL_REQUEST_NUMBER;
 
 const issueComment = context.issue;
-console.log(JSON.stringify(issueComment));
-const commentBody =
-  process.env.COMMENT_BODY || "Automated comment from GitHub Actions workflow.";
+const base = process.env.BASE;
+const head = process.env.HEAD;
+const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
+
+const images = GIT_STATUS_OUTPUT.trim().split("\n");
+const data = parts
+  .map((part) => {
+    const pieces = /(\w{1})\s"([^"]+)/.exec(part);
+    if (!pieces) return null;
+    return {
+      type: pieces[1],
+      path: pieces[2],
+    };
+  })
+  .filter((v) => !!v);
+
+let commentBody = "No screenshot changes detected";
+if (process.env.IMAGE_CHANGES) {
+  commentBody = `
+  Cypress Testing Results:
+  [Image Commit][${process.env.COMMIT_URL}]
+  |BASE|HEAD|
+  ${data.map((img) => {
+    const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${path}`;
+    const headUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${head}/${path}`;
+    if (img.type === "M") {
+      return `![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
+    }
+    if (img.type === "D") {
+      return `![${img.type}](${baseUrl})|Deleted|`;
+    }
+
+    return `|Added|![${img.type}](${headUrl})`;
+  })}
+  `;
+}
 
 await octokit.rest.issues.createComment({
   ...issueComment,

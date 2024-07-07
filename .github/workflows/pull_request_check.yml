@@ -20,6 +20,12 @@ jobs:
         with:
           node-version: "18"
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Write env file
         run: |
           echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env.cy
@@ -31,12 +37,6 @@ jobs:
           echo "CI=true" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: npx nx affected --target=lint --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
@@ -75,6 +75,14 @@ jobs:
             echo "CHANGED=false" >> $GITHUB_ENV
           fi
 
+      - name: grab the screenshots
+        id: screenshot_status
+        if: env.CHANGED == 'true'
+        run: |
+          echo "GIT_STATUS_OUTPUT<<EOF" >> $GITHUB_ENV
+           git status --porcelain apps/web-ui-e2e/cypress/screenshots/ >> $GITHUB_ENV
+           echo "EOF" >> $GITHUB_ENV
+
       - name: Configure git
         run: |
           git config --global user.name "github-actions[bot]"
@@ -97,28 +105,18 @@ jobs:
       - name: Construct Commit URL
         run: echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${{ env.COMMIT_HASH }}" >> $GITHUB_ENV
 
-      - name: Set COMMENT_BODY based on condition
-        id: set_comment
-        run: |
-          if [ "$CHANGED" = "true" ]; then
-            echo "COMMENT_BODY=Images updated. Cypress Status: ${{ env.cypress_failed }} [Check them out](${{ env.COMMIT_URL }})!" >> $GITHUB_ENV
-          else
-            echo "COMMENT_BODY=No image changes" >> $GITHUB_ENV
-          fi
-
       - name: Comment on PR
         run: node .github/scripts/comment-on-pr.mjs
         env:
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_BODY: "${{ env.COMMENT_BODY }}"
+          COMMIT_URL: "${{ env.COMMIT_URL }}"
+          GIT_STATUS_OUTPUT: "${{ env.GIT_STATUS_OUTPUT }}"
+          BASE: "${{ github.event.pull_request.base.ref }}"
+          HEAD: "$GITHUB_SHA"
+          IMAGE_CHANGES: "${{ env.CHANGED}}"
 
-      - name: Send bundle stats to RelativeCI
-        uses: relative-ci/agent-action@v2
-        with:
-          webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
-          key: ${{ secrets.RELATIVE_CI_KEY }}
-          token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Upload Cypress Screenshots
       #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
       #   uses: actions/upload-artifact@v4
