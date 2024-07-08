@@ -14,7 +14,8 @@
     "skipLibCheck": true,
     "composite": false,
     "skipDefaultLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {}
   },
   "exclude": [
     "node_modules",

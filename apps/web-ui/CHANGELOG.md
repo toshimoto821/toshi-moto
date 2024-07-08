@@ -1,211 +1,184 @@
 # UI Changelog
+
 ## [1.6.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.0...web-ui-1.6.1) (2024-07-07)
 
 ## [1.6.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.5.0...web-ui-1.6.0) (2024-07-07)
 
-
 ### Features
 
-* webpack stats ([702e190](https://github.com/toshimoto821/toshi-moto/commit/702e190ac08e31f35083f2677f45da23f03b0caf))
-
+- webpack stats ([702e190](https://github.com/toshimoto821/toshi-moto/commit/702e190ac08e31f35083f2677f45da23f03b0caf))
 
 ### Bug Fixes
 
-* stats ([ea37ca3](https://github.com/toshimoto821/toshi-moto/commit/ea37ca3e3102cfeebb517ea61aff6fd328b7e682))
+- stats ([ea37ca3](https://github.com/toshimoto821/toshi-moto/commit/ea37ca3e3102cfeebb517ea61aff6fd328b7e682))
 
 ## [1.5.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.4...web-ui-1.5.0) (2024-07-07)
 
-
 ### Features
 
-* lazy imports ([14c3b9c](https://github.com/toshimoto821/toshi-moto/commit/14c3b9c1c4476ec192d7e27a850f102966df8adf))
-
+- lazy imports ([14c3b9c](https://github.com/toshimoto821/toshi-moto/commit/14c3b9c1c4476ec192d7e27a850f102966df8adf))
 
 ### Bug Fixes
 
-* bundle size ([b3b60c6](https://github.com/toshimoto821/toshi-moto/commit/b3b60c698152ec71d815a5af2ae0576871ef8ce5))
+- bundle size ([b3b60c6](https://github.com/toshimoto821/toshi-moto/commit/b3b60c698152ec71d815a5af2ae0576871ef8ce5))
 
 ## [1.4.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.3...web-ui-1.4.4) (2024-07-07)
 
 ## [1.4.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.2...web-ui-1.4.3) (2024-07-06)
 
-
 ### Bug Fixes
 
-* build umbrel ([99d0b9d](https://github.com/toshimoto821/toshi-moto/commit/99d0b9d7b9db04f06b28ca8daf8d374045bbdc59))
+- build umbrel ([99d0b9d](https://github.com/toshimoto821/toshi-moto/commit/99d0b9d7b9db04f06b28ca8daf8d374045bbdc59))
 
 ## [1.4.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.1...web-ui-1.4.2) (2024-07-06)
 
-
 ### Bug Fixes
 
-* ci issues ([f32b61b](https://github.com/toshimoto821/toshi-moto/commit/f32b61bb85bc1fd980ec135a71d9d106ffb86388))
-* price ([f94e52c](https://github.com/toshimoto821/toshi-moto/commit/f94e52c4496183b43264f6da6098e94bf235281e))
-* removes env file ([6fe4d0f](https://github.com/toshimoto821/toshi-moto/commit/6fe4d0f08c91f7c5b7d75470b9ebdddd005f3f04))
-* updates ci ([f692f72](https://github.com/toshimoto821/toshi-moto/commit/f692f72a4de312a3bf2d90c4d21941e7dcb9a5db))
-* writes env ([ca30a64](https://github.com/toshimoto821/toshi-moto/commit/ca30a6458eb2c54660d7d0dd8ba06522588025aa))
+- ci issues ([f32b61b](https://github.com/toshimoto821/toshi-moto/commit/f32b61bb85bc1fd980ec135a71d9d106ffb86388))
+- price ([f94e52c](https://github.com/toshimoto821/toshi-moto/commit/f94e52c4496183b43264f6da6098e94bf235281e))
+- removes env file ([6fe4d0f](https://github.com/toshimoto821/toshi-moto/commit/6fe4d0f08c91f7c5b7d75470b9ebdddd005f3f04))
+- updates ci ([f692f72](https://github.com/toshimoto821/toshi-moto/commit/f692f72a4de312a3bf2d90c4d21941e7dcb9a5db))
+- writes env ([ca30a64](https://github.com/toshimoto821/toshi-moto/commit/ca30a6458eb2c54660d7d0dd8ba06522588025aa))
 
 ## [1.4.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.4.0...web-ui-1.4.1) (2024-07-04)
 
-
 ### Bug Fixes
 
-* cypress ([579ef67](https://github.com/toshimoto821/toshi-moto/commit/579ef67e52af832810b5f491327e0faa30942776))
+- cypress ([579ef67](https://github.com/toshimoto821/toshi-moto/commit/579ef67e52af832810b5f491327e0faa30942776))
 
 ## [1.4.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.13...web-ui-1.4.0) (2024-07-04)
 
-
 ### Features
 
-* cypress ([657eb9e](https://github.com/toshimoto821/toshi-moto/commit/657eb9e5a85642c9390207fbf8e658d988e7107b))
+- cypress ([657eb9e](https://github.com/toshimoto821/toshi-moto/commit/657eb9e5a85642c9390207fbf8e658d988e7107b))
 
 ## [1.3.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.12...web-ui-1.3.13) (2024-07-03)
 
-
 ### Bug Fixes
 
-* loading ([e83452f](https://github.com/toshimoto821/toshi-moto/commit/e83452f9e6c06304dbe41c84fdd3eeeddf4ac38e))
-* loading ([4f70557](https://github.com/toshimoto821/toshi-moto/commit/4f7055789fee3e66ea8f00297b952870cfe49d9e))
+- loading ([e83452f](https://github.com/toshimoto821/toshi-moto/commit/e83452f9e6c06304dbe41c84fdd3eeeddf4ac38e))
+- loading ([4f70557](https://github.com/toshimoto821/toshi-moto/commit/4f7055789fee3e66ea8f00297b952870cfe49d9e))
 
 ## [1.3.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.11...web-ui-1.3.12) (2024-07-03)
 
-
 ### Bug Fixes
 
-* loading screen ([128761b](https://github.com/toshimoto821/toshi-moto/commit/128761bfe8f4c458fd48b8db5813fec5a51299ec))
+- loading screen ([128761b](https://github.com/toshimoto821/toshi-moto/commit/128761bfe8f4c458fd48b8db5813fec5a51299ec))
 
 ## [1.3.11](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.10...web-ui-1.3.11) (2024-07-01)
 
-
 ### Bug Fixes
 
-* adds default loader ([134391b](https://github.com/toshimoto821/toshi-moto/commit/134391b9bceaff4b10838abf240bc08d21a57d6a))
+- adds default loader ([134391b](https://github.com/toshimoto821/toshi-moto/commit/134391b9bceaff4b10838abf240bc08d21a57d6a))
 
 ## [1.3.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.9...web-ui-1.3.10) (2024-07-01)
 
-
 ### Bug Fixes
 
-* tx dots for bad time ranges ([4b3b6fc](https://github.com/toshimoto821/toshi-moto/commit/4b3b6fc4dece49f6734840280371e1e44137696c))
+- tx dots for bad time ranges ([4b3b6fc](https://github.com/toshimoto821/toshi-moto/commit/4b3b6fc4dece49f6734840280371e1e44137696c))
 
 ## [1.3.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.8...web-ui-1.3.9) (2024-06-30)
 
-
 ### Bug Fixes
 
-* chart dots ([8d8f3af](https://github.com/toshimoto821/toshi-moto/commit/8d8f3af1a2eb6110f32d53dd210a635aa3db153f))
+- chart dots ([8d8f3af](https://github.com/toshimoto821/toshi-moto/commit/8d8f3af1a2eb6110f32d53dd210a635aa3db153f))
 
 ## [1.3.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.7...web-ui-1.3.8) (2024-06-30)
 
-
 ### Bug Fixes
 
-* name ([d6de1ff](https://github.com/toshimoto821/toshi-moto/commit/d6de1ff7fe245bc04677bd3296bba96a74674329))
+- name ([d6de1ff](https://github.com/toshimoto821/toshi-moto/commit/d6de1ff7fe245bc04677bd3296bba96a74674329))
 
 ## [1.3.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.6...web-ui-1.3.7) (2024-06-30)
 
-
 ### Bug Fixes
 
-* adds 256 icon ([a8742d2](https://github.com/toshimoto821/toshi-moto/commit/a8742d26b5698edd1b7f616e900b3bf32b6baf4c))
-* adds svg ([4daadda](https://github.com/toshimoto821/toshi-moto/commit/4daadda2e62b69906ab8e119a82148677622ebc6))
-* adds toshi-icon ([de7abf2](https://github.com/toshimoto821/toshi-moto/commit/de7abf2a9c755e42775d74125e56ebbae13b8a55))
-* community proxy ([ea4ada8](https://github.com/toshimoto821/toshi-moto/commit/ea4ada8f0f650a1b7206ac066874f62eba00b10e))
+- adds 256 icon ([a8742d2](https://github.com/toshimoto821/toshi-moto/commit/a8742d26b5698edd1b7f616e900b3bf32b6baf4c))
+- adds svg ([4daadda](https://github.com/toshimoto821/toshi-moto/commit/4daadda2e62b69906ab8e119a82148677622ebc6))
+- adds toshi-icon ([de7abf2](https://github.com/toshimoto821/toshi-moto/commit/de7abf2a9c755e42775d74125e56ebbae13b8a55))
+- community proxy ([ea4ada8](https://github.com/toshimoto821/toshi-moto/commit/ea4ada8f0f650a1b7206ac066874f62eba00b10e))
 
 ## [1.3.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.5...web-ui-1.3.6) (2024-06-30)
 
-
 ### Bug Fixes
 
-* chart edges ([39324ff](https://github.com/toshimoto821/toshi-moto/commit/39324ff7c337af6346d217716c6e37c9c96db424))
+- chart edges ([39324ff](https://github.com/toshimoto821/toshi-moto/commit/39324ff7c337af6346d217716c6e37c9c96db424))
 
 ## [1.3.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.4...web-ui-1.3.5) (2024-06-29)
 
-
 ### Bug Fixes
 
-* spacing ([930cb4e](https://github.com/toshimoto821/toshi-moto/commit/930cb4ec6e54b6e8233778eaaa7dc7a959e15fc4))
-* title spacing ([a4d3157](https://github.com/toshimoto821/toshi-moto/commit/a4d315755f73e2b00e67812ad42a0d8a611212eb))
+- spacing ([930cb4e](https://github.com/toshimoto821/toshi-moto/commit/930cb4ec6e54b6e8233778eaaa7dc7a959e15fc4))
+- title spacing ([a4d3157](https://github.com/toshimoto821/toshi-moto/commit/a4d315755f73e2b00e67812ad42a0d8a611212eb))
 
 ## [1.3.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.3...web-ui-1.3.4) (2024-06-29)
 
 ## [1.3.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.2...web-ui-1.3.3) (2024-06-29)
 
-
 ### Bug Fixes
 
-* btc allocation line ([981f709](https://github.com/toshimoto821/toshi-moto/commit/981f7090bcd7601a431f737244dc639c940880c8))
+- btc allocation line ([981f709](https://github.com/toshimoto821/toshi-moto/commit/981f7090bcd7601a431f737244dc639c940880c8))
 
 ## [1.3.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.1...web-ui-1.3.2) (2024-06-29)
 
-
 ### Bug Fixes
 
-* dates ([a66793a](https://github.com/toshimoto821/toshi-moto/commit/a66793ac04ccf655e727543c7bf545d7eeaa47c0))
-* lint ([4ae307d](https://github.com/toshimoto821/toshi-moto/commit/4ae307d8a0e484a0c9e86e544160375691ea710b))
+- dates ([a66793a](https://github.com/toshimoto821/toshi-moto/commit/a66793ac04ccf655e727543c7bf545d7eeaa47c0))
+- lint ([4ae307d](https://github.com/toshimoto821/toshi-moto/commit/4ae307d8a0e484a0c9e86e544160375691ea710b))
 
 ## [1.3.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.3.0...web-ui-1.3.1) (2024-06-28)
 
-
 ### Bug Fixes
 
-* attempt 1 ([cc17543](https://github.com/toshimoto821/toshi-moto/commit/cc175432e3916b270254c6777e448f035b5c8691))
+- attempt 1 ([cc17543](https://github.com/toshimoto821/toshi-moto/commit/cc175432e3916b270254c6777e448f035b5c8691))
 
 ## [1.3.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.34...web-ui-1.3.0) (2024-06-27)
 
-
 ### Features
 
-* adds archive ([19f73fb](https://github.com/toshimoto821/toshi-moto/commit/19f73fbce7bd279b0d0553e88cb4125566a50233))
+- adds archive ([19f73fb](https://github.com/toshimoto821/toshi-moto/commit/19f73fbce7bd279b0d0553e88cb4125566a50233))
 
 ## [1.2.34](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.33...web-ui-1.2.34) (2024-06-23)
 
-
 ### Bug Fixes
 
-* future btc allocation ([4197ca5](https://github.com/toshimoto821/toshi-moto/commit/4197ca5beac8ccda604c139c73e28ca189dc2761))
+- future btc allocation ([4197ca5](https://github.com/toshimoto821/toshi-moto/commit/4197ca5beac8ccda604c139c73e28ca189dc2761))
 
 ## [1.2.33](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.32...web-ui-1.2.33) (2024-06-23)
 
-
 ### Bug Fixes
 
-* tx col header ([7a2fda8](https://github.com/toshimoto821/toshi-moto/commit/7a2fda8b4afb501cea16d9f22c3a02fd0352825f))
+- tx col header ([7a2fda8](https://github.com/toshimoto821/toshi-moto/commit/7a2fda8b4afb501cea16d9f22c3a02fd0352825f))
 
 ## [1.2.32](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.31...web-ui-1.2.32) (2024-06-23)
 
-
 ### Bug Fixes
 
-* changes table for txs ([ee5f901](https://github.com/toshimoto821/toshi-moto/commit/ee5f90147b7233a42106fd5b18b09bd23504e846))
+- changes table for txs ([ee5f901](https://github.com/toshimoto821/toshi-moto/commit/ee5f90147b7233a42106fd5b18b09bd23504e846))
 
 ## [1.2.31](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.30...web-ui-1.2.31) (2024-06-22)
 
-
 ### Bug Fixes
 
-* minor cleanup ([8ab984f](https://github.com/toshimoto821/toshi-moto/commit/8ab984fd288740a500c413f02e8cff3c8af8c1fc))
+- minor cleanup ([8ab984f](https://github.com/toshimoto821/toshi-moto/commit/8ab984fd288740a500c413f02e8cff3c8af8c1fc))
 
 ## [1.2.30](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.29...web-ui-1.2.30) (2024-06-19)
 
-
 ### Bug Fixes
 
-* wallet scanning ([96d18dd](https://github.com/toshimoto821/toshi-moto/commit/96d18dd05f70ec06a8fd8bc0a298ec8fd84c1e6e))
+- wallet scanning ([96d18dd](https://github.com/toshimoto821/toshi-moto/commit/96d18dd05f70ec06a8fd8bc0a298ec8fd84c1e6e))
 
 ## [1.2.29](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.28...web-ui-1.2.29) (2024-06-17)
 
-
 ### Bug Fixes
 
-* restricts paths to / ([c6cb832](https://github.com/toshimoto821/toshi-moto/commit/c6cb8320a14997e3af6981f79870a27b845e5168))
+- restricts paths to / ([c6cb832](https://github.com/toshimoto821/toshi-moto/commit/c6cb8320a14997e3af6981f79870a27b845e5168))
 
 ## [1.2.28](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.27...web-ui-1.2.28) (2024-06-15)
 
-
 ### Bug Fixes
 
-* wallet dialog reset ([19a8ccf](https://github.com/toshimoto821/toshi-moto/commit/19a8ccf38a7b704650b0c51d5cf148ade82dec53))
+- wallet dialog reset ([19a8ccf](https://github.com/toshimoto821/toshi-moto/commit/19a8ccf38a7b704650b0c51d5cf148ade82dec53))
 
 ## [1.2.27](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.2.26...web-ui-1.2.27) (2024-06-14)
 
