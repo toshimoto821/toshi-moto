@@ -2,8 +2,12 @@ import { readFileSync, writeFileSync } from "fs";
 import { resolve, basename } from "path";
 import { cwd } from "process";
 
+import { exec } from "child_process";
+import { promisify } from "util";
+const execAsync = promisify(exec);
+
 // Function to update changelog with the specified version and append text
-export function injectImagesToChangelog(
+export async function injectImagesToChangelog(
   version: string,
   hash: string,
   filepaths: string[],
@@ -41,6 +45,9 @@ export function injectImagesToChangelog(
   // Write the updated changelog back to the file
   if (!dryRun) {
     writeFileSync(changelogPath, changelog, "utf8");
+    const command = `git add apps/web-ui/CHANGELOG.md && git commit --amend`;
+    const { stdout } = await execAsync(command);
+    console.log(stdout);
   }
 
   console.log(`Changelog updated for version ${version}.`);
