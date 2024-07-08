@@ -44,7 +44,7 @@ export async function changelogAndVersion(opts: IOpts) {
     // )}" ${dryRun}`;
     // const { stdout: logStdOut } = await execAsync(task);
     // console.log(logStdOut);
-    injectImagesToChangelog(nextVersion, sha, files, opts.dryRun);
+    await injectImagesToChangelog(nextVersion, sha, files, opts.dryRun);
 
     console.log(`Changelog updated for version ${nextVersion}`);
   } catch (error) {

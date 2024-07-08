@@ -45,7 +45,7 @@ export async function injectImagesToChangelog(
   // Write the updated changelog back to the file
   if (!dryRun) {
     writeFileSync(changelogPath, changelog, "utf8");
-    const command = `git add apps/web-ui/CHANGELOG.md && git commit --amend`;
+    const command = `git add apps/web-ui/CHANGELOG.md && git commit --amend --no-edit`;
     const { stdout } = await execAsync(command);
     console.log(stdout);
   }
