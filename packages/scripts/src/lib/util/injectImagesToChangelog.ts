@@ -3,7 +3,12 @@ import { resolve, basename } from "path";
 import { cwd } from "process";
 
 // Function to update changelog with the specified version and append text
-function updateChangelog(version: string, hash: string, filepaths: string[]) {
+export function injectImagesToChangelog(
+  version: string,
+  hash: string,
+  filepaths: string[],
+  dryRun = false
+) {
   // get the root nx dir
   const root = cwd();
   const changelogPath = resolve(root, "./apps/web-ui/CHANGELOG.md");
@@ -34,17 +39,19 @@ function updateChangelog(version: string, hash: string, filepaths: string[]) {
   changelog = changelog.replace(versionRegex, `$1\n${appendText}`);
 
   // Write the updated changelog back to the file
-  writeFileSync(changelogPath, changelog, "utf8");
+  if (!dryRun) {
+    writeFileSync(changelogPath, changelog, "utf8");
+  }
+
   console.log(`Changelog updated for version ${version}.`);
 }
 
 // Get version input and text to append from the command line
-const [, , version, hash, filepaths] = process.argv;
+// const [, , version, hash, filepaths] = process.argv;
 
-if (!version || !hash || !filepaths) {
-  console.error("Please provide a version number and text to append.");
-}
-const filepathsArray = filepaths.split(",");
+// if (!version || !hash || !filepaths) {
+//   console.error("Please provide a version number and text to append.");
+// }
+// const filepathsArray = filepaths.split(",");
 
-// Update the changelog
-updateChangelog(version, hash, filepathsArray);
+// // Update the changelog

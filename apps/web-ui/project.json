@@ -91,9 +91,9 @@
     "version": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/changelog.js ${SHA} \"${FILES}\""
+        "command": "node scripts/changelog.js ${VERSION_SHA} \"${VERSION_FILES}\""
       },
-      "dependsOn": ["web-ui:semver"]
+      "implicitDeps": ["semver"]
     }
   }
 }

@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-
+import { injectImagesToChangelog } from "./injectImagesToChangelog";
 const execAsync = promisify(exec);
 
 type IOpts = {
@@ -19,9 +19,9 @@ export async function changelogAndVersion(opts: IOpts) {
   const resp: IResponse[] = [];
   try {
     // Run @jscutlery/semver:version with --dry-run
-    const command = `nx run web-ui:version ${dryRun}`;
+    const command = `nx run web-ui:semver ${dryRun} --verbose`;
     const { stdout } = await execAsync(command);
-    console.log(stdout);
+
     resp.push({
       command,
       stdout,
@@ -39,15 +39,13 @@ export async function changelogAndVersion(opts: IOpts) {
     // Assuming you have a changelog task that can be run with the version number
     // Replace `your-changelog-task` with your actual changelog task command
 
-    const task = `nx changelog scripts ${nextVersion} ${sha} "${files.join(
-      ","
-    )}" ${dryRun}`;
-    const { stdout: logStdOut } = await execAsync(task);
-    console.log(logStdOut);
-    resp.push({
-      command: task,
-      stdout: logStdOut,
-    });
+    // const task = `nx changelog scripts ${nextVersion} ${sha} "${files.join(
+    //   ","
+    // )}" ${dryRun}`;
+    // const { stdout: logStdOut } = await execAsync(task);
+    // console.log(logStdOut);
+    injectImagesToChangelog(nextVersion, sha, files, opts.dryRun);
+
     console.log(`Changelog updated for version ${nextVersion}`);
   } catch (error) {
     console.error("Error:", error);
