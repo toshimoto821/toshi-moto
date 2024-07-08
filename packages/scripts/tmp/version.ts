@@ -36,6 +36,5 @@ async function runVersionAndUpdateChangelog() {
     console.error("Error:", error);
   }
 }
-
 // Replace 'your-project' with the actual name of your project
-runVersionAndUpdateChangelog();
+runVersionAndUpdateChangelog({});

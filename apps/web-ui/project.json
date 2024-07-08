@@ -81,19 +81,19 @@
         ]
       }
     },
-    "version": {
+    "semver": {
       "executor": "@jscutlery/semver:version",
       "options": {
         "preset": "conventionalcommits",
         "changelogHeader": "# UI Changelog"
       }
     },
-    "changelog": {
+    "version": {
       "executor": "nx:run-commands",
       "options": {
         "command": "node scripts/changelog.js ${SHA} \"${FILES}\""
       },
-      "dependsOn": ["web-ui:version"]
+      "dependsOn": ["web-ui:semver"]
     }
   }
 }
