@@ -81,6 +81,13 @@
         ]
       }
     },
+    "semver": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "preset": "conventionalcommits",
+        "changelogHeader": "# UI Changelog"
+      }
+    },
     "version": {
       "executor": "nx:run-commands",
       "options": {
