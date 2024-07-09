@@ -1,4 +1,15 @@
 # UI Changelog
+## [1.7.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.0...web-ui-1.7.1) (2024-07-09)
+
+![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/--SHA=e435c82af9f87e5bd618fa60b44740d1dcd653e6/--FILES='apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
+
+
+
+### Bug Fixes
+
+* changelog ([8164461](https://github.com/toshimoto821/toshi-moto/commit/81644610e6d7c578ddf0bcfa5ed7c0bda01cab0e))
+* delete ([e435c82](https://github.com/toshimoto821/toshi-moto/commit/e435c82af9f87e5bd618fa60b44740d1dcd653e6))
+
 ## [1.7.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.3...web-ui-1.7.0) (2024-07-09)
 
 ![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/6e0f8e0e8262a039e60c78cfeebd2cc534e738da/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
