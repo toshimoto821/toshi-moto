@@ -86,7 +86,7 @@
       "options": {
         "command": "echo 'Versioning UI'"
       },
-      "implicitDeps": ["scripts:version"]
+      "dependsOn": ["scripts:version"]
     }
   }
 }
