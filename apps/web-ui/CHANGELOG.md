@@ -1,5 +1,15 @@
 # UI Changelog
 
+## [1.6.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.1...web-ui-1.6.2) (2024-07-07)
+
+### Bug Fixes
+
+- affected ([2e3bfc9](https://github.com/toshimoto821/toshi-moto/commit/2e3bfc916efdbeb94b7df148846f5d9a94591bbe))
+- affected ([313a952](https://github.com/toshimoto821/toshi-moto/commit/313a9521bf1c40056e20c210e5bee5007905daed))
+- affected ([c6b0b96](https://github.com/toshimoto821/toshi-moto/commit/c6b0b96bf1c70e9592bb1c0ab1f94fd510075562))
+- affected ([48714e4](https://github.com/toshimoto821/toshi-moto/commit/48714e4c40067799be548999123a0cda220d081b))
+- affected ([1500349](https://github.com/toshimoto821/toshi-moto/commit/15003498481dde2def4063c1b36f2366fd533a61))
+
 ## [1.6.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.0...web-ui-1.6.1) (2024-07-07)
 
 ## [1.6.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.5.0...web-ui-1.6.0) (2024-07-07)
