@@ -1,4 +1,46 @@
 # UI Changelog
+## [1.7.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.1...web-ui-1.7.2) (2024-07-09)
+
+![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/87254d5a1eb27adf6e47cce9ccf8d2b5befc0e37/'apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
+
+
+
+### Bug Fixes
+
+* sha ([87254d5](https://github.com/toshimoto821/toshi-moto/commit/87254d5a1eb27adf6e47cce9ccf8d2b5befc0e37))
+* sha ([802f91f](https://github.com/toshimoto821/toshi-moto/commit/802f91f3b7ef1961974da8577b938a0a3c04ff53))
+
+## [1.7.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.0...web-ui-1.7.1) (2024-07-09)
+
+![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/--SHA=e435c82af9f87e5bd618fa60b44740d1dcd653e6/--FILES='apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
+
+
+
+### Bug Fixes
+
+* changelog ([8164461](https://github.com/toshimoto821/toshi-moto/commit/81644610e6d7c578ddf0bcfa5ed7c0bda01cab0e))
+* delete ([e435c82](https://github.com/toshimoto821/toshi-moto/commit/e435c82af9f87e5bd618fa60b44740d1dcd653e6))
+
+## [1.7.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.3...web-ui-1.7.0) (2024-07-09)
+
+![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/6e0f8e0e8262a039e60c78cfeebd2cc534e738da/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
+
+
+
+### Features
+
+* starts changelog update ([8b0cf71](https://github.com/toshimoto821/toshi-moto/commit/8b0cf710647c1329814254a6be6f1efee5ceded3))
+
+
+### Bug Fixes
+
+* bugs ([61b296d](https://github.com/toshimoto821/toshi-moto/commit/61b296d5e18a3936387c95e07d34d30aa6aebc42))
+* build ([83a61b2](https://github.com/toshimoto821/toshi-moto/commit/83a61b2cb4cf9ab006ff324ee38ec0083d64a966))
+* force build ([e53a9a0](https://github.com/toshimoto821/toshi-moto/commit/e53a9a0d7b8580c9060212e4688f17c14b1deb5a))
+* moves scripts to packages ([3dfd67f](https://github.com/toshimoto821/toshi-moto/commit/3dfd67fcd72526fc719bd03a23ca3c90ca42848b))
+* sha ([6e0f8e0](https://github.com/toshimoto821/toshi-moto/commit/6e0f8e0e8262a039e60c78cfeebd2cc534e738da))
+* sha ([98b1b34](https://github.com/toshimoto821/toshi-moto/commit/98b1b3466485953b5d999500a9e2c42886351e12))
+* sha ([99d9834](https://github.com/toshimoto821/toshi-moto/commit/99d98347402bf95fd4f532944adadff33d722beb))
 
 ## [1.6.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.2...web-ui-1.6.3) (2024-07-09)
 
