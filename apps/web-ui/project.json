@@ -82,11 +82,11 @@
       }
     },
     "version": {
-      "executor": "@jscutlery/semver:version",
+      "executor": "nx:run-commands",
       "options": {
-        "preset": "conventionalcommits",
-        "changelogHeader": "# UI Changelog"
-      }
+        "command": "echo 'Versioning UI'"
+      },
+      "implicitDeps": ["scripts:version"]
     }
   }
 }
