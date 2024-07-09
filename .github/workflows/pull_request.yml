@@ -83,7 +83,7 @@ jobs:
 
       - name: Release
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        run: npx nx affected --target=version --base=$BASE --head=$HEAD --projects=web-ui,api --sha=${{ env.SHA }} --FILES=${{ env.FILES}}
+        run: npx nx affected --target=version --base=$BASE --head=$HEAD --projects=web-ui,api
         env:
           SHA: ${{ env.HEAD }}
           FILES: "apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e -- Hero.png"
