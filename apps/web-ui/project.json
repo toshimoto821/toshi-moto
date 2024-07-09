@@ -81,19 +81,12 @@
         ]
       }
     },
-    "semver": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "preset": "conventionalcommits",
-        "changelogHeader": "# UI Changelog"
-      }
-    },
     "version": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node scripts/changelog.js ${VERSION_SHA} \"${VERSION_FILES}\""
+        "command": "echo 'Versioning UI'"
       },
-      "implicitDeps": ["semver"]
+      "implicitDeps": ["scripts:version"]
     }
   }
 }
