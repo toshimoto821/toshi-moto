@@ -6,6 +6,8 @@ const [, , sha = process.env["SHA"], files = process.env["FILES"]] =
 // const files = [
 //   "apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e -- Hero.png",
 // ];
+console.log(process.env["SHA"], "env.sha");
+console.log(process.argv, "argv");
 if (!sha || !files) {
   throw new Error("sha and files are required");
 }
