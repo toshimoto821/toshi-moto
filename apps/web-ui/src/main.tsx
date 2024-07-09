@@ -8,7 +8,7 @@ import "./index.css";
 
 import "react-day-picker/dist/style.css";
 import "@radix-ui/themes/styles.css";
-console.log(`Version number: __VERSION__`);
+console.log(`Version num: __VERSION__`);
 
 if (window.location.pathname !== "/") {
   window.location.href = "/";
