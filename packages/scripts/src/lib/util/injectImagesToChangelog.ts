@@ -20,27 +20,37 @@ export async function getLastTag() {
   const command = `git log`;
   const { stdout } = await execAsync(command);
   const lines = stdout.split("\n");
-  const tag = /tag:\s([^\\)]+)/.exec(lines[0]);
+  if (!lines?.[1]) {
+    return {};
+  }
   const commit = /commit\s(\w+)\s/.exec(lines[0]);
-
+  if (!commit?.[1]) return {};
+  const tags = await getTag(commit[1]);
   return {
-    tag: tag?.[1],
+    tags,
     commit: commit?.[1],
   };
 }
 
-export async function removeTag(tag: string) {
-  const command = `git tag -d ${tag}`;
-  const { stdout } = await execAsync(command);
-
-  return stdout;
+export async function removeTag(tag: string | string[]) {
+  const _tags = typeof tag === "string" ? [tag] : tag;
+  for (const tag of _tags) {
+    const command = `git tag -d ${tag}`;
+    const { stdout } = await execAsync(command);
+    console.log(stdout);
+  }
+  return true;
 }
 
-export async function addTag(hash: string, tag: string) {
-  const command = `git tag ${tag} ${hash}`;
-  const { stdout } = await execAsync(command);
+export async function addTag(hash: string, tag: string | string[]) {
+  const _tags = typeof tag === "string" ? [tag] : tag;
+  for (const tag of _tags) {
+    const command = `git tag ${tag} ${hash}`;
+    const { stdout } = await execAsync(command);
+    console.log(stdout);
+  }
 
-  return stdout;
+  return true;
 }
 
 // Function to update changelog with the specified version and append text
@@ -53,7 +63,7 @@ export async function injectImagesToChangelog(
   console.log("Getting last tag");
   const lastTag = await getLastTag();
 
-  if (!lastTag.tag) {
+  if (!lastTag.tags?.length) {
     console.error("No tags found");
     return;
   } else {
@@ -97,11 +107,11 @@ export async function injectImagesToChangelog(
     const { stdout } = await execAsync(command);
     console.log(stdout);
 
-    console.log(`moving tag ${lastTag.tag} on commit ${lastTag.commit}`);
-    await removeTag(lastTag.tag);
+    console.log(`moving tags ${lastTag.tags} on commit ${lastTag.commit}`);
+    await removeTag(lastTag.tags);
     const newCommit = await getLastTag();
     if (newCommit.commit) {
-      await addTag(newCommit.commit, lastTag.tag);
+      await addTag(newCommit.commit, lastTag.tags);
     } else {
       console.error("did not find a commit to tag");
     }
