@@ -1,5 +1,11 @@
 name: PR Merge
-
+# This runs twice on merge to main.
+# once for versioning from merge
+# once for pushing to relative ci
+# dont think relative ci is configure properly
+# i was expecting the merge alone would work
+# but since it runs from the merged branch it
+# doesnt sync with relative ci
 on:
   push:
     branches:
@@ -78,6 +84,10 @@ jobs:
       - name: Release
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         run: npx nx affected --target=version --base=$BASE --head=$HEAD
+        env:
+          VERSION_SHA: ${{ env.HEAD }}
+          FILES: "apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e -- Hero.png"
+          # @todo make ^^ dynamic
 
       - name: GitHub Push
         if: github.event_name == 'pull_request'
