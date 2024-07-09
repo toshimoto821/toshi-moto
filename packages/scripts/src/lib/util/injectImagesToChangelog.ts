@@ -23,7 +23,7 @@ export async function getLastTag() {
   if (!lines?.[1]) {
     return {};
   }
-  const commit = /commit\s(\w+)\s/.exec(lines[0]);
+  const commit = /commit\s(\w+)/.exec(lines[0]);
   if (!commit?.[1]) return {};
   const tags = await getTag(commit[1]);
   return {
