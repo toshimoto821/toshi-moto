@@ -1,4 +1,14 @@
 # UI Changelog
+## [1.7.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.3...web-ui-1.7.4) (2024-07-10)
+
+![$FILES](https://raw.githubusercontent.com/toshimoto821/toshi-moto/500fd0deb8a42e35649ccf39f312e9e493cf0f08/$FILES)
+
+
+
+### Bug Fixes
+
+* sha ([500fd0d](https://github.com/toshimoto821/toshi-moto/commit/500fd0deb8a42e35649ccf39f312e9e493cf0f08))
+
 ## [1.7.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.2...web-ui-1.7.3) (2024-07-10)
 
 ![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/5a1e6249bfd4cc860e4ae35d832df049c3a7eec3/%5C%22apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
