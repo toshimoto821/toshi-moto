@@ -1,4 +1,14 @@
 # UI Changelog
+## [1.7.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.5...web-ui-1.7.6) (2024-07-10)
+
+![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/a4c8443039757bdb3b1f317f43fc93c89faa12d4/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
+
+
+
+### Bug Fixes
+
+* sha ([7a5c106](https://github.com/toshimoto821/toshi-moto/commit/7a5c10651f9edb08998819ec113f5abb52d93a09))
+
 ## [1.7.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.4...web-ui-1.7.5) (2024-07-10)
 
 ![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/--projects=web-ui,api/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
