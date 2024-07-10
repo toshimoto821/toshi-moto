@@ -26,7 +26,7 @@
     "version": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["node dist/packages/scripts/src/lib/version.js'"]
+        "commands": ["node dist/packages/scripts/src/lib/version.js"]
       },
 
       "dependsOn": ["build"]
