@@ -4,69 +4,6 @@
 ![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/a4c8443039757bdb3b1f317f43fc93c89faa12d4/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
 
 
-
-### Bug Fixes
-
-* sha ([7a5c106](https://github.com/toshimoto821/toshi-moto/commit/7a5c10651f9edb08998819ec113f5abb52d93a09))
-
-## [1.7.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.4...web-ui-1.7.5) (2024-07-10)
-
-![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/--projects=web-ui,api/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
-
-
-
-### Bug Fixes
-
-* sha ([c9a62a2](https://github.com/toshimoto821/toshi-moto/commit/c9a62a289d59d31cdebb6bf2b0817c9cdcaa0748))
-
-## [1.7.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.3...web-ui-1.7.4) (2024-07-10)
-
-![$FILES](https://raw.githubusercontent.com/toshimoto821/toshi-moto/500fd0deb8a42e35649ccf39f312e9e493cf0f08/$FILES)
-
-
-
-### Bug Fixes
-
-* sha ([500fd0d](https://github.com/toshimoto821/toshi-moto/commit/500fd0deb8a42e35649ccf39f312e9e493cf0f08))
-
-## [1.7.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.2...web-ui-1.7.3) (2024-07-10)
-
-![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/5a1e6249bfd4cc860e4ae35d832df049c3a7eec3/%5C%22apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
-
-
-
-### Bug Fixes
-
-* quotes ([64d83af](https://github.com/toshimoto821/toshi-moto/commit/64d83af8132f4721a3c43a35c24a89f5ceccbb11))
-
-## [1.7.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.1...web-ui-1.7.2) (2024-07-09)
-
-![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/87254d5a1eb27adf6e47cce9ccf8d2b5befc0e37/'apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
-
-
-
-### Bug Fixes
-
-* sha ([87254d5](https://github.com/toshimoto821/toshi-moto/commit/87254d5a1eb27adf6e47cce9ccf8d2b5befc0e37))
-* sha ([802f91f](https://github.com/toshimoto821/toshi-moto/commit/802f91f3b7ef1961974da8577b938a0a3c04ff53))
-
-## [1.7.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.0...web-ui-1.7.1) (2024-07-09)
-
-![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/--SHA=e435c82af9f87e5bd618fa60b44740d1dcd653e6/--FILES='apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e)
-
-
-
-### Bug Fixes
-
-* changelog ([8164461](https://github.com/toshimoto821/toshi-moto/commit/81644610e6d7c578ddf0bcfa5ed7c0bda01cab0e))
-* delete ([e435c82](https://github.com/toshimoto821/toshi-moto/commit/e435c82af9f87e5bd618fa60b44740d1dcd653e6))
-
-## [1.7.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.6.3...web-ui-1.7.0) (2024-07-09)
-
-![web-ui-e2e](https://raw.githubusercontent.com/toshimoto821/toshi-moto/6e0f8e0e8262a039e60c78cfeebd2cc534e738da/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)
-
-
-
 ### Features
 
 * starts changelog update ([8b0cf71](https://github.com/toshimoto821/toshi-moto/commit/8b0cf710647c1329814254a6be6f1efee5ceded3))
