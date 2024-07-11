@@ -18,7 +18,7 @@ const data = images
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
     if (!pieces) return null;
     const path = pieces[2];
-    const [, name] = peices.splice(" -- ");
+    const [, name] = pieces.splice(" -- ");
     return {
       type: pieces[1],
       path,
@@ -27,6 +27,7 @@ const data = images
   })
   .filter((v) => !!v);
 
+console.log(data, "data");
 let commentBody = "No screenshot changes detected";
 
 if (process.env.IMAGE_CHANGES === "true") {
