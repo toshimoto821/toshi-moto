@@ -146,7 +146,9 @@ export const rangeToDays = (range: IChartTimeFrameRange) => {
 };
 
 export const getRangeFromTime = (time: number) => {
-  if (time <= 1000 * 60 * 60 * 24) {
+  if (time < 1000 * 60 * 60) {
+    return "5M";
+  } else if (time <= 1000 * 60 * 60 * 24) {
     return "1D";
   } else if (time <= 1000 * 60 * 60 * 24 * 7) {
     return "1W";
