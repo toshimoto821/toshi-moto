@@ -88,7 +88,7 @@ export async function injectImagesToChangelog(
     return;
   }
 
-  const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}`;
+  const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}/apps/web-ui-e2e/cypress/screenshots/app.cy.ts`;
   const appendText = filepaths
     .map((filepath) => {
       const filename = basename(filepath);
