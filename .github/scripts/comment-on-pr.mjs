@@ -17,9 +17,12 @@ const data = images
   .map((part) => {
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
     if (!pieces) return null;
+    const path = pieces[2];
+    const [, name] = peices.splice(" -- ");
     return {
       type: pieces[1],
-      path: pieces[2],
+      path,
+      name,
     };
   })
   .filter((v) => !!v);
@@ -40,13 +43,22 @@ if (process.env.IMAGE_CHANGES === "true") {
       img.path
     )}`;
     if (img.type === "M") {
-      return `|![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
+      return `
+      | ${img.name} | ${img.name} |
+      |![${img.type}](${baseUrl})|![${img.type}](${headUrl})|
+      `;
     }
     if (img.type === "D") {
-      return `|![${img.type}](${baseUrl})|Deleted|`;
+      return `
+        | ${img.name} | ${img.name} |
+        |![${img.type}](${baseUrl})|Deleted|
+      `;
     }
 
-    return `|Added|![${img.type}](${headUrl})`;
+    return `
+    | ${img.name} | ${img.name} |
+    | Added | ![${img.type}](${headUrl}) |
+    `;
   })}
   `;
 }
