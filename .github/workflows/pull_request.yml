@@ -97,7 +97,7 @@ jobs:
         id: ls_screenshots
         # | head -n 1 only gets the first line of the output
         run: |
-          OUTPUT=$(npx nx run web-ui-e2e:ls) | head -n 1
+          OUTPUT=$(npx nx run web-ui-e2e:ls | head -n 1)
           echo "$OUTPUT"
           echo "nx_output=$OUTPUT" >> $GITHUB_OUTPUT
 
