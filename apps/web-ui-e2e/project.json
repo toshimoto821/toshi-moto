@@ -10,7 +10,7 @@
     "ls": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "ls -1 cypress/screenshots/app.cy.ts/ | paste -sd \",\" -"
+        "command": "ls -1 apps/web-ui-e2e/cypress/screenshots/app.cy.ts/ | paste -sd \",\" -"
       }
     }
   }
