@@ -11,6 +11,7 @@ console.log(process.argv, "argv");
 if (!sha || !files) {
   throw new Error("sha and files are required");
 }
+
 changelogAndVersion({
   files: files.split(",").map((f) => f.trim()),
   sha,
