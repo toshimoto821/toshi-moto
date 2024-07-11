@@ -6,5 +6,12 @@
   "tags": [],
   "implicitDependencies": ["web-ui"],
   "// targets": "to see all targets run: nx show project web-ui-e2e --web",
-  "targets": {}
+  "targets": {
+    "ls": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ls -1 cypress/screenshots/app.cy.ts/ | paste -sd \",\" -"
+      }
+    }
+  }
 }

@@ -13,6 +13,12 @@ type IResponse = {
   command: string;
   stdout: string;
 };
+
+/**
+ * @param {string} sha -  the sha of the commit to point the image links to
+ * @param {string} files - the file paths to the images
+ * @param {boolean} dryRun - run without editing
+ */
 export async function changelogAndVersion(opts: IOpts) {
   const dryRun = opts.dryRun ? "--dry-run" : "";
   const { files, sha } = opts;

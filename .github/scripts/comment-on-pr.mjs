@@ -13,20 +13,22 @@ const head = process.env.HEAD;
 const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
 
 const images = GIT_STATUS_OUTPUT.trim().split("\n");
-console.log(images, "images");
 const data = images
   .map((part) => {
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
     if (!pieces) return null;
+    const path = pieces[2];
+    const [, name] = peices.splice(" -- ");
     return {
       type: pieces[1],
-      path: pieces[2],
+      path,
+      name,
     };
   })
   .filter((v) => !!v);
 
 let commentBody = "No screenshot changes detected";
-console.log(data, "data");
+
 if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
   Cypress Testing Results:
@@ -41,13 +43,22 @@ if (process.env.IMAGE_CHANGES === "true") {
       img.path
     )}`;
     if (img.type === "M") {
-      return `|![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
+      return `
+      | ${img.name} | ${img.name} |
+      |![${img.type}](${baseUrl})|![${img.type}](${headUrl})|
+      `;
     }
     if (img.type === "D") {
-      return `|![${img.type}](${baseUrl})|Deleted|`;
+      return `
+        | ${img.name} | ${img.name} |
+        |![${img.type}](${baseUrl})|Deleted|
+      `;
     }
 
-    return `|Added|![${img.type}](${headUrl})`;
+    return `
+    | ${img.name} | ${img.name} |
+    | Added | ![${img.type}](${headUrl}) |
+    `;
   })}
   `;
 }
