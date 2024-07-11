@@ -80,7 +80,7 @@ jobs:
         if: env.CHANGED == 'true'
         run: |
           echo "GIT_STATUS_OUTPUT<<EOF" >> $GITHUB_ENV
-           git status --porcelain apps/web-ui-e2e/cypress/screenshots/ >> $GITHUB_ENV
+           git status --porcelain apps/web-ui-e2e/cypress/screenshots/app.cy.ts >> $GITHUB_ENV
            echo "EOF" >> $GITHUB_ENV
 
       - name: Configure git
@@ -101,6 +101,13 @@ jobs:
         with:
           branch: ${{ github.head_ref }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Changelog Files
+        if: env.CHANGED == 'true'
+        id: ls_screenshots
+        run: |
+          OUTPUT=$(npx nx run web-ui-e2e:ls)
+          echo "$OUTPUT"
+          echo "::set-output name=nx_output::$OUTPUT"
 
       - name: Construct Commit URL
         run: echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${{ env.COMMIT_HASH }}" >> $GITHUB_ENV

@@ -81,13 +81,19 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Get Changelog Files
+        id: ls_screenshots
+        run: |
+          OUTPUT=$(npx nx run web-ui-e2e:ls)
+          echo "$OUTPUT"
+          echo "::set-output name=nx_output::$OUTPUT"
+
       - name: Release
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         run: npx nx affected --target=version --base=$BASE --head=$HEAD
         env:
           SHA: ${{ env.HEAD }}
-          FILES: "apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e -- Hero.png"
-          # @todo make ^^ dynamic
+          FILES: ${{ steps.ls_screenshots.outputs.nx_output }}
 
       - name: GitHub Push
         if: github.event_name == 'pull_request'

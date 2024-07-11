@@ -13,7 +13,6 @@ const head = process.env.HEAD;
 const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
 
 const images = GIT_STATUS_OUTPUT.trim().split("\n");
-console.log(images, "images");
 const data = images
   .map((part) => {
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
@@ -26,7 +25,7 @@ const data = images
   .filter((v) => !!v);
 
 let commentBody = "No screenshot changes detected";
-console.log(data, "data");
+
 if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
   Cypress Testing Results:
