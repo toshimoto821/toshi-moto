@@ -98,7 +98,11 @@ jobs:
         run: |
           OUTPUT=$(npx nx run web-ui-e2e:ls)
           echo "$OUTPUT"
-          echo "::set-output name=nx_output::$OUTPUT"
+          echo "nx_output=$OUTPUT" >> $GITHUB_OUTPUT
+
+      - name: Echo output
+        run: |
+          echo "${{ steps.ls_screenshots.outputs.nx_output }}"
 
       - name: Release
         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
