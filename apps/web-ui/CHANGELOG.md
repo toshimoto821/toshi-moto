@@ -1,4 +1,18 @@
 # UI Changelog
+## [1.7.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.8...web-ui-1.7.9) (2024-07-12)
+
+  |    |  |    |
+  |  --- | --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/40d8e3aeac7d8dc8636fb148b81400b5d6c1a743/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/40d8e3aeac7d8dc8636fb148b81400b5d6c1a743/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)||
+
+  
+
+
+### Bug Fixes
+
+* build ([40d8e3a](https://github.com/toshimoto821/toshi-moto/commit/40d8e3aeac7d8dc8636fb148b81400b5d6c1a743))
+* build ([7caf5b1](https://github.com/toshimoto821/toshi-moto/commit/7caf5b1e7a17d70a0f21d63cb7312f6071ed5c70))
+
 ## [1.7.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.7...web-ui-1.7.8) (2024-07-12)
 |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/091644466e62f9c1a924aa2ce478f9ca40fee7e0/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/091644466e62f9c1a924aa2ce478f9ca40fee7e0/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)||
 
