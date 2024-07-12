@@ -8,6 +8,8 @@ const execAsync = promisify(exec);
 
 function transformArrayToNestedArray(arr: string[], numCols: number) {
   const result = [];
+  // if len of array is less than numCols, set the numCols to the len
+  numCols = Math.min(arr.length, numCols);
 
   for (let i = 0; i < arr.length; i += numCols) {
     // Slice the array into chunks of numCols

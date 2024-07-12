@@ -84,8 +84,16 @@
     "semver": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "preset": "conventionalcommits",
-        "changelogHeader": "# UI Changelog"
+        "changelogHeader": "# UI Changelog",
+        "preset": {
+          "name": "conventionalcommits",
+          "types": [
+            { "type": "feat", "section": "✨ Features" },
+            { "type": "fix", "section": "🐞 Bug Fixes" },
+            { "type": "chore", "hidden": true },
+            { "type": "docs", "hidden": true }
+          ]
+        }
       }
     },
     "version": {
