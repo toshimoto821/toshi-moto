@@ -41,7 +41,7 @@ export const createMarkdownTable = (
   const table = transformArrayToNestedArray(paths, numCols);
 
   const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}/apps/web-ui-e2e/cypress/screenshots/app.cy.ts`;
-  return table.reduce((acc, row) => {
+  const tableMarkdown = table.reduce((acc, row) => {
     const updatedRow = row.map((path) => {
       if (!path) return "";
       const filename = basename(path);
@@ -49,6 +49,14 @@ export const createMarkdownTable = (
     });
     return `${acc}|${updatedRow.join("|")}|\n`;
   }, "");
+
+  const header1 = "|  " + new Array(numCols).fill("  ").join("|") + "  |";
+  const header2 = "| " + new Array(numCols).fill(" --- ").join("|") + " |";
+  return `
+  ${header1}
+  ${header2}
+  ${tableMarkdown}
+  `;
 };
 
 export async function getTag(hash: string) {
