@@ -84,14 +84,22 @@
     "semver": {
       "executor": "@jscutlery/semver:version",
       "options": {
-        "preset": "conventionalcommits",
-        "changelogHeader": "# UI Changelog"
+        "changelogHeader": "# UI Changelog",
+        "preset": {
+          "name": "conventionalcommits",
+          "types": [
+            { "type": "feat", "section": "✨ Features" },
+            { "type": "fix", "section": "🐞 Bug Fixes" },
+            { "type": "chore", "hidden": true }
+          ]
+        }
       }
     },
     "version": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "echo 'Versioning UI'"
+        "command": "echo 'Versioning UI'",
+        "preset": {}
       },
       "dependsOn": ["scripts:version"]
     }
