@@ -6,6 +6,51 @@ import { exec } from "child_process";
 import { promisify } from "util";
 const execAsync = promisify(exec);
 
+function transformArrayToNestedArray(arr: string[], numCols: number) {
+  const result = [];
+
+  for (let i = 0; i < arr.length; i += numCols) {
+    // Slice the array into chunks of numCols
+    const chunk = arr.slice(i, i + numCols);
+
+    // If the chunk is smaller than numCols, fill it with empty strings
+    while (chunk.length < numCols) {
+      chunk.push("");
+    }
+
+    result.push(chunk);
+  }
+
+  return result;
+}
+
+/**
+ * 
+ *  
+ *  turns ['one', 'two', 'three', 'four', 'five'] into
+    [
+      ['one', 'two', 'three'],
+      ['four', 'five', '']
+    ];
+ */
+export const createMarkdownTable = (
+  paths: string[],
+  hash: string,
+  numCols = 3
+) => {
+  const table = transformArrayToNestedArray(paths, numCols);
+
+  const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}/apps/web-ui-e2e/cypress/screenshots/app.cy.ts`;
+  return table.reduce((acc, row) => {
+    const updatedRow = row.map((path) => {
+      if (!path) return "";
+      const filename = basename(path);
+      return `![${filename}](${url}/${encodeURI(path)})`;
+    });
+    return `${acc}|${updatedRow.join("|")}|\n`;
+  }, "");
+};
+
 export async function getTag(hash: string) {
   const command = `git tag --points-at ${hash}`;
   const { stdout } = await execAsync(command);
@@ -88,13 +133,8 @@ export async function injectImagesToChangelog(
     return;
   }
 
-  const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}/apps/web-ui-e2e/cypress/screenshots/app.cy.ts`;
-  const appendText = filepaths
-    .map((filepath) => {
-      const filename = basename(filepath);
-      return `\n![${filename}](${url}/${encodeURI(filepath)})\n`;
-    })
-    .join();
+  const numCols = 3;
+  const appendText = createMarkdownTable(filepaths, hash, numCols);
 
   // Find the version entry and update it with the append text
   changelog = changelog.replace(versionRegex, `$1\n${appendText}`);
