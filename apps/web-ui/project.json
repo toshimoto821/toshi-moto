@@ -90,7 +90,8 @@
           "types": [
             { "type": "feat", "section": "✨ Features" },
             { "type": "fix", "section": "🐞 Bug Fixes" },
-            { "type": "chore", "hidden": true }
+            { "type": "chore", "hidden": true },
+            { "type": "docs", "hidden": true }
           ]
         }
       }
@@ -98,8 +99,7 @@
     "version": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "echo 'Versioning UI'",
-        "preset": {}
+        "command": "echo 'Versioning UI'"
       },
       "dependsOn": ["scripts:version"]
     }
