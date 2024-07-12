@@ -19,7 +19,7 @@ const data = images
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
     if (!pieces) return null;
     const path = pieces[2];
-    console.log(pieces);
+    console.log(pieces, "foo");
     const [, name] = pieces.split(" -- ");
     return {
       type: pieces[1],
