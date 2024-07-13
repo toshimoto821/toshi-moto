@@ -77,7 +77,7 @@ jobs:
       - name: Git DIFF
         run: |
           DIFF_OUTPUT=$(git --no-pager diff --name-only ${{ github.event.pull_request.base.sha }}  ${{ github.event.pull_request.head.sha }} -- apps/web-ui-e2e/cypress/screenshots/)
-          echo $DIFF_OUTPUT
+          DIFF_OUTPUT=$(echo "$DIFF_OUTPUT" | tr '\n' ' ')
           echo "DIFF_FILES=$DIFF_OUTPUT" >> $GITHUB_ENV
 
       - name: Check if files have changed in the specified directory
