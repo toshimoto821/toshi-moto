@@ -30,7 +30,7 @@ const data = images
 
 console.log(data, "data");
 let commentBody = "No screenshot changes detected";
-
+const bust = new Date().getTime();
 if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
 Cypress Testing Results:
@@ -42,10 +42,10 @@ ${data
   .map((img) => {
     const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${encodeURIComponent(
       img.path
-    )}`;
+    )}?ts=${bust}`;
     const headUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${head}/${encodeURIComponent(
       img.path
-    )}`;
+    )}?ts=${bust}`;
     if (img.type === "M") {
       return `| ${img.name} | ${img.name} |
 |![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
