@@ -236,7 +236,7 @@ export const Navbar = () => {
           className="flex flex-col absolute z-40 w-screen h-[140px]"
           ref={topHeaderToFifty}
         >
-          <div className="flex px-6 pt-6 backface-visibility-none">
+          <div className="bg-red-200 flex px-6 pt-6 backface-visibility-none">
             <div className="flex flex-col text-right">
               <Text
                 data-testid="btc-price"
