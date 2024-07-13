@@ -18,8 +18,8 @@ const data = images
   .map((part) => {
     const pieces = /(\w{1})\s"([^"]+)/.exec(part);
     if (!pieces) return null;
-    const path = pieces[2];
-    const [, name] = pieces.split(" -- ");
+    const path = pieces[2] || "";
+    const [, name] = path.split(" -- ");
     return {
       type: pieces[1],
       path,
