@@ -8,8 +8,6 @@ const execAsync = promisify(exec);
 
 function transformArrayToNestedArray(arr: string[], numCols: number) {
   const result = [];
-  // if len of array is less than numCols, set the numCols to the len
-  numCols = Math.min(arr.length, numCols);
 
   for (let i = 0; i < arr.length; i += numCols) {
     // Slice the array into chunks of numCols
@@ -41,7 +39,7 @@ export const createMarkdownTable = (
   numCols = 3
 ) => {
   const table = transformArrayToNestedArray(paths, numCols);
-
+  console.log("table", table);
   const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}/apps/web-ui-e2e/cypress/screenshots/app.cy.ts`;
   const tableMarkdown = table.reduce((acc, row) => {
     const updatedRow = row.map((path) => {
@@ -143,9 +141,12 @@ export async function injectImagesToChangelog(
     return;
   }
 
-  const numCols = 3;
+  // if len of array is less than numCols, set the numCols to the len
+  const numCols = Math.min(filepaths.length, 3);
+
   const appendText = createMarkdownTable(filepaths, hash, numCols);
 
+  console.log("markdown table", appendText);
   // Find the version entry and update it with the append text
   changelog = changelog.replace(versionRegex, `$1\n${appendText}`);
 
