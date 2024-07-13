@@ -133,7 +133,7 @@ jobs:
           COMMIT_URL: "${{ env.COMMIT_URL }}"
           GIT_STATUS_OUTPUT: "${{ env.GIT_STATUS_OUTPUT }}"
           BASE: "${{ github.event.pull_request.base.ref }}"
-          HEAD: ${{ github.sha }}
+          HEAD: ${{ github.event.pull_request.head.ref }}
           IMAGE_CHANGES: "${{ env.CHANGED }}"
 
       - name: Send bundle stats to RelativeCI
