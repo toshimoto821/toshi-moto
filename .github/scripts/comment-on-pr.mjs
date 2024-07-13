@@ -29,7 +29,7 @@ const data = images
   .filter((v) => !!v);
 
 console.log(data, "data");
-let commentBody = "No screenshot changes detected";
+let commentBody = `No screenshot changes detected comparing ${base} vs ${head}`;
 
 if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
