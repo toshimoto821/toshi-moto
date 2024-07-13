@@ -36,7 +36,7 @@ if (process.env.IMAGE_CHANGES === "true") {
 Cypress Testing Results:
 [Image Commit](${process.env.COMMIT_URL})
   
-| BASE  |  HEAD  |
+| ${base}  |  ${head}  |
 |  ---  |   ---  |
 ${data
   .map((img) => {

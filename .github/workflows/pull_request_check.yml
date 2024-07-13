@@ -74,23 +74,24 @@ jobs:
             echo "cypress_failed=false" >> $GITHUB_ENV
           fi
 
-      - name: Git DIFF
+      - name: Git status
         run: |
-          DIFF_OUTPUT=$(git --no-pager diff --name-only ${{ github.event.pull_request.base.sha }}  ${{ github.event.pull_request.head.sha }} -- apps/web-ui-e2e/cypress/screenshots/)
-          DIFF_OUTPUT=$(echo "$DIFF_OUTPUT" | tr '\n' ' ')
-          echo "DIFF_FILES=$DIFF_OUTPUT" >> $GITHUB_ENV
+          git status
 
+      # this is problematic
+      # if the images change, a commit happens and changed images are commited
+      # then if changed back there is no change vs base
+      # that may be ok but comment is wrong
+      # comment says base vs head
+      # that isnt correct
       - name: Check if files have changed in the specified directory
         id: file_check
         run: |
-          if [ -z "${{ env.DIFF_FILES }}" ]; then
+          if [[ -n $(git status --porcelain apps/web-ui-e2e/cypress/screenshots/) ]]; then
             echo "CHANGED=true" >> $GITHUB_ENV
           else
             echo "CHANGED=false" >> $GITHUB_ENV
           fi
-
-      - name: echo CHANGED
-        run: echo CHANGED=$CHANGED
 
       - name: grab the screenshots
         id: screenshot_status
@@ -140,7 +141,7 @@ jobs:
           GIT_STATUS_OUTPUT: "${{ env.GIT_STATUS_OUTPUT }}"
           BASE: "${{ github.event.pull_request.base.sha }}"
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          COMMIT_HASH: ${{ env.COMMIT_HASH }}
+          COMMIT_HASH: ${{ github.event.pull_request.head.sha }}
           IMAGE_CHANGES: "${{ env.CHANGED }}"
 
       - name: Send bundle stats to RelativeCI
