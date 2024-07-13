@@ -77,6 +77,13 @@ jobs:
       - name: Git status
         run: |
           git status
+
+      # this is problematic
+      # if the images change, a commit happens and changed images are commited
+      # then if changed back there is no change vs base
+      # that may be ok but comment is wrong
+      # comment says base vs head
+      # that isnt correct
       - name: Check if files have changed in the specified directory
         id: file_check
         run: |
@@ -132,8 +139,9 @@ jobs:
           COMMENT_BODY: "${{ env.COMMENT_BODY }}"
           COMMIT_URL: "${{ env.COMMIT_URL }}"
           GIT_STATUS_OUTPUT: "${{ env.GIT_STATUS_OUTPUT }}"
-          BASE: "${{ github.event.pull_request.base.ref }}"
-          HEAD: ${{ github.sha }}
+          BASE: "${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          COMMIT_HASH: ${{ github.event.pull_request.head.sha }}
           IMAGE_CHANGES: "${{ env.CHANGED }}"
 
       - name: Send bundle stats to RelativeCI

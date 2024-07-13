@@ -9,7 +9,7 @@ const issue_number = process.env.PULL_REQUEST_NUMBER;
 
 const issueComment = context.issue;
 const base = process.env.BASE;
-const head = process.env.HEAD;
+const head = process.env.COMMIT_HASH || process.env.HEAD;
 const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
 
 const images = GIT_STATUS_OUTPUT.trim().split("\n");
@@ -33,40 +33,35 @@ let commentBody = "No screenshot changes detected";
 
 if (process.env.IMAGE_CHANGES === "true") {
   commentBody = `
-  Cypress Testing Results:
-  [Image Commit](${process.env.COMMIT_URL})
-  | BASE  |  HEAD  |
-  |  ---  |   ---  |
-  ${data
-    .map((img) => {
-      const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${encodeURIComponent(
-        img.path
-      )}`;
-      const headUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${head}/${encodeURIComponent(
-        img.path
-      )}`;
-      if (img.type === "M") {
-        return `
-      | ${img.name} | ${img.name} |
-      |![${img.type}](${baseUrl})|![${img.type}](${headUrl})|
-      `;
-      }
-      if (img.type === "D") {
-        return `
-        | ${img.name} | ${img.name} |
-        |![${img.type}](${baseUrl})|Deleted|
-      `;
-      }
+Cypress Testing Results:
+[Image Commit](${process.env.COMMIT_URL})
+  
+| ${base}  |  ${head}  |
+|  ---  |   ---  |
+${data
+  .map((img) => {
+    const baseUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${base}/${encodeURIComponent(
+      img.path
+    )}`;
+    const headUrl = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${head}/${encodeURIComponent(
+      img.path
+    )}`;
+    if (img.type === "M") {
+      return `| ${img.name} | ${img.name} |
+|![${img.type}](${baseUrl})|![${img.type}](${headUrl})|`;
+    }
+    if (img.type === "D") {
+      return `| ${img.name} | ${img.name} |
+|![${img.type}](${baseUrl})|Deleted|`;
+    }
 
-      return `
-    | ${img.name} | ${img.name} |
-    | Added | ![${img.type}](${headUrl}) |
-    `;
-    })
-    .join("\n")}
+    return `| ${img.name} | ${img.name} |
+| Added | ![${img.type}](${headUrl}) |`;
+  })
+  .join("\n")}
   `;
 }
-console.log(commentBody);
+
 await octokit.rest.issues.createComment({
   ...issueComment,
   body: commentBody,
