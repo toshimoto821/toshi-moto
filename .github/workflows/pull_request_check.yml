@@ -74,17 +74,23 @@ jobs:
             echo "cypress_failed=false" >> $GITHUB_ENV
           fi
 
-      - name: Git status
+      - name: Git DIFF
         run: |
-          git status
+          DIFF_OUTPUT=$(git --no-pager diff --name-only ${{ github.event.pull_request.base.sha }}  ${{ github.event.pull_request.head.sha }} -- apps/web-ui-e2e/cypress/screenshots/)
+          echo $DIFF_OUTPUT
+          echo "DIFF_FILES=$DIFF_OUTPUT" >> $GITHUB_ENV
+
       - name: Check if files have changed in the specified directory
         id: file_check
         run: |
-          if [[ -n $(git status --porcelain apps/web-ui-e2e/cypress/screenshots/) ]]; then
+          if [ -z "${{ env.DIFF_FILES }}" ]; then
             echo "CHANGED=true" >> $GITHUB_ENV
           else
             echo "CHANGED=false" >> $GITHUB_ENV
           fi
+
+      - name: echo CHANGED
+        run: echo CHANGED=$CHANGED
 
       - name: grab the screenshots
         id: screenshot_status
