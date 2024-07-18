@@ -28,7 +28,7 @@ export const Onboarding = () => {
   };
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-2 md:px-0 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div className="py-2 px-4 border rounded bg-white drop-shadow-lg">
           <div className="py-4">
             <Heading size="6">Toshi Moto</Heading>
@@ -119,7 +119,7 @@ export const Onboarding = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1gap-4 px-2 md:px-0 mb-4">
+      <div className="grid grid-cols-1gap-4 mb-4">
         <div className="py-2 px-4 border rounded bg-white drop-shadow-lg">
           <div className="py-4">
             <Heading>Credits / About</Heading>
