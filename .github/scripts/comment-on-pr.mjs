@@ -9,7 +9,7 @@ const issue_number = process.env.PULL_REQUEST_NUMBER;
 
 const issueComment = context.issue;
 const base = process.env.BASE;
-const head = process.env.COMMIT_HASH || process.env.HEAD;
+const head = process.env.COMMIT_HASH || process.env.HEAD_SHA;
 const GIT_STATUS_OUTPUT = process.env.GIT_STATUS_OUTPUT || "";
 
 const images = GIT_STATUS_OUTPUT.trim().split("\n");
@@ -36,7 +36,7 @@ if (process.env.IMAGE_CHANGES === "true") {
 Cypress Testing Results:
 [Image Commit](${process.env.COMMIT_URL})
   
-| ${base}  |  ${head}  |
+| BASE (${base}) |  HEAD (${head}) |
 |  ---  |   ---  |
 ${data
   .map((img) => {
