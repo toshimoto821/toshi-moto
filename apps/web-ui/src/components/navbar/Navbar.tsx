@@ -218,7 +218,7 @@ export const Navbar = () => {
         {lineData && (
           <div
             ref={lineWrapperRef}
-            className={`absolute opacity-0 z-30 w-[${dimensions.width}]px`}
+            className={`absolute px-5 opacity-0 z-30 w-[${dimensions.width}]px`}
           >
             <ThinLine
               lineData={lineData}
