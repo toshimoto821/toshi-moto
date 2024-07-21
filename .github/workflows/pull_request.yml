@@ -59,7 +59,7 @@ jobs:
 
       - name: Determine the head commit of the PR
         id: determine_head
-        run: echo "HEAD=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+        run: echo "HEAD=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
 
       - name: Define BASE and HEAD
         run: |
