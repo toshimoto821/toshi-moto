@@ -1,4 +1,21 @@
 # UI Changelog
+## [1.7.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.11...web-ui-1.7.12) (2024-07-21)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/6635fc520798bc3fd242b06a0858d991b607fde4/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/6635fc520798bc3fd242b06a0858d991b607fde4/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* **dx:** build ([6d19d0b](https://github.com/toshimoto821/toshi-moto/commit/6d19d0b98ca2c3d9b1dbe8b29554d9d4d578e758))
+* **dx:** build ([06393af](https://github.com/toshimoto821/toshi-moto/commit/06393af7109a8b5250c8869d50c43a5a7d35fd66))
+* **dx:** deployable ([9207fbc](https://github.com/toshimoto821/toshi-moto/commit/9207fbcf8a2ae0fb072821f4f5907141163a23e1))
+* **dx:** fixes HEAD value for pr ([911c558](https://github.com/toshimoto821/toshi-moto/commit/911c558474c667971b387512745aacf99b9e119c))
+* **dx:** testing build and release ([963db28](https://github.com/toshimoto821/toshi-moto/commit/963db282cb24b7677f45e2a870a79e1ca512901b))
+
 ## [1.7.11](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.10...web-ui-1.7.11) (2024-07-13)
 
   |    |    |
