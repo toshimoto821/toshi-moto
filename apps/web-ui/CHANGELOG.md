@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.7.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.12...web-ui-1.7.13) (2024-07-24)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/253ddc67a1eef8d220af4c95304caaddd64bac01/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/253ddc67a1eef8d220af4c95304caaddd64bac01/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* umbrel bitcoin node url ([1a84483](https://github.com/toshimoto821/toshi-moto/commit/1a844837354a81a744eabb0aa96274533af457af))
+
 ## [1.7.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.11...web-ui-1.7.12) (2024-07-21)
 
   |    |    |
