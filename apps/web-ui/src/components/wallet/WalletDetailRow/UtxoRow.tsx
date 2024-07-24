@@ -12,10 +12,17 @@ import { AppContext } from "@providers/AppProvider";
 import { Wallet } from "@models/Wallet";
 import { Utxo } from "@models/Utxo";
 import { Transaction } from "@models/Transaction";
-import { cn, formatPrice, padBtcZeros, trimAddress } from "@lib/utils";
+import {
+  cn,
+  formatPrice,
+  getBitcoinNodeUrl,
+  padBtcZeros,
+  trimAddress,
+} from "@lib/utils";
 import { UtxoSankey } from "@components/graphs/UtxoSankey";
 import { TxTableHeader } from "./UtxoRow/TxTableHeader";
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+
+const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 
 type IUtxoRow = {
   utxo: Utxo;

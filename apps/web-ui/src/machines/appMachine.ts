@@ -21,8 +21,9 @@ import { IRequest, IResponse } from "./network.types";
 import { networkLoggerMachine } from "@machines/networkLoggerMachine";
 import { colorScale } from "@components/graphs/graph-utils";
 import { type IPrices } from "./btcHistoricPriceMachine";
+import { getBitcoinNodeUrl } from "@root/lib/utils";
 
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 const VITE_REST_TIME_BETWEEN_REQUESTS = import.meta.env
   .VITE_REST_TIME_BETWEEN_REQUESTS;
 const VITE_MAX_CONCURRENT_REQUESTS = import.meta.env
