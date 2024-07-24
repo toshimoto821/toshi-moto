@@ -87,6 +87,7 @@ jobs:
           VITE_COINGECKO_PRICE_API_URL: /api/prices/simple
           VITE_COINGECKO_API_URL: /api/prices/range
           VITE_BITCOIN_NODE_URL: http://umbrel.local:3006
+          VITE_IS_UMBREL: true
           VITE_REST_TIME_BETWEEN_REQUESTS: 0
           VITE_MAX_CONCURRENT_REQUESTS: 8
           VITE_BITCOIN_NETWORK: mainnet

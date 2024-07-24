@@ -1,8 +1,9 @@
 import { http, HttpResponse } from "msw";
 import address from "./addresses/emptyAddress.json";
 import mockTx from "./txs/tx_bc1q0zca2ylgutn9jxhkcflhry7kmrr86tf8wh5tat.json";
+import { getBitcoinNodeUrl } from "@root/lib/utils";
 
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 
 export const handlers = [
   http.get(`${VITE_BITCOIN_NODE_URL}/api/address/:address`, ({ params }) => {

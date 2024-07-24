@@ -70,6 +70,7 @@ jobs:
       - name: Lint
         run: npx nx affected --target=lint --base=$BASE --head=$HEAD
 
+      # dont think this is needed.
       - name: Write env file
         run: |
           echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env.cy
@@ -81,7 +82,7 @@ jobs:
           echo "CI=true" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
-
+          echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env.cy
       - name: Test
         run: npx nx affected --target=test --base=$BASE --head=$HEAD
 
