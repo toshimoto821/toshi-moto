@@ -30,6 +30,7 @@ RUN echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env
 RUN echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
 RUN echo "VITE_BITCOIN_NODE_URL=http://umbrel.local:3006" >> apps/web-ui/.env
+RUN echo "VITE_IS_UMBREL=true" >> apps/web-ui/.env
 
 RUN pnpm run build:umbrel
 

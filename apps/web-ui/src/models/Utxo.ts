@@ -1,6 +1,7 @@
 import { type ITxsInput } from "./Wallet";
 import { Transaction } from "./Transaction";
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+import { getBitcoinNodeUrl } from "@root/lib/utils";
+const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 
 type UtxoStats = {
   funded_txo_count: number;

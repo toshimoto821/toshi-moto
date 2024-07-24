@@ -3,12 +3,23 @@ import { twMerge } from "tailwind-merge";
 import { type IXhrOptions, type IResponse } from "@machines/network.types";
 import { Xpub } from "@models/Xpub";
 
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+const VITE_BITCOIN_NODE_URL_ENV = import.meta.env.VITE_BITCOIN_NODE_URL;
+const VITE_IS_UMBREL = import.meta.env.VITE_IS_UMBREL;
 export const ONE_HUNDRED_MILLION = 100000000;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+// on an umbrel, mempool runs on 3006
+
+export const getBitcoinNodeUrl = () => {
+  const { protocol, hostname } = window.location;
+  const umbrelUrl = `${protocol}//${hostname}:3006`;
+  return VITE_IS_UMBREL === "true" ? umbrelUrl : VITE_BITCOIN_NODE_URL_ENV;
+};
+
+const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 
 export const formatPrice = (price: number | string, decimals = 2) => {
   if (typeof price === "string") return price;

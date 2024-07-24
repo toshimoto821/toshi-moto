@@ -3,7 +3,7 @@
 self.__WB_DISABLE_DEV_LOGS = true;
 
 import { precacheAndRoute } from "workbox-precaching";
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+// const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
 // import { NavigationRoute, registerRoute } from "workbox-routing";
 
 declare let self: ServiceWorkerGlobalScope;
@@ -45,8 +45,8 @@ const hasCache = function (response: Response, ttl: number) {
 
 const cacheTtlMap = {
   // @todo make these configurable by user
-  [`${VITE_BITCOIN_NODE_URL}/api/tx/`]: 1000 * 60 * 60 * 24 * 365, // 1 year
-  [`${VITE_BITCOIN_NODE_URL}/api/address/`]: {
+  ["/api/tx/"]: 1000 * 60 * 60 * 24 * 365, // 1 year
+  ["/api/address/"]: {
     ".*/txs": 1000 * 60 * 60 * 24 * 365, // 1 year
     ".*": 1000 * 60 * 60 * 24 * 2, // 2 day
   },

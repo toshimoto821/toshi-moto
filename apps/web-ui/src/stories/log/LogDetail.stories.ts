@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { request } from "./mocks/request";
 import { LogDetail } from "@components/log/components/LogDetail/LogDetail";
 import "../../index.css";
-const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
+import { getBitcoinNodeUrl } from "@root/lib/utils";
+const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 console.log(VITE_BITCOIN_NODE_URL, "VITE_BITCOIN_NODE_URL");
 const meta = {
   title: "Log/LogDetail",
