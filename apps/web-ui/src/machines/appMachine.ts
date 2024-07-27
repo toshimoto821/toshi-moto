@@ -544,9 +544,28 @@ export const appMachine = setup({
             const walletId = event.data?.walletId;
             return context.btcWallets.map((wallet) => {
               if (wallet.id == walletId) {
+                // reset the transactions to undefined
+                // rbf can cache a tx that is no longer valid
+                const wipedTransactions = (event.data?.utxos || []).reduce(
+                  (acc, cur) => {
+                    return {
+                      ...acc,
+                      [cur]: {
+                        ...wallet.addresses[cur],
+                        transactions: undefined,
+                      },
+                    };
+                  },
+                  {}
+                );
+
                 return {
                   ...wallet,
                   refreshedAt: new Date(),
+                  addresses: {
+                    ...wallet.addresses,
+                    ...wipedTransactions,
+                  },
                 };
               }
               return wallet;
