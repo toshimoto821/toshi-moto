@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.7.15](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.14...web-ui-1.7.15) (2024-07-27)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/e86a7e0d555cb0bb276eca8159588fe334e921bd/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/e86a7e0d555cb0bb276eca8159588fe334e921bd/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* rbf reset ([0af2dd0](https://github.com/toshimoto821/toshi-moto/commit/0af2dd0409dfa5c7cc61d22f7687676389de8263))
+
 ## [1.7.14](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.13...web-ui-1.7.14) (2024-07-27)
 
   |    |    |
