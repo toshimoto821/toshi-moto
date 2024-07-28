@@ -122,7 +122,7 @@ export const ChartLegend = ({
   const brush = d3
     .brushX()
     .extent([
-      [margin.left, 2],
+      [margin.left, 1],
       [width - margin.right, height - 1],
     ])
     // .on("brush", brushed)
