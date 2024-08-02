@@ -11,6 +11,8 @@ import localForage from "localforage";
 import { Toast } from "@components/toast/Toast";
 import { Navbar } from "@components/navbar/Navbar";
 import { Xpub } from "@root/models/Xpub";
+import { useAppDispatch, useAppSelector } from "@lib/hooks/store.hooks";
+import { setAppVersion, selectAppVersion } from "@root/lib/slices/config.slice";
 
 export const Root = () => {
   const walletActorRef = AppContext.useActorRef();
@@ -19,6 +21,8 @@ export const Root = () => {
   const toastActorRef = ToastContext.useActorRef();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   const btcWallets = AppContext.useSelector(
     (current) => current.context.btcWallets
@@ -65,18 +69,15 @@ export const Root = () => {
     };
   }, [networkActorRef, toastActorRef, walletUIActorRef, walletActorRef]);
 
-  const storedVersion = AppContext.useSelector(
-    (current) => current.context.meta.appVersion
-  );
+  const storedVersion = useAppSelector(selectAppVersion);
+
   const currentVersion = "__VERSION__";
+  console.log(storedVersion, currentVersion);
   useEffect(() => {
-    // if (!storedVersion) {
-    walletActorRef.send({
-      type: "APP_MACHINE_UPDATE_APP_VERSION",
-      data: { appVersion: currentVersion },
-    });
-    // }
-  }, [storedVersion, walletActorRef, currentVersion]);
+    if (storedVersion !== currentVersion) {
+      dispatch(setAppVersion(currentVersion));
+    }
+  }, [storedVersion, dispatch, currentVersion]);
 
   useEffect(() => {
     setTimeout(() => {

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { AppProvider } from "./providers/AppProvider.tsx";
+import { AppProvider } from "./providers/AppProvider";
 import { AppLoader } from "./AppLoader.tsx";
 
 import { Theme } from "@radix-ui/themes";

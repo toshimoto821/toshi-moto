@@ -8,19 +8,10 @@ import {
 import { AppContext } from "@providers/AppProvider";
 import { App } from "./App.tsx";
 import { Loading } from "./screens/loading/Loading.tsx";
+
 export const AppLoader = () => {
   const { send } = AppContext.useActorRef();
-  const [willBeReady, setWillBeReady] = useState(false);
-  const ready = AppContext.useSelector((current) => current.context.meta.ready);
 
-  useEffect(() => {
-    if (ready && !willBeReady) {
-      // intentionally delay ready to prevent logo from flicker
-      setTimeout(() => {
-        setWillBeReady(true);
-      }, 1000);
-    }
-  }, [ready, willBeReady]);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     localForage.getItem("walletMachine").then((data: any) => {
@@ -54,11 +45,5 @@ export const AppLoader = () => {
     });
   }, [send]);
 
-  return (
-    <>
-      <Loading isLoading={!willBeReady}>
-        <App />
-      </Loading>
-    </>
-  );
+  return <App />;
 };

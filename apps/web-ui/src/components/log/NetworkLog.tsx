@@ -9,6 +9,8 @@ import { LogProgress } from "./components/LogProgress";
 import { cn, deleteAllCookies } from "@lib/utils";
 import { SettingsForm } from "../settings/SettingsForm";
 import { Popover } from "../popover/Popover";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectAppVersion } from "@root/lib/slices/config.slice";
 
 type INetworkLog = {
   expanded?: boolean;
@@ -16,9 +18,8 @@ type INetworkLog = {
 
 export const NetworkLog = (props: INetworkLog) => {
   const { expanded: defaultExpanded = false } = props;
-  const storedVersion = AppContext.useSelector(
-    (current) => current.context.meta.appVersion
-  );
+
+  const storedVersion = useAppSelector(selectAppVersion);
   const { send: networkActorSend } = NetworkContext.useActorRef();
   const [expanded, setExpanded] = useState<boolean>(defaultExpanded);
 

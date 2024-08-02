@@ -1,4 +1,9 @@
+import { Provider } from "react-redux";
 import { createActorContext } from "@xstate/react";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+
+import { store } from "@lib/store";
 // import { networkMachine } from "../machines/networkMachine";
 import { networkLoggerMachine } from "@machines/networkLoggerMachine";
 import { appMachine } from "@machines/appMachine";
@@ -29,18 +34,25 @@ export const AppContext = createActorContext(appMachine, {
 interface IAppProvider {
   children: React.ReactNode;
 }
+const persistor = persistStore(store);
 export const AppProvider = ({ children }: IAppProvider) => {
   return (
-    <NetworkContext.Provider>
-      <AppContext.Provider>
-        <ToastContext.Provider>
-          <BtcPriceContext.Provider>
-            <BtcHistoricPriceContext.Provider>
-              <WalletUIContext.Provider>{children}</WalletUIContext.Provider>
-            </BtcHistoricPriceContext.Provider>
-          </BtcPriceContext.Provider>
-        </ToastContext.Provider>
-      </AppContext.Provider>
-    </NetworkContext.Provider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NetworkContext.Provider>
+          <AppContext.Provider>
+            <ToastContext.Provider>
+              <BtcPriceContext.Provider>
+                <BtcHistoricPriceContext.Provider>
+                  <WalletUIContext.Provider>
+                    {children}
+                  </WalletUIContext.Provider>
+                </BtcHistoricPriceContext.Provider>
+              </BtcPriceContext.Provider>
+            </ToastContext.Provider>
+          </AppContext.Provider>
+        </NetworkContext.Provider>
+      </PersistGate>
+    </Provider>
   );
 };
