@@ -79,45 +79,45 @@ const getCacheTtl = (url: string) => {
   return 0;
 };
 
-self.addEventListener("fetch", async (event) => {
-  const url = new URL(event.request.url);
-  const ttlHeaderAsString = url.searchParams.get("ttl");
+// self.addEventListener("fetch", async (event) => {
+//   const url = new URL(event.request.url);
+//   const ttlHeaderAsString = url.searchParams.get("ttl");
 
-  const ttl = ttlHeaderAsString
-    ? parseInt(ttlHeaderAsString, 10)
-    : getCacheTtl(url.origin + url.pathname);
+//   const ttl = ttlHeaderAsString
+//     ? parseInt(ttlHeaderAsString, 10)
+//     : getCacheTtl(url.origin + url.pathname);
 
-  if (ttl > 0) {
-    event.respondWith(
-      caches.open(cacheName).then((cache) =>
-        cache.match(event.request).then((cachedResponse) => {
-          if (cachedResponse && hasCache(cachedResponse, ttl)) {
-            return cachedResponse;
-          }
-          return fetch(event.request.url).then((fetchedResponse) => {
-            const copy = fetchedResponse.clone();
+//   if (ttl > 0) {
+//     event.respondWith(
+//       caches.open(cacheName).then((cache) =>
+//         cache.match(event.request).then((cachedResponse) => {
+//           if (cachedResponse && hasCache(cachedResponse, ttl)) {
+//             return cachedResponse;
+//           }
+//           return fetch(event.request.url).then((fetchedResponse) => {
+//             const copy = fetchedResponse.clone();
 
-            const headers = new Headers(copy.headers);
-            headers.append("sw-fetched-on", new Date().getTime() + "");
-            if (copy.status === 200) {
-              copy.blob().then((body) => {
-                cache.put(
-                  event.request,
-                  new Response(body, {
-                    status: copy.status,
-                    statusText: copy.statusText,
-                    headers: headers,
-                  })
-                );
-              });
-            }
+//             const headers = new Headers(copy.headers);
+//             headers.append("sw-fetched-on", new Date().getTime() + "");
+//             if (copy.status === 200) {
+//               copy.blob().then((body) => {
+//                 cache.put(
+//                   event.request,
+//                   new Response(body, {
+//                     status: copy.status,
+//                     statusText: copy.statusText,
+//                     headers: headers,
+//                   })
+//                 );
+//               });
+//             }
 
-            return fetchedResponse;
-          });
-        })
-      )
-    );
-  } else {
-    return fetch(event.request.url);
-  }
-});
+//             return fetchedResponse;
+//           });
+//         })
+//       )
+//     );
+//   } else {
+//     return fetch(event.request.url);
+//   }
+// });

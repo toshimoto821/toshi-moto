@@ -49,7 +49,7 @@ export const Root = () => {
 
   useEffect(() => {
     if (pathname !== "/onboarding" && btcWallets.length === 0) {
-      navigate("/onboarding");
+      // navigate("/onboarding");
     }
   }, [pathname, btcWallets.length, navigate]);
 
@@ -72,7 +72,7 @@ export const Root = () => {
   const storedVersion = useAppSelector(selectAppVersion);
 
   const currentVersion = "__VERSION__";
-  console.log(storedVersion, currentVersion);
+
   useEffect(() => {
     if (storedVersion !== currentVersion) {
       dispatch(setAppVersion(currentVersion));

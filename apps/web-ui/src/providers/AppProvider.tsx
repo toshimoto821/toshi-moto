@@ -7,7 +7,6 @@ import { store } from "@lib/store";
 // import { networkMachine } from "../machines/networkMachine";
 import { networkLoggerMachine } from "@machines/networkLoggerMachine";
 import { appMachine } from "@machines/appMachine";
-import { btcPriceMachine } from "@machines/btcPriceMachine";
 import { walletListUIMachine } from "@machines/walletListUIMachine";
 import { btcHistoricPriceMachine } from "@machines/btcHistoricPriceMachine";
 import { toastMachine } from "@root/machines/toastMachine";
@@ -15,7 +14,6 @@ import { toastMachine } from "@root/machines/toastMachine";
 export const BtcHistoricPriceContext = createActorContext(
   btcHistoricPriceMachine
 );
-export const BtcPriceContext = createActorContext(btcPriceMachine);
 
 export const WalletUIContext = createActorContext(walletListUIMachine);
 
@@ -42,13 +40,9 @@ export const AppProvider = ({ children }: IAppProvider) => {
         <NetworkContext.Provider>
           <AppContext.Provider>
             <ToastContext.Provider>
-              <BtcPriceContext.Provider>
-                <BtcHistoricPriceContext.Provider>
-                  <WalletUIContext.Provider>
-                    {children}
-                  </WalletUIContext.Provider>
-                </BtcHistoricPriceContext.Provider>
-              </BtcPriceContext.Provider>
+              <BtcHistoricPriceContext.Provider>
+                <WalletUIContext.Provider>{children}</WalletUIContext.Provider>
+              </BtcHistoricPriceContext.Provider>
             </ToastContext.Provider>
           </AppContext.Provider>
         </NetworkContext.Provider>

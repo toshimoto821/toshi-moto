@@ -2,6 +2,8 @@ import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist-indexeddb-storage";
 import { configReducer } from "./slices/config.slice";
+import { apiSlice } from "./slices/api.slice";
+import { priceReducer } from "./slices/price.slice";
 import { persistReducer } from "redux-persist";
 
 // import { apiSlice } from '@/features/api/apiSlice'
@@ -12,12 +14,15 @@ import { persistReducer } from "redux-persist";
 
 const reducer = combineReducers({
   config: configReducer,
+  price: priceReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
 const persistConfig = {
   key: "appRoot",
   version: 1,
   storage: storage("motostorage"),
+  blacklist: [apiSlice.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
@@ -28,9 +33,8 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ["persist/PERSIST"],
       },
-    }),
+    }).concat(apiSlice.middleware),
   // .prepend(listenerMiddleware.middleware)
-  // .concat(apiSlice.middleware),
 });
 
 // Infer the type of `store`

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import localForage from "localforage";
 import { type IWalletInput, type ITxsInput } from "@models/Wallet";
 import {
@@ -7,7 +7,7 @@ import {
 } from "@machines/appMachine.ts";
 import { AppContext } from "@providers/AppProvider";
 import { App } from "./App.tsx";
-import { Loading } from "./screens/loading/Loading.tsx";
+// import { Loading } from "./screens/loading/Loading.tsx";
 
 export const AppLoader = () => {
   const { send } = AppContext.useActorRef();
