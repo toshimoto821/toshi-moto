@@ -9,7 +9,7 @@ import { selectBaseApiUrl } from "./config.slice";
 import type { RootState } from "../store";
 import { ONE_HUNDRED_MILLION } from "../utils";
 
-const dynamicBaseQuery: BaseQueryFn<
+export const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
@@ -18,7 +18,7 @@ const dynamicBaseQuery: BaseQueryFn<
 
   const baseUrl = selectBaseApiUrl(state);
   const baseQuery = fetchBaseQuery({ baseUrl });
-  return baseQuery(args, api, extraOptions);
+  return baseQuery(args, api, { ...extraOptions, foo: "bar" });
 };
 
 export interface PriceResponse {
@@ -30,30 +30,39 @@ export interface PriceResponse {
   };
 }
 
+export type CirculatingSupplyResponse = number;
+
+export type APIResponse = PriceResponse | CirculatingSupplyResponse;
+
+export const transformCirculatingSupply = (response: number) => {
+  return response / ONE_HUNDRED_MILLION;
+};
+
+export const getPriceQuery = () => {
+  const params = {
+    ids: "bitcoin",
+    vs_currencies: "usd",
+    include_24hr_vol: "true",
+    include_24hr_change: "true",
+    include_last_updated_at: "true",
+  };
+  const queryString = new URLSearchParams(params).toString();
+  return `/api/prices/simple?${queryString}`;
+};
+
+export const getCirculatingSupplyQuery = () =>
+  "https://blockchain.info/q/totalbc";
+
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: dynamicBaseQuery,
   endpoints: (builder) => ({
-    getCirculatingSupply: builder.query<number, void>({
-      query: () => "https://blockchain.info/q/totalbc",
-      transformResponse: (response: number) => {
-        return response / ONE_HUNDRED_MILLION;
-      },
+    getCirculatingSupply: builder.query<CirculatingSupplyResponse, void>({
+      query: getCirculatingSupplyQuery,
+      transformResponse: transformCirculatingSupply,
     }),
     getPrice: builder.query<PriceResponse, void>({
-      query: () => {
-        const params = {
-          ids: "bitcoin",
-          vs_currencies: "usd",
-          include_24hr_vol: "true",
-          include_24hr_change: "true",
-          include_last_updated_at: "true",
-        };
-        const queryString = new URLSearchParams(params).toString();
-        return `/api/prices/simple?${queryString}`;
-      },
-
-      keepUnusedDataFor: 0,
+      query: getPriceQuery,
     }),
     getHistoricPrice: builder.mutation({
       query: () => "/api/prices/range",

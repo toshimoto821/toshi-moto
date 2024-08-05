@@ -2,13 +2,14 @@ import { forwardRef, ReactNode } from "react";
 import JsonView from "@uiw/react-json-view";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { type IRequest } from "@machines/network.types";
 import { LogResponseData } from "./LogResponseData";
 import { cn as classNames } from "@lib/utils";
+import { type Request } from "@lib/slices/network.slice";
 import "./log-detail-tab.css";
+import { APIResponse } from "@root/lib/slices/api.slice";
 
 type ILogDetailTab = {
-  request: IRequest;
+  request: Request<APIResponse>;
 };
 export const LogDetailTab = (props: ILogDetailTab) => {
   const { request } = props;
@@ -47,9 +48,7 @@ export const LogDetailTab = (props: ILogDetailTab) => {
       <AccordionItem value="item-3">
         <AccordionTrigger>Response</AccordionTrigger>
         <AccordionContent className="text-xs p-2 pb-1">
-          {request?.response?.data && (
-            <JsonView value={request?.response?.data} />
-          )}
+          {request?.response?.data && <JsonView value={request?.response} />}
         </AccordionContent>
       </AccordionItem>
     </Accordion.Root>

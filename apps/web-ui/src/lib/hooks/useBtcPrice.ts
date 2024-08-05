@@ -8,17 +8,17 @@ import { selectBtcPrice } from "../slices/price.slice";
 
 export const useBtcPrice = () => {
   const { refetch, isLoading: loading, error } = useGetPriceQuery();
-  const supply = useGetCirculatingSupplyQuery();
+  useGetCirculatingSupplyQuery();
 
   const {
     btcPrice,
     last_updated_at: updatedAt,
     usd_24h_change: change,
+    circulatingSupply,
   } = useAppSelector(selectBtcPrice);
 
   const refresh = refetch;
 
-  const circulatingSupply = supply.data || 0;
   const forcastModel = AppContext.useSelector((current) => {
     return current.context.meta.forcastModel;
   });

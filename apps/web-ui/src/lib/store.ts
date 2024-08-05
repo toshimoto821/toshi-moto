@@ -1,11 +1,16 @@
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist-indexeddb-storage";
+import { persistReducer } from "redux-persist";
+
 import { configReducer } from "./slices/config.slice";
 import { apiSlice } from "./slices/api.slice";
 import { priceReducer } from "./slices/price.slice";
-import { persistReducer } from "redux-persist";
+import { networkReducer } from "./slices/network.slice";
 
+import { listenerMiddleware } from "./store/middleware/listener";
+
+// import networkMiddleware from "./store/middleware/network";
 // import { apiSlice } from '@/features/api/apiSlice'
 // import authReducer from '@/features/auth/authSlice'
 // import notificationsReducer from '@/features/notifications/notificationsSlice'
@@ -15,6 +20,7 @@ import { persistReducer } from "redux-persist";
 const reducer = combineReducers({
   config: configReducer,
   price: priceReducer,
+  network: networkReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
@@ -22,7 +28,7 @@ const persistConfig = {
   key: "appRoot",
   version: 1,
   storage: storage("motostorage"),
-  blacklist: [apiSlice.reducerPath],
+  blacklist: [apiSlice.reducerPath, "network"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
@@ -33,7 +39,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ["persist/PERSIST"],
       },
-    }).concat(apiSlice.middleware),
+    })
+      .prepend(listenerMiddleware.middleware)
+      .concat(apiSlice.middleware),
+
   // .prepend(listenerMiddleware.middleware)
 });
 

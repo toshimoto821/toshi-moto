@@ -1,8 +1,8 @@
-import { IRequest } from "@root/machines/network.types";
 import transform from "lodash/transform";
 import assign from "lodash/assign";
 import isObject from "lodash/isObject";
-
+import { type Request } from "@lib/slices/network.slice";
+import { APIResponse, PriceResponse } from "@root/lib/slices/api.slice";
 function flattenObject(
   obj: Record<string, any>,
   prefix = ""
@@ -21,11 +21,12 @@ function flattenObject(
   );
 }
 
-export const toTabularData = (request: IRequest) => {
+export const toTabularData = (request: Request<APIResponse>) => {
   const headers = [] as string[];
   const rows = [] as string[][];
   if (request.meta.type === "btc-historic-price") {
     headers.push("Timestamp", "Price");
+    // update
     const prices = request.response?.data.prices;
     if (prices.length) {
       for (const priceRow of prices) {
@@ -34,10 +35,18 @@ export const toTabularData = (request: IRequest) => {
     }
   }
 
-  if (request.meta.type === "btc-price") {
+  if (request.meta.type === "supply") {
     headers.push("Key", "Value");
-    const data = Object.keys(request.response?.data.bitcoin).map((key) => {
-      return [key + "", request.response?.data.bitcoin[key] + ""];
+    rows.push(["price", request.response?.data + ""]);
+  }
+
+  if (request.meta.type === "price" && request.response?.data) {
+    const response = request.response?.data as PriceResponse;
+    headers.push("Key", "Value");
+    const data = (
+      Object.keys(response.bitcoin) as (keyof typeof response.bitcoin)[]
+    ).map((key) => {
+      return [key + "", response.bitcoin[key] + ""];
     });
 
     rows.push(...data);

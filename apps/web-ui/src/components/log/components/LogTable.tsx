@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Flex, Box, IconButton, Text } from "@radix-ui/themes";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { clsx } from "clsx";
-import type { IRequest } from "@machines/network.types";
-import { useEffect } from "react";
+import { type Request } from "@lib/slices/network.slice";
+import { type APIResponse } from "@root/lib/slices/api.slice";
 
 const getUrl = (url: string, type: keyof URL) => {
   let u: URL;
@@ -17,7 +17,7 @@ const getUrl = (url: string, type: keyof URL) => {
 };
 
 interface ILogTable {
-  requests: IRequest[];
+  requests: Request<APIResponse>[];
   activeRequestIndex: number | null;
   children?: React.ReactNode;
   onClickDeleteAll?: () => void;
@@ -25,7 +25,7 @@ interface ILogTable {
     request,
     index,
   }: {
-    request: IRequest;
+    request: Request<APIResponse>;
     index: number;
   }) => void;
 }

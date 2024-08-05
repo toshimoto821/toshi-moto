@@ -7,6 +7,7 @@ interface PriceState {
   last_updated_at: number;
   usd_24h_change: number;
   usd_24h_vol: number;
+  circulatingSupply: number;
 }
 
 const initialState: PriceState = {
@@ -14,6 +15,7 @@ const initialState: PriceState = {
   last_updated_at: 0,
   usd_24h_change: 0,
   usd_24h_vol: 0,
+  circulatingSupply: 0,
 };
 
 export const priceSlice = createSlice({
@@ -30,6 +32,13 @@ export const priceSlice = createSlice({
         state.usd_24h_vol = action.payload.bitcoin.usd_24h_vol;
       }
     );
+
+    builder.addMatcher(
+      apiSlice.endpoints.getCirculatingSupply.matchFulfilled,
+      (state, action) => {
+        state.circulatingSupply = action.payload;
+      }
+    );
   },
 });
 
@@ -39,4 +48,5 @@ export const selectBtcPrice = (state: RootState) => ({
   btcPrice: state.price.btcPrice,
   last_updated_at: state.price.last_updated_at,
   usd_24h_change: state.price.usd_24h_change,
+  circulatingSupply: state.price.circulatingSupply,
 });

@@ -1,8 +1,9 @@
 import { Card, Box, Text, Button } from "@radix-ui/themes";
 import { NetworkContext } from "@providers/AppProvider";
-import type { IRequest } from "@machines/network.types";
+import { type Request } from "@lib/slices/network.slice";
+
 type ILogDetailActions = {
-  request: IRequest;
+  request: Request;
   onDelete: () => void;
 };
 export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
@@ -22,9 +23,10 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
   };
 
   const handleRetry = () => {
-    if (request.retry) {
-      request.retry();
-    }
+    // if (request.retry) {
+    //   request.retry();
+    // }
+    console.log("implement retry");
   };
   return (
     <div className="p-4">
@@ -45,7 +47,7 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
           </Box>
         </div>
       </Card>
-      {request.retry && (
+      {false && (
         <Card>
           <div className="flex justify-between items-end">
             <Box>

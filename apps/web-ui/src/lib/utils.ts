@@ -266,19 +266,24 @@ export const deleteAllCookies = () => {
 };
 
 export const getQueryParams = (url: string) => {
-  const uri = new URL(url);
-  const search = uri.search.substring(1, uri.search.length);
+  try {
+    const uri = new URL(url);
+    const search = uri.search.substring(1, uri.search.length);
 
-  return search
-    .split("&")
-    .map((parts) => {
-      return parts.split("=");
-    })
-    .reduce((acc, cur) => {
-      return {
-        ...acc,
-        [cur[0]]: cur[1],
-      };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, {}) as Record<string, any>;
+    return search
+      .split("&")
+      .map((parts) => {
+        return parts.split("=");
+      })
+      .reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur[0]]: cur[1],
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }, {}) as Record<string, any>;
+  } catch (ex) {
+    console.error(ex);
+    return {};
+  }
 };
