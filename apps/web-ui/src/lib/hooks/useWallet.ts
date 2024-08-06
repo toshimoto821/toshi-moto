@@ -1,12 +1,16 @@
 import { useEffect, useMemo } from "react";
+import { nanoid } from "@reduxjs/toolkit";
 import { useMachine } from "@xstate/react";
 import { useWallets } from "@lib/hooks/useWallets";
 import { AppContext, WalletUIContext } from "@providers/AppProvider";
 import { walletManagerMachine } from "@machines/walletManagerMachine";
+import { useAppDispatch } from "@lib/hooks/store.hooks";
+import { upsertWallet } from "@lib/slices/wallets.slice";
 
 export const useWallet = (xpubs: string[]) => {
   const appMachine = AppContext.useActorRef();
   const walletUIActorRef = WalletUIContext.useActorRef();
+  const dispatch = useAppDispatch();
   const { wallets } = useWallets();
 
   const [, send] = useMachine(walletManagerMachine, {
@@ -60,6 +64,9 @@ export const useWallet = (xpubs: string[]) => {
       type: "SAVE",
       data: { id },
     });
+    const walletId = id ?? nanoid();
+
+    dispatch(upsertWallet({ name, id: walletId }));
   };
 
   // console.log(current);

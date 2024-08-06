@@ -7,20 +7,15 @@ import { configReducer } from "./slices/config.slice";
 import { apiSlice } from "./slices/api.slice";
 import { priceReducer } from "./slices/price.slice";
 import { networkReducer } from "./slices/network.slice";
+import { walletsReducer } from "./slices/wallets.slice";
 
 import { listenerMiddleware } from "./store/middleware/listener";
-
-// import networkMiddleware from "./store/middleware/network";
-// import { apiSlice } from '@/features/api/apiSlice'
-// import authReducer from '@/features/auth/authSlice'
-// import notificationsReducer from '@/features/notifications/notificationsSlice'
-
-// import { listenerMiddleware } from './listenerMiddleware'
 
 const reducer = combineReducers({
   config: configReducer,
   price: priceReducer,
   network: networkReducer,
+  wallets: walletsReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

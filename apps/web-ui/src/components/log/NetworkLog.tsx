@@ -12,7 +12,6 @@ import { Popover } from "../popover/Popover";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import {
   selectRequests,
-  selectQueuedRequests,
   selectCountRequests,
 } from "@root/lib/slices/network.slice";
 import { selectAppVersion } from "@root/lib/slices/config.slice";
@@ -112,8 +111,8 @@ export const NetworkLog = (props: INetworkLog) => {
         })}
       >
         <LogProgress
-          value={counts.queued + counts.pending}
-          max={counts.complete}
+          value={counts.complete + 1}
+          max={counts.queued + counts.pending + counts.complete + 1}
         />
 
         <Tabs.Root defaultValue="network" className="border-t">

@@ -1,4 +1,9 @@
-import { createEntityAdapter, createSlice, isAnyOf } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSlice,
+  isAnyOf,
+  createSelector,
+} from "@reduxjs/toolkit";
 import {
   apiSlice,
   getPriceQuery,
@@ -15,6 +20,8 @@ export interface Request<T> {
   completedAt?: number;
   status: string;
   meta: RequestMeta;
+  // used in ui for showing count
+  inactive?: boolean;
   response?: {
     data: T;
   };
@@ -49,10 +56,10 @@ export const networkSlice = createSlice({
   name: "network",
   initialState,
   reducers: {
-    markCompleteAsDone(state) {
+    markCompleteAsInactive(state) {
       Object.values(state.requests.entities)
         .filter((req) => req.status === "complete")
-        .forEach((req) => (req.status = "done"));
+        .forEach((req) => (req.inactive = true));
     },
   },
   extraReducers(builder) {
@@ -104,7 +111,7 @@ export const networkSlice = createSlice({
   },
 });
 
-export const { markCompleteAsDone } = networkSlice.actions;
+export const { markCompleteAsInactive } = networkSlice.actions;
 
 export const getRequestUrl = (type: string) => {
   if (type === "getPrice") {
@@ -145,49 +152,63 @@ export const selectRequests = (state: RootState) => {
   return requests;
 };
 
-const selectRequestByStatus = (status: string) => {
+const selectRequestByStatus = (status: string, showInactive = false) => {
   return (state: RootState) => {
     const requests = requestSelectors.selectAll(state);
 
-    return requests.filter((request) => request.status === status);
+    return requests.filter(
+      (request) =>
+        request.status === status && (showInactive || !request.inactive)
+    );
   };
 };
 
-export const selectQueuedRequests = (state: RootState) => {
-  const requests = selectRequestByStatus("queued")(state);
+export const selectQueuedRequests = (
+  state: RootState,
+  showInactive = false
+) => {
+  const requests = selectRequestByStatus("queued", showInactive)(state);
 
   return requests;
 };
 
-export const selectPendingRequests = (state: RootState) => {
-  const requests = selectRequestByStatus("pending")(state);
+export const selectPendingRequests = (
+  state: RootState,
+  showInactive = false
+) => {
+  const requests = selectRequestByStatus("pending", showInactive)(state);
 
   return requests;
 };
 
-export const selectCompleteRequests = (state: RootState) => {
-  const requests = selectRequestByStatus("complete")(state);
+export const selectCompleteRequests = (
+  state: RootState,
+  showInactive = false
+) => {
+  const requests = selectRequestByStatus("complete", showInactive)(state);
 
   return requests;
 };
 
-export const selectCountRequests = (state: RootState) => {
-  const total = state.network.requests.ids.length;
-  const complete = selectCompleteRequests(state);
-  const completeLen = complete.length;
-  const queued = selectQueuedRequests(state).length;
-  const pending = selectPendingRequests(state).length;
+export const selectCountRequests = createSelector(
+  // @fixme should select deeper state
+  (state: RootState) => state,
+  (state: RootState) => {
+    const total = state.network.requests.ids.length;
+    const complete = selectCompleteRequests(state);
+    const completeLen = complete.length;
+    const queued = selectQueuedRequests(state).length;
+    const pending = selectPendingRequests(state).length;
 
-  const done = selectRequestByStatus("done")(state);
-
-  return {
-    total,
-    queued,
-    pending,
-    complete: completeLen,
-    done: done.length,
-  };
-};
+    return {
+      total,
+      queued,
+      pending,
+      complete: completeLen,
+      // done: done.length,
+    };
+  }
+);
 
 ///////////////////////////////////////////
 // Middleware
@@ -205,7 +226,7 @@ export const addNetworkListener = (startAppListening: AppStartListening) => {
         clearTimeout(networkTimer);
       }
       networkTimer = setTimeout(() => {
-        listenerApi.dispatch(markCompleteAsDone());
+        listenerApi.dispatch(markCompleteAsInactive());
       }, 5000);
     },
   });

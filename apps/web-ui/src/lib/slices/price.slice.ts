@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "./api.slice";
 import type { RootState } from "../store";
 
@@ -44,9 +44,12 @@ export const priceSlice = createSlice({
 
 export const priceReducer = priceSlice.reducer;
 
-export const selectBtcPrice = (state: RootState) => ({
-  btcPrice: state.price.btcPrice,
-  last_updated_at: state.price.last_updated_at,
-  usd_24h_change: state.price.usd_24h_change,
-  circulatingSupply: state.price.circulatingSupply,
-});
+export const selectBtcPrice = createSelector(
+  (state: RootState) => state.price,
+  (price) => ({
+    btcPrice: price.btcPrice,
+    last_updated_at: price.last_updated_at,
+    usd_24h_change: price.usd_24h_change,
+    circulatingSupply: price.circulatingSupply,
+  })
+);
