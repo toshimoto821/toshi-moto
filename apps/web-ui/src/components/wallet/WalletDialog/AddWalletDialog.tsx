@@ -1,12 +1,12 @@
-import { useState, type MouseEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useMachine } from "@xstate/react";
-import { Dialog, Button, Flex, Tabs, Box } from "@radix-ui/themes";
+import { Dialog, Tabs, Box } from "@radix-ui/themes";
 
 import { AppContext } from "@providers/AppProvider";
-import { SingleSig } from "./SingleSig";
-import { walletManagerMachine } from "@machines/walletManagerMachine";
+import { WalletDetails } from "./WalletDetails";
+
 import { Wallet } from "@models/Wallet";
-import { MultiSig } from "./MultiSig";
+
 import { ImportWallet } from "./ImportWallet";
 
 type IAddWalletDialog = {
@@ -16,76 +16,25 @@ type IAddWalletDialog = {
   onClose: (success: boolean) => void;
 };
 
-type ITabType = "SINGLE_SIG" | "MULTI_SIG" | "IMPORT";
+type ITabType = "DETAILS" | "IMPORT";
 
 export const AddWalletDialog = ({
   wallet,
   open,
   onClose,
 }: IAddWalletDialog) => {
-  const [activeTab, setActiveTab] = useState<ITabType>(
-    !wallet
-      ? "SINGLE_SIG"
-      : wallet.accountType === "SINGLE_SIG"
-      ? "SINGLE_SIG"
-      : "MULTI_SIG"
-  );
-  const appMachine = AppContext.useActorRef();
-
-  const [current, send] = useMachine(walletManagerMachine, {
-    input: {
-      appMachine,
-      wallet,
-    },
-  });
-
-  useEffect(() => {
-    if (wallet?.id) {
-      send({ type: "RESET_FORM", data: { wallet } });
-    }
-  }, [wallet?.id, send, wallet]);
-
-  const isSuccess = current.matches("success");
-  useEffect(() => {
-    if (isSuccess) {
-      handleClose(true);
-      send({ type: "RESET_FORM", data: {} });
-    }
-  }, [isSuccess, wallet]);
-
-  const handleSave = (evt: MouseEvent<HTMLButtonElement>) => {
-    evt.preventDefault();
-
-    const accountType = activeTab;
-    if (accountType === "IMPORT") return;
-    send({
-      type: "SAVE",
-      data: {},
-    });
-  };
-
-  const handleDelete = (evt: MouseEvent<HTMLButtonElement>) => {
-    evt.preventDefault();
-    if (wallet) {
-      appMachine.send({
-        type: "APP_MACHINE_DELETE_WALLET",
-        data: { walletId: wallet.id },
-      });
-    }
-
-    handleClose(false);
-  };
+  const [activeTab, setActiveTab] = useState<ITabType>("DETAILS");
 
   function handleClose(success: boolean) {
     onClose(success);
   }
 
   const onOpenChange = () => {
-    send({ type: "RESET_FORM", data: { wallet: wallet } });
+    // send({ type: "RESET_FORM", data: { wallet: wallet } });
   };
 
-  const handleImportDone = (accountType: "SINGLE_SIG" | "MULTI_SIG") => {
-    setActiveTab(accountType);
+  const handleImportDone = () => {
+    setActiveTab("DETAILS");
   };
 
   return (
@@ -100,49 +49,20 @@ export const AddWalletDialog = ({
           }}
         >
           <Tabs.List>
-            <Tabs.Trigger value="SINGLE_SIG">Single Sig</Tabs.Trigger>
-            <Tabs.Trigger value="MULTI_SIG">Multi Sig</Tabs.Trigger>
+            <Tabs.Trigger value="DETAILS">Wallet Details</Tabs.Trigger>
             <Tabs.Trigger value="IMPORT">Import</Tabs.Trigger>
           </Tabs.List>
 
           <Box pt="3" pb="2">
-            <Tabs.Content value="SINGLE_SIG">
-              <SingleSig wallet={wallet} snapshot={current} send={send} />
+            <Tabs.Content value="DETAILS">
+              <WalletDetails wallet={wallet} onClose={handleClose} />
             </Tabs.Content>
 
-            <Tabs.Content value="MULTI_SIG">
-              <MultiSig wallet={wallet} snapshot={current} send={send} />
-            </Tabs.Content>
             <Tabs.Content value="IMPORT">
-              <ImportWallet send={send} onDone={handleImportDone} />
+              <ImportWallet onDone={handleImportDone} />
             </Tabs.Content>
           </Box>
         </Tabs.Root>
-
-        <Flex gap="3" mt="4" justify="between">
-          <Flex>
-            {wallet?.id && (
-              <Dialog.Close>
-                <Button variant="outline" color="red" onClick={handleDelete}>
-                  Delete
-                </Button>
-              </Dialog.Close>
-            )}
-          </Flex>
-          <Flex gap="3">
-            <Button
-              variant="soft"
-              color="gray"
-              onClick={() => handleClose(false)}
-            >
-              Cancel
-            </Button>
-
-            <Dialog.Close>
-              <Button onClick={handleSave}>Save</Button>
-            </Dialog.Close>
-          </Flex>
-        </Flex>
       </Dialog.Content>
     </Dialog.Root>
   );

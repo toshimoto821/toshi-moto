@@ -272,6 +272,11 @@ export class Wallet {
     return xpubs;
   }
 
+  get listXpubsStrings() {
+    const xpubs = this.listXpubs;
+    return xpubs.map((xpub) => xpub.address);
+  }
+
   get listAddresses() {
     return Object.values(this.addresses);
   }

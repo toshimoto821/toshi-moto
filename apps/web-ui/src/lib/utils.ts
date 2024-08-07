@@ -108,8 +108,8 @@ const defaultOptions = {
 };
 
 type Headers = Record<string, string>;
-export const xhrRequest = (url: string, opts: IXhrOptions = defaultOptions) =>
-  new Promise((resolve, reject) => {
+export function xhrRequest<T>(url: string, opts: IXhrOptions = defaultOptions):Promise<T> {
+  return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const startTime = new Date().getTime();
     xhr.onreadystatechange = () => {
@@ -175,6 +175,7 @@ export const xhrRequest = (url: string, opts: IXhrOptions = defaultOptions) =>
 
     xhr.send();
   });
+}
 
 export function invokeApi(url: string, id: string, ttl?: number) {
   // mempool.space doesnt support fetch options request

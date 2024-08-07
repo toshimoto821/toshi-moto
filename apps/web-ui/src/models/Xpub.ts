@@ -117,13 +117,14 @@ export class Xpub {
   }
 
   static async getAddressAtIndex(
-    xpub: string | string[],
+    xpubInput: string | string[],
     index: number,
     isChange: boolean
   ) {
-    const bitcoinjs = await Xpub.getBitcoinjs();
+    const xpub = Array.isArray(xpubInput) ? xpubInput : [xpubInput];
 
-    if (Array.isArray(xpub)) {
+    const bitcoinjs = await Xpub.getBitcoinjs();
+    if (xpub.length > 1) {
       const pubkeys = xpub
         .map((xp) => {
           const node = bitcoinjs.bip32
@@ -158,7 +159,7 @@ export class Xpub {
       return address;
     }
     const node = bitcoinjs.bip32.fromBase58(
-      xpub,
+      xpub[0],
       VITE_BITCOIN_NETWORK === "mainnet"
         ? bitcoinjs.networks.bitcoin
         : bitcoinjs.networks.testnet

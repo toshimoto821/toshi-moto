@@ -18,10 +18,9 @@ type IWalletImport = {
 };
 type IAccountType = "SINGLE_SIG" | "MULTI_SIG";
 type IImportWallet = {
-  send: ({ type, data }: IWalletManagerEvents) => void;
   onDone: (accountType: IAccountType, result: IResult) => void;
 };
-export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
+export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [willScan, setWillScan] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -39,33 +38,33 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
       AccountType = "MULTI_SIG";
       // multisig
       for (let i = 0; i < xpubs.length; i++) {
-        send({
-          type: "BLUR_FIELD",
-          data: { index: i, value: xpubs[i], xpub: true },
-        });
+        // send({
+        //   type: "BLUR_FIELD",
+        //   data: { index: i, value: xpubs[i], xpub: true },
+        // });
         if (i > 2) {
           // send({ type: "ADD_EMPTY_FIELD", data: { xpub: true } });
         }
       }
     } else if (xpubs.length === 1) {
       AccountType = "SINGLE_SIG";
-      send({
-        type: "BLUR_FIELD",
-        data: { index: 0, value: xpubs[0], xpub: true },
-      });
+      // send({
+      //   type: "BLUR_FIELD",
+      //   data: { index: 0, value: xpubs[0], xpub: true },
+      // });
     }
 
-    send({
-      type: "SET_NAME",
-      data: { name: result.name },
-    });
-    send({
-      type: "SET_VALUE",
-      data: {
-        key: "color",
-        value: result.color,
-      },
-    });
+    // send({
+    //   type: "SET_NAME",
+    //   data: { name: result.name },
+    // });
+    // send({
+    //   type: "SET_VALUE",
+    //   data: {
+    //     key: "color",
+    //     value: result.color,
+    //   },
+    // });
 
     onDoneProp(AccountType, result);
   };
