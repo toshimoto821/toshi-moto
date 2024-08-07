@@ -1,17 +1,17 @@
-export type IRequest = {
+export type IRequest<T> = {
   id: string;
   url: string;
   meta?: any;
-  response?: IResponse;
+  response?: IResponse<T>;
   retry?: () => void;
   loading: boolean;
   status: string;
   createdAt: number;
 };
 
-export type IResponse = {
+export type IResponse<T> = {
   id: string;
-  data: any;
+  data: T;
   headers: Record<string, string>;
   details: {
     duration: number;
@@ -21,9 +21,9 @@ export type IResponse = {
   };
 };
 
-export type IRequestResponse = {
-  request: IRequest;
-  response: IResponse;
+export type IRequestResponse<T> = {
+  request: IRequest<T>;
+  response: IResponse<T>;
 };
 
 export type IXhrOptions = {

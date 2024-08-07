@@ -6,6 +6,7 @@ import {
 import { Xpub } from "@models/Xpub";
 import { createAppAsyncThunk } from "../store/withTypes";
 import { getAddress } from "./api.slice";
+import { AppDispatch } from "../store";
 
 interface Wallet {
   id: string;
@@ -59,30 +60,55 @@ export const walletsReducer = walletsSlice.reducer;
 
 export const { removeWallet } = walletsSlice.actions;
 
-export const upsertWallet = createAppAsyncThunk(
-  walletsSlice.actions.upsertWallet.type,
-  async (wallet: Wallet, { dispatch, getState }) => {
-    console.log(wallet);
-    dispatch(walletsSlice.actions.upsertWallet(wallet));
-    const state = getState();
-    console.log(state);
-    // scan wallet to get xpubs
-    // up to n+ empty addresses
-    let running = true;
-    const xpubs = wallet.xpubs;
-    let index = 0;
-    let change = false;
-    while (running) {
-      const address = await Xpub.getAddressAtIndex(xpubs, index, change);
-      await dispatch(getAddress.initiate(address));
-      console.log(address);
-      // check for transactions
+export async function getLastAddressIndex(
+  xpub: string | string[],
+  change: boolean,
+  dispatch: AppDispatch
+) {
+  let running = true;
 
-      // if tx, continue and throw out data
+  const SKIP_BY = 10;
+  let index = 0;
+  let lastAddressWithNoTxs = -1;
+  while (running) {
+    const address = await Xpub.getAddressAtIndex(xpub, index, change);
+    const response = await dispatch(getAddress.initiate(address));
 
-      // otherwise return
+    // check for transactions
+    if (
+      (response.data && response?.data?.chain_stats.tx_count > 0) ||
+      response?.data?.mempool_stats?.tx_count
+    ) {
+      index += SKIP_BY;
+    } else if (
+      response?.data?.chain_stats?.tx_count === 0 &&
+      response?.data?.mempool_stats?.tx_count === 0
+    ) {
+      lastAddressWithNoTxs = Math.max(index, SKIP_BY); // + SKIP_BY;
+      running = false;
+    } else {
       running = false;
     }
+  }
+  return lastAddressWithNoTxs;
+}
+
+export const upsertWallet = createAppAsyncThunk(
+  walletsSlice.actions.upsertWallet.type,
+  async (wallet: Wallet, { dispatch /*, getState */ }) => {
+    dispatch(walletsSlice.actions.upsertWallet(wallet));
+    // const state = getState();
+
+    const receiveIndex = await getLastAddressIndex(
+      wallet.xpubs,
+      false,
+      dispatch
+    );
+    console.log(receiveIndex, "receiveIndex");
+    // scan wallet to get xpubs
+    // up to n+ empty addresses
+
+    // if tx, continue and throw out data
 
     // add addresses to wallet
 

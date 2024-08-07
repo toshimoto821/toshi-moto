@@ -4,8 +4,6 @@ import {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
-  QueryReturnValue,
-  BaseQueryApi,
 } from "@reduxjs/toolkit/query/react";
 import { xhrRequest } from "@root/lib/utils";
 import { selectBaseApiUrl, selectBaseNodeUrl } from "./config.slice";
@@ -74,36 +72,27 @@ export const getPriceQuery = () => {
 export const getCirculatingSupplyQuery = () =>
   "https://blockchain.info/q/totalbc";
 
-const queryFn = async (
-  address: string,
-  api: BaseQueryApi
-): Promise<
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  QueryReturnValue<AddressResponse, FetchBaseQueryError, {} | undefined>
-> => {
-  console.log(api);
-  try {
-    const state = api.getState() as RootState;
-    const nodeUrl = selectBaseNodeUrl(state);
-    const url = `${nodeUrl}/api/address/${address}`;
-    const response = await xhrRequest<AddressResponse>(url, {
-      id: "getAddress",
-    });
-
-    return { data: response };
-  } catch (error) {
-    return { error: error as FetchBaseQueryError };
-  }
-};
-
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: dynamicBaseQuery,
   endpoints: (builder) => ({
-    getAddress: builder.query<string, string>({
-      queryFn,
-    }),
+    getAddress: builder.query<AddressResponse, string>({
+      queryFn: async (address, queryApi) => {
+        try {
+          const state = queryApi.getState() as RootState;
+          const nodeUrl = selectBaseNodeUrl(state);
+          const url = `${nodeUrl}/api/address/${address}`;
+          const response = await xhrRequest<AddressResponse>(url, {
+            id: "getAddress",
+          });
+          const data: AddressResponse = response.data;
 
+          return { data };
+        } catch (error) {
+          return { error: error as FetchBaseQueryError };
+        }
+      },
+    }),
     getCirculatingSupply: builder.query<CirculatingSupplyResponse, void>({
       query: getCirculatingSupplyQuery,
       transformResponse: transformCirculatingSupply,

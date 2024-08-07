@@ -108,7 +108,10 @@ const defaultOptions = {
 };
 
 type Headers = Record<string, string>;
-export function xhrRequest<T>(url: string, opts: IXhrOptions = defaultOptions):Promise<T> {
+export function xhrRequest<T>(
+  url: string,
+  opts: IXhrOptions = defaultOptions
+): Promise<IResponse<T>> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const startTime = new Date().getTime();
@@ -135,7 +138,7 @@ export function xhrRequest<T>(url: string, opts: IXhrOptions = defaultOptions):P
 
         const contentTypes = (headerMap["content-type"] || "").split(";");
 
-        const data = contentTypes.includes("application/json")
+        const data: T = contentTypes.includes("application/json")
           ? JSON.parse(xhr.responseText)
           : xhr.responseText;
 
@@ -146,7 +149,7 @@ export function xhrRequest<T>(url: string, opts: IXhrOptions = defaultOptions):P
           endTime: new Date().getTime(),
           url,
         };
-        const response: IResponse = {
+        const response: IResponse<T> = {
           data,
           headers: headerMap,
           details,
@@ -182,6 +185,7 @@ export function invokeApi(url: string, id: string, ttl?: number) {
   return xhrRequest(url, { id, ttl });
 }
 
+// @deprecated
 export const getLastAddressIndex = async (
   xpub: string | string[],
   change: boolean,
