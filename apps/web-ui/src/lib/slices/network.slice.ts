@@ -102,6 +102,26 @@ const initialState: NetworkState = {
 //   // Add other fields if necessary
 // }
 
+const API_REQUEST_FULFILLED = isAnyOf(
+  apiSlice.endpoints.getAddress.matchFulfilled,
+  apiSlice.endpoints.getTransactions.matchFulfilled,
+  apiSlice.endpoints.getPrice.matchFulfilled,
+  apiSlice.endpoints.getCirculatingSupply.matchFulfilled
+);
+
+const API_REQUEST_REJECTED = isAnyOf(
+  apiSlice.endpoints.getAddress.matchRejected,
+  apiSlice.endpoints.getTransactions.matchRejected,
+  apiSlice.endpoints.getPrice.matchRejected,
+  apiSlice.endpoints.getCirculatingSupply.matchRejected
+);
+
+const API_REQUEST_PENDING = isAnyOf(
+  apiSlice.endpoints.getAddress.matchPending,
+  apiSlice.endpoints.getTransactions.matchPending,
+  apiSlice.endpoints.getPrice.matchPending,
+  apiSlice.endpoints.getCirculatingSupply.matchPending
+);
 ///////////////////////////////////////////
 // Slice
 ///////////////////////////////////////////
@@ -135,79 +155,94 @@ export const networkSlice = createSlice({
 
     markCompleteAsInactive(state) {
       Object.values(state.requests.entities)
-        .filter((req) => req.status === "complete")
+        .filter((req) => req.status === "fulfilled")
         .forEach((req) => (req.inactive = true));
     },
   },
   extraReducers(builder) {
     // pending
-    builder.addMatcher(
-      isAnyOf(
-        apiSlice.endpoints.getAddress.matchPending,
-        apiSlice.endpoints.getTransactions.matchPending,
-        apiSlice.endpoints.getPrice.matchPending,
-        apiSlice.endpoints.getCirculatingSupply.matchPending
-      ),
-      (state, action) => {
-        // dequeue
-        const id = action.meta.arg.originalArgs?.queueId;
-        if (id) {
-          const item: QueueItem = state.queue.entities[id];
-          state.queue = queueAdapter.removeOne(state.queue, id);
-          state.processing = processingAdapter.addOne(state.processing, item);
-          const request: Request<APIResponse> = {
-            id: action.meta.requestId,
-            url: getRequestUrl(
-              action.meta.arg.endpointName,
-              action.meta.arg.originalArgs
-            ),
-            startedTimeStamp: action.meta.startedTimeStamp,
-            status: action.meta.requestStatus,
-            meta: {
-              type: getRequestType(action.meta.arg.endpointName),
-              priority: 1,
+    builder.addMatcher(API_REQUEST_PENDING, (state, action) => {
+      // dequeue
+      const id = action.meta.arg.originalArgs?.queueId || action.meta.requestId;
+      if (id) {
+        const item: QueueItem = state.queue.entities[id];
+        if (item) {
+          queueAdapter.removeOne(state.queue, id);
+          processingAdapter.addOne(state.processing, item);
+        } else {
+          processingAdapter.addOne(state.processing, {
+            id,
+            action: {
+              endpoint: action.meta.arg
+                .endpointName as QueueItemAction["endpoint"],
+              args: action.meta.arg.originalArgs,
             },
-          };
-          state.requests = requestsAdapter.upsertOne(state.requests, request);
+          });
         }
-      }
-    );
-    // complete
-    builder.addMatcher(
-      isAnyOf(
-        apiSlice.endpoints.getAddress.matchFulfilled,
-        apiSlice.endpoints.getTransactions.matchFulfilled,
-        apiSlice.endpoints.getPrice.matchFulfilled,
-        apiSlice.endpoints.getCirculatingSupply.matchFulfilled
-      ),
-      (state, action) => {
-        console.log("complete", action);
-        const id = action.meta.arg.originalArgs?.queueId;
-        if (id) {
-          // const item: QueueItem = state.processing.entities[id];
-          state.processing = processingAdapter.removeOne(state.processing, id);
-        }
-        // @ts-expect-error baseQueryMeta is not in the type
-        const url = new URL(action.meta.baseQueryMeta.request.url);
 
-        state.requests = requestsAdapter.updateOne(state.requests, {
-          id: action.meta.requestId,
-          changes: {
-            fulfilledTimeStamp: action.meta.fulfilledTimeStamp,
-            status: action.meta.requestStatus,
-            url: {
-              origin: url.origin,
-              pathname: url.pathname,
-            },
-            response: {
-              data: action.payload,
-            },
+        const request: Request<APIResponse> = {
+          id,
+          url: getRequestUrl(
+            action.meta.arg.endpointName,
+            action.meta.arg.originalArgs
+          ),
+          startedTimeStamp: action.meta.startedTimeStamp,
+          status: action.meta.requestStatus,
+          meta: {
+            type: getRequestType(action.meta.arg.endpointName),
+            priority: 1,
           },
-        });
+        };
+        state.requests = requestsAdapter.upsertOne(state.requests, request);
       }
-    );
+    });
+
+    // complete
+    builder.addMatcher(API_REQUEST_FULFILLED, (state, action) => {
+      const id = action.meta.arg.originalArgs?.queueId || action.meta.requestId;
+      if (id) {
+        // const item: QueueItem = state.processing.entities[id];
+        state.processing = processingAdapter.removeOne(state.processing, id);
+      }
+      // @ts-expect-error baseQueryMeta is not in the type
+      const url = new URL(action.meta.baseQueryMeta.request.url);
+
+      state.requests = requestsAdapter.updateOne(state.requests, {
+        id,
+        changes: {
+          fulfilledTimeStamp: action.meta.fulfilledTimeStamp,
+          status: action.meta.requestStatus,
+          url: {
+            origin: url.origin,
+            pathname: url.pathname,
+          },
+          response: {
+            data: action.payload,
+          },
+        },
+      });
+    });
 
     // @todo handle rejected
+    builder.addMatcher(API_REQUEST_REJECTED, (state, action) => {
+      const id = action.meta.arg.originalArgs?.queueId || action.meta.requestId;
+      if (id) {
+        processingAdapter.removeOne(state.processing, id);
+      }
+      // @ts-expect-error baseQueryMeta is not in the type
+      const url = new URL(action.meta.baseQueryMeta.request.url);
+
+      requestsAdapter.updateOne(state.requests, {
+        id,
+        changes: {
+          status: action.meta.requestStatus,
+          url: {
+            origin: url.origin,
+            pathname: url.pathname,
+          },
+        },
+      });
+    });
   },
 });
 
@@ -272,11 +307,8 @@ export const addNetworkListener = (startAppListening: AppStartListening) => {
 
   // api fulfilled listener
   startAppListening({
-    matcher: isAnyOf(
-      apiSlice.endpoints.getAddress.matchFulfilled,
-      apiSlice.endpoints.getTransactions.matchFulfilled
-    ),
-    effect: async (action, listenerApi) => {
+    matcher: API_REQUEST_FULFILLED,
+    effect: async (_, listenerApi) => {
       const state = listenerApi.getState();
       const queueIds = state.network.queue.ids.slice();
       const processingCount = state.network.processing.ids.length;
@@ -303,21 +335,6 @@ export const addNetworkListener = (startAppListening: AppStartListening) => {
             );
           }
         });
-      }
-    },
-  });
-
-  // rejected
-  startAppListening({
-    matcher: isAnyOf(
-      apiSlice.endpoints.getAddress.matchRejected,
-      apiSlice.endpoints.getTransactions.matchRejected
-    ),
-    effect: (action, listenerApi) => {
-      const state = listenerApi.getState();
-      const id = action.meta.arg.originalArgs?.queueId;
-      if (id) {
-        console.log(id);
       }
     },
   });
@@ -371,8 +388,17 @@ export const networkReducer = networkSlice.reducer;
 ///////////////////////////////////////////
 // Selectors
 ///////////////////////////////////////////
+
 const requestSelectors = requestsAdapter.getSelectors<RootState>(
   (state) => state.network.requests
+);
+
+const queueSelectors = queueAdapter.getSelectors<RootState>(
+  (state) => state.network.queue
+);
+
+const processingSelectors = processingAdapter.getSelectors<RootState>(
+  (state) => state.network.processing
 );
 
 export const selectRequests = (state: RootState) => {
@@ -393,20 +419,14 @@ const selectRequestByStatus = (status: string, showInactive = false) => {
   };
 };
 
-export const selectQueuedRequests = (
-  state: RootState,
-  showInactive = false
-) => {
-  const requests = selectRequestByStatus("queued", showInactive)(state);
+export const selectQueuedRequests = (state: RootState) => {
+  const queue = queueSelectors.selectAll(state);
 
-  return requests;
+  return queue;
 };
 
-export const selectPendingRequests = (
-  state: RootState,
-  showInactive = false
-) => {
-  const requests = selectRequestByStatus("pending", showInactive)(state);
+export const selectPendingRequests = (state: RootState) => {
+  const requests = processingSelectors.selectAll(state);
 
   return requests;
 };

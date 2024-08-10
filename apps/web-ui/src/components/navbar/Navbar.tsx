@@ -56,6 +56,7 @@ export const Navbar = () => {
     loading,
     updatedTime,
   } = useBtcPrice();
+
   const btcPrice = forcastPrice ?? rawPrice;
   const { netAssetValue, actions, data, ui, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);

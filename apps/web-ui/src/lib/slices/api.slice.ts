@@ -179,12 +179,12 @@ export const apiSlice = createApi({
     }),
     getCirculatingSupply: builder.query<
       CirculatingSupplyResponse,
-      { queueId?: string }
+      { queueId?: string } | void
     >({
       query: getCirculatingSupplyQuery,
       transformResponse: transformCirculatingSupply,
     }),
-    getPrice: builder.query<PriceResponse, { queueId?: string }>({
+    getPrice: builder.query<PriceResponse, { queueId?: string } | void>({
       query: getPriceQuery,
     }),
     getHistoricPrice: builder.mutation({
