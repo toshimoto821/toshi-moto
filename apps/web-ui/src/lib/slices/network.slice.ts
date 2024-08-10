@@ -3,21 +3,40 @@ import {
   createSlice,
   isAnyOf,
   createSelector,
+  PayloadAction,
+  nanoid,
+  ThunkAction,
+  UnknownAction,
 } from "@reduxjs/toolkit";
+
 import {
   apiSlice,
   getPriceQuery,
   getCirculatingSupplyQuery,
+  getAddressQuery,
+  getTransactionQuery,
   type APIResponse,
+  type AddressArgs,
 } from "./api.slice";
 import type { RootState } from "../store";
+import {
+  initialState as configInitialState,
+  type ConfigState,
+} from "./config.slice";
 import type { AppStartListening } from "../store/middleware/listener";
+
+///////////////////////////////////////////
+// Types
+///////////////////////////////////////////
 
 export interface Request<T> {
   id: string;
-  url: string;
-  createdAt: number;
-  completedAt?: number;
+  url: {
+    origin?: string;
+    pathname: string;
+  };
+  startedTimeStamp: number;
+  fulfilledTimeStamp?: number;
   status: string;
   meta: RequestMeta;
   // used in ui for showing count
@@ -35,27 +54,85 @@ export interface RequestMeta {
 }
 
 const requestsAdapter = createEntityAdapter<Request<APIResponse>>({
-  sortComparer: (a, b) => a.createdAt - b.createdAt,
+  sortComparer: (a, b) => a.startedTimeStamp - b.startedTimeStamp,
 });
 
+const queueAdapter = createEntityAdapter<QueueItem>();
+const processingAdapter = createEntityAdapter<QueueItem>();
+
+export type CustomThunkAction = ThunkAction<
+  void,
+  RootState,
+  unknown,
+  UnknownAction
+>;
+
+export interface QueueItemAction {
+  endpoint: keyof typeof apiSlice.endpoints;
+  args: any;
+}
+// type Payload = ReturnType<typeof apiSlice.endpoints.getAddress.initiate>;
+export interface QueueItem {
+  id: string;
+  action: QueueItemAction;
+}
+
 export interface NetworkState {
+  config: {
+    api: ConfigState["api"];
+  };
+  queue: ReturnType<typeof queueAdapter.getInitialState>;
+  processing: ReturnType<typeof processingAdapter.getInitialState>;
   requests: ReturnType<typeof requestsAdapter.getInitialState>;
 }
+
 const initialState: NetworkState = {
+  config: {
+    api: configInitialState.api,
+  },
+  queue: queueAdapter.getInitialState(),
+  processing: processingAdapter.getInitialState(),
   requests: requestsAdapter.getInitialState(),
 };
 
-interface BaseQueryMeta {
-  request: {
-    url: string;
-  };
-  // Add other fields if necessary
-}
+// interface BaseQueryMeta {
+//   request: {
+//     url: string;
+//   };
+//   // Add other fields if necessary
+// }
+
+///////////////////////////////////////////
+// Slice
+///////////////////////////////////////////
 
 export const networkSlice = createSlice({
   name: "network",
   initialState,
   reducers: {
+    updateConfig: (state, action: PayloadAction<ConfigState>) => {
+      state.config.api = action.payload.api;
+    },
+    enqueueAction: (
+      state,
+      action: PayloadAction<QueueItemAction | QueueItemAction[]>
+    ) => {
+      const items: QueueItemAction[] = [];
+      if (Array.isArray(action.payload)) {
+        items.push(...action.payload);
+      } else {
+        items.push(action.payload);
+      }
+
+      queueAdapter.addMany(
+        state.queue,
+        items.map((item) => ({
+          id: nanoid(),
+          action: item,
+        }))
+      );
+    },
+
     markCompleteAsInactive(state) {
       Object.values(state.requests.entities)
         .filter((req) => req.status === "complete")
@@ -66,62 +143,215 @@ export const networkSlice = createSlice({
     // pending
     builder.addMatcher(
       isAnyOf(
+        apiSlice.endpoints.getAddress.matchPending,
+        apiSlice.endpoints.getTransactions.matchPending,
         apiSlice.endpoints.getPrice.matchPending,
         apiSlice.endpoints.getCirculatingSupply.matchPending
       ),
       (state, action) => {
-        const request: Request<APIResponse> = {
-          id: action.meta.requestId,
-          url: getRequestUrl(action.meta.arg.endpointName),
-          createdAt: action.meta.startedTimeStamp,
-          status: action.meta.requestStatus,
-          meta: {
-            type: getRequestType(action.meta.arg.endpointName),
-            priority: 1,
-          },
-        };
-        state.requests = requestsAdapter.upsertOne(state.requests, request);
+        // dequeue
+        const id = action.meta.arg.originalArgs?.queueId;
+        if (id) {
+          const item: QueueItem = state.queue.entities[id];
+          state.queue = queueAdapter.removeOne(state.queue, id);
+          state.processing = processingAdapter.addOne(state.processing, item);
+          const request: Request<APIResponse> = {
+            id: action.meta.requestId,
+            url: getRequestUrl(
+              action.meta.arg.endpointName,
+              action.meta.arg.originalArgs
+            ),
+            startedTimeStamp: action.meta.startedTimeStamp,
+            status: action.meta.requestStatus,
+            meta: {
+              type: getRequestType(action.meta.arg.endpointName),
+              priority: 1,
+            },
+          };
+          state.requests = requestsAdapter.upsertOne(state.requests, request);
+        }
       }
     );
     // complete
     builder.addMatcher(
       isAnyOf(
+        apiSlice.endpoints.getAddress.matchFulfilled,
+        apiSlice.endpoints.getTransactions.matchFulfilled,
         apiSlice.endpoints.getPrice.matchFulfilled,
         apiSlice.endpoints.getCirculatingSupply.matchFulfilled
       ),
       (state, action) => {
-        const req = state.requests.entities[action.meta.requestId];
-
-        if (req) {
-          const baseQueryMeta = action.meta.baseQueryMeta as BaseQueryMeta;
-          state.requests = requestsAdapter.updateOne(state.requests, {
-            id: action.meta.requestId,
-            changes: {
-              status: "complete",
-              completedAt: action.meta.fulfilledTimeStamp,
-              url: baseQueryMeta.request.url,
-              response: {
-                data: action.payload,
-              },
-            },
-          });
+        console.log("complete", action);
+        const id = action.meta.arg.originalArgs?.queueId;
+        if (id) {
+          // const item: QueueItem = state.processing.entities[id];
+          state.processing = processingAdapter.removeOne(state.processing, id);
         }
+        // @ts-expect-error baseQueryMeta is not in the type
+        const url = new URL(action.meta.baseQueryMeta.request.url);
+
+        state.requests = requestsAdapter.updateOne(state.requests, {
+          id: action.meta.requestId,
+          changes: {
+            fulfilledTimeStamp: action.meta.fulfilledTimeStamp,
+            status: action.meta.requestStatus,
+            url: {
+              origin: url.origin,
+              pathname: url.pathname,
+            },
+            response: {
+              data: action.payload,
+            },
+          },
+        });
       }
     );
+
+    // @todo handle rejected
   },
 });
 
-export const { markCompleteAsInactive } = networkSlice.actions;
+export const { markCompleteAsInactive, enqueueAction } = networkSlice.actions;
 
-export const getRequestUrl = (type: string) => {
+///////////////////////////////////////////
+// Middleware
+///////////////////////////////////////////
+// const networkQueue: PayloadAction<Request<APIResponse>>[] = [];
+
+let networkTimer: NodeJS.Timeout | null = null;
+export const addNetworkListener = (startAppListening: AppStartListening) => {
+  startAppListening({
+    matcher: isAnyOf(
+      apiSlice.endpoints.getPrice.matchFulfilled,
+      apiSlice.endpoints.getCirculatingSupply.matchFulfilled
+    ),
+    effect: async (_, listenerApi) => {
+      if (networkTimer) {
+        clearTimeout(networkTimer);
+      }
+      networkTimer = setTimeout(() => {
+        listenerApi.dispatch(markCompleteAsInactive());
+      }, 5000);
+    },
+  });
+
+  startAppListening({
+    predicate: (action, state) => {
+      return (
+        networkSlice.actions.enqueueAction.match(action) &&
+        state.network.processing.ids.length === 0
+      );
+    },
+    effect: async (_, listenerApi) => {
+      const state = listenerApi.getState();
+      const queueIds = state.network.queue.ids.slice();
+      const QUEUE_SIZE = 4;
+
+      const processingIds = queueIds.slice(0, QUEUE_SIZE);
+      processingIds.forEach((id) => {
+        const item = state.network.queue.entities[id];
+        if (item.action.endpoint === "getAddress") {
+          // need to pass the host with getAddress
+          listenerApi.dispatch(
+            apiSlice.endpoints.getAddress.initiate({
+              ...item.action.args,
+              queueId: id,
+            } as AddressArgs)
+          );
+        } else if (item.action.endpoint === "getTransactions") {
+          listenerApi.dispatch(
+            apiSlice.endpoints.getTransactions.initiate({
+              ...item.action.args,
+              queueId: id,
+            })
+          );
+        }
+      });
+    },
+  });
+
+  // api fulfilled listener
+  startAppListening({
+    matcher: isAnyOf(
+      apiSlice.endpoints.getAddress.matchFulfilled,
+      apiSlice.endpoints.getTransactions.matchFulfilled
+    ),
+    effect: async (action, listenerApi) => {
+      const state = listenerApi.getState();
+      const queueIds = state.network.queue.ids.slice();
+      const processingCount = state.network.processing.ids.length;
+      const QUEUE_SIZE = 4;
+      const diff = QUEUE_SIZE - processingCount;
+      if (diff > 0) {
+        const processingIds = queueIds.slice(0, diff);
+        processingIds.forEach((id) => {
+          const item = state.network.queue.entities[id];
+          if (item.action.endpoint === "getAddress") {
+            // need to pass the host with getAddress
+            listenerApi.dispatch(
+              apiSlice.endpoints.getAddress.initiate({
+                ...item.action.args,
+                queueId: id,
+              } as AddressArgs)
+            );
+          } else if (item.action.endpoint === "getTransactions") {
+            listenerApi.dispatch(
+              apiSlice.endpoints.getTransactions.initiate({
+                ...item.action.args,
+                queueId: id,
+              })
+            );
+          }
+        });
+      }
+    },
+  });
+
+  // rejected
+  startAppListening({
+    matcher: isAnyOf(
+      apiSlice.endpoints.getAddress.matchRejected,
+      apiSlice.endpoints.getTransactions.matchRejected
+    ),
+    effect: (action, listenerApi) => {
+      const state = listenerApi.getState();
+      const id = action.meta.arg.originalArgs?.queueId;
+      if (id) {
+        console.log(id);
+      }
+    },
+  });
+};
+
+export const getRequestUrl = (type: string, originalArgs: any) => {
+  if (type === "getTransactions") {
+    const pathname = getTransactionQuery(originalArgs);
+    return {
+      pathname,
+    };
+  }
+
+  if (type === "getAddress") {
+    const pathname = getAddressQuery(originalArgs);
+    return {
+      pathname,
+    };
+  }
   if (type === "getPrice") {
     // const baseUrl = dynamicBaseQuery("", api, {});
-    return getPriceQuery();
+    const pathname = getPriceQuery();
+    return {
+      pathname,
+    };
   }
   if (type === "getCirculatingSupply") {
-    return getCirculatingSupplyQuery();
+    const url = new URL(getCirculatingSupplyQuery());
+    return {
+      origin: url.origin,
+      pathname: url.pathname,
+    };
   }
-  return "";
+  throw new Error("unknown request type");
 };
 
 export const getRequestType = (type: string) => {
@@ -209,25 +439,3 @@ export const selectCountRequests = createSelector(
     };
   }
 );
-
-///////////////////////////////////////////
-// Middleware
-///////////////////////////////////////////
-
-let networkTimer: NodeJS.Timeout | null = null;
-export const addNetworkListener = (startAppListening: AppStartListening) => {
-  startAppListening({
-    matcher: isAnyOf(
-      apiSlice.endpoints.getPrice.matchFulfilled,
-      apiSlice.endpoints.getCirculatingSupply.matchFulfilled
-    ),
-    effect: async (_, listenerApi) => {
-      if (networkTimer) {
-        clearTimeout(networkTimer);
-      }
-      networkTimer = setTimeout(() => {
-        listenerApi.dispatch(markCompleteAsInactive());
-      }, 5000);
-    },
-  });
-};

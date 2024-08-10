@@ -87,6 +87,23 @@ export class Xpub {
     return Xpub.getBitcoinjs();
   }
 
+  static async scanXpubs(
+    xpub: string | string[],
+    {
+      start = 0,
+      limit = 10,
+      isChange = false,
+    }: { start?: number; limit?: number; isChange?: boolean } = {}
+  ): Promise<string[]> {
+    if (Array.isArray(xpub) && xpub.length > 1) {
+      return Xpub.scanXpubMultiSigAddresses(xpub, { start, limit, isChange });
+    }
+    if (Array.isArray(xpub)) {
+      return Xpub.scanXpubAddresses(xpub[0], { start, limit, isChange });
+    }
+
+    return Xpub.scanXpubAddresses(xpub, { start, limit, isChange });
+  }
   static async scanXpubAddresses(
     xpub: string,
     {

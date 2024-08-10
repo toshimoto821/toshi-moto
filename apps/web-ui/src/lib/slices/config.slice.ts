@@ -10,7 +10,8 @@ const priceUrl = import.meta.env.VITE_COINGECKO_PRICE_API_URL;
 
 const nodeUrl = import.meta.env.VITE_BITCOIN_NODE_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
-interface ConfigState {
+
+export interface ConfigState {
   appVersion: string;
   api: {
     priceUrl: string;
@@ -20,7 +21,7 @@ interface ConfigState {
   };
 }
 
-const initialState: ConfigState = {
+export const initialState: ConfigState = {
   appVersion: "0.0.0",
   api: {
     priceUrl,
