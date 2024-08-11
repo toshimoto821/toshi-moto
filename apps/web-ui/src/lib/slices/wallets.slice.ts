@@ -8,7 +8,6 @@ import { createAppAsyncThunk } from "../store/withTypes";
 import { apiSlice } from "./api.slice";
 import type { AddressResponse, Transaction } from "./api.slice.types";
 import { enqueueAction } from "./network.slice";
-
 import type { AppStartListening } from "../store/middleware/listener";
 
 interface Wallet {
@@ -347,7 +346,10 @@ export const { removeWallet } = walletsSlice.actions;
 
 export const upsertWallet = createAppAsyncThunk(
   walletsSlice.actions.upsertWallet.type,
-  async (wallet: Wallet, { dispatch /*, getState*/ }) => {
+  async (
+    wallet: Pick<Wallet, "id" | "name" | "color" | "xpubs">,
+    { dispatch /*, getState*/ }
+  ) => {
     // add the initial wallet
     dispatch(
       walletsSlice.actions.upsertWallet({
@@ -365,11 +367,3 @@ export const upsertWallet = createAppAsyncThunk(
     );
   }
 );
-
-///////////////////////////
-/// Utils
-///////////////////////////
-
-export function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}

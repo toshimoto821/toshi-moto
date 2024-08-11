@@ -5,10 +5,7 @@ import {
   createSelector,
   PayloadAction,
   nanoid,
-  ThunkAction,
-  UnknownAction,
 } from "@reduxjs/toolkit";
-
 import {
   apiSlice,
   getPriceQuery,
@@ -16,48 +13,27 @@ import {
   getAddressQuery,
   getTransactionQuery,
 } from "./api.slice";
+import { wait } from "./slice.utils";
+import { createAppAsyncThunk } from "../store/withTypes";
 import type { AddressArgs } from "./api.slice.types";
 import type { APIRequestResponse } from "./network.slice.types";
-
 import type { RootState } from "../store";
+import type {
+  QueueItem,
+  QueueItemAction,
+  NetworkState,
+} from "./network.slice.types";
 import {
   initialState as configInitialState,
   type ConfigState,
 } from "./config.slice";
 import type { AppStartListening } from "../store/middleware/listener";
 
-const requestsAdapter = createEntityAdapter<APIRequestResponse>({
+export const requestsAdapter = createEntityAdapter<APIRequestResponse>({
   sortComparer: (a, b) => a.startedTimeStamp - b.startedTimeStamp,
 });
-
-const queueAdapter = createEntityAdapter<QueueItem>();
-const processingAdapter = createEntityAdapter<QueueItem>();
-
-export type CustomThunkAction = ThunkAction<
-  void,
-  RootState,
-  unknown,
-  UnknownAction
->;
-
-export interface QueueItemAction {
-  endpoint: keyof typeof apiSlice.endpoints;
-  args: any;
-}
-// type Payload = ReturnType<typeof apiSlice.endpoints.getAddress.initiate>;
-export interface QueueItem {
-  id: string;
-  action: QueueItemAction;
-}
-
-export interface NetworkState {
-  config: {
-    api: ConfigState["api"];
-  };
-  queue: ReturnType<typeof queueAdapter.getInitialState>;
-  processing: ReturnType<typeof processingAdapter.getInitialState>;
-  requests: ReturnType<typeof requestsAdapter.getInitialState>;
-}
+export const queueAdapter = createEntityAdapter<QueueItem>();
+export const processingAdapter = createEntityAdapter<QueueItem>();
 
 const initialState: NetworkState = {
   config: {
@@ -191,7 +167,7 @@ export const networkSlice = createSlice({
       // @ts-expect-error baseQueryMeta is not in the type
       const url = new URL(action.meta.baseQueryMeta.request.url);
 
-      state.requests = requestsAdapter.updateOne(state.requests, {
+      requestsAdapter.updateOne(state.requests, {
         id,
         changes: {
           fulfilledTimeStamp: action.meta.fulfilledTimeStamp,
@@ -259,11 +235,47 @@ export const addNetworkListener = (startAppListening: AppStartListening) => {
       );
     },
     effect: async (_, listenerApi) => {
-      const state = listenerApi.getState();
-      const queueIds = state.network.queue.ids.slice();
-      const QUEUE_SIZE = 4;
+      listenerApi.dispatch(processQueue());
+    },
+  });
 
-      const processingIds = queueIds.slice(0, QUEUE_SIZE);
+  // api fulfilled listener
+  startAppListening({
+    matcher: API_REQUEST_FULFILLED,
+    effect: (_, { dispatch }) => {
+      dispatch(processQueue());
+    },
+  });
+
+  startAppListening({
+    matcher: API_REQUEST_REJECTED,
+    effect(action, { dispatch }) {
+      if (!action.meta.condition) {
+        dispatch(processQueue());
+      }
+    },
+  });
+};
+
+///////////////////////////////////////////
+/// actors
+///////////////////////////////////////////
+
+export const processQueue = createAppAsyncThunk(
+  "network/processQueue",
+  async (_, listenerApi) => {
+    const state = listenerApi.getState();
+    const queueIds = state.network.queue.ids.slice();
+    const processingCount = state.network.processing.ids.length;
+    const { conconcurrentRequests, timeBetweenRequests } = state.config.network;
+    const QUEUE_SIZE = conconcurrentRequests;
+
+    if (timeBetweenRequests > 0) {
+      await wait(timeBetweenRequests);
+    }
+    const diff = QUEUE_SIZE - processingCount;
+    if (diff > 0) {
+      const processingIds = queueIds.slice(0, diff);
       processingIds.forEach((id) => {
         const item = state.network.queue.entities[id];
         if (item.action.endpoint === "getAddress") {
@@ -283,43 +295,9 @@ export const addNetworkListener = (startAppListening: AppStartListening) => {
           );
         }
       });
-    },
-  });
-
-  // api fulfilled listener
-  startAppListening({
-    matcher: API_REQUEST_FULFILLED,
-    effect: async (_, listenerApi) => {
-      const state = listenerApi.getState();
-      const queueIds = state.network.queue.ids.slice();
-      const processingCount = state.network.processing.ids.length;
-      const QUEUE_SIZE = 4;
-      const diff = QUEUE_SIZE - processingCount;
-      if (diff > 0) {
-        const processingIds = queueIds.slice(0, diff);
-        processingIds.forEach((id) => {
-          const item = state.network.queue.entities[id];
-          if (item.action.endpoint === "getAddress") {
-            // need to pass the host with getAddress
-            listenerApi.dispatch(
-              apiSlice.endpoints.getAddress.initiate({
-                ...item.action.args,
-                queueId: id,
-              } as AddressArgs)
-            );
-          } else if (item.action.endpoint === "getTransactions") {
-            listenerApi.dispatch(
-              apiSlice.endpoints.getTransactions.initiate({
-                ...item.action.args,
-                queueId: id,
-              })
-            );
-          }
-        });
-      }
-    },
-  });
-};
+    }
+  }
+);
 
 export const getRequestUrl = (type: string, originalArgs: any) => {
   if (type === "getTransactions") {

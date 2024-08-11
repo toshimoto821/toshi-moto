@@ -19,6 +19,10 @@ export interface ConfigState {
     nodeUrl: string;
     url: string;
   };
+  network: {
+    conconcurrentRequests: number;
+    timeBetweenRequests: number;
+  };
 }
 
 export const initialState: ConfigState = {
@@ -28,6 +32,10 @@ export const initialState: ConfigState = {
     historicPriceUrl,
     nodeUrl,
     url: apiUrl,
+  },
+  network: {
+    conconcurrentRequests: 4,
+    timeBetweenRequests: 0,
   },
 };
 

@@ -66,7 +66,14 @@ export const useWallet = (xpubs: string[]) => {
     });
     const walletId = id ?? nanoid();
 
-    dispatch(upsertWallet({ name, id: walletId }));
+    dispatch(
+      upsertWallet({
+        name,
+        id: walletId,
+        color: "rgb(153, 204, 255)",
+        xpubs,
+      })
+    );
   };
 
   // console.log(current);

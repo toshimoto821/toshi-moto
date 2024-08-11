@@ -5,3 +5,7 @@ export function splitIntoChunks<T>(array: T[], chunkSize: number): T[][] {
   }
   return result;
 }
+
+export function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
