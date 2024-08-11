@@ -5,7 +5,8 @@ import {
 } from "@reduxjs/toolkit";
 import { Xpub } from "@models/Xpub";
 import { createAppAsyncThunk } from "../store/withTypes";
-import { apiSlice, type AddressResponse, type Transaction } from "./api.slice";
+import { apiSlice } from "./api.slice";
+import type { AddressResponse, Transaction } from "./api.slice.types";
 import { enqueueAction } from "./network.slice";
 
 import type { AppStartListening } from "../store/middleware/listener";

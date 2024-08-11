@@ -1,9 +1,9 @@
 import { Card, Box, Text, Button } from "@radix-ui/themes";
 import { NetworkContext } from "@providers/AppProvider";
-import { type Request } from "@lib/slices/network.slice";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
 
 type ILogDetailActions = {
-  request: Request;
+  request: APIRequestResponse;
   onDelete: () => void;
 };
 export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {

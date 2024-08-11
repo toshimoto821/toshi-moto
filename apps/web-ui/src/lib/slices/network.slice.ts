@@ -15,9 +15,10 @@ import {
   getCirculatingSupplyQuery,
   getAddressQuery,
   getTransactionQuery,
-  type APIResponse,
-  type AddressArgs,
 } from "./api.slice";
+import type { AddressArgs } from "./api.slice.types";
+import type { APIRequestResponse } from "./network.slice.types";
+
 import type { RootState } from "../store";
 import {
   initialState as configInitialState,
@@ -25,35 +26,7 @@ import {
 } from "./config.slice";
 import type { AppStartListening } from "../store/middleware/listener";
 
-///////////////////////////////////////////
-// Types
-///////////////////////////////////////////
-
-export interface Request<T> {
-  id: string;
-  url: {
-    origin?: string;
-    pathname: string;
-  };
-  startedTimeStamp: number;
-  fulfilledTimeStamp?: number;
-  status: string;
-  meta: RequestMeta;
-  // used in ui for showing count
-  inactive?: boolean;
-  response?: {
-    data: T;
-  };
-}
-
-export interface RequestMeta {
-  priority: number;
-  type: string;
-  address?: string;
-  walletId?: string;
-}
-
-const requestsAdapter = createEntityAdapter<Request<APIResponse>>({
+const requestsAdapter = createEntityAdapter<APIRequestResponse>({
   sortComparer: (a, b) => a.startedTimeStamp - b.startedTimeStamp,
 });
 
@@ -122,6 +95,17 @@ const API_REQUEST_PENDING = isAnyOf(
   apiSlice.endpoints.getPrice.matchPending,
   apiSlice.endpoints.getCirculatingSupply.matchPending
 );
+
+const API_REQUEST_FULFILLED_REJECTED = isAnyOf(
+  apiSlice.endpoints.getAddress.matchFulfilled,
+  apiSlice.endpoints.getAddress.matchRejected,
+  apiSlice.endpoints.getTransactions.matchFulfilled,
+  apiSlice.endpoints.getTransactions.matchRejected,
+  apiSlice.endpoints.getPrice.matchFulfilled,
+  apiSlice.endpoints.getPrice.matchRejected,
+  apiSlice.endpoints.getCirculatingSupply.matchFulfilled,
+  apiSlice.endpoints.getCirculatingSupply.matchRejected
+);
 ///////////////////////////////////////////
 // Slice
 ///////////////////////////////////////////
@@ -180,7 +164,7 @@ export const networkSlice = createSlice({
           });
         }
 
-        const request: Request<APIResponse> = {
+        const request: APIRequestResponse = {
           id,
           url: getRequestUrl(
             action.meta.arg.endpointName,
@@ -256,10 +240,7 @@ export const { markCompleteAsInactive, enqueueAction } = networkSlice.actions;
 let networkTimer: NodeJS.Timeout | null = null;
 export const addNetworkListener = (startAppListening: AppStartListening) => {
   startAppListening({
-    matcher: isAnyOf(
-      apiSlice.endpoints.getPrice.matchFulfilled,
-      apiSlice.endpoints.getCirculatingSupply.matchFulfilled
-    ),
+    matcher: API_REQUEST_FULFILLED_REJECTED,
     effect: async (_, listenerApi) => {
       if (networkTimer) {
         clearTimeout(networkTimer);
@@ -357,8 +338,11 @@ export const getRequestUrl = (type: string, originalArgs: any) => {
   if (type === "getPrice") {
     // const baseUrl = dynamicBaseQuery("", api, {});
     const pathname = getPriceQuery();
+    const [, search = ""] = pathname.split("?");
+
     return {
       pathname,
+      search,
     };
   }
   if (type === "getCirculatingSupply") {
@@ -366,6 +350,7 @@ export const getRequestUrl = (type: string, originalArgs: any) => {
     return {
       origin: url.origin,
       pathname: url.pathname,
+      search: url.search,
     };
   }
   throw new Error("unknown request type");
@@ -378,6 +363,14 @@ export const getRequestType = (type: string) => {
 
   if (type === "getCirculatingSupply") {
     return "supply";
+  }
+
+  if (type === "getTransactions") {
+    return "transactions";
+  }
+
+  if (type === "getAddress") {
+    return "address";
   }
 
   return "unknown";
@@ -435,7 +428,7 @@ export const selectCompleteRequests = (
   state: RootState,
   showInactive = false
 ) => {
-  const requests = selectRequestByStatus("complete", showInactive)(state);
+  const requests = selectRequestByStatus("fulfilled", showInactive)(state);
 
   return requests;
 };

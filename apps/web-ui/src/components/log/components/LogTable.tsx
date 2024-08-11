@@ -2,22 +2,11 @@ import { useRef, useEffect } from "react";
 import { Flex, Box, IconButton, Text } from "@radix-ui/themes";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { clsx } from "clsx";
-import { type Request } from "@lib/slices/network.slice";
-import { type APIResponse } from "@root/lib/slices/api.slice";
 
-const getUrl = (url: string, type: keyof URL) => {
-  let u: URL;
-  if (/^\//.test(url)) {
-    u = new URL(window.location.origin + url);
-  } else {
-    u = new URL(url);
-  }
-
-  return u[type] as string;
-};
+import { type APIRequestResponse } from "@root/lib/slices/network.slice.types";
 
 interface ILogTable {
-  requests: Request<APIResponse>[];
+  requests: APIRequestResponse[];
   activeRequestIndex: number | null;
   children?: React.ReactNode;
   onClickDeleteAll?: () => void;
@@ -25,7 +14,7 @@ interface ILogTable {
     request,
     index,
   }: {
-    request: Request<APIResponse>;
+    request: APIRequestResponse;
     index: number;
   }) => void;
 }
@@ -81,10 +70,10 @@ export const LogTable = ({
             <Box className="w-6/12 md:w-7/12 border border-l-0 border-t-0 border-b-0 px-2 flex items-center overflow-scroll">
               <div className="flex flex-col justify-around">
                 <div className=" text-gray-500 overflow-scroll leading-none">
-                  <Text size="1">{getUrl(request.url, "pathname")}</Text>
+                  <Text size="1">{request.url.pathname}</Text>
                 </div>
                 <div className="leading-none">
-                  <Text size="1">{getUrl(request.url, "host")}</Text>
+                  <Text size="1">{request.url.origin}</Text>
                 </div>
               </div>
             </Box>
@@ -96,10 +85,11 @@ export const LogTable = ({
             </Box>
             <Box className="px-2 w-2/12 flex items-center text-sm">
               <Text size="1" className="whitespace-nowrap hidden md:inline">
-                {new Date(request.createdAt).toLocaleString()}
+                {new Date(request.startedTimeStamp).toLocaleString()}
               </Text>
               <Text size="1" className="whitespace-nowrap inline md:hidden">
-                {new Date(request.createdAt).toLocaleTimeString()}
+                {request.fulfilledTimeStamp &&
+                  new Date(request.fulfilledTimeStamp).toLocaleTimeString()}
               </Text>
             </Box>
           </Flex>

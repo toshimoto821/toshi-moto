@@ -1,8 +1,14 @@
 import transform from "lodash/transform";
 import assign from "lodash/assign";
 import isObject from "lodash/isObject";
-import { type Request } from "@lib/slices/network.slice";
-import { APIResponse, PriceResponse } from "@root/lib/slices/api.slice";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
+import type {
+  PriceResponse,
+  PriceHistoryResponse,
+  AddressResponse,
+  TransactionsResponse,
+} from "@root/lib/slices/api.slice.types";
+
 function flattenObject(
   obj: Record<string, any>,
   prefix = ""
@@ -21,13 +27,14 @@ function flattenObject(
   );
 }
 
-export const toTabularData = (request: Request<APIResponse>) => {
+export const toTabularData = (request: APIRequestResponse) => {
   const headers = [] as string[];
   const rows = [] as string[][];
   if (request.meta.type === "btc-historic-price") {
     headers.push("Timestamp", "Price");
-    // update
-    const prices = request.response?.data.prices;
+
+    const response = request.response?.data as PriceHistoryResponse;
+    const prices = response.prices;
     if (prices.length) {
       for (const priceRow of prices) {
         rows.push([priceRow[0] + "", priceRow[1] + ""]);
@@ -37,7 +44,7 @@ export const toTabularData = (request: Request<APIResponse>) => {
 
   if (request.meta.type === "supply") {
     headers.push("Key", "Value");
-    rows.push(["price", request.response?.data + ""]);
+    rows.push(["supply", request.response?.data + ""]);
   }
 
   if (request.meta.type === "price" && request.response?.data) {
@@ -65,7 +72,8 @@ export const toTabularData = (request: Request<APIResponse>) => {
       "weight"
     );
 
-    const data = request.response?.data.map((row: any) => {
+    const response = request.response?.data as TransactionsResponse;
+    const data = (response || []).map((row: any) => {
       return [
         row.fee,
         row.locktime,
@@ -83,7 +91,8 @@ export const toTabularData = (request: Request<APIResponse>) => {
 
   if (request.meta.type === "utxo") {
     headers.push("Key", "Value");
-    const flatObject = flattenObject(request.response?.data);
+    const response = request.response?.data as AddressResponse;
+    const flatObject = flattenObject(response || {});
     const data = Object.keys(flatObject).map((key: any) => {
       const value = flatObject[key];
 

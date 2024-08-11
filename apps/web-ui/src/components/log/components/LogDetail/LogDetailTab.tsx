@@ -4,12 +4,11 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { LogResponseData } from "./LogResponseData";
 import { cn as classNames } from "@lib/utils";
-import { type Request } from "@lib/slices/network.slice";
+import type { APIReqequestResponse } from "@lib/slices/network.slice.types";
 import "./log-detail-tab.css";
-import { APIResponse } from "@root/lib/slices/api.slice";
 
 type ILogDetailTab = {
-  request: Request<APIResponse>;
+  request: APIReqequestResponse;
 };
 export const LogDetailTab = (props: ILogDetailTab) => {
   const { request } = props;
@@ -21,7 +20,11 @@ export const LogDetailTab = (props: ILogDetailTab) => {
         <AccordionContent className="text-xs ">
           <div className="flex border border-x-0 border-t-0 p-2">
             <div className="w-36 font-bold">Request URL</div>
-            <div className="flex-1 overflow-auto">{request.url}</div>
+            <div className="flex-1 overflow-auto">
+              {request.url.origin}
+              {request.url.pathname}
+              {request.url.search}
+            </div>
           </div>
           <div className="flex border border-x-0 border-t-0  p-2">
             <div className="w-36 font-bold">Type</div>
@@ -34,7 +37,8 @@ export const LogDetailTab = (props: ILogDetailTab) => {
           <div className="flex  p-2">
             <div className="w-36 font-bold">Timestamp</div>
             <div className="flex-1">
-              {new Date(request.createdAt).toLocaleString()}
+              {request.fulfilledTimeStamp &&
+                new Date(request.fulfilledTimeStamp).toLocaleString()}
             </div>
           </div>
         </AccordionContent>

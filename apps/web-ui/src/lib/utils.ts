@@ -270,25 +270,14 @@ export const deleteAllCookies = () => {
   }
 };
 
-export const getQueryParams = (url: string) => {
-  try {
-    const uri = new URL(url);
-    const search = uri.search.substring(1, uri.search.length);
+export const getQueryParams = (search?: string) => {
+  if (!search) return {};
 
-    return search
-      .split("&")
-      .map((parts) => {
-        return parts.split("=");
-      })
-      .reduce((acc, cur) => {
-        return {
-          ...acc,
-          [cur[0]]: cur[1],
-        };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }, {}) as Record<string, any>;
-  } catch (ex) {
-    console.error(ex);
+  try {
+    const queryParams = new URLSearchParams(search);
+    return Object.fromEntries(queryParams.entries());
+  } catch (e) {
+    console.log("could not parse query params", e);
     return {};
   }
 };

@@ -5,10 +5,10 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { LogDetailActions } from "./LogDetailActions";
 import { LogDetailTab } from "./LogDetailTab";
 import { LogDescription } from "./LogDescription";
-import { type Request } from "@lib/slices/network.slice";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
 
 type ILogDetail = {
-  request: Request;
+  request: APIRequestResponse;
   handleClose?: () => void;
 };
 export const LogDetail = ({ request, handleClose }: ILogDetail) => {
