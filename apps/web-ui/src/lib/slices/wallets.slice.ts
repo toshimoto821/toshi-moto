@@ -33,20 +33,25 @@ interface Address {
   index: number;
   isChange: boolean;
   walletId: string;
-  details?: AddressResponse;
+  details?: {
+    data: AddressResponse;
+    fulfilledTimeStamp: number;
+  };
   // loading transactions, etc
   status?: string;
 
   transactions: ReturnType<typeof transactionAdapter.getInitialState>;
 }
 
-interface WalletTransaction extends Transaction {
+interface WrappedTransactions {
   id: string;
+  data: Transaction;
+  fulfilledTimeStamp: number;
 }
 
 const walletsAdapter = createEntityAdapter<Wallet>();
 const addressAdapter = createEntityAdapter<Address>();
-const transactionAdapter = createEntityAdapter<WalletTransaction>();
+const transactionAdapter = createEntityAdapter<WrappedTransactions>();
 
 type AddressPayload = {
   walletId: string;
@@ -99,7 +104,10 @@ export const walletsSlice = createSlice({
             transactions:
               addressObj.transactions || transactionAdapter.getInitialState(),
             status: "RESOLVED",
-            details: action.payload,
+            details: {
+              data: action.payload,
+              fulfilledTimeStamp: action.meta.fulfilledTimeStamp,
+            },
           });
           wallet.addresses = addressEntity;
           state.entities[walletId] = wallet;
@@ -130,7 +138,13 @@ export const walletsSlice = createSlice({
         const { address, walletId } = action.meta.arg.originalArgs;
         const wallet = state.entities[walletId];
         if (wallet) {
-          const txs = action.payload.map((tx) => ({ ...tx, id: tx.txid }));
+          const txs = action.payload.map((tx) => {
+            return {
+              id: tx.txid,
+              data: tx,
+              fulfilledTimeStamp: action.meta.fulfilledTimeStamp,
+            };
+          });
           wallet.addresses.entities[address].transactions =
             transactionAdapter.upsertMany(
               wallet.addresses.entities[address].transactions,

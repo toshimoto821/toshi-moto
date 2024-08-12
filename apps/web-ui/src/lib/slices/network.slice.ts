@@ -211,7 +211,6 @@ export const { markCompleteAsInactive, enqueueAction } = networkSlice.actions;
 ///////////////////////////////////////////
 // Middleware
 ///////////////////////////////////////////
-// const networkQueue: PayloadAction<Request<APIResponse>>[] = [];
 
 let networkTimer: NodeJS.Timeout | null = null;
 export const addNetworkListener = (startAppListening: AppStartListening) => {
@@ -270,12 +269,12 @@ export const processQueue = createAppAsyncThunk(
     const { conconcurrentRequests, timeBetweenRequests } = state.config.network;
     const QUEUE_SIZE = conconcurrentRequests;
 
-    if (timeBetweenRequests > 0) {
-      await wait(timeBetweenRequests);
-    }
     const diff = QUEUE_SIZE - processingCount;
     if (diff > 0) {
       const processingIds = queueIds.slice(0, diff);
+      if (timeBetweenRequests > 0 && processingIds.length) {
+        await wait(timeBetweenRequests);
+      }
       processingIds.forEach((id) => {
         const item = state.network.queue.entities[id];
         if (item.action.endpoint === "getAddress") {
