@@ -107,7 +107,7 @@ export const TransactionRow = ({
         (vinOrVout.type === "VOUT" && vinOrVout.vout !== address.address);
 
       const btcAmount = (vinOrVout.btc || 0) / 100000000;
-      const btcValue = (address.settings.btcPrice || 0) * btcAmount;
+      const btcValue = address.value;
       return (
         <div
           key={key}
