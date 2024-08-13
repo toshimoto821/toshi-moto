@@ -6,16 +6,23 @@ import {
 import { Xpub } from "@models/Xpub";
 import { createAppAsyncThunk } from "../store/withTypes";
 import { apiSlice } from "./api.slice";
-import type { AddressResponse, Transaction } from "./api.slice.types";
+import type {
+  AddressArgs,
+  AddressResponse,
+  Transaction,
+} from "./api.slice.types";
 import { enqueueAction } from "./network.slice";
 import type { AppStartListening } from "../store/middleware/listener";
+import { RootState } from "../store";
+import { IWalletAddressFilters } from "@root/models/Wallet";
 
-interface Wallet {
+export interface Wallet {
   id: string;
   name: string;
   color: string;
   xpubs: string[];
   meta: {
+    refreshedAt: number;
     change: {
       lastAddressIndex: number | null;
     };
@@ -26,9 +33,11 @@ interface Wallet {
   // loading addresses, fetching transactions, etc
   status?: string;
   addresses: ReturnType<typeof addressAdapter.getInitialState>;
+  addressFilters: IWalletAddressFilters;
+  archived?: boolean;
 }
 
-interface Address {
+export interface Address {
   id: string; // address
   index: number;
   isChange: boolean;
@@ -53,7 +62,7 @@ const walletsAdapter = createEntityAdapter<Wallet>();
 const addressAdapter = createEntityAdapter<Address>();
 const transactionAdapter = createEntityAdapter<WrappedTransactions>();
 
-type AddressPayload = {
+export type AddressPayload = {
   walletId: string;
   addresses: string[];
   isChange: boolean;
@@ -84,8 +93,34 @@ export const walletsSlice = createSlice({
         }
       }
     },
+    refreshAddresses(state, action: PayloadAction<AddressArgs[]>) {
+      for (const item of action.payload) {
+        const { walletId, address } = item;
+        state.entities[walletId].addresses.entities[address].status = "PENDING";
+      }
+    },
+    refreshWallet(state, action: PayloadAction<string>) {
+      const wallet = state.entities[action.payload];
+      if (wallet) {
+        wallet.meta.refreshedAt = new Date().getTime();
+      }
+    },
   },
   extraReducers: (builder) => {
+    builder.addMatcher(
+      apiSlice.endpoints.getAddress.matchRejected,
+      (state, action) => {
+        const { address, walletId } = action.meta.arg.originalArgs;
+        const wallet = state.entities[walletId];
+        if (wallet) {
+          const addressObj = wallet.addresses.entities[address];
+          if (addressObj) {
+            addressObj.status = "REJECTED";
+          }
+        }
+      }
+    );
+
     builder.addMatcher(
       apiSlice.endpoints.getAddress.matchFulfilled,
       (state, action) => {
@@ -134,7 +169,6 @@ export const walletsSlice = createSlice({
     builder.addMatcher(
       apiSlice.endpoints.getTransactions.matchFulfilled,
       (state, action) => {
-        console.log(action);
         const { address, walletId } = action.meta.arg.originalArgs;
         const wallet = state.entities[walletId];
         if (wallet) {
@@ -358,6 +392,56 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
 
 export const { removeWallet } = walletsSlice.actions;
 
+export const refreshAddresses = createAppAsyncThunk(
+  walletsSlice.actions.refreshAddresses.type,
+  async (addresses: AddressArgs[], { dispatch }) => {
+    dispatch(walletsSlice.actions.refreshAddresses(addresses));
+
+    dispatch(
+      enqueueAction(
+        addresses.map((address) => ({
+          endpoint: "getAddress",
+          args: address,
+        }))
+      )
+    );
+  }
+);
+
+interface RefresWalletArgs {
+  walletId: string;
+  ttl?: number;
+}
+export const refreshWallet = createAppAsyncThunk(
+  walletsSlice.actions.refreshWallet.type,
+  async ({ walletId, ttl }: RefresWalletArgs, { dispatch, getState }) => {
+    const state = getState();
+    const wallet = state.wallets.entities[walletId];
+    if (wallet) {
+      const { refreshedAt } = wallet.meta;
+      // dont refresh if cache is not stale
+      if (ttl && refreshedAt) {
+        const now = new Date().getTime();
+        const diff = now - refreshedAt;
+        if (diff < ttl) return;
+      }
+      dispatch(walletsSlice.actions.refreshWallet(walletId));
+
+      const addresses = Object.values(wallet.addresses.entities).map(
+        (address) => {
+          return {
+            address: address.id,
+            walletId,
+            index: address.index,
+            isChange: address.isChange,
+          } as AddressArgs;
+        }
+      );
+      dispatch(refreshAddresses(addresses));
+    }
+  }
+);
+
 export const upsertWallet = createAppAsyncThunk(
   walletsSlice.actions.upsertWallet.type,
   async (
@@ -369,6 +453,7 @@ export const upsertWallet = createAppAsyncThunk(
       walletsSlice.actions.upsertWallet({
         ...wallet,
         meta: {
+          refreshedAt: new Date().getTime(),
           change: {
             lastAddressIndex: null,
           },
@@ -377,7 +462,18 @@ export const upsertWallet = createAppAsyncThunk(
           },
         },
         addresses: addressAdapter.getInitialState(),
+        addressFilters: {
+          change: true,
+          receive: true,
+          utxoOnly: false,
+        },
       })
     );
   }
 );
+
+///////////////////////////
+// Selectors
+///////////////////////////
+export const { selectAll: selectAllWallets } =
+  walletsAdapter.getSelectors<RootState>((state) => state.wallets);

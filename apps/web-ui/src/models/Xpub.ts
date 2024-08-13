@@ -1,32 +1,14 @@
 import { trimAddress } from "@lib/utils";
-import { IUtxoInput, type Utxo } from "./Utxo";
-import { IUtxoRequest } from "@machines/appMachine";
 
 const VITE_BITCOIN_NETWORK: "mainnet" | "testnet" =
   import.meta.env.VITE_BITCOIN_NETWORK || "mainnet";
 
-export type IXpubInput = {
-  address: string;
-  utxos?: Record<string, IUtxoInput>;
-};
-
-type ISettings = {
-  cur: string;
-  blockExplorer: string;
-  btcPrice?: number;
-  utxos?: Record<string, IUtxoRequest>;
-};
-
 export class Xpub {
   address: string;
-  // utxo doesn't have to have a balance, they are really just addresses
-  utxos: Record<string, Utxo> = {};
 
-  settings?: ISettings;
   bitcoinjs?: any;
-  constructor(data: IXpubInput, settings: ISettings) {
-    this.address = data.address;
-    this.settings = settings;
+  constructor(address: string) {
+    this.address = address;
   }
 
   static async scanXpubMultiSigAddresses(

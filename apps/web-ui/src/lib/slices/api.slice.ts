@@ -65,42 +65,12 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getAddress: builder.query<AddressResponse, AddressArgs>({
       query: getAddressQuery,
-      // queryFn: async ({ address }, queryApi) => {
-      //   try {
-      //     const state = queryApi.getState() as RootState;
-      //     const nodeUrl = selectBaseNodeUrl(state);
-      //     const url = `${nodeUrl}/api/address/${address}`;
-      //     const response = await xhrRequest<AddressResponse>(url, {
-      //       id: "getAddress",
-      //     });
-      //     const data: AddressResponse = response.data;
-
-      //     return { data };
-      //   } catch (error) {
-      //     return { error: error as FetchBaseQueryError };
-      //   }
-      // },
     }),
     getTransactions: builder.query<
       TransactionsResponse,
       { address: string; walletId: string; queueId?: string }
     >({
       query: getTransactionQuery,
-      // queryFn: async ({ address }, queryApi) => {
-      //   try {
-      //     const state = queryApi.getState() as RootState;
-      //     const nodeUrl = selectBaseNodeUrl(state);
-      //     const url = `${nodeUrl}/api/address/${address}/txs`;
-      //     const response = await xhrRequest<TransactionsResponse>(url, {
-      //       id: "getTransactions",
-      //     });
-      //     const data: TransactionsResponse = response.data;
-
-      //     return { data };
-      //   } catch (error) {
-      //     return { error: error as FetchBaseQueryError };
-      //   }
-      // },
     }),
     getCirculatingSupply: builder.query<
       CirculatingSupplyResponse,

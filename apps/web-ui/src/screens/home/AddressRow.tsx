@@ -12,7 +12,6 @@ import { padBtcZeros, trimAddress, copyToClipboard } from "@lib/utils";
 import { ToastContext, AppContext } from "@root/providers/AppProvider";
 import { cn, formatPrice } from "@lib/utils";
 import { useWallets } from "@lib/hooks/useWallets";
-
 import { type ICurrency } from "@root/types";
 import { currencySymbols } from "@root/lib/currencies";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
@@ -26,7 +25,6 @@ type IDimensions = {
 type IAddressRow = {
   address: Utxo;
   isUtxoExpanded: boolean;
-  isLoading: boolean;
   onClickExpandUtxo: () => void;
   separator: boolean;
   wallets: ReturnType<typeof useWallets>;
@@ -41,7 +39,7 @@ export const AddressRow = (prop: IAddressRow) => {
     isUtxoExpanded,
     onClickExpandUtxo,
     separator,
-    isLoading,
+
     // perf optimization to pass it in
     wallets: useWalletRet,
     dimensions,
@@ -97,7 +95,7 @@ export const AddressRow = (prop: IAddressRow) => {
           className={cn(
             "grid grid-cols-9 gap-1 py-4 items-center text-xs px-2",
             {
-              "animate-pulse": isLoading,
+              "animate-pulse": address.isLoading,
             }
           )}
         >
@@ -115,7 +113,7 @@ export const AddressRow = (prop: IAddressRow) => {
               variant="outline"
               size="2"
               onClick={() => onClickRefresh({ address })}
-              loading={isLoading}
+              loading={address.isLoading}
             >
               <Text className="font-mono" size="1">
                 {address.indexString}

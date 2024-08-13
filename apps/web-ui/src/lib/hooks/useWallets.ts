@@ -13,6 +13,14 @@ import {
 import { type IExpandAddressKey } from "@machines/walletListUIMachine";
 import { Wallet } from "@models/Wallet";
 import { useBtcPrice } from "./useBtcPrice";
+import { useAppSelector, useAppDispatch } from "@lib/hooks/store.hooks";
+import {
+  refreshAddresses,
+  refreshWallet,
+  selectAllWallets,
+} from "@lib/slices/wallets.slice";
+import { type AddressArgs } from "@lib/slices/api.slice.types";
+import { Utxo } from "@root/models/Utxo";
 
 export const useWallets = () => {
   const params = useParams();
@@ -20,16 +28,12 @@ export const useWallets = () => {
   const appRef = AppContext.useActorRef();
   const networkActorRef = NetworkContext.useActorRef();
   const walletUIActorRef = WalletUIContext.useActorRef();
-  const wallets = AppContext.useSelector(
-    (current) => current.context.btcWallets
-  );
+
+  const dispatch = useAppDispatch();
+  const walletsState = useAppSelector(selectAllWallets);
 
   const addresses = AppContext.useSelector(
     (current) => current.context.addresses
-  );
-
-  const transactions = AppContext.useSelector(
-    (current) => current.context.transactions
   );
 
   // const currency = AppContext.useSelector(
@@ -52,16 +56,12 @@ export const useWallets = () => {
     });
   }, [appRef, params.walletId, networkActorRef, send]);
 
-  const walletRows = wallets
+  const walletRows = walletsState
     .map(
       (wallet) =>
         new Wallet(wallet, {
           cur: currency,
           btcPrice: forcastPrice ?? btcPrice,
-          blockExplorer: "mempool.space",
-          addresses,
-          transactions,
-          addressFilters: wallet.settings?.addressFilters,
         })
     )
     .sort((a, b) => b.balance - a.balance);
@@ -225,51 +225,23 @@ export const useWallets = () => {
       };
       appRef.send({ type: "APP_MACHINE_UPDATE_META", data });
     },
-
-    refreshWallet({
+    refreshWallet(walletId: string) {
+      dispatch(refreshWallet({ walletId, ttl: 1000 * 60 * 60 * 24 }));
+    },
+    refreshAddresses({
       walletId,
       addresses,
-      ttl = 0,
     }: {
       walletId: string;
-      addresses: string[];
-      ttl?: number;
+      addresses: Utxo[];
     }) {
       const wallet = walletRows.find((wallet) => wallet.id === walletId);
       if (!wallet) return;
-      const index = wallet.receiveMeta.lastAddressIndex;
-      let addressesToSend = new Set<string>();
-      // only fetch the next address if there are more than one address
-      // no need to run next address check if user is only attempting to manually
-      // refresh a single address
-      if (addresses.length > 1 && typeof index === "number") {
-        const addr = wallet.getLastAddressAtIndex({
-          index: index + 1,
-          type: "RECEIVE",
-        });
-        if (addr) {
-          addressesToSend.add(addr.address);
-        }
-      }
 
-      if (wallet.refreshedAt) {
-        const now = new Date().getTime();
-        const diff = now - wallet.refreshedAt.getTime();
+      const addressesToSend = addresses.map((addr) => addr.addressArgs);
 
-        if (diff > ttl) {
-          addressesToSend = new Set([...addressesToSend, ...addresses]);
-        }
-      }
-      if (addressesToSend.size > 0) {
-        appRef.send({
-          type: "APP_MACHINE_FETCH_WALLETS_UTXOS",
-          data: {
-            walletId: walletId,
-            bypassCache: ttl === 0,
-            ttl,
-            utxos: Array.from(addressesToSend),
-          },
-        });
+      if (addressesToSend.length > 0) {
+        dispatch(refreshAddresses(addressesToSend));
       }
     },
 
