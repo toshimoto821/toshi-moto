@@ -15,7 +15,6 @@ type ITransactionRow = {
   index: number;
   walletColor: string;
   className?: string;
-  selectedTxs: Set<string>;
   onClickTx: () => void;
   currency: ICurrency;
 };
@@ -35,7 +34,7 @@ export const TransactionRow = ({
   transaction,
   address,
   index,
-  // selectedTxs,
+
   // onClickTx,
   walletColor,
   currency,

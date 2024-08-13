@@ -18,7 +18,7 @@ type ISankey = {
   width: number;
   height: number;
   onClick?: (type: "address" | "tx", value: string) => void;
-  selectedTxs: Set<string>;
+  selectedTxs: string[];
   index: number;
 };
 
@@ -50,7 +50,7 @@ export const Sankey = ({
   width,
   height,
   onClick: onClickGraph,
-  selectedTxs = new Set<string>(),
+  selectedTxs = [],
   index,
 }: ISankey) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -359,12 +359,12 @@ export const Sankey = ({
         .transition()
         .duration(200)
         .attr("d", (d: Node) => {
-          const size = selectedTxs.has(d.name) ? 2000 : 1200;
+          const size = selectedTxs.includes(d.name) ? 2000 : 1200;
           return symbolToUse.size(size)();
         })
         .attr("transform", function (d: any) {
           // const v = d.x1 - d.x0;
-          const padding = selectedTxs.has(d.name) ? 20 : 15;
+          const padding = selectedTxs.includes(d.name) ? 20 : 15;
           const x = d.x1 + padding; // - v;
           const y = (d.y0 + d.y1) / 2;
 

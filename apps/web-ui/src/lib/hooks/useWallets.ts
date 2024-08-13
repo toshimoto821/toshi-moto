@@ -19,8 +19,9 @@ import {
   refreshWallet,
   selectAllWallets,
 } from "@lib/slices/wallets.slice";
-import { type AddressArgs } from "@lib/slices/api.slice.types";
+
 import { Utxo } from "@root/models/Utxo";
+import { setUI } from "../slices/ui.slice";
 
 export const useWallets = () => {
   const params = useParams();
@@ -86,10 +87,6 @@ export const useWallets = () => {
     (current) => current.context.meta.addressFilters
   );
 
-  const selectedTxs = AppContext.useSelector(
-    (current) => new Set(current.context.selectedTxs || [])
-  );
-
   const toggleNetAssetValue = () => {
     appRef.send({ type: "APP_MACHINE_TOGGLE_NET_ASSET_VALUE" });
   };
@@ -111,7 +108,7 @@ export const useWallets = () => {
       const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
       send({ type: "COLLAPSE_ADDRESS", data: { id: key } });
     },
-    selectInputAddresses: (selected: boolean) => {
+    selectInputAddresses: () => {
       const txids = [] as string[];
 
       // go through every address and get transactions
@@ -141,11 +138,13 @@ export const useWallets = () => {
           }
         }
       }
+      const unique = Array.from(new Set(txids));
 
-      appRef.send({
-        type: "APP_MACHINE_CHANGE_SELECTED_TXS",
-        data: { txids, selected },
-      });
+      dispatch(
+        setUI({
+          graphSelectedTransactions: unique,
+        })
+      );
     },
     selectWalletInputAddresses: (walletId: string, selected: boolean) => {
       const wallet = walletRows.find((w) => w.id === walletId);
@@ -398,7 +397,6 @@ export const useWallets = () => {
 
   const ui = {
     expandedTxs,
-    selectedTxs,
     addressFilters,
     balanceVisible,
     isLoadingAddress: (address: string, wallet: Wallet) => {

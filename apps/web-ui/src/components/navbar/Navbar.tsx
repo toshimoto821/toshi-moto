@@ -20,8 +20,9 @@ import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
 import { cn } from "@root/lib/utils";
 import { WalletUIContext, AppContext } from "@root/providers/AppProvider";
-import { AppMachineMeta } from "@root/machines/appMachine";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
 
 const colorScale = d3
   .scaleLinear<string>()
@@ -64,6 +65,9 @@ export const Navbar = () => {
   const [defaultDateTab, setDefaultDateTab] = useState<"start" | "end">(
     "start"
   );
+
+  const uiState = useAppSelector(selectUI);
+
   const privateNumber = useNumberObfuscation();
   // const [chartOpacity, setChartOpacity] = useState(0);
   const lineWrapperRef = useRef<HTMLDivElement>(null);
@@ -87,9 +91,6 @@ export const Navbar = () => {
     (current) => current.context.plotData
   );
 
-  // const currency = AppContext.useSelector(
-  //   (current) => current.context.meta.currency
-  // );
   const currency = "usd";
   const currencySymbol = currencySymbols[currency];
 
@@ -188,14 +189,6 @@ export const Navbar = () => {
     actions.selectInputAddresses(true);
   };
 
-  const handleUpdateMeta = ({
-    showPlotDots,
-    showBtcAllocation,
-    privatePrice,
-  }: Partial<AppMachineMeta>) => {
-    actions.updateMeta({ showPlotDots, showBtcAllocation, privatePrice });
-  };
-
   // This was an attempt to better align the dates of the chart data.
   // however it was more confusing because the user would select
   // a particular date with the picker and the chart would not match that date
@@ -228,7 +221,7 @@ export const Navbar = () => {
               height={chartHeight}
               graphAssetValue={netAssetValue}
               chartTimeframeGroup={meta.chartTimeframeGroup}
-              showBtcAllocation={meta.showBtcAllocation}
+              showBtcAllocation={uiState.graphBtcAllocation}
               btcPrice={btcPrice ?? 0}
             />
           </div>
@@ -340,7 +333,7 @@ export const Navbar = () => {
           <div className="border border-b-0 border-x-0 ">
             <div
               ref={headerControlsRef}
-              className="md:container flex justify-between px-4 text-gray-400 py-2"
+              className="flex justify-between px-4 text-gray-400 py-2"
             >
               <div className="flex">
                 <div className="flex items-center">
@@ -369,7 +362,6 @@ export const Navbar = () => {
               <div>
                 <div className="flex items-center">
                   <SelectionDropdown
-                    onClickUpdateMeta={handleUpdateMeta}
                     onClearSelection={handleClearSelected}
                     onClickToggleInputAddresses={handleSelectInputAddresses}
                   />

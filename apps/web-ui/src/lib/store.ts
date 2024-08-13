@@ -8,6 +8,7 @@ import { apiSlice } from "./slices/api.slice";
 import { priceReducer } from "./slices/price.slice";
 import { networkReducer } from "./slices/network.slice";
 import { walletsReducer } from "./slices/wallets.slice";
+import { uiReducer } from "./slices/ui.slice";
 
 import { listenerMiddleware } from "./store/middleware/listener";
 
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   price: priceReducer,
   network: networkReducer,
   wallets: walletsReducer,
+  ui: uiReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

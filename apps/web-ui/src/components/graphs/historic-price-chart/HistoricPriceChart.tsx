@@ -16,6 +16,8 @@ import type { IPlotData } from "@machines/walletListUIMachine";
 import { useWindowFocus } from "@lib/hooks/useWindowFocus";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { generateRandomPriceSeries } from "../graph-utils";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
 
 type IHistoricPriceChart = {
   height: number;
@@ -39,17 +41,11 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const walletActorRef = WalletUIContext.useActorRef();
 
   const refreshKey = useWindowFocus(1000 * 60 * 10); // every 10 minutes
-
-  const showPlotDots = AppContext.useSelector(
-    (current) => current.context.meta.showPlotDots
-  );
+  const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
+    useAppSelector(selectUI);
 
   const forcastModel = AppContext.useSelector(
     (current) => current.context.meta.forcastModel
-  );
-
-  const showBtcAllocation = AppContext.useSelector(
-    (current) => current.context.meta.showBtcAllocation
   );
 
   const result = useChartData({

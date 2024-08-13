@@ -17,6 +17,8 @@ import {
   getDatesForChartGroup,
   getRangeFromTime,
 } from "@components/graphs/graph-utils";
+import { useAppSelector } from "./store.hooks";
+import { selectUI } from "../slices/ui.slice";
 
 type IUseChartData = {
   btcPrice?: number;
@@ -41,6 +43,8 @@ type Grouped = Record<string, Data>;
 
 export const useChartData = (opts: IUseChartData) => {
   const { btcPrice, selectedWallets, wallets, netAssetValue } = opts;
+
+  const { graphSelectedTransactions: selectedTxs } = useAppSelector(selectUI);
 
   const btcPrices = useBtcHistoricPrices();
   let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
@@ -135,11 +139,6 @@ export const useChartData = (opts: IUseChartData) => {
     }
   }
 
-  const selectedTxs =
-    AppContext.useSelector((current) => {
-      return new Set(current.context.selectedTxs);
-    }) || new Set();
-
   const dateToKeyFn = getGroupKey(chartTimeframeGroup);
 
   // group the prices into buckets (hours, or weeks based on range)
@@ -185,7 +184,7 @@ export const useChartData = (opts: IUseChartData) => {
     btcPrice,
     prices.length,
     chartTimeframeGroup,
-    selectedTxs.size,
+    selectedTxs.length,
     // prices?.[0]?.[0], // if first date changes, update
     prices?.[0]?.[1], // if first date changes, update
     refreshKey,
@@ -222,7 +221,7 @@ export const useChartData = (opts: IUseChartData) => {
       for (const address of wallet.listAddresses) {
         // @loop 5 (r) (3 txs each)
         for (const tx of address.listTransactions) {
-          const visible = selectedTxs.has(tx.txid); // ||  selectedTxs.size === 0 ||
+          const visible = selectedTxs.includes(tx.txid); // ||  selectedTxs.size === 0 ||
           // if (selectedTxs.size === 0 || selectedTxs.has(tx.txid)) {
           const vout = tx.sumVout(address.address);
           const vin = tx.sumVin(address.address);
@@ -270,7 +269,7 @@ export const useChartData = (opts: IUseChartData) => {
     };
   }, [
     filteredWallets.length,
-    selectedTxs.size,
+    selectedTxs.length,
     netAssetValue,
     prices.length,
     selectedWallets,
@@ -366,7 +365,7 @@ export const useChartData = (opts: IUseChartData) => {
   }, [
     nodes.length,
     inputNodes.length,
-    selectedTxs.size,
+    selectedTxs.length,
     netAssetValue,
     groupedKeys.length,
     refreshKey,
@@ -437,7 +436,7 @@ export const useChartData = (opts: IUseChartData) => {
     allNodes,
     allNodes.length,
     allNodes[0]?.date?.getTime(),
-    selectedTxs.size,
+    selectedTxs.length,
     refreshKey,
   ]);
 

@@ -54,7 +54,7 @@ export const AddressRow = (prop: IAddressRow) => {
   );
   const privateNumber = useNumberObfuscation();
 
-  const { wallets, ui, actions } = useWalletRet;
+  const { wallets, actions } = useWalletRet;
   const [height, setHeight] = useState(200);
   useEffect(() => {
     const h = Math.max(window.innerHeight / 4, 200);
@@ -196,7 +196,6 @@ export const AddressRow = (prop: IAddressRow) => {
             toggleTx={actions.toggleTx}
             index={i}
             onClickTx={handleOnClickTx(tx)}
-            selectedTxs={ui.selectedTxs}
             wallets={wallets}
             width={dimensions.width}
             height={height}

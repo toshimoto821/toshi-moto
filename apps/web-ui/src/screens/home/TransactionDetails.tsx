@@ -16,7 +16,6 @@ type ITransactionDetails = {
   width: number;
   height: number;
   wallets: Wallet[];
-  selectedTxs: Set<string>;
   toggleTx: (tx: Transaction) => void;
   onClickTx: () => void;
   index: number;
@@ -29,7 +28,6 @@ export const TransactionDetails = (props: ITransactionDetails) => {
     width,
     height,
     wallets,
-    selectedTxs,
     toggleTx,
     index,
     onClickTx,
@@ -113,7 +111,6 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           address={address}
           index={index}
           onClickTx={onClickTx}
-          selectedTxs={selectedTxs}
           walletColor={walletColor}
           currency={props.currency}
         />
@@ -125,7 +122,6 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           utxo={address}
           width={width}
           height={height}
-          selectedTxs={selectedTxs}
           toggleTx={toggleTx}
           index={index}
         />
