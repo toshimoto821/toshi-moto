@@ -1,13 +1,10 @@
-import { useState, useEffect } from "react";
-import { useMachine } from "@xstate/react";
+import { useState } from "react";
+
 import { Dialog, Tabs, Box } from "@radix-ui/themes";
-
-import { AppContext } from "@providers/AppProvider";
 import { WalletDetails } from "./WalletDetails";
-
 import { Wallet } from "@models/Wallet";
 
-import { ImportWallet } from "./ImportWallet";
+import { type ImportResult, ImportWallet } from "./ImportWallet";
 
 type IAddWalletDialog = {
   children?: React.ReactNode;
@@ -24,7 +21,9 @@ export const AddWalletDialog = ({
   onClose,
 }: IAddWalletDialog) => {
   const [activeTab, setActiveTab] = useState<ITabType>("DETAILS");
-
+  const [importedWallet, setImportedWallet] = useState<
+    ImportResult | undefined
+  >();
   function handleClose(success: boolean) {
     onClose(success);
   }
@@ -33,7 +32,8 @@ export const AddWalletDialog = ({
     // send({ type: "RESET_FORM", data: { wallet: wallet } });
   };
 
-  const handleImportDone = () => {
+  const handleImportDone = (result: ImportResult) => {
+    setImportedWallet(result);
     setActiveTab("DETAILS");
   };
 
@@ -55,7 +55,11 @@ export const AddWalletDialog = ({
 
           <Box pt="3" pb="2">
             <Tabs.Content value="DETAILS">
-              <WalletDetails wallet={wallet} onClose={handleClose} />
+              <WalletDetails
+                wallet={wallet}
+                importResult={importedWallet}
+                onClose={handleClose}
+              />
             </Tabs.Content>
 
             <Tabs.Content value="IMPORT">

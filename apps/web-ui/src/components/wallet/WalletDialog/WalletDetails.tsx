@@ -6,9 +6,10 @@ import { Wallet } from "@models/Wallet";
 import { hexToRgb, parseRgb, rgbToHex } from "@root/lib/utils";
 import { useAppDispatch } from "@root/lib/hooks/store.hooks";
 import { upsertWallet } from "@root/lib/slices/wallets.slice";
-
-type ISingleSig = {
+import { type ImportResult } from "./ImportWallet";
+type WalletDetailsProps = {
   wallet?: Wallet;
+  importResult?: ImportResult;
   onClose: (success: boolean) => void;
 };
 
@@ -19,15 +20,32 @@ type WalletFields = {
   xpubs: string[];
 };
 
-export const WalletDetails = ({ wallet, onClose }: ISingleSig) => {
+export const WalletDetails = ({
+  importResult,
+  wallet,
+  onClose,
+}: WalletDetailsProps) => {
   const dispatch = useAppDispatch();
 
-  const [fields, setFields] = useState<WalletFields>({
-    id: wallet?.id || nanoid(),
-    name: wallet?.name || "",
-    color: wallet?.color || "rgb(153, 204, 255)",
-    xpubs: wallet ? wallet.listXpubsStrings : [""],
-  });
+  const initialData = {} as WalletFields;
+  if (importResult) {
+    initialData.id = nanoid();
+    initialData.name = importResult.name;
+    initialData.color = importResult.color || "rgb(153, 204, 255)";
+    initialData.xpubs = importResult.xpubs || [""];
+  } else if (wallet) {
+    initialData.id = wallet.id;
+    initialData.name = wallet.name;
+    initialData.color = wallet.color || "rgb(153, 204, 255)";
+    initialData.xpubs = wallet.listXpubsStrings || [""];
+  } else {
+    initialData.id = nanoid();
+    initialData.name = "";
+    initialData.color = "rgb(153, 204, 255)";
+    initialData.xpubs = [""];
+  }
+
+  const [fields, setFields] = useState<WalletFields>(initialData);
 
   const bindField = (key: keyof WalletFields) => {
     return (evt: FocusEvent<HTMLInputElement>) => {

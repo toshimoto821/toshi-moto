@@ -18,6 +18,9 @@ import {
   refreshAddresses,
   refreshWallet,
   selectAllWallets,
+  incrementAddressIndex,
+  removeWallet,
+  trimAddresses,
 } from "@lib/slices/wallets.slice";
 
 import { Utxo } from "@root/models/Utxo";
@@ -216,8 +219,8 @@ export const useWallets = () => {
       };
       appRef.send({ type: "APP_MACHINE_UPDATE_META", data });
     },
-    refreshWallet(walletId: string) {
-      dispatch(refreshWallet({ walletId, ttl: 1000 * 60 * 60 * 24 }));
+    refreshWallet(walletId: string, ttl = 1000 * 60 * 60 * 24) {
+      dispatch(refreshWallet({ walletId, ttl }));
     },
     refreshAddresses({
       walletId,
@@ -237,12 +240,7 @@ export const useWallets = () => {
     },
 
     deleteWallet(walletId: string) {
-      appRef.send({
-        type: "APP_MACHINE_DELETE_WALLET",
-        data: {
-          walletId,
-        },
-      });
+      dispatch(removeWallet(walletId));
     },
 
     changeAddressFilter: (walletId: string, filter: IAppAddressFilters) => {
@@ -265,27 +263,34 @@ export const useWallets = () => {
       incrementOrDecrement?: number;
     }) {
       if (addressFilters.utxoOnly) {
-        appRef.send({
-          type: "APP_MACHINE_CHANGE_ADDRESS_FILTER",
-          data: {
-            filter: {
-              change: true,
-              receive: true,
-              utxoOnly: false,
-            },
-            walletId,
-          },
-        });
+        // appRef.send({
+        //   type: "APP_MACHINE_CHANGE_ADDRESS_FILTER",
+        //   data: {
+        //     filter: {
+        //       change: true,
+        //       receive: true,
+        //       utxoOnly: false,
+        //     },
+        //     walletId,
+        //   },
+        // });
       }
 
-      appRef.send({
-        type: "APP_MACHINE_UPDATE_WALLET_PAGINATION_LIMIT",
-        data: {
+      dispatch(
+        incrementAddressIndex({
           walletId,
-          addressType: change ? "CHANGE" : "RECEIVE",
+          change,
           incrementOrDecrement,
-        },
-      });
+        })
+      );
+      // appRef.send({
+      //   type: "APP_MACHINE_UPDATE_WALLET_PAGINATION_LIMIT",
+      //   data: {
+      //     walletId,
+      //     addressType: change ? "CHANGE" : "RECEIVE",
+      //     incrementOrDecrement,
+      //   },
+      // });
     },
     trimWalletAddresses({
       walletId,
@@ -301,14 +306,23 @@ export const useWallets = () => {
       const index = wallet.getNextAddressIndex({
         type: change ? "CHANGE" : "RECEIVE",
       });
-      appRef.send({
-        type: "APP_MACHINE_TRIM_WALLET_ADDRESSES",
-        data: {
+
+      dispatch(
+        trimAddresses({
           walletId,
-          addressType: change ? "CHANGE" : "RECEIVE",
+          change,
           index,
-        },
-      });
+        })
+      );
+
+      // appRef.send({
+      //   type: "APP_MACHINE_TRIM_WALLET_ADDRESSES",
+      //   data: {
+      //     walletId,
+      //     addressType: change ? "CHANGE" : "RECEIVE",
+      //     index,
+      //   },
+      // });
     },
     archiveWallet({
       walletId,

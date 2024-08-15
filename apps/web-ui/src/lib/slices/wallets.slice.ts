@@ -59,7 +59,12 @@ interface WrappedTransactions {
 }
 
 const walletsAdapter = createEntityAdapter<Wallet>();
-const addressAdapter = createEntityAdapter<Address>();
+
+const addressAdapter = createEntityAdapter<Address>({
+  sortComparer: (a, b) => {
+    return b.index - a.index;
+  },
+});
 const transactionAdapter = createEntityAdapter<WrappedTransactions>();
 
 export type AddressPayload = {
@@ -76,8 +81,8 @@ export const walletsSlice = createSlice({
     upsertWallet(state, action: PayloadAction<Wallet>) {
       walletsAdapter.upsertOne(state, action.payload);
     },
-    removeWallet(state, action: PayloadAction<{ id: string }>) {
-      state = walletsAdapter.removeOne(state, action.payload.id);
+    removeWallet(state, action: PayloadAction<string>) {
+      walletsAdapter.removeOne(state, action.payload);
     },
     upsertAddresses(state, action: PayloadAction<AddressPayload>) {
       const wallet = state.entities[action.payload.walletId];
@@ -99,10 +104,51 @@ export const walletsSlice = createSlice({
         state.entities[walletId].addresses.entities[address].status = "PENDING";
       }
     },
+    trimAddresses(
+      state,
+      action: PayloadAction<{
+        walletId: string;
+        change: boolean;
+        index: number;
+      }>
+    ) {
+      const wallet = state.entities[action.payload.walletId];
+      if (wallet) {
+        const addressesToRemove = wallet.addresses.ids.filter((addressId) => {
+          const address = wallet.addresses.entities[addressId];
+          if (address.isChange === action.payload.change) {
+            if (address.index > action.payload.index) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        addressAdapter.removeMany(wallet.addresses, addressesToRemove);
+      }
+    },
     refreshWallet(state, action: PayloadAction<string>) {
       const wallet = state.entities[action.payload];
       if (wallet) {
         wallet.meta.refreshedAt = new Date().getTime();
+      }
+    },
+    incrementAddressIndex(
+      state,
+      action: PayloadAction<{
+        walletId: string;
+        change: boolean;
+        incrementOrDecrement: number;
+      }>
+    ) {
+      const wallet = state.entities[action.payload.walletId];
+      if (wallet) {
+        const type = action.payload.change ? "change" : "receive";
+        wallet.meta[type].lastAddressIndex =
+          wallet.meta[type].lastAddressIndex || 0;
+
+        wallet.meta[type].lastAddressIndex +=
+          action.payload.incrementOrDecrement;
       }
     },
   },
@@ -197,6 +243,44 @@ export const walletsReducer = walletsSlice.reducer;
 ///////////////////////////////////////////
 
 export const addWalletListener = (startAppListening: AppStartListening) => {
+  startAppListening({
+    actionCreator: walletsSlice.actions.incrementAddressIndex,
+    effect: async (action, listenerApi) => {
+      const state = listenerApi.getState();
+      const wallet = state.wallets.entities[action.payload.walletId];
+
+      // just the first address
+      if (wallet) {
+        const metaType = action.payload.change ? "change" : "receive";
+        const lastAddressIndex = wallet.meta[metaType].lastAddressIndex || 0;
+        const start = Math.max(
+          lastAddressIndex - action.payload.incrementOrDecrement,
+          0
+        );
+        // const limit = lastAddressIndex - action.payload.incrementOrDecrement;
+        const addresses = await Xpub.scanXpubs(wallet.xpubs, {
+          start,
+          limit: Math.abs(action.payload.incrementOrDecrement),
+          isChange: action.payload.change,
+        });
+
+        listenerApi.dispatch(
+          enqueueAction(
+            addresses.map((address, index) => ({
+              endpoint: "getAddress",
+              args: {
+                address,
+                walletId: action.payload.walletId,
+                index: start + index,
+                isChange: action.payload.change,
+              },
+            }))
+          )
+        );
+      }
+    },
+  });
+
   // wallet listener
   startAppListening({
     actionCreator: walletsSlice.actions.upsertWallet,
@@ -390,7 +474,8 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
 // Actions
 ///////////////////////////
 
-export const { removeWallet } = walletsSlice.actions;
+export const { removeWallet, incrementAddressIndex, trimAddresses } =
+  walletsSlice.actions;
 
 export const refreshAddresses = createAppAsyncThunk(
   walletsSlice.actions.refreshAddresses.type,

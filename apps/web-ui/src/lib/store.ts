@@ -33,7 +33,11 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
+      immutableCheck: {
+        warnAfter: 120,
+      },
       serializableCheck: {
+        warnAfter: 120,
         ignoredActions: ["persist/PERSIST"],
       },
     })

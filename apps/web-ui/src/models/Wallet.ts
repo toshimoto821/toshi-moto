@@ -222,12 +222,6 @@ export class Wallet {
     return Object.values(this.addresses);
   }
 
-  get listManualAddresses() {
-    return this.listAddresses.filter((address) => {
-      return address.manual;
-    });
-  }
-
   get listChangeAddresses() {
     return Object.values(this.addresses).filter((address) => {
       return address.isChange;

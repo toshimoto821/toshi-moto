@@ -104,10 +104,7 @@ export const WalletDetail = () => {
                 receive: false,
               }}
               onClickRefresh={() => {
-                actions.refreshAddresses({
-                  walletId: wallet.id,
-                  addresses,
-                });
+                actions.refreshWallet(wallet.id, 0);
               }}
               onClickFilter={(filter: IAppAddressFilters) => {
                 actions.changeAddressFilter(wallet.id, filter);
