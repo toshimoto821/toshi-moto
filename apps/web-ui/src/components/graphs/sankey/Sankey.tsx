@@ -8,7 +8,8 @@ import {
 import { trimAddress } from "@lib/utils";
 import { padBtcZeros } from "@lib/utils";
 import { GraphHoverCard } from "./GraphHoverCard";
-import { AppContext } from "@providers/AppProvider";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@lib/slices/ui.slice";
 
 type ISankey = {
   data: {
@@ -56,13 +57,8 @@ export const Sankey = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const hoverCardRef = useRef<HTMLDivElement>(null);
 
-  const chartEndDate = AppContext.useSelector(
-    (current) => current.context.meta.chartEndDate
-  );
-
-  const chartStartDate = AppContext.useSelector(
-    (current) => current.context.meta.chartStartDate
-  );
+  const { graphStartDate: chartStartDate, graphEndDate: chartEndDate } =
+    useAppSelector(selectUI);
 
   const selectedElements =
     useRef<d3.Selection<SVGPathElement | null, Node, SVGGElement, unknown>>();

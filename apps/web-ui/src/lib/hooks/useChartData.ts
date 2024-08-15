@@ -1,6 +1,6 @@
-import { useRef, useMemo } from "react";
+import { useMemo } from "react";
 import { AppContext, WalletUIContext } from "@providers/AppProvider";
-import type { IChartTimeframeGroups } from "@machines/appMachine";
+
 import { Wallet } from "@models/Wallet";
 import { round, ONE_HUNDRED_MILLION } from "@lib/utils";
 import { useBtcHistoricPrices } from "./useBtcHistoricPrices";
@@ -15,7 +15,6 @@ import {
   getGroupKey,
   addTime,
   getDatesForChartGroup,
-  getRangeFromTime,
 } from "@components/graphs/graph-utils";
 import { useAppSelector } from "./store.hooks";
 import { selectUI } from "../slices/ui.slice";
@@ -24,7 +23,6 @@ type IUseChartData = {
   btcPrice?: number;
   wallets: Wallet[];
   selectedWallets: Set<string>;
-  netAssetValue: boolean;
 };
 
 type Data = {
@@ -42,9 +40,15 @@ type Data = {
 type Grouped = Record<string, Data>;
 
 export const useChartData = (opts: IUseChartData) => {
-  const { btcPrice, selectedWallets, wallets, netAssetValue } = opts;
+  const { btcPrice, selectedWallets, wallets } = opts;
 
-  const { graphSelectedTransactions: selectedTxs } = useAppSelector(selectUI);
+  const {
+    graphSelectedTransactions: selectedTxs,
+    graphTimeFrameGroup,
+    graphStartDate,
+    graphEndDate,
+    netAssetValue,
+  } = useAppSelector(selectUI);
 
   const btcPrices = useBtcHistoricPrices();
   let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
@@ -70,26 +74,9 @@ export const useChartData = (opts: IUseChartData) => {
   // this is kinda broken.  the chart flickers because the
   // group updates immediately but the data doesn't
   // the group should be driven off the data
-  const chartTimeframeGroupState = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeframeGroup
-  );
-  const chartTimeFrameGroupRef = useRef<IChartTimeframeGroups>(
-    chartTimeframeGroupState
-  );
-
-  const chartTimeframeRange = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeFrameRange || "5Y"
-  );
-
-  const chartStartDate =
-    AppContext.useSelector((current) => current.context.meta.chartStartDate) ??
-    0;
-
-  const chartEndDate =
-    AppContext.useSelector((current) => current.context.meta.chartEndDate) ?? 0;
 
   const chartTimeDiffInDays = Math.round(
-    (chartEndDate - chartStartDate) / (1000 * 60 * 60 * 24)
+    (graphStartDate - graphEndDate) / (1000 * 60 * 60 * 24)
   );
 
   // add the current price
@@ -107,39 +94,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
   }
 
-  let chartTimeframeGroup = chartTimeframeGroupState; //"1D" as IChartTimeframeGroups;
-
-  if (chartTimeframeRange === "1D") {
-    chartTimeFrameGroupRef.current = "5M";
-  } else if (chartTimeframeRange === "1W" || chartTimeframeRange === "1M") {
-    chartTimeFrameGroupRef.current = "1H";
-  } else if (chartTimeframeRange === "3M" || chartTimeframeRange === "1Y") {
-    chartTimeFrameGroupRef.current = "1D";
-  } else {
-    chartTimeFrameGroupRef.current = "1W";
-  }
-
-  chartTimeframeGroup = chartTimeFrameGroupRef.current;
-
-  // if the time difference between last two prices and first
-  // two prices is different, it means that the range needs
-  // to be set on the first because we dont have the data
-  // for the last price (which is probably smaller)
-  if (prices.length > 4) {
-    const [firstDate] = prices[0];
-    const [secondDate] = prices[1];
-    const firstDiff = secondDate - firstDate;
-
-    const [sendToLastDate] = prices[prices.length - 2];
-    const [lastDate] = prices[prices.length - 1];
-    const lastDiff = lastDate - sendToLastDate;
-    if (lastDiff !== firstDiff) {
-      const range = getRangeFromTime(firstDiff);
-      chartTimeframeGroup = range;
-    }
-  }
-
-  const dateToKeyFn = getGroupKey(chartTimeframeGroup);
+  const dateToKeyFn = getGroupKey(graphTimeFrameGroup);
 
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
@@ -169,7 +124,7 @@ export const useChartData = (opts: IUseChartData) => {
         acc[key] = {
           date: d,
           startDate: d,
-          endDate: addTime(chartTimeframeGroup, d),
+          endDate: addTime(graphTimeFrameGroup, d),
           sum: price,
           last: price,
           avg: price,
@@ -183,7 +138,7 @@ export const useChartData = (opts: IUseChartData) => {
   }, [
     btcPrice,
     prices.length,
-    chartTimeframeGroup,
+    graphTimeFrameGroup,
     selectedTxs.length,
     // prices?.[0]?.[0], // if first date changes, update
     prices?.[0]?.[1], // if first date changes, update
@@ -321,7 +276,7 @@ export const useChartData = (opts: IUseChartData) => {
         const { start, end } = getDatesForChartGroup(
           group.startDate,
           group.endDate,
-          chartTimeframeGroup,
+          graphTimeFrameGroup,
           groupValues[j + 1]?.startDate
         );
         if (
@@ -344,7 +299,7 @@ export const useChartData = (opts: IUseChartData) => {
         const { start, end } = getDatesForChartGroup(
           group.startDate,
           group.endDate,
-          chartTimeframeGroup,
+          graphTimeFrameGroup,
           groupValues[j + 1]?.startDate
         );
         if (node.vin > 0 && node.date >= start && node.date < end) {
@@ -407,7 +362,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
 
     return { lineData: node, lineMap };
-  }, [node, chartStartDate, groupedKeys[0]]);
+  }, [node, graphStartDate, groupedKeys[0]]);
 
   const plotData = useMemo(() => {
     const plotData = [] as IPlotData[];

@@ -59,7 +59,7 @@ export const Navbar = () => {
   } = useBtcPrice();
 
   const btcPrice = forcastPrice ?? rawPrice;
-  const { netAssetValue, actions, data, ui, wallets } = useWallets();
+  const { actions, data, ui, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
 
   const [defaultDateTab, setDefaultDateTab] = useState<"start" | "end">(
@@ -67,7 +67,7 @@ export const Navbar = () => {
   );
 
   const uiState = useAppSelector(selectUI);
-
+  const { netAssetValue } = uiState;
   const privateNumber = useNumberObfuscation();
   // const [chartOpacity, setChartOpacity] = useState(0);
   const lineWrapperRef = useRef<HTMLDivElement>(null);
@@ -186,7 +186,7 @@ export const Navbar = () => {
   };
 
   const handleSelectInputAddresses = () => {
-    actions.selectInputAddresses(true);
+    actions.selectInputAddresses();
   };
 
   // This was an attempt to better align the dates of the chart data.

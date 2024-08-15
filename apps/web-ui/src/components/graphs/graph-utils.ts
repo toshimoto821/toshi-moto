@@ -4,6 +4,7 @@ import type {
   IChartTimeframeGroups,
   IChartTimeFrameRange,
 } from "@root/machines/appMachine";
+import { GraphTimeFrameRange, GroupBy } from "@root/lib/slices/ui.slice.types";
 let count = 0;
 
 class Id {
@@ -145,16 +146,23 @@ export const rangeToDays = (range: IChartTimeFrameRange) => {
   throw new Error("invalid range for rangeToDays");
 };
 
-export const getRangeFromTime = (time: number) => {
-  if (time < 1000 * 60 * 60) {
-    return "5M";
-  } else if (time <= 1000 * 60 * 60 * 24) {
+export const getRangeFromTime = (time: number): GraphTimeFrameRange => {
+  const oneDay = 1000 * 60 * 60 * 24;
+  if (time <= oneDay) {
     return "1D";
-  } else if (time <= 1000 * 60 * 60 * 24 * 7) {
+  } else if (time <= oneDay * 7) {
     return "1W";
+  } else if (time <= oneDay * 30) {
+    return "1M";
+  } else if (time <= oneDay * 90) {
+    return "3M";
+  } else if (time <= oneDay * 365) {
+    return "1Y";
+  } else if (time <= oneDay * 365 * 2) {
+    return "2Y";
   }
 
-  return "1M";
+  return "5Y";
 };
 
 export const getDatesForChartGroup = (

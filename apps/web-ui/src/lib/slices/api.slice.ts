@@ -8,11 +8,13 @@ import {
 import { selectBaseApiUrl, selectBaseNodeUrl } from "./config.slice";
 import type { RootState } from "../store";
 import { ONE_HUNDRED_MILLION } from "../utils";
-import {
+import type {
   AddressArgs,
   AddressResponse,
   CirculatingSupplyResponse,
   PriceResponse,
+  PriceHistoryResponse,
+  PriceHistoricArgs,
   TransactionsResponse,
 } from "./api.slice.types";
 
@@ -82,16 +84,23 @@ export const apiSlice = createApi({
     getPrice: builder.query<PriceResponse, { queueId?: string } | void>({
       query: getPriceQuery,
     }),
-    getHistoricPrice: builder.mutation({
-      query: () => "/api/prices/range",
+    getHistoricPrice: builder.query<PriceHistoryResponse, PriceHistoricArgs>({
+      query: (args) => {
+        const { from, to, groupBy, currency = "usd" } = args;
+        return `/api/prices/range?vs_currency=${currency}&from=${from}&to=${to}&group_by=${groupBy}`;
+      },
     }),
   }),
 });
 
 export const {
   useGetPriceQuery,
-  useGetHistoricPriceMutation,
+  useGetHistoricPriceQuery,
   useGetCirculatingSupplyQuery,
 } = apiSlice;
 
 export const { getAddress, getTransactions } = apiSlice.endpoints;
+
+//////////////////////////////////////
+// Selectors
+//////////////////////////////////////

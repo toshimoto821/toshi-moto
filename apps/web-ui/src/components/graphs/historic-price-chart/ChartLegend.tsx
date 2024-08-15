@@ -5,9 +5,10 @@ import { type BrushSelection } from "d3";
 import debounce from "lodash/debounce";
 import { AppContext } from "@root/providers/AppProvider";
 import { type IChartTimeFrameRange } from "@root/machines/appMachine";
-import { BtcHistoricPriceContext } from "@root/providers/AppProvider";
+
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { cn } from "@root/lib/utils";
+import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 
 type IChartLegendProps = {
   height: number;
@@ -33,9 +34,7 @@ export const ChartLegend = ({
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const prices =
-    BtcHistoricPriceContext.useSelector((current) => current.context.prices) ||
-    null;
+  const { prices } = useBtcHistoricPrices();
 
   const forcastPrices = AppContext.useSelector(
     (current) => current.context.forcastPrices

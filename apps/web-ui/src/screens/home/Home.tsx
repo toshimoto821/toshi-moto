@@ -3,17 +3,17 @@ import { Outlet, useLocation } from "react-router-dom";
 import { Button } from "@radix-ui/themes";
 import { useBtcPrice } from "@lib/hooks/useBtcPrice";
 import { useWallets } from "@lib/hooks/useWallets";
+import { useElementDimensions } from "@lib/hooks/useElementDimensions";
 import { Footer } from "@components/footer/Footer";
-import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
-import { HistoricPriceChart } from "@root/components/graphs/historic-price-chart/HistoricPriceChart";
+import { HistoricPriceChart } from "@components/graphs/historic-price-chart/HistoricPriceChart";
 import { NetworkLog } from "@components/log/NetworkLog";
-import { AddWalletDialog } from "@root/components/wallet/WalletDialog/AddWalletDialog";
+import { AddWalletDialog } from "@components/wallet/WalletDialog/AddWalletDialog";
 
 export const Home = () => {
   const { pathname } = useLocation();
   const [addWalletOpen, setAddWalletOpen] = useState(false);
   const { btcPrice } = useBtcPrice();
-  const { wallets, selectedWallets, netAssetValue } = useWallets();
+  const { wallets, selectedWallets } = useWallets();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
@@ -25,7 +25,6 @@ export const Home = () => {
         <div ref={containerRef} className="mb-4 pt-2">
           <HistoricPriceChart
             wallets={wallets}
-            netAssetValue={netAssetValue}
             selectedWallets={selectedWallets}
             height={400}
             btcPrice={btcPrice}

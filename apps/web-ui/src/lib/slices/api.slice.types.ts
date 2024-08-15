@@ -1,3 +1,6 @@
+import type { ICurrency } from "@root/types";
+import { type GroupBy } from "@lib/slices/ui.slice.types";
+
 export interface PriceResponse {
   bitcoin: {
     last_updated_at: number;
@@ -8,7 +11,19 @@ export interface PriceResponse {
 }
 
 export interface PriceHistoryResponse {
+  meta: {
+    from: number;
+    to: number;
+    groupBy: GroupBy;
+  };
   prices: [number, number][];
+}
+
+export interface PriceHistoricArgs {
+  from: number;
+  to: number;
+  currency?: ICurrency;
+  groupBy: GroupBy;
 }
 
 export interface AddressArgs {

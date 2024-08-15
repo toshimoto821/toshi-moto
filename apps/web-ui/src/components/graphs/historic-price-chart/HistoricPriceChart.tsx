@@ -9,15 +9,18 @@ import { AppContext, WalletUIContext } from "@providers/AppProvider";
 import { ChartLegend } from "./ChartLegend";
 import type {
   IChartTimeFrameRange,
-  IChartTimeframeGroups,
   IForcastModelType,
 } from "@machines/appMachine";
 import type { IPlotData } from "@machines/walletListUIMachine";
 import { useWindowFocus } from "@lib/hooks/useWindowFocus";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { generateRandomPriceSeries } from "../graph-utils";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI } from "@root/lib/slices/ui.slice";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import {
+  selectUI,
+  setGraphByRange,
+  chartByDateRangeAction,
+} from "@root/lib/slices/ui.slice";
 
 type IHistoricPriceChart = {
   height: number;
@@ -26,21 +29,22 @@ type IHistoricPriceChart = {
   prices?: [number, number][];
   btcPrice?: number;
   selectedWallets: Set<string>;
-  netAssetValue: boolean;
 };
 
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
-  const { height, width, wallets, btcPrice, netAssetValue, selectedWallets } =
-    props;
+  const { height, width, wallets, btcPrice, selectedWallets } = props;
   const clearSelectionRef = useRef<() => void>();
   const btcPrices = useBtcHistoricPrices();
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
-  const { loadedChartTimeFrameRange } = btcPrices;
+  const { graphTimeFrameRange, netAssetValue } = useAppSelector(selectUI);
+
+  const dispatch = useAppDispatch();
 
   const { send } = AppContext.useActorRef();
   const walletActorRef = WalletUIContext.useActorRef();
 
   const refreshKey = useWindowFocus(1000 * 60 * 10); // every 10 minutes
+
   const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
     useAppSelector(selectUI);
 
@@ -49,24 +53,12 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   );
 
   const result = useChartData({
-    netAssetValue,
     btcPrice,
     wallets,
     selectedWallets,
   });
-  // this is kinda broken.  the chart flickers because the
-  // group updates immediately but the data doesn't
-  // the group should be driven off the data
-  const chartTimeframeGroupState = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeframeGroup
-  );
-  const chartTimeFrameGroupRef = useRef<IChartTimeframeGroups>(
-    chartTimeframeGroupState
-  );
 
-  const chartTimeframeRange = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeFrameRange || "5Y"
-  );
+  const chartTimeframeRange = graphTimeFrameRange;
 
   // add the current price
   let timeDiff = 1000 * 60 * 60 * 24;
@@ -83,16 +75,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     }
   }
 
-  if (chartTimeframeRange === "1D") {
-    chartTimeFrameGroupRef.current = "5M";
-  } else if (chartTimeframeRange === "1W" || chartTimeframeRange === "1M") {
-    chartTimeFrameGroupRef.current = "1H";
-  } else if (chartTimeframeRange === "3M" || chartTimeframeRange === "1Y") {
-    chartTimeFrameGroupRef.current = "1D";
-  } else {
-    chartTimeFrameGroupRef.current = "1W";
-  }
-
   const filteredWallets =
     props.selectedWallets.size > 0
       ? wallets.filter((wallet) => {
@@ -102,10 +84,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
 
   const handleUpdateTimeframe = (timeframe: IChartTimeFrameRange) => {
     return () => {
-      send({
-        type: "APP_MACHINE_UPDATE_CHART_RANGE",
-        data: { group: timeframe },
-      });
+      dispatch(setGraphByRange(timeframe));
+
+      // @todo
       walletActorRef.send({
         type: "SET_SELECTED_LOT_DATA_INDEX",
         data: { date: -1 },
@@ -177,7 +158,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     lineData.length,
     plotData.length,
     netAssetValue,
-    chartTimeFrameGroupRef?.current,
+    graphTimeFrameRange,
     refreshKey,
     walletIds,
     forcastModel,
@@ -216,6 +197,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       });
       return;
     }
+
+    console.log(start, end);
+    dispatch(chartByDateRangeAction(start, end));
     send({
       type: "APP_MACHINE_UPDATE_CHART_RANGE_BY_DATE",
       data: {
@@ -335,7 +319,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
         <ChartLegend
           height={30}
           width={width}
-          chartTimeFrameRange={loadedChartTimeFrameRange}
+          chartTimeFrameRange={graphTimeFrameRange}
           onChange={handleRangeChange}
           onReset={handleReset}
         />

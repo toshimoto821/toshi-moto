@@ -21,7 +21,16 @@ import {
 } from "@lib/slices/wallets.slice";
 
 import { Utxo } from "@root/models/Utxo";
-import { setUI } from "../slices/ui.slice";
+import {
+  setUI,
+  selectUI,
+  toggleSelectedTx,
+  removeSelectedTransactions,
+  addSelectedTransactions,
+  defaultGraphEndDate,
+  setGraphByRange,
+} from "../slices/ui.slice";
+import { getRangeFromTime } from "@root/components/graphs/graph-utils";
 
 export const useWallets = () => {
   const params = useParams();
@@ -31,6 +40,7 @@ export const useWallets = () => {
   const walletUIActorRef = WalletUIContext.useActorRef();
 
   const dispatch = useAppDispatch();
+  const uiState = useAppSelector(selectUI);
   const walletsState = useAppSelector(selectAllWallets);
 
   const addresses = AppContext.useSelector(
@@ -67,20 +77,14 @@ export const useWallets = () => {
     )
     .sort((a, b) => b.balance - a.balance);
 
-  const chartEndDate = AppContext.useSelector(
-    (current) => current.context.meta.chartEndDate
-  );
+  const chartEndDate = uiState.graphEndDate;
 
-  const chartStartDate = AppContext.useSelector(
-    (current) => current.context.meta.chartStartDate
-  );
+  const chartStartDate = uiState.graphStartDate;
+
+  const netAssetValue = uiState.netAssetValue;
 
   const balanceVisible = AppContext.useSelector(
     (current) => current.context.meta.balanceVisible
-  );
-
-  const netAssetValue = AppContext.useSelector(
-    (current) => current.context.meta.netAssetValue
   );
 
   const addressFilters = AppContext.useSelector(
@@ -88,7 +92,11 @@ export const useWallets = () => {
   );
 
   const toggleNetAssetValue = () => {
-    appRef.send({ type: "APP_MACHINE_TOGGLE_NET_ASSET_VALUE" });
+    dispatch(
+      setUI({
+        netAssetValue: !netAssetValue,
+      })
+    );
   };
 
   const actions = {
@@ -180,40 +188,24 @@ export const useWallets = () => {
         }
       }
 
-      appRef.send({
-        type: "APP_MACHINE_CHANGE_SELECTED_TXS",
-        data: { txids, selected },
-      });
+      if (selected) {
+        addSelectedTransactions(txids);
+      } else {
+        removeSelectedTransactions(txids);
+      }
     },
     toggleTx: (tx: Transaction) => {
-      appRef.send({
-        type: "APP_MACHINE_TOGGLE_SELECTED_TX",
-        data: { txid: tx.txid },
-      });
+      dispatch(toggleSelectedTx(tx.txid));
 
       const txDate = tx.date?.getTime();
       if (!txDate) return;
       // if the tx date is not within the range of the chart, update the chart range
       if (txDate < chartStartDate || txDate > chartEndDate) {
-        // which is closer, start or end and move that
-        const start = Math.abs(txDate - chartStartDate);
-        const end = Math.abs(txDate - chartEndDate);
-        const meta = {} as Partial<AppMachineMeta>;
-        if (start < end) {
-          meta.chartStartDate = txDate - 1000 * 60 * 60 * 24 * 7;
-        } else {
-          meta.chartEndDate = Math.min(
-            txDate + 1000 * 60 * 60 * 24 * 7,
-            new Date().getTime()
-          );
-        }
-        meta.chartTimeframeGroup = "1D";
-        appRef.send({
-          type: "APP_MACHINE_UPDATE_META",
-          data: {
-            meta,
-          },
-        });
+        const chartEndData = defaultGraphEndDate;
+        const diff = chartEndData - txDate;
+
+        const range = getRangeFromTime(diff);
+        dispatch(setGraphByRange(range));
       }
     },
     toggleBalanceVisibility() {
