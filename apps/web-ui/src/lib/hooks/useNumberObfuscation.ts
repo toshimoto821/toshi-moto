@@ -1,9 +1,8 @@
-import { AppContext } from "@providers/AppProvider";
+import { useAppSelector } from "./store.hooks";
+import { selectPrivatePrice } from "../slices/ui.slice";
 
 export const useNumberObfuscation = () => {
-  const privatePrice = AppContext.useSelector((current) => {
-    return current.context.meta.privatePrice;
-  });
+  const privatePrice = useAppSelector(selectPrivatePrice);
   return (price: string) => {
     if (privatePrice) {
       return "••.•••";

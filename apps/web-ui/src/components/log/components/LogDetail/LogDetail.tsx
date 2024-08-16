@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Tabs, Text, IconButton } from "@radix-ui/themes";
-import { type IRequest } from "@machines/network.types";
 import { Cross2Icon } from "@radix-ui/react-icons";
 // import { WalletContext } from "@providers/AppProvider";
 import { LogDetailActions } from "./LogDetailActions";
 import { LogDetailTab } from "./LogDetailTab";
 import { LogDescription } from "./LogDescription";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
 
 type ILogDetail = {
-  request: IRequest;
+  request: APIRequestResponse;
   handleClose?: () => void;
 };
 export const LogDetail = ({ request, handleClose }: ILogDetail) => {

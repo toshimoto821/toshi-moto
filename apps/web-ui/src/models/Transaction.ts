@@ -1,59 +1,21 @@
 import { getBitcoinNodeUrl } from "@root/lib/utils";
-
+import type { Transaction as TransactionSliceModel } from "@lib/slices/api.slice.types";
 const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 
-type ITxStatus = {
-  confirmed: boolean;
-  block_height: number;
-  block_hash: string;
-  block_time: number;
-};
-
-type IVOut = {
-  scriptpubkey_asm: string;
-  scriptpubkey_address: string;
-  scriptpubkey_type: string;
-  scriptpubkey_hex: string;
-  value: number;
-};
-
-type IVin = {
-  inner_redeemscript_asm: string;
-  inner_witnessscript_asm: string;
-  is_coinbase: boolean;
-  prevout: IVOut;
-  scriptsig: string;
-  scriptsig_asm: string;
-  txid: string;
-  vout: number;
-  witness: string[];
-};
-
-export type ITransactionData = {
-  fee: number;
-  locktime: number;
-  size: number;
-  status: ITxStatus;
-  txid: string;
-  vin: IVin[];
-  vout: IVOut[];
-  weight: number;
-};
-
 export class Transaction {
-  data: ITransactionData;
+  private _data: TransactionSliceModel;
 
-  constructor(data: ITransactionData) {
-    this.data = data;
+  constructor(data: TransactionSliceModel) {
+    this._data = data;
   }
 
   get confirmed() {
-    return this.data.status.confirmed;
+    return this._data.status.confirmed;
   }
 
   get date() {
-    if (!this.data.status.confirmed) return null;
-    return new Date(this.data.status.block_time * 1000);
+    if (!this._data.status.confirmed) return null;
+    return new Date(this._data.status.block_time * 1000);
   }
 
   get shortDate() {
@@ -86,19 +48,19 @@ export class Transaction {
   }
 
   get fee() {
-    return this.data.fee;
+    return this._data.fee;
   }
 
   get txid() {
-    return this.data.txid;
+    return this._data.txid;
   }
 
   get vin() {
-    return this.data.vin;
+    return this._data.vin;
   }
 
   get vout() {
-    return this.data.vout;
+    return this._data.vout;
   }
 
   blockExplorerLink(bitcoinNodeUrl = VITE_BITCOIN_NODE_URL) {
@@ -106,22 +68,24 @@ export class Transaction {
   }
 
   findVout(address: string) {
-    return this.data.vout.find((vout) => vout.scriptpubkey_address === address);
+    return this._data.vout.find(
+      (vout) => vout.scriptpubkey_address === address
+    );
   }
 
   findVin(address: string) {
-    return this.data.vin.find(
+    return this._data.vin.find(
       (vin) => vin.prevout.scriptpubkey_address === address
     );
   }
   sumVin(address: string) {
-    return this.data.vin
+    return this._data.vin
       .filter((vin) => vin.prevout.scriptpubkey_address === address)
       .reduce((acc, vin) => acc + vin.prevout.value, 0);
   }
 
   sumVout(address: string) {
-    return this.data.vout
+    return this._data.vout
       .filter((vout) => vout.scriptpubkey_address === address)
       .reduce((acc, vout) => acc + vout.value, 0);
   }
