@@ -1,14 +1,16 @@
 import { Table, Text } from "@radix-ui/themes";
 import { getQueryParams } from "@root/lib/utils";
-import { IRequest } from "@root/machines/network.types";
 import { toTabularData } from "./table-data-helper";
 import { cn } from "@lib/utils";
+import { type APIRequestResponse } from "@lib/slices/network.slice.types";
+
 type ILogResponseData = {
-  request: IRequest;
+  request: APIRequestResponse;
 };
+
 export const LogResponseData = (props: ILogResponseData) => {
   const { request } = props;
-  const params = getQueryParams(request.url);
+  const params = getQueryParams(request.url.search);
   const requestData = Object.keys(params)
     .map((param) => {
       return [param, params[param]];
@@ -16,7 +18,7 @@ export const LogResponseData = (props: ILogResponseData) => {
     .filter((pair) => pair[0]);
 
   const responseTableData = toTabularData(request);
-  console.log(responseTableData);
+
   return (
     <div className="mb-2">
       {!!requestData.length && (

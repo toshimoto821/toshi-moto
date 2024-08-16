@@ -5,10 +5,11 @@ import { Utxo } from "@models/Utxo";
 import { Wallet } from "@models/Wallet";
 import { Transaction } from "@models/Transaction";
 import { PinTopIcon, PinBottomIcon } from "@radix-ui/react-icons";
-import { AppContext } from "@root/providers/AppProvider";
 import { cn, trimAddress } from "@lib/utils";
 import { ICurrency } from "@root/types";
 import { Popover } from "@root/components/popover/Popover";
+import { useAppSelector } from "@lib/hooks/store.hooks";
+import { selectBaseNodeUrl } from "@lib/slices/config.slice";
 
 type ITransactionDetails = {
   utxo: Utxo;
@@ -16,7 +17,6 @@ type ITransactionDetails = {
   width: number;
   height: number;
   wallets: Wallet[];
-  selectedTxs: Set<string>;
   toggleTx: (tx: Transaction) => void;
   onClickTx: () => void;
   index: number;
@@ -29,15 +29,12 @@ export const TransactionDetails = (props: ITransactionDetails) => {
     width,
     height,
     wallets,
-    selectedTxs,
     toggleTx,
     index,
     onClickTx,
   } = props;
 
-  const bitcoinNodeUrl = AppContext.useSelector(
-    (current) => current.context.meta.config.bitcoinNodeUrl
-  );
+  const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
 
   const walletColor =
     wallets.find((w) => w.id === address.walletId)?.color || "#ccc";
@@ -113,7 +110,6 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           address={address}
           index={index}
           onClickTx={onClickTx}
-          selectedTxs={selectedTxs}
           walletColor={walletColor}
           currency={props.currency}
         />
@@ -125,7 +121,6 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           utxo={address}
           width={width}
           height={height}
-          selectedTxs={selectedTxs}
           toggleTx={toggleTx}
           index={index}
         />

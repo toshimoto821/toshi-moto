@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { LogDetail } from "@components/log/components/LogDetail/LogDetail";
+// import { LogDetail } from "@components/log/components/LogDetail/LogDetail";
 import { LogTable } from "@components/log/components/LogTable";
-import { request } from "./mocks/request";
+// import { request } from "./mocks/request";
 
 import "../../index.css";
 
 const Log = () => (
-  <LogTable requests={[request, request, request]} activeRequestIndex={0}>
-    <LogDetail request={request} />
+  <LogTable requests={[]} activeRequestIndex={0}>
+    {/* <LogDetail request={request} /> */}
   </LogTable>
 );
 
