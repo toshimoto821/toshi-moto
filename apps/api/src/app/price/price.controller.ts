@@ -14,6 +14,11 @@ import { RangeQueryDto, SimplePriceDto } from "./dto/create-price.dto";
 import { Price } from "./schemas/price.schema";
 
 type IRangeResponse = {
+  meta: {
+    groupBy: string;
+    from: number;
+    to: number;
+  };
   prices: [number, number][];
 };
 
@@ -69,6 +74,11 @@ export class PriceController {
     }
 
     return {
+      meta: {
+        groupBy: query.group_by,
+        from: query.from,
+        to: query.to,
+      },
       prices: range.map((r) => [r.timestamp.getTime(), r.price]),
     };
   }

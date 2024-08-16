@@ -1,117 +1,91 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import {
-  AppContext,
-  NetworkContext,
-  WalletUIContext,
-} from "@providers/AppProvider";
 import { Transaction } from "@models/Transaction";
-import {
-  type IAppAddressFilters,
-  type AppMachineMeta,
-} from "@machines/appMachine";
-import { type IExpandAddressKey } from "@machines/walletListUIMachine";
 import { Wallet } from "@models/Wallet";
 import { useBtcPrice } from "./useBtcPrice";
+import { useAppSelector, useAppDispatch } from "@lib/hooks/store.hooks";
+import type { IExpandAddressKey, IAppAddressFilters } from "@root/types";
+import {
+  refreshAddresses,
+  refreshWallet,
+  selectAllWallets,
+  incrementAddressIndex,
+  removeWallet,
+  trimAddresses,
+  archiveWallet,
+} from "@lib/slices/wallets.slice";
+
+import { Utxo } from "@root/models/Utxo";
+import {
+  setUI,
+  selectUI,
+  toggleSelectedTx,
+  removeSelectedTransactions,
+  addSelectedTransactions,
+  defaultGraphEndDate,
+  setGraphByRange,
+  expandAddress,
+  collapseAddress,
+  toggleAddress,
+} from "../slices/ui.slice";
+import { getRangeFromTime } from "@root/components/graphs/graph-utils";
+import { UIState } from "../slices/ui.slice.types";
 
 export const useWallets = () => {
   const params = useParams();
 
-  const appRef = AppContext.useActorRef();
-  const networkActorRef = NetworkContext.useActorRef();
-  const walletUIActorRef = WalletUIContext.useActorRef();
-  const wallets = AppContext.useSelector(
-    (current) => current.context.btcWallets
-  );
+  const dispatch = useAppDispatch();
+  const uiState = useAppSelector(selectUI);
+  const walletsState = useAppSelector(selectAllWallets);
 
-  const addresses = AppContext.useSelector(
-    (current) => current.context.addresses
-  );
-
-  const transactions = AppContext.useSelector(
-    (current) => current.context.transactions
-  );
-
-  // const currency = AppContext.useSelector(
-  //   (current) => current.context.meta.currency
-  // );
   const currency = "usd";
 
-  const { send } = walletUIActorRef;
+  const { btcPrice, forcastPrice } = useBtcPrice();
 
-  const { btcPrice, loading: btcPriceLoading, forcastPrice } = useBtcPrice();
-
-  useEffect(() => {
-    send({
-      type: "INIT",
-      data: {
-        networkLoggerRef: networkActorRef,
-        appMachineRef: appRef,
-        selectedWallet: params.walletId || "",
-      },
-    });
-  }, [appRef, params.walletId, networkActorRef, send]);
-
-  const walletRows = wallets
+  const walletRows = walletsState
     .map(
       (wallet) =>
         new Wallet(wallet, {
           cur: currency,
           btcPrice: forcastPrice ?? btcPrice,
-          blockExplorer: "mempool.space",
-          addresses,
-          transactions,
-          addressFilters: wallet.settings?.addressFilters,
         })
     )
     .sort((a, b) => b.balance - a.balance);
 
-  const chartEndDate = AppContext.useSelector(
-    (current) => current.context.meta.chartEndDate
-  );
+  const chartEndDate = uiState.graphEndDate;
 
-  const chartStartDate = AppContext.useSelector(
-    (current) => current.context.meta.chartStartDate
-  );
+  const chartStartDate = uiState.graphStartDate;
 
-  const balanceVisible = AppContext.useSelector(
-    (current) => current.context.meta.balanceVisible
-  );
-
-  const netAssetValue = AppContext.useSelector(
-    (current) => current.context.meta.netAssetValue
-  );
-
-  const addressFilters = AppContext.useSelector(
-    (current) => current.context.meta.addressFilters
-  );
-
-  const selectedTxs = AppContext.useSelector(
-    (current) => new Set(current.context.selectedTxs || [])
-  );
+  const netAssetValue = uiState.netAssetValue;
 
   const toggleNetAssetValue = () => {
-    appRef.send({ type: "APP_MACHINE_TOGGLE_NET_ASSET_VALUE" });
+    dispatch(
+      setUI({
+        netAssetValue: !netAssetValue,
+      })
+    );
   };
 
   const actions = {
-    updateMeta: (meta: Partial<AppMachineMeta>) => {
-      appRef.send({ type: "APP_MACHINE_UPDATE_META", data: { meta } });
+    updateMeta: (meta: Partial<UIState>) => {
+      console.log(meta);
+      throw new Error("@todo, implement");
+      // appRef.send({ type: "APP_MACHINE_UPDATE_META", data: { meta } });
     },
     toggleNetAssetValue,
     toggleAddress: (walletId: string, address: string) => {
       const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
-      send({ type: "TOGGLE_ADDRESS", data: { id: key } });
+      dispatch(toggleAddress(key));
     },
     expandAddress: (walletId: string, address: string) => {
       const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
-      send({ type: "EXPAND_ADDRESS", data: { id: key } });
+      dispatch(expandAddress(key));
     },
     collapseAddress: (walletId: string, address: string) => {
       const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
-      send({ type: "COLLAPSE_ADDRESS", data: { id: key } });
+      dispatch(collapseAddress(key));
     },
-    selectInputAddresses: (selected: boolean) => {
+    selectInputAddresses: () => {
       const txids = [] as string[];
 
       // go through every address and get transactions
@@ -141,11 +115,13 @@ export const useWallets = () => {
           }
         }
       }
+      const unique = Array.from(new Set(txids));
 
-      appRef.send({
-        type: "APP_MACHINE_CHANGE_SELECTED_TXS",
-        data: { txids, selected },
-      });
+      dispatch(
+        setUI({
+          graphSelectedTransactions: unique,
+        })
+      );
     },
     selectWalletInputAddresses: (walletId: string, selected: boolean) => {
       const wallet = walletRows.find((w) => w.id === walletId);
@@ -181,115 +157,75 @@ export const useWallets = () => {
         }
       }
 
-      appRef.send({
-        type: "APP_MACHINE_CHANGE_SELECTED_TXS",
-        data: { txids, selected },
-      });
+      if (selected) {
+        dispatch(addSelectedTransactions(txids));
+      } else {
+        dispatch(removeSelectedTransactions(txids));
+      }
     },
     toggleTx: (tx: Transaction) => {
-      appRef.send({
-        type: "APP_MACHINE_TOGGLE_SELECTED_TX",
-        data: { txid: tx.txid },
-      });
+      dispatch(toggleSelectedTx(tx.txid));
 
       const txDate = tx.date?.getTime();
       if (!txDate) return;
       // if the tx date is not within the range of the chart, update the chart range
       if (txDate < chartStartDate || txDate > chartEndDate) {
-        // which is closer, start or end and move that
-        const start = Math.abs(txDate - chartStartDate);
-        const end = Math.abs(txDate - chartEndDate);
-        const meta = {} as Partial<AppMachineMeta>;
-        if (start < end) {
-          meta.chartStartDate = txDate - 1000 * 60 * 60 * 24 * 7;
-        } else {
-          meta.chartEndDate = Math.min(
-            txDate + 1000 * 60 * 60 * 24 * 7,
-            new Date().getTime()
-          );
-        }
-        meta.chartTimeframeGroup = "1D";
-        appRef.send({
-          type: "APP_MACHINE_UPDATE_META",
-          data: {
-            meta,
-          },
-        });
+        const chartEndData = defaultGraphEndDate;
+        const diff = chartEndData - txDate;
+
+        const range = getRangeFromTime(diff);
+        dispatch(setGraphByRange(range));
       }
     },
     toggleBalanceVisibility() {
-      const data = {
-        meta: {
-          balanceVisible: !balanceVisible,
-        },
-      };
-      appRef.send({ type: "APP_MACHINE_UPDATE_META", data });
+      dispatch(
+        setUI({
+          navbarBalanceVisibility: !uiState.navbarBalanceVisibility,
+        })
+      );
     },
-
-    refreshWallet({
+    refreshWallet(walletId: string, ttl = 1000 * 60 * 60 * 24) {
+      dispatch(refreshWallet({ walletId, ttl }));
+    },
+    refreshAddresses({
       walletId,
       addresses,
-      ttl = 0,
     }: {
       walletId: string;
-      addresses: string[];
-      ttl?: number;
+      addresses: Utxo[];
     }) {
       const wallet = walletRows.find((wallet) => wallet.id === walletId);
       if (!wallet) return;
-      const index = wallet.receiveMeta.lastAddressIndex;
-      let addressesToSend = new Set<string>();
-      // only fetch the next address if there are more than one address
-      // no need to run next address check if user is only attempting to manually
-      // refresh a single address
-      if (addresses.length > 1 && typeof index === "number") {
-        const addr = wallet.getLastAddressAtIndex({
-          index: index + 1,
-          type: "RECEIVE",
-        });
-        if (addr) {
-          addressesToSend.add(addr.address);
-        }
-      }
 
-      if (wallet.refreshedAt) {
-        const now = new Date().getTime();
-        const diff = now - wallet.refreshedAt.getTime();
+      const addressesToSend = addresses.map((addr) => addr.addressArgs);
 
-        if (diff > ttl) {
-          addressesToSend = new Set([...addressesToSend, ...addresses]);
-        }
-      }
-      if (addressesToSend.size > 0) {
-        appRef.send({
-          type: "APP_MACHINE_FETCH_WALLETS_UTXOS",
-          data: {
-            walletId: walletId,
-            bypassCache: ttl === 0,
-            ttl,
-            utxos: Array.from(addressesToSend),
-          },
-        });
+      if (addressesToSend.length > 0) {
+        dispatch(refreshAddresses(addressesToSend));
       }
     },
 
     deleteWallet(walletId: string) {
-      appRef.send({
-        type: "APP_MACHINE_DELETE_WALLET",
-        data: {
-          walletId,
-        },
-      });
+      dispatch(removeWallet(walletId));
     },
 
     changeAddressFilter: (walletId: string, filter: IAppAddressFilters) => {
-      appRef.send({
-        type: "APP_MACHINE_CHANGE_ADDRESS_FILTER",
-        data: {
-          filter,
-          walletId,
-        },
-      });
+      const filters = uiState.filterUtxoOnly
+        ? uiState.filterUtxoOnly.slice()
+        : [];
+
+      const index = filters.indexOf(walletId);
+      if (index > -1) {
+        filters.splice(index);
+      }
+      if (filter.utxoOnly) {
+        filters.push(walletId);
+      }
+
+      dispatch(
+        setUI({
+          filterUtxoOnly: filters,
+        })
+      );
     },
 
     loadNextAddresses({
@@ -301,28 +237,25 @@ export const useWallets = () => {
       change: boolean;
       incrementOrDecrement?: number;
     }) {
-      if (addressFilters.utxoOnly) {
-        appRef.send({
-          type: "APP_MACHINE_CHANGE_ADDRESS_FILTER",
-          data: {
-            filter: {
-              change: true,
-              receive: true,
-              utxoOnly: false,
-            },
-            walletId,
-          },
-        });
+      if (uiState.filterUtxoOnly.includes(walletId)) {
+        actions.changeAddressFilter(walletId, { utxoOnly: false });
       }
 
-      appRef.send({
-        type: "APP_MACHINE_UPDATE_WALLET_PAGINATION_LIMIT",
-        data: {
+      dispatch(
+        incrementAddressIndex({
           walletId,
-          addressType: change ? "CHANGE" : "RECEIVE",
+          change,
           incrementOrDecrement,
-        },
-      });
+        })
+      );
+      // appRef.send({
+      //   type: "APP_MACHINE_UPDATE_WALLET_PAGINATION_LIMIT",
+      //   data: {
+      //     walletId,
+      //     addressType: change ? "CHANGE" : "RECEIVE",
+      //     incrementOrDecrement,
+      //   },
+      // });
     },
     trimWalletAddresses({
       walletId,
@@ -338,14 +271,14 @@ export const useWallets = () => {
       const index = wallet.getNextAddressIndex({
         type: change ? "CHANGE" : "RECEIVE",
       });
-      appRef.send({
-        type: "APP_MACHINE_TRIM_WALLET_ADDRESSES",
-        data: {
+
+      dispatch(
+        trimAddresses({
           walletId,
-          addressType: change ? "CHANGE" : "RECEIVE",
+          change,
           index,
-        },
-      });
+        })
+      );
     },
     archiveWallet({
       walletId,
@@ -354,24 +287,24 @@ export const useWallets = () => {
       walletId: string;
       archive: boolean;
     }) {
-      appRef.send({
-        type: "APP_MACHINE_ARCHIVE_WALLET",
-        data: {
+      dispatch(
+        archiveWallet({
           walletId,
           archive,
-        },
-      });
+        })
+      );
     },
   };
 
   const toRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
     const { walletId, address } = params;
-    if (walletId) {
-      send({ type: "TOGGLE_SELECT_WALLET", data: { walletId } });
-    } else {
-      send({ type: "CLEAR_SELECTED_WALLETS" });
-    }
+
+    dispatch(
+      setUI({
+        selectedWalletId: walletId ?? null,
+      })
+    );
 
     if (address && walletId) {
       if (toRef.current) {
@@ -397,15 +330,11 @@ export const useWallets = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.walletId, params.address]);
 
-  const selectedWallet = WalletUIContext.useSelector((current) => {
-    return current.context.selectedWallet;
-  });
-
   const walletFilter = (wallet: Wallet) => {
-    if (!selectedWallet) {
+    if (!uiState.selectedWalletId) {
       return true;
     }
-    return selectedWallet === wallet.id;
+    return uiState.selectedWalletId === wallet.id;
   };
 
   const totalBalance = walletRows.reduce((acc, wallet) => {
@@ -420,32 +349,11 @@ export const useWallets = () => {
     totalBalance,
     totalValue,
   };
-  const expandedTxs = WalletUIContext.useSelector(
-    (current) => current.context.expandedTxs
-  );
 
-  const ui = {
-    expandedTxs,
-    selectedTxs,
-    addressFilters,
-    balanceVisible,
-    isLoadingAddress: (address: string, wallet: Wallet) => {
-      if (addresses[address]?.loading) return true;
-
-      return !wallet.isAddressLoaded(address);
-    },
-    btcPriceLoading,
-  };
-
-  const selectedWallets = new Set<string>(
-    selectedWallet ? [selectedWallet] : Array.from(walletRows).map((w) => w.id)
-  );
   return {
     wallets: walletRows,
     data,
-    ui,
     // @todo move into ui
-    selectedWallets,
     netAssetValue,
     actions,
   };

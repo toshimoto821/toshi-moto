@@ -1,7 +1,13 @@
-import { IRequest } from "@root/machines/network.types";
 import transform from "lodash/transform";
 import assign from "lodash/assign";
 import isObject from "lodash/isObject";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
+import type {
+  PriceResponse,
+  PriceHistoryResponse,
+  AddressResponse,
+  TransactionsResponse,
+} from "@root/lib/slices/api.slice.types";
 
 function flattenObject(
   obj: Record<string, any>,
@@ -21,12 +27,14 @@ function flattenObject(
   );
 }
 
-export const toTabularData = (request: IRequest) => {
+export const toTabularData = (request: APIRequestResponse) => {
   const headers = [] as string[];
   const rows = [] as string[][];
   if (request.meta.type === "btc-historic-price") {
     headers.push("Timestamp", "Price");
-    const prices = request.response?.data.prices;
+
+    const response = request.response?.data as PriceHistoryResponse;
+    const prices = response.prices;
     if (prices.length) {
       for (const priceRow of prices) {
         rows.push([priceRow[0] + "", priceRow[1] + ""]);
@@ -34,10 +42,18 @@ export const toTabularData = (request: IRequest) => {
     }
   }
 
-  if (request.meta.type === "btc-price") {
+  if (request.meta.type === "supply") {
     headers.push("Key", "Value");
-    const data = Object.keys(request.response?.data.bitcoin).map((key) => {
-      return [key + "", request.response?.data.bitcoin[key] + ""];
+    rows.push(["supply", request.response?.data + ""]);
+  }
+
+  if (request.meta.type === "price" && request.response?.data) {
+    const response = request.response?.data as PriceResponse;
+    headers.push("Key", "Value");
+    const data = (
+      Object.keys(response.bitcoin) as (keyof typeof response.bitcoin)[]
+    ).map((key) => {
+      return [key + "", response.bitcoin[key] + ""];
     });
 
     rows.push(...data);
@@ -56,7 +72,8 @@ export const toTabularData = (request: IRequest) => {
       "weight"
     );
 
-    const data = request.response?.data.map((row: any) => {
+    const response = request.response?.data as TransactionsResponse;
+    const data = (response || []).map((row: any) => {
       return [
         row.fee,
         row.locktime,
@@ -74,7 +91,8 @@ export const toTabularData = (request: IRequest) => {
 
   if (request.meta.type === "utxo") {
     headers.push("Key", "Value");
-    const flatObject = flattenObject(request.response?.data);
+    const response = request.response?.data as AddressResponse;
+    const flatObject = flattenObject(response || {});
     const data = Object.keys(flatObject).map((key: any) => {
       const value = flatObject[key];
 
