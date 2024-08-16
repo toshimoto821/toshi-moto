@@ -10,15 +10,19 @@ import { AddressRow } from "./AddressRow";
 import { useElementDimensions } from "@lib/hooks/useElementDimensions";
 import { useBtcPrice } from "@root/lib/hooks/useBtcPrice";
 import { Popover } from "@root/components/popover/Popover";
-import { type IAppAddressFilters } from "@machines/appMachine";
-import { type IExpandAddressKey } from "@machines/walletListUIMachine";
+import type { IAppAddressFilters, IExpandAddressKey } from "@root/types";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
+
 export const WalletDetail = () => {
   const useWalletRet = useWallets();
-  const { wallets, ui, actions } = useWalletRet;
+  const { wallets, actions } = useWalletRet;
   const { walletId, address } = useParams();
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
   const { circulatingSupply, btcPrice } = useBtcPrice();
+  const { filterUtxoOnly = [], walletExpandedAddresses = [] } =
+    useAppSelector(selectUI);
 
   const navigate = useNavigate();
   const wallet = wallets.find((wallet) => wallet.id === walletId);
@@ -29,7 +33,7 @@ export const WalletDetail = () => {
 
   const isUtxoExpanded = (address: string) => {
     const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
-    return ui.expandedTxs.has(key);
+    return walletExpandedAddresses.includes(key);
   };
 
   const handleToggleAddress = (address: string) => {
@@ -42,7 +46,7 @@ export const WalletDetail = () => {
 
   const changeAddresses =
     wallet?.getAddresses({
-      onlyUtxos: wallet.settings.addressFilters.utxoOnly,
+      onlyUtxos: filterUtxoOnly.includes(walletId!),
       change: true,
       receive: false,
       addresses: address ? [address] : undefined,
@@ -51,24 +55,16 @@ export const WalletDetail = () => {
 
   const receiveAddresses =
     wallet?.getAddresses({
-      onlyUtxos: wallet.settings.addressFilters.utxoOnly,
+      onlyUtxos: filterUtxoOnly.includes(walletId!),
       change: false,
       receive: true,
       addresses: address ? [address] : undefined,
     }) || [];
 
-  const addresses = [...receiveAddresses, ...changeAddresses];
-
   useEffect(() => {
     const to = setTimeout(() => {
       if (wallet && !wallet.archived) {
-        // @todo this needs to cancel outstanding requests for
-        // the same addresses in queue
-        actions.refreshWallet({
-          walletId: wallet?.id,
-          ttl: 1000 * 60 * 60 * 24, // 1 day ttl
-          addresses: addresses.map((address) => address.address),
-        });
+        actions.refreshWallet(wallet?.id);
       }
     }, 200);
     return () => {
@@ -105,12 +101,11 @@ export const WalletDetail = () => {
           <div className="flex items-center">
             <AddressFilterDropdown
               wallet={wallet}
-              filters={wallet.settings.addressFilters}
+              filters={{
+                utxoOnly: filterUtxoOnly.includes(walletId!),
+              }}
               onClickRefresh={() => {
-                actions.refreshWallet({
-                  walletId: wallet.id,
-                  addresses: addresses.map((address) => address.address),
-                });
+                actions.refreshWallet(wallet.id, 0);
               }}
               onClickFilter={(filter: IAppAddressFilters) => {
                 actions.changeAddressFilter(wallet.id, filter);
@@ -184,7 +179,6 @@ export const WalletDetail = () => {
           return (
             <AddressRow
               key={index + address.address}
-              isLoading={ui.isLoadingAddress(address.address, wallet)}
               address={address}
               isUtxoExpanded={isUtxoExpanded(address.address)}
               onClickExpandUtxo={handleToggleAddress(address.address)}
@@ -192,9 +186,9 @@ export const WalletDetail = () => {
               wallets={useWalletRet}
               dimensions={dimensions}
               onClickRefresh={({ address }) => {
-                actions.refreshWallet({
+                actions.refreshAddresses({
                   walletId: wallet.id,
-                  addresses: [address.address],
+                  addresses: [address],
                 });
               }}
               currency={wallet.settings.cur}
@@ -204,10 +198,10 @@ export const WalletDetail = () => {
 
         {receiveAddresses.length === 0 && (
           <div className="h-48 flex flex-col items-center justify-center">
-            {wallet.settings.addressFilters.utxoOnly && (
+            {walletId && filterUtxoOnly.includes(walletId) && (
               <Text>No receive UTXO's in wallet found</Text>
             )}
-            {!wallet.settings.addressFilters.utxoOnly && (
+            {walletId && !filterUtxoOnly.includes(walletId) && (
               <Text>Loading receive addresses...</Text>
             )}
           </div>
@@ -232,7 +226,6 @@ export const WalletDetail = () => {
           return (
             <AddressRow
               key={index + address.address}
-              isLoading={ui.isLoadingAddress(address.address, wallet)}
               address={address}
               isUtxoExpanded={isUtxoExpanded(address.address)}
               onClickExpandUtxo={handleToggleAddress(address.address)}
@@ -240,9 +233,9 @@ export const WalletDetail = () => {
               wallets={useWalletRet}
               dimensions={dimensions}
               onClickRefresh={({ address }) => {
-                actions.refreshWallet({
+                actions.refreshAddresses({
                   walletId: wallet.id,
-                  addresses: [address.address],
+                  addresses: [address],
                 });
               }}
               currency={wallet.settings.cur}
@@ -251,10 +244,10 @@ export const WalletDetail = () => {
         })}
         {changeAddresses.length === 0 && (
           <div className="h-48 flex flex-col items-center justify-center">
-            {wallet.settings.addressFilters.utxoOnly && (
+            {walletId && filterUtxoOnly.includes(walletId) && (
               <Text>No change UTXO's in wallet found</Text>
             )}
-            {!wallet.settings.addressFilters.utxoOnly && (
+            {walletId && !filterUtxoOnly.includes(walletId) && (
               <Text>Loading change addresses...</Text>
             )}
           </div>

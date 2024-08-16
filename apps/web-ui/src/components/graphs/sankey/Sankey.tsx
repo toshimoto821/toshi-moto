@@ -8,7 +8,8 @@ import {
 import { trimAddress } from "@lib/utils";
 import { padBtcZeros } from "@lib/utils";
 import { GraphHoverCard } from "./GraphHoverCard";
-import { AppContext } from "@providers/AppProvider";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@lib/slices/ui.slice";
 
 type ISankey = {
   data: {
@@ -18,7 +19,7 @@ type ISankey = {
   width: number;
   height: number;
   onClick?: (type: "address" | "tx", value: string) => void;
-  selectedTxs: Set<string>;
+  selectedTxs: string[];
   index: number;
 };
 
@@ -50,19 +51,14 @@ export const Sankey = ({
   width,
   height,
   onClick: onClickGraph,
-  selectedTxs = new Set<string>(),
+  selectedTxs = [],
   index,
 }: ISankey) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const hoverCardRef = useRef<HTMLDivElement>(null);
 
-  const chartEndDate = AppContext.useSelector(
-    (current) => current.context.meta.chartEndDate
-  );
-
-  const chartStartDate = AppContext.useSelector(
-    (current) => current.context.meta.chartStartDate
-  );
+  const { graphStartDate: chartStartDate, graphEndDate: chartEndDate } =
+    useAppSelector(selectUI);
 
   const selectedElements =
     useRef<d3.Selection<SVGPathElement | null, Node, SVGGElement, unknown>>();
@@ -359,12 +355,12 @@ export const Sankey = ({
         .transition()
         .duration(200)
         .attr("d", (d: Node) => {
-          const size = selectedTxs.has(d.name) ? 2000 : 1200;
+          const size = selectedTxs.includes(d.name) ? 2000 : 1200;
           return symbolToUse.size(size)();
         })
         .attr("transform", function (d: any) {
           // const v = d.x1 - d.x0;
-          const padding = selectedTxs.has(d.name) ? 20 : 15;
+          const padding = selectedTxs.includes(d.name) ? 20 : 15;
           const x = d.x1 + padding; // - v;
           const y = (d.y0 + d.y1) / 2;
 

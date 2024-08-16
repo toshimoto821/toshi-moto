@@ -3,13 +3,14 @@ import { Wallet } from "@models/Wallet";
 import { Sankey, type Node } from "./sankey/Sankey";
 import { Utxo } from "@models/Utxo";
 import { Transaction } from "@models/Transaction";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
 type ITransactionSankey = {
   utxo: Utxo;
   transaction: Transaction;
   width: number;
   height: number;
   wallets: Wallet[];
-  selectedTxs: Set<string>;
   toggleTx: (tx: Transaction) => void;
   index: number;
 };
@@ -20,11 +21,11 @@ export const TransactionSankey = ({
   width,
   height,
   wallets,
-  selectedTxs,
   toggleTx,
   index,
 }: ITransactionSankey) => {
   const navigate = useNavigate();
+  const { graphSelectedTransactions: selectedTxs } = useAppSelector(selectUI);
   const utxoWallet = utxo.walletId
     ? wallets.find((w) => w.id === utxo.walletId)
     : null;

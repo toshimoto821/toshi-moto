@@ -1,30 +1,29 @@
 import { Card, Box, Text, Button } from "@radix-ui/themes";
-import { NetworkContext } from "@providers/AppProvider";
-import type { IRequest } from "@machines/network.types";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
+import { deleteRequest } from "@root/lib/slices/network.slice";
+import { useAppDispatch } from "@root/lib/hooks/store.hooks";
+
 type ILogDetailActions = {
-  request: IRequest;
+  request: APIRequestResponse;
   onDelete: () => void;
 };
 export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
-  const networkActorRef = NetworkContext.useActorRef();
-
-  // const requests = NetworkContext.useSelector((current) => {
-  //   return current.context.requests;
-  // });
-
+  const dispatch = useAppDispatch();
   const handleDelete = () => {
     const { id } = request;
 
-    networkActorRef.send({ type: "DELETE", data: { id } });
+    dispatch(deleteRequest(id));
+
     if (onDelete) {
       onDelete();
     }
   };
 
   const handleRetry = () => {
-    if (request.retry) {
-      request.retry();
-    }
+    // if (request.retry) {
+    //   request.retry();
+    // }
+    console.log("implement retry");
   };
   return (
     <div className="p-4">
@@ -45,7 +44,7 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
           </Box>
         </div>
       </Card>
-      {request.retry && (
+      {false && (
         <Card>
           <div className="flex justify-between items-end">
             <Box>
