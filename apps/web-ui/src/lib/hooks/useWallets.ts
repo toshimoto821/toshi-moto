@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { AppContext, WalletUIContext } from "@providers/AppProvider";
 import { Transaction } from "@models/Transaction";
 import { Wallet } from "@models/Wallet";
 import { useBtcPrice } from "./useBtcPrice";
@@ -39,13 +38,9 @@ export const useWallets = () => {
   const uiState = useAppSelector(selectUI);
   const walletsState = useAppSelector(selectAllWallets);
 
-  const addresses = AppContext.useSelector(
-    (current) => current.context.addresses
-  );
-
   const currency = "usd";
 
-  const { btcPrice, loading: btcPriceLoading, forcastPrice } = useBtcPrice();
+  const { btcPrice, forcastPrice } = useBtcPrice();
 
   const walletRows = walletsState
     .map(
@@ -62,14 +57,6 @@ export const useWallets = () => {
   const chartStartDate = uiState.graphStartDate;
 
   const netAssetValue = uiState.netAssetValue;
-
-  const balanceVisible = AppContext.useSelector(
-    (current) => current.context.meta.balanceVisible
-  );
-
-  const addressFilters = AppContext.useSelector(
-    (current) => current.context.meta.addressFilters
-  );
 
   const toggleNetAssetValue = () => {
     dispatch(
@@ -250,18 +237,8 @@ export const useWallets = () => {
       change: boolean;
       incrementOrDecrement?: number;
     }) {
-      if (addressFilters.utxoOnly) {
-        // appRef.send({
-        //   type: "APP_MACHINE_CHANGE_ADDRESS_FILTER",
-        //   data: {
-        //     filter: {
-        //       change: true,
-        //       receive: true,
-        //       utxoOnly: false,
-        //     },
-        //     walletId,
-        //   },
-        // });
+      if (uiState.filterUtxoOnly.includes(walletId)) {
+        actions.changeAddressFilter(walletId, { utxoOnly: false });
       }
 
       dispatch(
@@ -353,15 +330,11 @@ export const useWallets = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.walletId, params.address]);
 
-  const selectedWallet = WalletUIContext.useSelector((current) => {
-    return current.context.selectedWallet;
-  });
-
   const walletFilter = (wallet: Wallet) => {
-    if (!selectedWallet) {
+    if (!uiState.selectedWalletId) {
       return true;
     }
-    return selectedWallet === wallet.id;
+    return uiState.selectedWalletId === wallet.id;
   };
 
   const totalBalance = walletRows.reduce((acc, wallet) => {
@@ -376,31 +349,11 @@ export const useWallets = () => {
     totalBalance,
     totalValue,
   };
-  const expandedTxs = WalletUIContext.useSelector(
-    (current) => current.context.expandedTxs
-  );
 
-  const ui = {
-    expandedTxs,
-    addressFilters,
-    balanceVisible,
-    isLoadingAddress: (address: string, wallet: Wallet) => {
-      if (addresses[address]?.loading) return true;
-
-      return !wallet.isAddressLoaded(address);
-    },
-    btcPriceLoading,
-  };
-
-  const selectedWallets = new Set<string>(
-    selectedWallet ? [selectedWallet] : Array.from(walletRows).map((w) => w.id)
-  );
   return {
     wallets: walletRows,
     data,
-    ui,
     // @todo move into ui
-    selectedWallets,
     netAssetValue,
     actions,
   };

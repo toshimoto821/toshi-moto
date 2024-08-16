@@ -18,6 +18,7 @@ import {
 } from "@components/graphs/graph-utils";
 import { useAppSelector } from "./store.hooks";
 import { selectUI } from "../slices/ui.slice";
+import { selectForecast } from "../slices/price.slice";
 
 type IUseChartData = {
   btcPrice?: number;
@@ -59,16 +60,10 @@ export const useChartData = (opts: IUseChartData) => {
     (current) => current.context.plotData[current.context.selectedPlotIndex]
   );
 
-  const forcastModel = AppContext.useSelector(
-    (current) => current.context.meta.forcastModel
-  );
+  const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
-  const forcastPrices = AppContext.useSelector(
-    (current) => current.context.forcastPrices || []
-  );
-
-  if (forcastModel) {
-    prices = prices.concat(forcastPrices);
+  if (forecastModel) {
+    prices = prices.concat(forecastPrices);
   }
 
   // this is kinda broken.  the chart flickers because the
@@ -82,7 +77,7 @@ export const useChartData = (opts: IUseChartData) => {
   // add the current price
   let timeDiff = 1000 * 60 * 60 * 24;
   const now = new Date().getTime();
-  if (prices?.length > 2 && btcPrice && !forcastModel) {
+  if (prices?.length > 2 && btcPrice && !forecastModel) {
     const lastPrice = prices[prices.length - 1][0];
     const secondToLastPrice = prices[prices.length - 2][0];
 
@@ -144,7 +139,7 @@ export const useChartData = (opts: IUseChartData) => {
     prices?.[0]?.[1], // if first date changes, update
     refreshKey,
     chartTimeDiffInDays,
-    forcastModel,
+    forecastModel,
   ]);
 
   const filteredWallets = selectedWalletId

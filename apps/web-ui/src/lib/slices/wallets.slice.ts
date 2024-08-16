@@ -14,7 +14,7 @@ import type {
 import { enqueueAction } from "./network.slice";
 import type { AppStartListening } from "../store/middleware/listener";
 import { RootState } from "../store";
-import { IWalletAddressFilters } from "@root/models/Wallet";
+import { IAppAddressFilters } from "@root/types";
 
 export interface Wallet {
   id: string;
@@ -33,7 +33,7 @@ export interface Wallet {
   // loading addresses, fetching transactions, etc
   status?: string;
   addresses: ReturnType<typeof addressAdapter.getInitialState>;
-  addressFilters: IWalletAddressFilters;
+  addressFilters: IAppAddressFilters;
   archived?: boolean;
 }
 
@@ -561,8 +561,6 @@ export const upsertWallet = createAppAsyncThunk(
         },
         addresses: addressAdapter.getInitialState(),
         addressFilters: {
-          change: true,
-          receive: true,
           utxoOnly: false,
         },
       })

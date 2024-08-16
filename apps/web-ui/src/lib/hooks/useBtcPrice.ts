@@ -1,10 +1,9 @@
-import { AppContext } from "@providers/AppProvider";
 import { useAppSelector } from "@lib/hooks/store.hooks";
 import {
   useGetPriceQuery,
   useGetCirculatingSupplyQuery,
 } from "../slices/api.slice";
-import { selectBtcPrice } from "../slices/price.slice";
+import { selectBtcPrice, selectForecastPrice } from "../slices/price.slice";
 
 export const useBtcPrice = () => {
   const { refetch, isLoading: loading, error } = useGetPriceQuery();
@@ -19,19 +18,8 @@ export const useBtcPrice = () => {
 
   const refresh = refetch;
 
-  const forcastModel = AppContext.useSelector((current) => {
-    return current.context.meta.forcastModel;
-  });
-
-  const forcastPrices = AppContext.useSelector((current) => {
-    return current.context.forcastPrices || [];
-  });
-
-  let forcastPrice = null;
-  if (forcastModel && forcastPrices.length) {
-    forcastPrice = forcastPrices[forcastPrices.length - 1][1];
-  }
-
+  const forcastPrice = useAppSelector(selectForecastPrice);
+  console.log(forcastPrice, "forcastPrice");
   const updatedTime = updatedAt ? new Date(updatedAt).toLocaleString() : "";
   return {
     btcPrice,

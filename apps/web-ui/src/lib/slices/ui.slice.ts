@@ -29,6 +29,8 @@ const initialState: UIState = {
   netAssetValue: false,
   privatePrice: false,
   selectedWalletId: null,
+  toastOpen: false,
+  toastMessage: null,
   walletExpandedAddresses: [],
 };
 
@@ -41,6 +43,14 @@ export const uiSlice = createSlice({
         ...state,
         ...action.payload,
       };
+    },
+    showToast(state, action: PayloadAction<UIState["toastMessage"]>) {
+      state.toastOpen = true;
+      state.toastMessage = action.payload;
+    },
+    clearToast(state) {
+      state.toastMessage = null;
+      state.toastOpen = false;
     },
     toggleSelectedTx(state, action: PayloadAction<string>) {
       // remove from graphSelectedTransactions if exists
@@ -102,6 +112,8 @@ export const {
   expandAddress,
   collapseAddress,
   toggleAddress,
+  showToast,
+  clearToast,
 } = uiSlice.actions;
 
 export const setGraphByRange = (

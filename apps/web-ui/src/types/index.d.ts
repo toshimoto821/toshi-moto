@@ -73,3 +73,15 @@ export type IExpandAddressKey = `wallet-id:${string};utxo:${string}`;
 export type IAppAddressFilters = {
   utxoOnly: boolean;
 };
+
+export type IChartTimeframeGroups = "5M" | "1H" | "1D" | "1W" | "1M";
+
+export type IChartTimeFrameRange =
+  | "1D"
+  | "1W"
+  | "1M"
+  | "3M"
+  | "1Y"
+  | "2Y"
+  | "5Y"
+  | "ALL";

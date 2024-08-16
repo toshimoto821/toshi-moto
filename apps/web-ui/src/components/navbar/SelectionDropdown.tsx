@@ -1,7 +1,6 @@
 // import { useState } from "react";
 import { DropdownMenu, IconButton, Text } from "@radix-ui/themes";
 import { CommitIcon } from "@radix-ui/react-icons";
-import { AppContext } from "@root/providers/AppProvider";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI, setUI } from "@lib/slices/ui.slice";
 

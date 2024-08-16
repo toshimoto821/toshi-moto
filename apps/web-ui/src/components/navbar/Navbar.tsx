@@ -21,8 +21,9 @@ import { currencySymbols } from "@root/lib/currencies";
 import { cn } from "@root/lib/utils";
 import { WalletUIContext, AppContext } from "@root/providers/AppProvider";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI } from "@root/lib/slices/ui.slice";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI, showToast } from "@root/lib/slices/ui.slice";
+import { useChartData } from "@root/lib/hooks/useChartData";
 
 const colorScale = d3
   .scaleLinear<string>()
@@ -57,14 +58,20 @@ export const Navbar = () => {
     loading,
     updatedTime,
   } = useBtcPrice();
+  // const dispatch = useAppDispatch();
 
   const btcPrice = forcastPrice ?? rawPrice;
-  const { actions, data, ui, wallets } = useWallets();
+  const { actions, data, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
 
   const [defaultDateTab, setDefaultDateTab] = useState<"start" | "end">(
     "start"
   );
+
+  const { lineData, plotData } = useChartData({
+    wallets,
+    btcPrice,
+  });
 
   const uiState = useAppSelector(selectUI);
   const { netAssetValue } = uiState;
@@ -82,14 +89,6 @@ export const Navbar = () => {
   const dimensions = useElementDimensions(containerRef);
 
   const meta = AppContext.useSelector((current) => current.context.meta);
-
-  const lineData = WalletUIContext.useSelector(
-    (current) => current.context.lineData
-  );
-
-  const plotData = WalletUIContext.useSelector(
-    (current) => current.context.plotData
-  );
 
   const currency = "usd";
   const currencySymbol = currencySymbols[currency];
@@ -321,9 +320,11 @@ export const Navbar = () => {
               ref={myBtcRef}
               className={`md:container md:mx-auto flex items-start transition-opacity justify-center px-6 flex-1`}
             >
-              <Button variant="ghost">
-                <Text size="6" color="orange" onClick={toggleBalance}>
-                  {ui.balanceVisible ? padBtcZeros(data.totalBalance) : "My"}
+              <Button variant="ghost" onClick={toggleBalance}>
+                <Text size="6" color="orange">
+                  {uiState.navbarBalanceVisibility
+                    ? padBtcZeros(data.totalBalance)
+                    : "My"}
                   &nbsp;BTC
                 </Text>
               </Button>

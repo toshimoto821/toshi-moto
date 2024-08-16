@@ -5,8 +5,8 @@ import { jade, ruby } from "@radix-ui/colors";
 import findLastIndex from "lodash/findLastIndex";
 import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
-import { AppContext } from "@root/providers/AppProvider";
 import { IPlotData } from "@root/machines/walletListUIMachine";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import "./tooltip.css";
 import {
   ONE_HUNDRED_MILLION,
@@ -16,6 +16,7 @@ import {
 } from "@root/lib/utils";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { IForcastModelType } from "@root/machines/appMachine";
+import { selectForecast } from "@root/lib/slices/price.slice";
 // https://observablehq.com/@d3/bar-line-chart
 export type Plot = {
   x: number;
@@ -40,7 +41,6 @@ export type ILine = {
   onClearSelection: () => void;
   dots: boolean;
   showBtcAllocation: boolean;
-  forcastModel: IForcastModelType | null;
 };
 
 // @todo make generic
@@ -90,9 +90,7 @@ export const Line = (props: ILine) => {
   const [activePlotTs, setActivePlotTs] = useState<number | null>(null);
   const [focusedPlotTs, setFocusedPlotTs] = useState<number | null>(null);
   const privateNumber = useNumberObfuscation();
-  const forcastModel = AppContext.useSelector(
-    (current) => current.context.meta.forcastModel
-  );
+  const { forecastModel } = useAppSelector(selectForecast);
 
   const tomorrow = addDays(new Date(), 1);
 
@@ -163,7 +161,7 @@ export const Line = (props: ILine) => {
 
   const last = lineData[lineData.length - 1];
   const tomorrowStart = TOMORROW_START.getTime();
-  if (!forcastModel && last?.x > tomorrowStart) {
+  if (!forecastModel && last?.x > tomorrowStart) {
     last.x = tomorrowStart;
   }
 
@@ -1046,7 +1044,7 @@ export const Line = (props: ILine) => {
   const getLatestDateInPast = (lineData: Plot[]) => {
     const len = lineData.length;
     const now = new Date().getTime();
-    if (forcastModel) {
+    if (forecastModel) {
       for (let i = len - 1; i >= 0; i--) {
         const current = lineData[i];
         if (current.x <= now) {
@@ -1210,7 +1208,7 @@ export const Line = (props: ILine) => {
     activePlotTs,
     btcPrice,
     maxExt3,
-    forcastModel,
+    forecastModel,
     focusedPlotTs,
     lineData.length,
     render,

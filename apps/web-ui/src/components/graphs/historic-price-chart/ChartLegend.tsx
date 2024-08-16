@@ -3,12 +3,14 @@ import { useRef, useEffect, useMemo, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection } from "d3";
 import debounce from "lodash/debounce";
-import { AppContext } from "@root/providers/AppProvider";
+
 import { type IChartTimeFrameRange } from "@root/machines/appMachine";
 
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { cn } from "@root/lib/utils";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectForecast } from "@root/lib/slices/price.slice";
 
 type IChartLegendProps = {
   height: number;
@@ -36,20 +38,14 @@ export const ChartLegend = ({
   const currentSelecion = useRef<BrushSelection | null>(null);
   const { prices } = useBtcHistoricPrices();
 
-  const forcastPrices = AppContext.useSelector(
-    (current) => current.context.forcastPrices
-  );
-
-  const forcastModel = AppContext.useSelector(
-    (current) => current.context.meta.forcastModel
-  );
+  const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
   const cachedPrices = useMemo(() => {
-    if (forcastModel && forcastPrices) {
-      return prices?.concat(forcastPrices);
+    if (forecastModel && forecastPrices) {
+      return prices?.concat(forecastPrices);
     }
     return prices;
-  }, [chartTimeFrameRange, forcastModel]);
+  }, [chartTimeFrameRange, forecastModel, prices?.length]);
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
@@ -252,7 +248,7 @@ export const ChartLegend = ({
       svg.append("g").call(xAxisMobile);
     }
 
-    if (!forcastModel) {
+    if (!forecastModel) {
       const brushSelection = svg.append("g");
 
       brushSelection.attr("class", "brush").call(brush);
@@ -274,7 +270,7 @@ export const ChartLegend = ({
       svg.selectAll("circle").remove();
       svg.selectAll("line").remove();
     };
-  }, [hasPrices, chartTimeFrameRange, screensize, forcastModel]);
+  }, [hasPrices, chartTimeFrameRange, screensize, forecastModel]);
 
   useEffect(() => {
     // Function to execute when the window is resized
@@ -295,7 +291,7 @@ export const ChartLegend = ({
   return (
     <div
       className={cn("mx-4", {
-        "opacity-60": !!forcastModel,
+        "opacity-60": !!forecastModel,
       })}
     >
       <svg

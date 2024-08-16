@@ -1,5 +1,10 @@
 import type { ICurrency } from "@root/types";
 
+interface ToastMessage {
+  line1: string;
+  line2?: string;
+}
+
 export interface UIState {
   currency: ICurrency;
   filterUtxoOnly: string[];
@@ -14,6 +19,8 @@ export interface UIState {
   netAssetValue: boolean;
   privatePrice: boolean;
   selectedWalletId: string | null;
+  toastOpen: boolean;
+  toastMessage: ToastMessage | null;
   walletExpandedAddresses: string[];
 }
 

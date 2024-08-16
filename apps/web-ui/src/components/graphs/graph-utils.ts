@@ -1,10 +1,7 @@
 import * as d3 from "d3";
 import type { StackedBar } from "./line/Line";
-import type {
-  IChartTimeframeGroups,
-  IChartTimeFrameRange,
-} from "@root/machines/appMachine";
-import { GraphTimeFrameRange, GroupBy } from "@root/lib/slices/ui.slice.types";
+import type { IChartTimeframeGroups, IChartTimeFrameRange } from "@root/types";
+import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 let count = 0;
 
 class Id {
