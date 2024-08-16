@@ -1,7 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { type IXhrOptions, type IResponse } from "@machines/network.types";
-import { Xpub } from "@models/Xpub";
 
 const VITE_BITCOIN_NODE_URL_ENV = import.meta.env.VITE_BITCOIN_NODE_URL;
 const VITE_IS_UMBREL = import.meta.env.VITE_IS_UMBREL;
@@ -19,7 +17,7 @@ export const getBitcoinNodeUrl = () => {
   return VITE_IS_UMBREL === "true" ? umbrelUrl : VITE_BITCOIN_NODE_URL_ENV;
 };
 
-const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
+// const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
 
 export const formatPrice = (price: number | string, decimals = 2) => {
   if (typeof price === "string") return price;
@@ -103,125 +101,125 @@ export function antilog(n: number | string, base = e) {
 export const wait = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-const defaultOptions = {
-  timeout: 60000,
-};
+// const defaultOptions = {
+//   timeout: 60000,
+// };
 
-type Headers = Record<string, string>;
-export function xhrRequest<T>(
-  url: string,
-  opts: IXhrOptions = defaultOptions
-): Promise<IResponse<T>> {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const startTime = new Date().getTime();
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        const endTime = new Date().getTime();
-        const duration = endTime - startTime;
-        const responseHeaders = xhr.getAllResponseHeaders();
+// type Headers = Record<string, string>;
+// export function xhrRequest<T>(
+//   url: string,
+//   opts: IXhrOptions = defaultOptions
+// ): Promise<IResponse<T>> {
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     const startTime = new Date().getTime();
+//     xhr.onreadystatechange = () => {
+//       if (xhr.readyState === 4) {
+//         const endTime = new Date().getTime();
+//         const duration = endTime - startTime;
+//         const responseHeaders = xhr.getAllResponseHeaders();
 
-        // Convert the header string into an array
-        // of individual headers
-        const arr = responseHeaders.trim().split(/[\r\n]+/);
+//         // Convert the header string into an array
+//         // of individual headers
+//         const arr = responseHeaders.trim().split(/[\r\n]+/);
 
-        // Create a map of header names to values
-        const headerMap: Headers = arr.reduce((acc, line) => {
-          const parts = line.split(": ");
-          const header = parts.shift() as string;
-          const value = parts.join(": ");
-          return {
-            ...acc,
-            [header]: value,
-          };
-        }, {});
+//         // Create a map of header names to values
+//         const headerMap: Headers = arr.reduce((acc, line) => {
+//           const parts = line.split(": ");
+//           const header = parts.shift() as string;
+//           const value = parts.join(": ");
+//           return {
+//             ...acc,
+//             [header]: value,
+//           };
+//         }, {});
 
-        const contentTypes = (headerMap["content-type"] || "").split(";");
+//         const contentTypes = (headerMap["content-type"] || "").split(";");
 
-        const data: T = contentTypes.includes("application/json")
-          ? JSON.parse(xhr.responseText)
-          : xhr.responseText;
+//         const data: T = contentTypes.includes("application/json")
+//           ? JSON.parse(xhr.responseText)
+//           : xhr.responseText;
 
-        const details = {
-          duration,
-          status: xhr.status,
-          startTime,
-          endTime: new Date().getTime(),
-          url,
-        };
-        const response: IResponse<T> = {
-          data,
-          headers: headerMap,
-          details,
-          id: opts.id || new Date().getTime().toString(),
-        };
-        if (xhr.status === 200) {
-          resolve(response);
-        } else {
-          reject(response);
-        }
-      }
-    };
-    xhr.timeout = opts.timeout ?? defaultOptions.timeout;
+//         const details = {
+//           duration,
+//           status: xhr.status,
+//           startTime,
+//           endTime: new Date().getTime(),
+//           url,
+//         };
+//         const response: IResponse<T> = {
+//           data,
+//           headers: headerMap,
+//           details,
+//           id: opts.id || new Date().getTime().toString(),
+//         };
+//         if (xhr.status === 200) {
+//           resolve(response);
+//         } else {
+//           reject(response);
+//         }
+//       }
+//     };
+//     xhr.timeout = opts.timeout ?? defaultOptions.timeout;
 
-    xhr.onerror = reject;
-    // if opts.ttl set a query paral ttl
-    let u = url;
-    if (typeof opts.ttl !== "undefined") {
-      if (url.includes("?")) {
-        u = `${url}&ttl=${opts.ttl}`;
-      } else {
-        u = `${url}?ttl=${opts.ttl}`;
-      }
-    }
-    xhr.open("GET", u, true);
+//     xhr.onerror = reject;
+//     // if opts.ttl set a query paral ttl
+//     let u = url;
+//     if (typeof opts.ttl !== "undefined") {
+//       if (url.includes("?")) {
+//         u = `${url}&ttl=${opts.ttl}`;
+//       } else {
+//         u = `${url}?ttl=${opts.ttl}`;
+//       }
+//     }
+//     xhr.open("GET", u, true);
 
-    xhr.send();
-  });
-}
+//     xhr.send();
+//   });
+// }
 
-export function invokeApi(url: string, id: string, ttl?: number) {
-  // mempool.space doesnt support fetch options request
-  return xhrRequest(url, { id, ttl });
-}
+// export function invokeApi(url: string, id: string, ttl?: number) {
+//   // mempool.space doesnt support fetch options request
+//   return xhrRequest(url, { id, ttl });
+// }
 
 // @deprecated
-export const getLastAddressIndex = async (
-  xpub: string | string[],
-  change: boolean,
-  bitcoinNodeUrl?: string
-) => {
-  // some wallets (aqua) start at 1
-  let index = 1;
-  let running = true;
-  const SKIP_BY = 10;
-  let lastAddressWithNoTxs = -1;
-  while (running) {
-    const address = await Xpub.getAddressAtIndex(xpub, index, change);
+// export const getLastAddressIndex = async (
+//   xpub: string | string[],
+//   change: boolean,
+//   bitcoinNodeUrl?: string
+// ) => {
+//   // some wallets (aqua) start at 1
+//   let index = 1;
+//   let running = true;
+//   const SKIP_BY = 10;
+//   let lastAddressWithNoTxs = -1;
+//   while (running) {
+//     const address = await Xpub.getAddressAtIndex(xpub, index, change);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const response: any = await invokeApi(
-      `${bitcoinNodeUrl || VITE_BITCOIN_NODE_URL}/api/address/${address}`,
-      `${address}-scan`
-    );
-    if (
-      response?.data?.chain_stats?.tx_count > 0 ||
-      response?.data?.mempool_stats?.tx_count
-    ) {
-      index += SKIP_BY;
-    } else if (
-      response?.data?.chain_stats?.tx_count === 0 &&
-      response?.data?.mempool_stats?.tx_count === 0
-    ) {
-      lastAddressWithNoTxs = Math.max(index, SKIP_BY); // + SKIP_BY;
-      running = false;
-    } else {
-      running = false;
-    }
-  }
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     const response: any = await invokeApi(
+//       `${bitcoinNodeUrl || VITE_BITCOIN_NODE_URL}/api/address/${address}`,
+//       `${address}-scan`
+//     );
+//     if (
+//       response?.data?.chain_stats?.tx_count > 0 ||
+//       response?.data?.mempool_stats?.tx_count
+//     ) {
+//       index += SKIP_BY;
+//     } else if (
+//       response?.data?.chain_stats?.tx_count === 0 &&
+//       response?.data?.mempool_stats?.tx_count === 0
+//     ) {
+//       lastAddressWithNoTxs = Math.max(index, SKIP_BY); // + SKIP_BY;
+//       running = false;
+//     } else {
+//       running = false;
+//     }
+//   }
 
-  return lastAddressWithNoTxs;
-};
+//   return lastAddressWithNoTxs;
+// };
 
 export const parseRgb = (rgb?: string) => {
   if (!rgb) return { r: 0, g: 0, b: 0 };

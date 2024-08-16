@@ -2,7 +2,8 @@ import { mauve, violet } from "@radix-ui/colors";
 // eslint-disable-next-line
 const isCI = process.env.CI === "true";
 
-const path = isCI ? "apps/web-ui/" : "./";
+// const path = isCI ? "apps/web-ui/" : "./";
+const path = "apps/web-ui/";
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],

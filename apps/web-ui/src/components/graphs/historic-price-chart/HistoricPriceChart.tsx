@@ -5,11 +5,10 @@ import { Flex, Separator, Button } from "@radix-ui/themes";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { Line } from "../line/Line";
 import { Wallet } from "@models/Wallet";
-import { WalletUIContext } from "@providers/AppProvider";
 import { ChartLegend } from "./ChartLegend";
 import type { IChartTimeFrameRange } from "@root/types";
 import type { IForcastModelType } from "@lib/slices/price.slice";
-import type { IPlotData } from "@machines/walletListUIMachine";
+import type { IPlotData } from "@root/types";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { generateRandomPriceSeries } from "../graph-utils";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
@@ -36,8 +35,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const { graphTimeFrameRange, netAssetValue } = useAppSelector(selectUI);
 
   const dispatch = useAppDispatch();
-
-  const walletActorRef = WalletUIContext.useActorRef();
 
   const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
     useAppSelector(selectUI);
@@ -71,10 +68,11 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       dispatch(setGraphByRange(timeframe));
 
       // @todo
-      walletActorRef.send({
-        type: "SET_SELECTED_LOT_DATA_INDEX",
-        data: { date: -1 },
-      });
+      console.log("@todo implement");
+      // walletActorRef.send({
+      //   type: "SET_SELECTED_LOT_DATA_INDEX",
+      //   data: { date: -1 },
+      // });
     };
   };
 
@@ -132,20 +130,21 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const onSelectPlot = (plot: IPlotData, clearSelection: () => void) => {
     // setSelectedPlot(plot);
     clearSelectionRef.current = clearSelection;
-    walletActorRef.send({
-      type: "SET_SELECTED_LOT_DATA_INDEX",
-      data: { date: plot.x, clearSelection },
-    });
+    console.log("@todo implement", plot);
+    // walletActorRef.send({
+    //   type: "SET_SELECTED_LOT_DATA_INDEX",
+    //   data: { date: plot.x, clearSelection },
+    // });
   };
 
   const handleClearPlotSelection = () => {
     if (clearSelectionRef.current) {
       clearSelectionRef.current();
-
-      walletActorRef.send({
-        type: "SET_SELECTED_LOT_DATA_INDEX",
-        data: { date: -1 },
-      });
+      console.log("@todo implement");
+      // walletActorRef.send({
+      //   type: "SET_SELECTED_LOT_DATA_INDEX",
+      //   data: { date: -1 },
+      // });
     }
   };
 

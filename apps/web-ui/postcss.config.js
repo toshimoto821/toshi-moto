@@ -1,12 +1,8 @@
-// eslint-disable-next-line
-const isCI = process.env.CI === "true";
-
+import config from "./tailwind.config.js";
 export default {
   plugins: {
     tailwindcss: {
-      config: isCI
-        ? "./apps/web-ui/tailwind.config.js"
-        : "./tailwind.config.js",
+      config,
     },
     autoprefixer: {},
   },

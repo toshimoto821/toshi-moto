@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { type BrushSelection } from "d3";
 import debounce from "lodash/debounce";
 
-import { type IChartTimeFrameRange } from "@root/machines/appMachine";
+import { type IChartTimeFrameRange } from "@root/types";
 
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { cn } from "@root/lib/utils";

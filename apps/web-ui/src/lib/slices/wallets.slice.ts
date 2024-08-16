@@ -153,11 +153,11 @@ export const walletsSlice = createSlice({
       const wallet = state.entities[action.payload.walletId];
       if (wallet) {
         const type = action.payload.change ? "change" : "receive";
-        wallet.meta[type].lastAddressIndex =
-          wallet.meta[type].lastAddressIndex || 0;
+        let currentValue = wallet.meta[type].lastAddressIndex ?? 0;
 
-        wallet.meta[type].lastAddressIndex +=
-          action.payload.incrementOrDecrement;
+        currentValue += action.payload.incrementOrDecrement;
+
+        wallet.meta[type].lastAddressIndex = currentValue;
       }
     },
   },

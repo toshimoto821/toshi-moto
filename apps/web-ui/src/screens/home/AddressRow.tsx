@@ -9,15 +9,15 @@ import {
 import { Utxo } from "@models/Utxo";
 import { Transaction } from "@models/Transaction";
 import { padBtcZeros, trimAddress, copyToClipboard } from "@lib/utils";
-import { ToastContext } from "@root/providers/AppProvider";
 import { cn, formatPrice } from "@lib/utils";
 import { useWallets } from "@lib/hooks/useWallets";
 import { type ICurrency } from "@root/types";
 import { currencySymbols } from "@root/lib/currencies";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { TransactionDetails } from "./TransactionDetails";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectBaseNodeUrl } from "@root/lib/slices/config.slice";
+import { showToast } from "@root/lib/slices/ui.slice";
 type IDimensions = {
   height: number;
   width: number;
@@ -48,9 +48,8 @@ export const AddressRow = (prop: IAddressRow) => {
     currency,
   } = prop;
 
-  const { send } = ToastContext.useActorRef();
-
   const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
+  const dispatch = useAppDispatch();
   const privateNumber = useNumberObfuscation();
 
   const { wallets, actions } = useWalletRet;
@@ -74,10 +73,7 @@ export const AddressRow = (prop: IAddressRow) => {
         line1: "Address copied to clipboard",
         line2: trimAddress(address),
       };
-      send({
-        type: "TOAST",
-        data: { message },
-      });
+      dispatch(showToast(message));
     };
   };
 

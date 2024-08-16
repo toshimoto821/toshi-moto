@@ -1,22 +1,19 @@
 import { Card, Box, Text, Button } from "@radix-ui/themes";
-import { NetworkContext } from "@providers/AppProvider";
 import type { APIRequestResponse } from "@lib/slices/network.slice.types";
+import { deleteRequest } from "@root/lib/slices/network.slice";
+import { useAppDispatch } from "@root/lib/hooks/store.hooks";
 
 type ILogDetailActions = {
   request: APIRequestResponse;
   onDelete: () => void;
 };
 export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
-  const networkActorRef = NetworkContext.useActorRef();
-
-  // const requests = NetworkContext.useSelector((current) => {
-  //   return current.context.requests;
-  // });
-
+  const dispatch = useAppDispatch();
   const handleDelete = () => {
     const { id } = request;
 
-    networkActorRef.send({ type: "DELETE", data: { id } });
+    dispatch(deleteRequest(id));
+
     if (onDelete) {
       onDelete();
     }

@@ -85,3 +85,31 @@ export type IChartTimeFrameRange =
   | "2Y"
   | "5Y"
   | "ALL";
+
+type LineData = {
+  x: number;
+  y1: number;
+  y1Sum: number;
+  y1SumInDollars: number;
+  y2: number;
+};
+
+export type IRawNode = {
+  x: number;
+  y1: number; // not used
+  y1Sum: number;
+  y1SumInDollars: number;
+  // y1, // shows the net value at the current price, not price of date range
+  y2: number;
+};
+
+export type IPlotType = "VIN" | "VOUT";
+
+export type IPlotData = {
+  node: IRawNode;
+  x: number;
+  data: StackedBarData;
+  type: IPlotType;
+  value: number;
+  grpSum: number;
+};

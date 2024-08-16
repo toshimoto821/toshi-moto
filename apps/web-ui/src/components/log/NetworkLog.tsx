@@ -3,16 +3,16 @@ import { Text, Button, Tabs, Box, Separator } from "@radix-ui/themes";
 import { CaretUpIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { LogTable } from "./components/LogTable";
 import { LogDetail } from "./components/LogDetail/LogDetail";
-import { NetworkContext } from "@providers/AppProvider";
 import { IconButton } from "@radix-ui/themes";
 import { LogProgress } from "./components/LogProgress";
 import { cn, deleteAllCookies } from "@lib/utils";
 import { SettingsForm } from "../settings/SettingsForm";
 import { Popover } from "../popover/Popover";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import {
   selectRequests,
   selectCountRequests,
+  deleteAllRequests,
 } from "@root/lib/slices/network.slice";
 import { selectAppVersion } from "@root/lib/slices/config.slice";
 
@@ -25,7 +25,6 @@ export const NetworkLog = (props: INetworkLog) => {
 
   const storedVersion = useAppSelector(selectAppVersion);
 
-  const { send: networkActorSend } = NetworkContext.useActorRef();
   const [expanded, setExpanded] = useState<boolean>(defaultExpanded);
 
   const [activeRequestIndex, setActiveRequestIndex] = useState<number | null>(
@@ -51,7 +50,7 @@ export const NetworkLog = (props: INetworkLog) => {
   }, [expanded]);
 
   const requests = useAppSelector(selectRequests);
-
+  const dispatch = useAppDispatch();
   const counts = useAppSelector(selectCountRequests);
 
   const handleRowClick = ({ index }: { index: number }) => {
@@ -62,7 +61,7 @@ export const NetworkLog = (props: INetworkLog) => {
   };
 
   const handleDeleteAll = () => {
-    networkActorSend({ type: "DELETE_ALL" });
+    dispatch(deleteAllRequests());
   };
 
   const handleReload = () => {

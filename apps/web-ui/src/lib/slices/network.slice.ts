@@ -46,13 +46,6 @@ const initialState: NetworkState = {
   requests: requestsAdapter.getInitialState(),
 };
 
-// interface BaseQueryMeta {
-//   request: {
-//     url: string;
-//   };
-//   // Add other fields if necessary
-// }
-
 const API_REQUEST_FULFILLED = isAnyOf(
   apiSlice.endpoints.getAddress.matchFulfilled,
   apiSlice.endpoints.getTransactions.matchFulfilled,
@@ -119,6 +112,12 @@ export const networkSlice = createSlice({
       Object.values(state.requests.entities)
         .filter((req) => req.status === "fulfilled")
         .forEach((req) => (req.inactive = true));
+    },
+    deleteRequest(state, action: PayloadAction<string>) {
+      requestsAdapter.removeOne(state.requests, action.payload);
+    },
+    deleteAllRequests(state) {
+      requestsAdapter.removeAll(state.requests);
     },
   },
   extraReducers(builder) {
@@ -230,7 +229,12 @@ export const networkSlice = createSlice({
   },
 });
 
-export const { markCompleteAsInactive, enqueueAction } = networkSlice.actions;
+export const {
+  markCompleteAsInactive,
+  enqueueAction,
+  deleteRequest,
+  deleteAllRequests,
+} = networkSlice.actions;
 
 ///////////////////////////////////////////
 // Middleware

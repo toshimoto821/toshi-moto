@@ -4,11 +4,12 @@ import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Transaction } from "@models/Transaction";
 import { Utxo } from "@models/Utxo";
 import { cn, trimAddress, padBtcZeros, formatPrice } from "@lib/utils";
-import { AppContext } from "@root/providers/AppProvider";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { ICurrency } from "@root/types";
 import cloneDeep from "lodash/cloneDeep";
 import { currencySymbols } from "@root/lib/currencies";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectBaseNodeUrl } from "@root/lib/slices/config.slice";
 type ITransactionRow = {
   transaction: Transaction;
   address: Utxo;
@@ -43,9 +44,7 @@ export const TransactionRow = ({
 
   const [isTxDetailsExpanded, setIsTxDetailsExpanded] = useState(false);
 
-  const bitcoinNodeUrl = AppContext.useSelector(
-    (current) => current.context.meta.config.bitcoinNodeUrl
-  );
+  const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
 
   const getVins = () => {
     return transaction.vin.map(

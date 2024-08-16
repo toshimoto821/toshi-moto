@@ -1,16 +1,9 @@
 import { useMemo } from "react";
-import { AppContext, WalletUIContext } from "@providers/AppProvider";
-
 import { Wallet } from "@models/Wallet";
 import { round, ONE_HUNDRED_MILLION } from "@lib/utils";
 import { useBtcHistoricPrices } from "./useBtcHistoricPrices";
-import { useWindowFocus } from "./useWindowFocus";
 import type { StackedBarData } from "@root/components/graphs/line/Line";
-import type {
-  IRawNode,
-  IPlotType,
-  IPlotData,
-} from "@machines/walletListUIMachine";
+import type { IRawNode, IPlotType, IPlotData } from "@root/types";
 import {
   getGroupKey,
   addTime,
@@ -54,11 +47,9 @@ export const useChartData = (opts: IUseChartData) => {
   const btcPrices = useBtcHistoricPrices();
   let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
-  const refreshKey = useWindowFocus(1000 * 60 * 10); // every 10 minutes
-
-  const selectedPlot = WalletUIContext.useSelector(
-    (current) => current.context.plotData[current.context.selectedPlotIndex]
-  );
+  // const selectedPlot = WalletUIContext.useSelector(
+  //   (current) => current.context.plotData[current.context.selectedPlotIndex]
+  // );
 
   const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
@@ -137,7 +128,6 @@ export const useChartData = (opts: IUseChartData) => {
     selectedTxs.length,
     // prices?.[0]?.[0], // if first date changes, update
     prices?.[0]?.[1], // if first date changes, update
-    refreshKey,
     chartTimeDiffInDays,
     forecastModel,
   ]);
@@ -222,8 +212,6 @@ export const useChartData = (opts: IUseChartData) => {
     netAssetValue,
     prices.length,
     selectedWalletId,
-    selectedPlot,
-    refreshKey,
     chartTimeDiffInDays,
   ]);
 
@@ -317,7 +305,6 @@ export const useChartData = (opts: IUseChartData) => {
     selectedTxs.length,
     netAssetValue,
     groupedKeys.length,
-    refreshKey,
     groupedKeys[0],
     chartTimeDiffInDays,
   ]);
@@ -386,7 +373,6 @@ export const useChartData = (opts: IUseChartData) => {
     allNodes.length,
     allNodes[0]?.date?.getTime(),
     selectedTxs.length,
-    refreshKey,
   ]);
 
   return {

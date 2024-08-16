@@ -4,11 +4,11 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { LogResponseData } from "./LogResponseData";
 import { cn as classNames } from "@lib/utils";
-import type { APIReqequestResponse } from "@lib/slices/network.slice.types";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
 import "./log-detail-tab.css";
 
 type ILogDetailTab = {
-  request: APIReqequestResponse;
+  request: APIRequestResponse;
 };
 export const LogDetailTab = (props: ILogDetailTab) => {
   const { request } = props;

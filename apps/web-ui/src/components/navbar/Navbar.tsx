@@ -19,10 +19,9 @@ import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
 import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
 import { cn } from "@root/lib/utils";
-import { WalletUIContext, AppContext } from "@root/providers/AppProvider";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
-import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI, showToast } from "@root/lib/slices/ui.slice";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
 import { useChartData } from "@root/lib/hooks/useChartData";
 
 const colorScale = d3
@@ -88,13 +87,8 @@ export const Navbar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
 
-  const meta = AppContext.useSelector((current) => current.context.meta);
-
   const currency = "usd";
   const currencySymbol = currencySymbols[currency];
-
-  const { send } = AppContext.useActorRef();
-  const walletActorRef = WalletUIContext.useActorRef();
 
   let change = btcChangePrice;
   let valueChange;
@@ -175,13 +169,14 @@ export const Navbar = () => {
   };
 
   const handleClearSelected = () => {
-    send({
-      type: "APP_MACHINE_CLEAR_SELECTED_TXS",
-    });
-    walletActorRef.send({
-      type: "SET_SELECTED_LOT_DATA_INDEX",
-      data: { date: -1 },
-    });
+    console.log("@todo");
+    // send({
+    //   type: "APP_MACHINE_CLEAR_SELECTED_TXS",
+    // });
+    // walletActorRef.send({
+    //   type: "SET_SELECTED_LOT_DATA_INDEX",
+    //   data: { date: -1 },
+    // });
   };
 
   const handleSelectInputAddresses = () => {
@@ -196,8 +191,8 @@ export const Navbar = () => {
   //   ? prices[prices.length - 1][0]
   //   : meta.chartEndDate;
 
-  const firstDateAsNumber = meta.chartStartDate;
-  const lastDateAsNumber = meta.chartEndDate;
+  const firstDateAsNumber = uiState.graphStartDate;
+  const lastDateAsNumber = uiState.graphEndDate;
 
   const firstDate = new Date(firstDateAsNumber);
   const lastDate = new Date(lastDateAsNumber);
@@ -219,7 +214,7 @@ export const Navbar = () => {
               width={dimensions.width}
               height={chartHeight}
               graphAssetValue={netAssetValue}
-              chartTimeframeGroup={meta.chartTimeframeGroup}
+              chartTimeframeGroup={uiState.graphTimeFrameGroup}
               showBtcAllocation={uiState.graphBtcAllocation}
               btcPrice={btcPrice ?? 0}
             />

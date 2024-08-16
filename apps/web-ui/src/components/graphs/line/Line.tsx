@@ -5,7 +5,7 @@ import { jade, ruby } from "@radix-ui/colors";
 import findLastIndex from "lodash/findLastIndex";
 import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
-import { IPlotData } from "@root/machines/walletListUIMachine";
+import { IPlotData } from "@root/types";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import "./tooltip.css";
 import {
@@ -15,7 +15,6 @@ import {
   trim,
 } from "@root/lib/utils";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
-import { IForcastModelType } from "@root/machines/appMachine";
 import { selectForecast } from "@root/lib/slices/price.slice";
 // https://observablehq.com/@d3/bar-line-chart
 export type Plot = {
