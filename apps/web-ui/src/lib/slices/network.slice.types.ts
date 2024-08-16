@@ -32,6 +32,7 @@ export interface QueueItem {
 export interface NetworkState {
   config: {
     api: ConfigState["api"];
+    network: ConfigState["network"];
   };
   queue: ReturnType<typeof queueAdapter.getInitialState>;
   processing: ReturnType<typeof processingAdapter.getInitialState>;

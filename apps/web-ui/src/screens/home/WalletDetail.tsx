@@ -10,15 +10,19 @@ import { AddressRow } from "./AddressRow";
 import { useElementDimensions } from "@lib/hooks/useElementDimensions";
 import { useBtcPrice } from "@root/lib/hooks/useBtcPrice";
 import { Popover } from "@root/components/popover/Popover";
-import { type IAppAddressFilters } from "@machines/appMachine";
-import { type IExpandAddressKey } from "@machines/walletListUIMachine";
+import type { IAppAddressFilters, IExpandAddressKey } from "@root/types";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
+
 export const WalletDetail = () => {
   const useWalletRet = useWallets();
-  const { wallets, ui, actions } = useWalletRet;
+  const { wallets, actions } = useWalletRet;
   const { walletId, address } = useParams();
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
   const { circulatingSupply, btcPrice } = useBtcPrice();
+  const { filterUtxoOnly = [], walletExpandedAddresses = [] } =
+    useAppSelector(selectUI);
 
   const navigate = useNavigate();
   const wallet = wallets.find((wallet) => wallet.id === walletId);
@@ -29,7 +33,7 @@ export const WalletDetail = () => {
 
   const isUtxoExpanded = (address: string) => {
     const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
-    return ui.expandedTxs.has(key);
+    return walletExpandedAddresses.includes(key);
   };
 
   const handleToggleAddress = (address: string) => {
@@ -42,7 +46,7 @@ export const WalletDetail = () => {
 
   const changeAddresses =
     wallet?.getAddresses({
-      onlyUtxos: false, // @fix me with state
+      onlyUtxos: filterUtxoOnly.includes(walletId!),
       change: true,
       receive: false,
       addresses: address ? [address] : undefined,
@@ -51,7 +55,7 @@ export const WalletDetail = () => {
 
   const receiveAddresses =
     wallet?.getAddresses({
-      onlyUtxos: false, // @todo fix me with state
+      onlyUtxos: filterUtxoOnly.includes(walletId!),
       change: false,
       receive: true,
       addresses: address ? [address] : undefined,
@@ -98,10 +102,7 @@ export const WalletDetail = () => {
             <AddressFilterDropdown
               wallet={wallet}
               filters={{
-                // @todo fix me with state
-                utxoOnly: false,
-                change: false,
-                receive: false,
+                utxoOnly: filterUtxoOnly.includes(walletId!),
               }}
               onClickRefresh={() => {
                 actions.refreshWallet(wallet.id, 0);
@@ -197,10 +198,10 @@ export const WalletDetail = () => {
 
         {receiveAddresses.length === 0 && (
           <div className="h-48 flex flex-col items-center justify-center">
-            {false && ( // @todo fix me // wallet.settings.addressFilters.utxoOnly
+            {walletId && filterUtxoOnly.includes(walletId) && (
               <Text>No receive UTXO's in wallet found</Text>
             )}
-            {true && ( // @todo fix me // !wallet.settings.addressFilters.utxoOnly
+            {walletId && !filterUtxoOnly.includes(walletId) && (
               <Text>Loading receive addresses...</Text>
             )}
           </div>
@@ -243,10 +244,10 @@ export const WalletDetail = () => {
         })}
         {changeAddresses.length === 0 && (
           <div className="h-48 flex flex-col items-center justify-center">
-            {false && ( // @todo fix me wallet.settings.addressFilters.utxoOnly
+            {walletId && filterUtxoOnly.includes(walletId) && (
               <Text>No change UTXO's in wallet found</Text>
             )}
-            {true && ( // @todo fix me !wallet.settings.addressFilters.utxoOnly
+            {walletId && !filterUtxoOnly.includes(walletId) && (
               <Text>Loading change addresses...</Text>
             )}
           </div>

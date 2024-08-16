@@ -178,13 +178,13 @@ export const TransactionRow = ({
         >
           {isTxDetailsExpanded && (
             <>
-              <EyeClosedIcon width="16" height="15" />
+              <EyeOpenIcon width="16" height="15" />
               Hide Other ({vins.length} Inputs / {vouts.length} Outputs)
             </>
           )}
           {!isTxDetailsExpanded && (
             <>
-              <EyeOpenIcon width="16" height="15" />
+              <EyeClosedIcon width="16" height="15" />
               Show All ({vins.length} Inputs / {vouts.length} Outputs)
             </>
           )}

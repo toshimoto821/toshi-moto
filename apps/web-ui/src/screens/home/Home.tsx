@@ -13,7 +13,7 @@ export const Home = () => {
   const { pathname } = useLocation();
   const [addWalletOpen, setAddWalletOpen] = useState(false);
   const { btcPrice } = useBtcPrice();
-  const { wallets, selectedWallets } = useWallets();
+  const { wallets } = useWallets();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
@@ -25,7 +25,6 @@ export const Home = () => {
         <div ref={containerRef} className="mb-4 pt-2">
           <HistoricPriceChart
             wallets={wallets}
-            selectedWallets={selectedWallets}
             height={400}
             btcPrice={btcPrice}
             width={dimensions.width}

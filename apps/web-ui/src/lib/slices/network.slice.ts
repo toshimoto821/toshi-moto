@@ -25,6 +25,7 @@ import type {
 } from "./network.slice.types";
 import {
   initialState as configInitialState,
+  setConfig,
   type ConfigState,
 } from "./config.slice";
 import type { AppStartListening } from "../store/middleware/listener";
@@ -38,6 +39,7 @@ export const processingAdapter = createEntityAdapter<QueueItem>();
 const initialState: NetworkState = {
   config: {
     api: configInitialState.api,
+    network: configInitialState.network,
   },
   queue: queueAdapter.getInitialState(),
   processing: processingAdapter.getInitialState(),
@@ -120,6 +122,28 @@ export const networkSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase(setConfig, (state, action) => {
+      console.log(state, action);
+      const apiConfig = {
+        ...state.config.api,
+        ...action.payload.api,
+      };
+      const networkConfig = {
+        ...state.config.network,
+        ...action.payload.network,
+      };
+      const config = {
+        api: apiConfig,
+        network: networkConfig,
+      };
+      return {
+        ...state,
+        config: {
+          ...config,
+        },
+      };
+    });
+
     // pending
     builder.addMatcher(API_REQUEST_PENDING, (state, action) => {
       // dequeue

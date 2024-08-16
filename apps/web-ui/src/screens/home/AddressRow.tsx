@@ -9,14 +9,15 @@ import {
 import { Utxo } from "@models/Utxo";
 import { Transaction } from "@models/Transaction";
 import { padBtcZeros, trimAddress, copyToClipboard } from "@lib/utils";
-import { ToastContext, AppContext } from "@root/providers/AppProvider";
+import { ToastContext } from "@root/providers/AppProvider";
 import { cn, formatPrice } from "@lib/utils";
 import { useWallets } from "@lib/hooks/useWallets";
 import { type ICurrency } from "@root/types";
 import { currencySymbols } from "@root/lib/currencies";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { TransactionDetails } from "./TransactionDetails";
-
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectBaseNodeUrl } from "@root/lib/slices/config.slice";
 type IDimensions = {
   height: number;
   width: number;
@@ -49,9 +50,7 @@ export const AddressRow = (prop: IAddressRow) => {
 
   const { send } = ToastContext.useActorRef();
 
-  const bitcoinNodeUrl = AppContext.useSelector(
-    (current) => current.context.meta.config.bitcoinNodeUrl
-  );
+  const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
   const privateNumber = useNumberObfuscation();
 
   const { wallets, actions } = useWalletRet;

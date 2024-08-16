@@ -78,6 +78,15 @@ export const walletsSlice = createSlice({
   name: "wallets",
   initialState: walletsAdapter.getInitialState(),
   reducers: {
+    archiveWallet(
+      state,
+      action: PayloadAction<{ walletId: string; archive: boolean }>
+    ) {
+      const wallet = state.entities[action.payload.walletId];
+      if (wallet) {
+        wallet.archived = action.payload.archive;
+      }
+    },
     upsertWallet(state, action: PayloadAction<Wallet>) {
       walletsAdapter.upsertOne(state, action.payload);
     },
@@ -474,8 +483,12 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
 // Actions
 ///////////////////////////
 
-export const { removeWallet, incrementAddressIndex, trimAddresses } =
-  walletsSlice.actions;
+export const {
+  removeWallet,
+  incrementAddressIndex,
+  trimAddresses,
+  archiveWallet,
+} = walletsSlice.actions;
 
 export const refreshAddresses = createAppAsyncThunk(
   walletsSlice.actions.refreshAddresses.type,

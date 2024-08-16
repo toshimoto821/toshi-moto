@@ -19,13 +19,6 @@ export type IWalletManifest = {
   utxos: number;
 };
 
-export type IWalletAddressFilters = {
-  change: boolean;
-  receive: boolean;
-  utxoOnly: boolean;
-  // inputAddresses: boolean;
-};
-
 export type ITxLite = {
   txid: string;
   blockHeight: number;

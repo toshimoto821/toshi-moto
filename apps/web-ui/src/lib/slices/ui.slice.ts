@@ -17,6 +17,7 @@ export const defaultGraphEndDate = timeDay(
 
 const initialState: UIState = {
   currency: "usd",
+  filterUtxoOnly: [],
   graphTimeFrameRange: "5Y",
   graphTimeFrameGroup: "1W",
   graphStartDate: defaultGraphStartDate,
@@ -24,8 +25,11 @@ const initialState: UIState = {
   graphBtcAllocation: true,
   graphPlotDots: false,
   graphSelectedTransactions: [],
+  navbarBalanceVisibility: false,
   netAssetValue: false,
   privatePrice: false,
+  selectedWalletId: null,
+  walletExpandedAddresses: [],
 };
 
 export const uiSlice = createSlice({
@@ -63,6 +67,25 @@ export const uiSlice = createSlice({
         }
       }
     },
+    expandAddress(state, action: PayloadAction<string>) {
+      const set = new Set(state.walletExpandedAddresses || []);
+      set.add(action.payload);
+      state.walletExpandedAddresses = Array.from(set);
+    },
+    collapseAddress(state, action: PayloadAction<string>) {
+      const set = new Set(state.walletExpandedAddresses);
+      set.delete(action.payload);
+      state.walletExpandedAddresses = Array.from(set);
+    },
+    toggleAddress(state, action: PayloadAction<string>) {
+      const set = new Set(state.walletExpandedAddresses);
+      if (set.has(action.payload)) {
+        set.delete(action.payload);
+      } else {
+        set.add(action.payload);
+      }
+      state.walletExpandedAddresses = Array.from(set);
+    },
   },
 });
 
@@ -76,6 +99,9 @@ export const {
   toggleSelectedTx,
   addSelectedTransactions,
   removeSelectedTransactions,
+  expandAddress,
+  collapseAddress,
+  toggleAddress,
 } = uiSlice.actions;
 
 export const setGraphByRange = (

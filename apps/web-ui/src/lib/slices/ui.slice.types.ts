@@ -2,6 +2,7 @@ import type { ICurrency } from "@root/types";
 
 export interface UIState {
   currency: ICurrency;
+  filterUtxoOnly: string[];
   graphTimeFrameRange: GraphTimeFrameRange;
   graphTimeFrameGroup: GroupBy;
   graphStartDate: number;
@@ -9,8 +10,11 @@ export interface UIState {
   graphBtcAllocation: boolean;
   graphPlotDots: boolean;
   graphSelectedTransactions: string[];
+  navbarBalanceVisibility: boolean;
   netAssetValue: boolean;
   privatePrice: boolean;
+  selectedWalletId: string | null;
+  walletExpandedAddresses: string[];
 }
 
 export type GraphTimeFrameRange =

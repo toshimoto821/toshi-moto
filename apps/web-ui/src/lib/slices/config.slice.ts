@@ -46,13 +46,34 @@ const configSlice = createSlice({
     setAppVersion: (state, action: PayloadAction<string>) => {
       state.appVersion = action.payload;
     },
+    setConfig(state, action: PayloadAction<Partial<ConfigState>>) {
+      const apiConfig = {
+        ...state.api,
+        ...action.payload.api,
+      };
+      const networkConfig = {
+        ...state.network,
+        ...action.payload.network,
+      };
+      return {
+        ...state,
+        api: {
+          ...apiConfig,
+        },
+        network: {
+          ...networkConfig,
+        },
+      };
+    },
   },
 });
-
+export const { setConfig } = configSlice.actions;
 export const configReducer = configSlice.reducer;
 
 export const selectAppVersion = (state: RootState) => state.config.appVersion;
 export const setAppVersion = createAction<string>("config/setAppVersion");
+export const selectApiConfig = (state: RootState) => state.config.api;
+export const selectNetworkConfig = (state: RootState) => state.config.network;
 
 export const selectBaseNodeUrl = (state: RootState) => state.config.api.nodeUrl;
 export const selectBaseApiUrl = (state: RootState) => state.config.api.url;

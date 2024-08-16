@@ -67,3 +67,9 @@ export type ICurrency =
 export type ICurrencyNames = Record<ICurrency, string>;
 
 export type ICurrencySymbols = Record<ICurrency, string>;
+
+export type IExpandAddressKey = `wallet-id:${string};utxo:${string}`;
+
+export type IAppAddressFilters = {
+  utxoOnly: boolean;
+};

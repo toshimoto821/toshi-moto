@@ -28,15 +28,15 @@ type IHistoricPriceChart = {
   wallets: Wallet[];
   prices?: [number, number][];
   btcPrice?: number;
-  selectedWallets: Set<string>;
 };
 
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
-  const { height, width, wallets, btcPrice, selectedWallets } = props;
+  const { height, width, wallets, btcPrice } = props;
   const clearSelectionRef = useRef<() => void>();
   const btcPrices = useBtcHistoricPrices();
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
-  const { graphTimeFrameRange, netAssetValue } = useAppSelector(selectUI);
+  const { graphTimeFrameRange, netAssetValue, selectedWalletId } =
+    useAppSelector(selectUI);
 
   const dispatch = useAppDispatch();
 
@@ -55,7 +55,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const result = useChartData({
     btcPrice,
     wallets,
-    selectedWallets,
   });
 
   const chartTimeframeRange = graphTimeFrameRange;
@@ -75,12 +74,11 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     }
   }
 
-  const filteredWallets =
-    props.selectedWallets.size > 0
-      ? wallets.filter((wallet) => {
-          return props.selectedWallets.has(wallet.id);
-        })
-      : wallets;
+  const filteredWallets = selectedWalletId
+    ? wallets.filter((wallet) => {
+        return selectedWalletId === wallet.id;
+      })
+    : wallets;
 
   const handleUpdateTimeframe = (timeframe: IChartTimeFrameRange) => {
     return () => {

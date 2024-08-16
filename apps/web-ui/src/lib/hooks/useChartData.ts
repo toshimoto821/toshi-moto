@@ -22,7 +22,6 @@ import { selectUI } from "../slices/ui.slice";
 type IUseChartData = {
   btcPrice?: number;
   wallets: Wallet[];
-  selectedWallets: Set<string>;
 };
 
 type Data = {
@@ -40,7 +39,7 @@ type Data = {
 type Grouped = Record<string, Data>;
 
 export const useChartData = (opts: IUseChartData) => {
-  const { btcPrice, selectedWallets, wallets } = opts;
+  const { btcPrice, wallets } = opts;
 
   const {
     graphSelectedTransactions: selectedTxs,
@@ -48,6 +47,7 @@ export const useChartData = (opts: IUseChartData) => {
     graphStartDate,
     graphEndDate,
     netAssetValue,
+    selectedWalletId,
   } = useAppSelector(selectUI);
 
   const btcPrices = useBtcHistoricPrices();
@@ -147,12 +147,11 @@ export const useChartData = (opts: IUseChartData) => {
     forcastModel,
   ]);
 
-  const filteredWallets =
-    selectedWallets.size > 0
-      ? wallets.filter((wallet) => {
-          return selectedWallets.has(wallet.id);
-        })
-      : wallets;
+  const filteredWallets = selectedWalletId
+    ? wallets.filter((wallet) => {
+        return wallet.id === selectedWalletId;
+      })
+    : wallets;
 
   const groupedValues = Object.values(grouped || {});
 
@@ -227,7 +226,7 @@ export const useChartData = (opts: IUseChartData) => {
     selectedTxs.length,
     netAssetValue,
     prices.length,
-    selectedWallets,
+    selectedWalletId,
     selectedPlot,
     refreshKey,
     chartTimeDiffInDays,
