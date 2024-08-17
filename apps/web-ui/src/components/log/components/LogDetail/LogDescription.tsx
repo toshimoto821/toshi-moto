@@ -1,9 +1,9 @@
 import { Separator, Text, Callout } from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { type IRequest } from "@machines/network.types";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
 
 type ILogDescription = {
-  request: IRequest;
+  request: APIRequestResponse;
 };
 export const LogDescription = (props: ILogDescription) => {
   const type = props.request.meta?.type;

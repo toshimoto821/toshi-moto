@@ -14,3 +14,4 @@ declare module "virtual:pwa-register" {
 declare module "@toshimoto821/bitcoinjs";
 
 declare module "react-day-picker";
+declare module "redux-persist-indexeddb-storage";

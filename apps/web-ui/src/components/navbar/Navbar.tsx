@@ -19,9 +19,10 @@ import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
 import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
 import { cn } from "@root/lib/utils";
-import { WalletUIContext, AppContext } from "@root/providers/AppProvider";
-import { AppMachineMeta } from "@root/machines/appMachine";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
+import { useChartData } from "@root/lib/hooks/useChartData";
 
 const colorScale = d3
   .scaleLinear<string>()
@@ -56,13 +57,23 @@ export const Navbar = () => {
     loading,
     updatedTime,
   } = useBtcPrice();
+  // const dispatch = useAppDispatch();
+
   const btcPrice = forcastPrice ?? rawPrice;
-  const { netAssetValue, actions, data, ui, wallets } = useWallets();
+  const { actions, data, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
 
   const [defaultDateTab, setDefaultDateTab] = useState<"start" | "end">(
     "start"
   );
+
+  const { lineData, plotData } = useChartData({
+    wallets,
+    btcPrice,
+  });
+
+  const uiState = useAppSelector(selectUI);
+  const { netAssetValue } = uiState;
   const privateNumber = useNumberObfuscation();
   // const [chartOpacity, setChartOpacity] = useState(0);
   const lineWrapperRef = useRef<HTMLDivElement>(null);
@@ -76,24 +87,8 @@ export const Navbar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
 
-  const meta = AppContext.useSelector((current) => current.context.meta);
-
-  const lineData = WalletUIContext.useSelector(
-    (current) => current.context.lineData
-  );
-
-  const plotData = WalletUIContext.useSelector(
-    (current) => current.context.plotData
-  );
-
-  // const currency = AppContext.useSelector(
-  //   (current) => current.context.meta.currency
-  // );
   const currency = "usd";
   const currencySymbol = currencySymbols[currency];
-
-  const { send } = AppContext.useActorRef();
-  const walletActorRef = WalletUIContext.useActorRef();
 
   let change = btcChangePrice;
   let valueChange;
@@ -173,26 +168,8 @@ export const Navbar = () => {
     setDateRangeOpen(false);
   };
 
-  const handleClearSelected = () => {
-    send({
-      type: "APP_MACHINE_CLEAR_SELECTED_TXS",
-    });
-    walletActorRef.send({
-      type: "SET_SELECTED_LOT_DATA_INDEX",
-      data: { date: -1 },
-    });
-  };
-
   const handleSelectInputAddresses = () => {
-    actions.selectInputAddresses(true);
-  };
-
-  const handleUpdateMeta = ({
-    showPlotDots,
-    showBtcAllocation,
-    privatePrice,
-  }: Partial<AppMachineMeta>) => {
-    actions.updateMeta({ showPlotDots, showBtcAllocation, privatePrice });
+    actions.selectInputAddresses();
   };
 
   // This was an attempt to better align the dates of the chart data.
@@ -203,8 +180,8 @@ export const Navbar = () => {
   //   ? prices[prices.length - 1][0]
   //   : meta.chartEndDate;
 
-  const firstDateAsNumber = meta.chartStartDate;
-  const lastDateAsNumber = meta.chartEndDate;
+  const firstDateAsNumber = uiState.graphStartDate;
+  const lastDateAsNumber = uiState.graphEndDate;
 
   const firstDate = new Date(firstDateAsNumber);
   const lastDate = new Date(lastDateAsNumber);
@@ -226,8 +203,8 @@ export const Navbar = () => {
               width={dimensions.width}
               height={chartHeight}
               graphAssetValue={netAssetValue}
-              chartTimeframeGroup={meta.chartTimeframeGroup}
-              showBtcAllocation={meta.showBtcAllocation}
+              chartTimeframeGroup={uiState.graphTimeFrameGroup}
+              showBtcAllocation={uiState.graphBtcAllocation}
               btcPrice={btcPrice ?? 0}
             />
           </div>
@@ -327,9 +304,11 @@ export const Navbar = () => {
               ref={myBtcRef}
               className={`md:container md:mx-auto flex items-start transition-opacity justify-center px-6 flex-1`}
             >
-              <Button variant="ghost">
-                <Text size="6" color="orange" onClick={toggleBalance}>
-                  {ui.balanceVisible ? padBtcZeros(data.totalBalance) : "My"}
+              <Button variant="ghost" onClick={toggleBalance}>
+                <Text size="6" color="orange">
+                  {uiState.navbarBalanceVisibility
+                    ? padBtcZeros(data.totalBalance)
+                    : "My"}
                   &nbsp;BTC
                 </Text>
               </Button>
@@ -339,7 +318,7 @@ export const Navbar = () => {
           <div className="border border-b-0 border-x-0 ">
             <div
               ref={headerControlsRef}
-              className="md:container flex justify-between px-4 text-gray-400 py-2"
+              className="flex justify-between px-4 text-gray-400 py-2"
             >
               <div className="flex">
                 <div className="flex items-center">
@@ -368,8 +347,6 @@ export const Navbar = () => {
               <div>
                 <div className="flex items-center">
                   <SelectionDropdown
-                    onClickUpdateMeta={handleUpdateMeta}
-                    onClearSelection={handleClearSelected}
                     onClickToggleInputAddresses={handleSelectInputAddresses}
                   />
                 </div>

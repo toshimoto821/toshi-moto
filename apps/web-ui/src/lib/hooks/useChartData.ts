@@ -1,28 +1,21 @@
-import { useRef, useMemo } from "react";
-import { AppContext, WalletUIContext } from "@providers/AppProvider";
-import type { IChartTimeframeGroups } from "@machines/appMachine";
+import { useMemo } from "react";
 import { Wallet } from "@models/Wallet";
 import { round, ONE_HUNDRED_MILLION } from "@lib/utils";
 import { useBtcHistoricPrices } from "./useBtcHistoricPrices";
-import { useWindowFocus } from "./useWindowFocus";
 import type { StackedBarData } from "@root/components/graphs/line/Line";
-import type {
-  IRawNode,
-  IPlotType,
-  IPlotData,
-} from "@machines/walletListUIMachine";
+import type { IRawNode, IPlotType, IPlotData } from "@root/types";
 import {
   getGroupKey,
   addTime,
   getDatesForChartGroup,
-  getRangeFromTime,
 } from "@components/graphs/graph-utils";
+import { useAppSelector } from "./store.hooks";
+import { selectUI } from "../slices/ui.slice";
+import { selectForecast } from "../slices/price.slice";
 
 type IUseChartData = {
   btcPrice?: number;
   wallets: Wallet[];
-  selectedWallets: Set<string>;
-  netAssetValue: boolean;
 };
 
 type Data = {
@@ -40,58 +33,42 @@ type Data = {
 type Grouped = Record<string, Data>;
 
 export const useChartData = (opts: IUseChartData) => {
-  const { btcPrice, selectedWallets, wallets, netAssetValue } = opts;
+  const { btcPrice, wallets } = opts;
+
+  const {
+    graphSelectedTransactions: selectedTxs,
+    graphTimeFrameGroup,
+    graphStartDate,
+    graphEndDate,
+    netAssetValue,
+    selectedWalletId,
+  } = useAppSelector(selectUI);
 
   const btcPrices = useBtcHistoricPrices();
   let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
-  const refreshKey = useWindowFocus(1000 * 60 * 10); // every 10 minutes
+  // const selectedPlot = WalletUIContext.useSelector(
+  //   (current) => current.context.plotData[current.context.selectedPlotIndex]
+  // );
 
-  const selectedPlot = WalletUIContext.useSelector(
-    (current) => current.context.plotData[current.context.selectedPlotIndex]
-  );
+  const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
-  const forcastModel = AppContext.useSelector(
-    (current) => current.context.meta.forcastModel
-  );
-
-  const forcastPrices = AppContext.useSelector(
-    (current) => current.context.forcastPrices || []
-  );
-
-  if (forcastModel) {
-    prices = prices.concat(forcastPrices);
+  if (forecastModel) {
+    prices = prices.concat(forecastPrices);
   }
 
   // this is kinda broken.  the chart flickers because the
   // group updates immediately but the data doesn't
   // the group should be driven off the data
-  const chartTimeframeGroupState = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeframeGroup
-  );
-  const chartTimeFrameGroupRef = useRef<IChartTimeframeGroups>(
-    chartTimeframeGroupState
-  );
-
-  const chartTimeframeRange = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeFrameRange || "5Y"
-  );
-
-  const chartStartDate =
-    AppContext.useSelector((current) => current.context.meta.chartStartDate) ??
-    0;
-
-  const chartEndDate =
-    AppContext.useSelector((current) => current.context.meta.chartEndDate) ?? 0;
 
   const chartTimeDiffInDays = Math.round(
-    (chartEndDate - chartStartDate) / (1000 * 60 * 60 * 24)
+    (graphStartDate - graphEndDate) / (1000 * 60 * 60 * 24)
   );
 
   // add the current price
   let timeDiff = 1000 * 60 * 60 * 24;
   const now = new Date().getTime();
-  if (prices?.length > 2 && btcPrice && !forcastModel) {
+  if (prices?.length > 2 && btcPrice && !forecastModel) {
     const lastPrice = prices[prices.length - 1][0];
     const secondToLastPrice = prices[prices.length - 2][0];
 
@@ -103,44 +80,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
   }
 
-  let chartTimeframeGroup = chartTimeframeGroupState; //"1D" as IChartTimeframeGroups;
-
-  if (chartTimeframeRange === "1D") {
-    chartTimeFrameGroupRef.current = "5M";
-  } else if (chartTimeframeRange === "1W" || chartTimeframeRange === "1M") {
-    chartTimeFrameGroupRef.current = "1H";
-  } else if (chartTimeframeRange === "3M" || chartTimeframeRange === "1Y") {
-    chartTimeFrameGroupRef.current = "1D";
-  } else {
-    chartTimeFrameGroupRef.current = "1W";
-  }
-
-  chartTimeframeGroup = chartTimeFrameGroupRef.current;
-
-  // if the time difference between last two prices and first
-  // two prices is different, it means that the range needs
-  // to be set on the first because we dont have the data
-  // for the last price (which is probably smaller)
-  if (prices.length > 4) {
-    const [firstDate] = prices[0];
-    const [secondDate] = prices[1];
-    const firstDiff = secondDate - firstDate;
-
-    const [sendToLastDate] = prices[prices.length - 2];
-    const [lastDate] = prices[prices.length - 1];
-    const lastDiff = lastDate - sendToLastDate;
-    if (lastDiff !== firstDiff) {
-      const range = getRangeFromTime(firstDiff);
-      chartTimeframeGroup = range;
-    }
-  }
-
-  const selectedTxs =
-    AppContext.useSelector((current) => {
-      return new Set(current.context.selectedTxs);
-    }) || new Set();
-
-  const dateToKeyFn = getGroupKey(chartTimeframeGroup);
+  const dateToKeyFn = getGroupKey(graphTimeFrameGroup);
 
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
@@ -170,7 +110,7 @@ export const useChartData = (opts: IUseChartData) => {
         acc[key] = {
           date: d,
           startDate: d,
-          endDate: addTime(chartTimeframeGroup, d),
+          endDate: addTime(graphTimeFrameGroup, d),
           sum: price,
           last: price,
           avg: price,
@@ -184,21 +124,19 @@ export const useChartData = (opts: IUseChartData) => {
   }, [
     btcPrice,
     prices.length,
-    chartTimeframeGroup,
-    selectedTxs.size,
+    graphTimeFrameGroup,
+    selectedTxs.length,
     // prices?.[0]?.[0], // if first date changes, update
     prices?.[0]?.[1], // if first date changes, update
-    refreshKey,
     chartTimeDiffInDays,
-    forcastModel,
+    forecastModel,
   ]);
 
-  const filteredWallets =
-    selectedWallets.size > 0
-      ? wallets.filter((wallet) => {
-          return selectedWallets.has(wallet.id);
-        })
-      : wallets;
+  const filteredWallets = selectedWalletId
+    ? wallets.filter((wallet) => {
+        return wallet.id === selectedWalletId;
+      })
+    : wallets;
 
   const groupedValues = Object.values(grouped || {});
 
@@ -222,7 +160,7 @@ export const useChartData = (opts: IUseChartData) => {
       for (const address of wallet.listAddresses) {
         // @loop 5 (r) (3 txs each)
         for (const tx of address.listTransactions) {
-          const visible = selectedTxs.has(tx.txid); // ||  selectedTxs.size === 0 ||
+          const visible = selectedTxs.includes(tx.txid); // ||  selectedTxs.size === 0 ||
           // if (selectedTxs.size === 0 || selectedTxs.has(tx.txid)) {
           const vout = tx.sumVout(address.address);
           const vin = tx.sumVin(address.address);
@@ -270,12 +208,10 @@ export const useChartData = (opts: IUseChartData) => {
     };
   }, [
     filteredWallets.length,
-    selectedTxs.size,
+    selectedTxs.length,
     netAssetValue,
     prices.length,
-    selectedWallets,
-    selectedPlot,
-    refreshKey,
+    selectedWalletId,
     chartTimeDiffInDays,
   ]);
 
@@ -322,7 +258,7 @@ export const useChartData = (opts: IUseChartData) => {
         const { start, end } = getDatesForChartGroup(
           group.startDate,
           group.endDate,
-          chartTimeframeGroup,
+          graphTimeFrameGroup,
           groupValues[j + 1]?.startDate
         );
         if (
@@ -345,7 +281,7 @@ export const useChartData = (opts: IUseChartData) => {
         const { start, end } = getDatesForChartGroup(
           group.startDate,
           group.endDate,
-          chartTimeframeGroup,
+          graphTimeFrameGroup,
           groupValues[j + 1]?.startDate
         );
         if (node.vin > 0 && node.date >= start && node.date < end) {
@@ -366,10 +302,9 @@ export const useChartData = (opts: IUseChartData) => {
   }, [
     nodes.length,
     inputNodes.length,
-    selectedTxs.size,
+    selectedTxs.length,
     netAssetValue,
     groupedKeys.length,
-    refreshKey,
     groupedKeys[0],
     chartTimeDiffInDays,
   ]);
@@ -408,7 +343,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
 
     return { lineData: node, lineMap };
-  }, [node, chartStartDate, groupedKeys[0]]);
+  }, [node, graphStartDate, groupedKeys[0]]);
 
   const plotData = useMemo(() => {
     const plotData = [] as IPlotData[];
@@ -437,8 +372,7 @@ export const useChartData = (opts: IUseChartData) => {
     allNodes,
     allNodes.length,
     allNodes[0]?.date?.getTime(),
-    selectedTxs.size,
-    refreshKey,
+    selectedTxs.length,
   ]);
 
   return {

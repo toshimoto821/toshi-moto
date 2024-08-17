@@ -75,6 +75,7 @@
     "@nestjs/mongoose": "^10.0.4",
     "@nestjs/platform-express": "^10.0.2",
     "@nestjs/schedule": "^4.0.1",
+    "@reduxjs/toolkit": "^2.2.7",
     "@toshimoto821/bitcoinjs": "^1.0.1",
     "@types/express": "^4.17.21",
     "axios": "^1.6.7",
@@ -85,6 +86,9 @@
     "mongoose": "^8.2.4",
     "newrelic": "^11.16.0",
     "qrcode.react": "^3.1.0",
+    "react-redux": "^9.1.2",
+    "redux-persist": "^6.0.0",
+    "redux-persist-indexeddb-storage": "^1.0.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0"

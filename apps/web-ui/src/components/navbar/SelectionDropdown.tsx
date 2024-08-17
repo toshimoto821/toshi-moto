@@ -1,11 +1,10 @@
 // import { useState } from "react";
 import { DropdownMenu, IconButton, Text } from "@radix-ui/themes";
 import { CommitIcon } from "@radix-ui/react-icons";
-import { AppContext } from "@root/providers/AppProvider";
-import { type AppMachineMeta } from "@root/machines/appMachine";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI, setUI } from "@lib/slices/ui.slice";
+
 type ISelectionDropdown = {
-  onClickUpdateMeta: (meta: Partial<AppMachineMeta>) => void;
-  onClearSelection: () => void;
   onClickToggleInputAddresses: ({
     selected,
     filter,
@@ -15,32 +14,21 @@ type ISelectionDropdown = {
   }) => void;
 };
 export const SelectionDropdown = (props: ISelectionDropdown) => {
-  const { onClearSelection, onClickToggleInputAddresses, onClickUpdateMeta } =
-    props;
-
-  const selectedTxs =
-    AppContext.useSelector((current) => {
-      return new Set(current.context.selectedTxs);
-    }) || new Set();
-
-  const showPlotDots = AppContext.useSelector((current) => {
-    return current.context.meta.showPlotDots;
-  });
-
-  const showBtcAllocation = AppContext.useSelector((current) => {
-    return current.context.meta.showBtcAllocation;
-  });
-
-  const privatePrice = AppContext.useSelector((current) => {
-    return current.context.meta.privatePrice;
-  });
+  const dispatch = useAppDispatch();
+  const {
+    privatePrice,
+    graphPlotDots,
+    graphBtcAllocation,
+    graphSelectedTransactions,
+  } = useAppSelector(selectUI);
+  const { onClickToggleInputAddresses } = props;
 
   return (
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <IconButton variant="ghost" className="flex items-center">
-            <Text size="1">{selectedTxs.size}</Text>
+            <Text size="1">{graphSelectedTransactions.length}</Text>
             <CommitIcon width="16" height="16" className="ml-2" />{" "}
           </IconButton>
         </DropdownMenu.Trigger>
@@ -61,25 +49,17 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
             <DropdownMenu.SubTrigger>View</DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent>
               <DropdownMenu.Item
-                shortcut={showBtcAllocation ? "✓" : ""}
+                shortcut={graphBtcAllocation ? "✓" : ""}
                 onSelect={() => {
-                  onClickUpdateMeta({
-                    showBtcAllocation: !showBtcAllocation,
-                    showPlotDots,
-                    privatePrice,
-                  });
+                  dispatch(setUI({ graphBtcAllocation: !graphBtcAllocation }));
                 }}
               >
                 BTC Allocation
               </DropdownMenu.Item>
               <DropdownMenu.Item
-                shortcut={showPlotDots ? "✓" : ""}
+                shortcut={graphPlotDots ? "✓" : ""}
                 onSelect={() => {
-                  onClickUpdateMeta({
-                    showPlotDots: !showPlotDots,
-                    showBtcAllocation,
-                    privatePrice,
-                  });
+                  dispatch(setUI({ graphPlotDots: !graphPlotDots }));
                 }}
               >
                 Transactions
@@ -90,11 +70,7 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
           <DropdownMenu.Item
             shortcut={privatePrice ? "✓" : ""}
             onSelect={() => {
-              onClickUpdateMeta({
-                showPlotDots,
-                showBtcAllocation,
-                privatePrice: !privatePrice,
-              });
+              dispatch(setUI({ privatePrice: !privatePrice }));
             }}
           >
             Hide Price
@@ -102,9 +78,15 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
           <DropdownMenu.Separator />
 
           <DropdownMenu.Item
-            disabled={selectedTxs.size === 0}
+            disabled={graphSelectedTransactions.length === 0}
             color="red"
-            onSelect={onClearSelection}
+            onSelect={() => {
+              dispatch(
+                setUI({
+                  graphSelectedTransactions: [],
+                })
+              );
+            }}
           >
             Clear
           </DropdownMenu.Item>

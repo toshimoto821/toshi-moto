@@ -1,87 +1,24 @@
-import { useEffect, useCallback, type MouseEvent } from "react";
+import { useAppSelector } from "@lib/hooks/store.hooks";
 import {
-  NetworkContext,
-  BtcPriceContext,
-  AppContext,
-} from "@providers/AppProvider";
-import type { ICurrency } from "@root/types";
-import { ONE_HUNDRED_MILLION } from "../utils";
+  useGetPriceQuery,
+  useGetCirculatingSupplyQuery,
+} from "../slices/api.slice";
+import { selectBtcPrice, selectForecastPrice } from "../slices/price.slice";
 
 export const useBtcPrice = () => {
-  const networkLoggerRef = NetworkContext.useActorRef();
-  const walletActorRef = AppContext.useActorRef();
-  const { send } = BtcPriceContext.useActorRef();
+  const { refetch, isLoading: loading, error } = useGetPriceQuery();
+  useGetCirculatingSupplyQuery();
 
-  // const currency = AppContext.useSelector(
-  //   (current) => current.context.meta.currency
-  // );
-  const currency = "usd";
+  const {
+    btcPrice,
+    last_updated_at: updatedAt,
+    usd_24h_change: change,
+    circulatingSupply,
+  } = useAppSelector(selectBtcPrice);
 
-  const priceUrl = AppContext.useSelector(
-    (current) => current.context.meta.config.priceUrl
-  );
+  const refresh = refetch;
 
-  useEffect(() => {
-    if (priceUrl) {
-      send({
-        type: "INIT",
-        data: { networkLoggerRef, walletActorRef, currency, uri: priceUrl },
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [priceUrl]);
-
-  const refresh = useCallback(
-    (_: Event | MouseEvent, currencyProp: ICurrency = currency) => {
-      if (priceUrl) {
-        send({
-          type: "FETCH",
-          data: { currency: currencyProp, uri: priceUrl },
-        });
-      }
-    },
-    [send, currency, priceUrl]
-  );
-
-  const change = BtcPriceContext.useSelector(
-    (current) => current.context?.btcPrices?.[currency]?.change
-  );
-
-  const error = BtcPriceContext.useSelector(
-    (current) => current.context?.error
-  );
-
-  const btcPrice = BtcPriceContext.useSelector(
-    (current) => current.context?.btcPrices?.[currency]?.price
-  );
-
-  const circulatingSupply = BtcPriceContext.useSelector((current) =>
-    current.context?.circulatingSupply
-      ? current.context?.circulatingSupply / ONE_HUNDRED_MILLION
-      : undefined
-  );
-
-  const updatedAt = BtcPriceContext.useSelector(
-    (current) => current.context?.lastUpdatedAt
-  );
-
-  const loading = BtcPriceContext.useSelector(
-    (current) => current.context?.loading
-  );
-
-  const forcastModel = AppContext.useSelector((current) => {
-    return current.context.meta.forcastModel;
-  });
-
-  const forcastPrices = AppContext.useSelector((current) => {
-    return current.context.forcastPrices || [];
-  });
-
-  let forcastPrice = null;
-  if (forcastModel && forcastPrices.length) {
-    forcastPrice = forcastPrices[forcastPrices.length - 1][1];
-  }
+  const forcastPrice = useAppSelector(selectForecastPrice);
 
   const updatedTime = updatedAt ? new Date(updatedAt).toLocaleString() : "";
   return {
