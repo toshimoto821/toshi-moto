@@ -245,6 +245,12 @@ export class Wallet {
     }, 0);
   }
 
+  get loadedTransactionCount() {
+    return this.listAddresses.reduce((acc, cur) => {
+      return acc + cur.listTransactions.length;
+    }, 0);
+  }
+
   get utxoCount() {
     return this.listUtxos.length;
   }

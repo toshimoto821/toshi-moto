@@ -75,10 +75,16 @@ export const selectBtcPrice = createSelector(
   })
 );
 
-export const selectForecast = (state: RootState) => ({
-  forecastModel: state.price.forecastModel,
-  forecastPrices: state.price.forecastPrices,
-});
+export const selectForecast = createSelector(
+  (state: RootState) => state.price.forecastModel,
+  (state: RootState) => state.price.forecastPrices,
+  (forecastModel, forecastPrices) => {
+    return {
+      forecastModel,
+      forecastPrices,
+    };
+  }
+);
 
 export const selectForecastPrice = createSelector(
   (state: RootState) => state.price.forecastModel,

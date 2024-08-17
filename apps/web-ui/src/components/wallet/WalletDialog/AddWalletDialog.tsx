@@ -25,6 +25,7 @@ export const AddWalletDialog = ({
     ImportResult | undefined
   >();
   function handleClose(success: boolean) {
+    setImportedWallet(undefined);
     onClose(success);
   }
 

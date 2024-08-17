@@ -68,6 +68,8 @@ export const WalletDetails = ({
     return () => {
       if (success) {
         dispatch(upsertWallet(fields));
+      } else {
+        setFields(initialData);
       }
       onClose(success);
     };
