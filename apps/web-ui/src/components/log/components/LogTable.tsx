@@ -62,6 +62,8 @@ export const LogTable = ({
               {
                 "bg-blue-100": activeRequestIndex === index,
                 "hover:bg-mauve2": activeRequestIndex !== index,
+                "bg-red-100": request.status === "rejected",
+                "hover:bg-red-200": request.status === "rejected",
               }
             )}
             key={index}

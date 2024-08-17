@@ -53,7 +53,7 @@ const API_REQUEST_FULFILLED = isAnyOf(
   apiSlice.endpoints.getCirculatingSupply.matchFulfilled
 );
 
-const API_REQUEST_REJECTED = isAnyOf(
+export const API_REQUEST_REJECTED = isAnyOf(
   apiSlice.endpoints.getAddress.matchRejected,
   apiSlice.endpoints.getTransactions.matchRejected,
   apiSlice.endpoints.getPrice.matchRejected,
@@ -122,7 +122,6 @@ export const networkSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(setConfig, (state, action) => {
-      console.log(state, action);
       const apiConfig = {
         ...state.config.api,
         ...action.payload.api,

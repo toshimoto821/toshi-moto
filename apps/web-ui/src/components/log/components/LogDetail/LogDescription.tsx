@@ -70,7 +70,7 @@ export const LogDescription = (props: ILogDescription) => {
     );
   }
 
-  if (type === "txs") {
+  if (type === "transactions") {
     return (
       <div className="p-4">
         <Text size="3" weight="bold">
@@ -101,7 +101,7 @@ export const LogDescription = (props: ILogDescription) => {
     );
   }
 
-  if (type === "utxo") {
+  if (type === "address") {
     return (
       <div className="p-4">
         <Text size="3" weight="bold">
