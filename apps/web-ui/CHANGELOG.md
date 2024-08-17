@@ -1,4 +1,34 @@
 # UI Changelog
+## [1.8.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.16...web-ui-1.8.0) (2024-08-17)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/49fb318223af17ce4bce893c6482292424c1df47/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/49fb318223af17ce4bce893c6482292424c1df47/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### ✨ Features
+
+* adds custom middleware for network requests ([6d49fde](https://github.com/toshimoto821/toshi-moto/commit/6d49fded71d6236502141662ef119124fec2fa67))
+* adds timeBetweenRequests ([db6dbb1](https://github.com/toshimoto821/toshi-moto/commit/db6dbb13edf4ff0f337f50907bb3337ec1c29c9e))
+* adds wallet slice ([a90a51e](https://github.com/toshimoto821/toshi-moto/commit/a90a51e0df9a0fa8e7ca3dd49dd9a00d0ac26321))
+* rejection handler ([e889a32](https://github.com/toshimoto821/toshi-moto/commit/e889a3212eb4694ef3c87647930c6117d6ea8193))
+* started getAddress api ([2adf702](https://github.com/toshimoto821/toshi-moto/commit/2adf702ec677ad7df6470e9f25e1ff83f0cbffc2))
+* starts ui state ([9cf66bd](https://github.com/toshimoto821/toshi-moto/commit/9cf66bd25ef0f2cd309ae6d670986d719b1b333c))
+* **state:** migrates btcPriceMachine ([f294436](https://github.com/toshimoto821/toshi-moto/commit/f2944362f0b47663867808cc9ff1e90329fc3567))
+
+
+### 🐞 Bug Fixes
+
+* async add wallet flow ([d5331cd](https://github.com/toshimoto821/toshi-moto/commit/d5331cda5e9cbccff72f93a87b32abb25f8060fa))
+* chart issues ([dcbb827](https://github.com/toshimoto821/toshi-moto/commit/dcbb827845ef842def799d49b8f23ab345ddf75c))
+* ts issues ([ba86785](https://github.com/toshimoto821/toshi-moto/commit/ba8678533b9dc789312fd807520d5985f9f95aa4))
+* types ([c9376ae](https://github.com/toshimoto821/toshi-moto/commit/c9376ae84845e18dc29ba3d6dbdfab68439959f9))
+* uses config for network settings ([601c4d2](https://github.com/toshimoto821/toshi-moto/commit/601c4d249e1023f2e5298aceef786dafd2a37f39))
+* working transactions ([85f087e](https://github.com/toshimoto821/toshi-moto/commit/85f087e7e6f11874b53fe6d5c5b55056cd75bb7d))
+* working wallet details ([7ae8f11](https://github.com/toshimoto821/toshi-moto/commit/7ae8f11fcccf3cf2abc938e6cf967f75b0f6eb1a))
+
 ## [1.7.16](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.15...web-ui-1.7.16) (2024-07-28)
 
   |    |    |
