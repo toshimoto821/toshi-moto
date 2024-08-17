@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { request } from "./mocks/request";
 import { LogTable } from "@components/log/components/LogTable";
 import "../../index.css";
 const meta = {
@@ -18,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Expanded: Story = {
   args: {
-    requests: [request, request, request, request, request],
+    requests: [],
     activeRequestIndex: 0,
   },
 };

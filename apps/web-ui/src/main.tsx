@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { AppProvider } from "./providers/AppProvider.tsx";
-import { AppLoader } from "./AppLoader.tsx";
-
+import { AppProvider } from "./providers/AppProvider";
+import { App } from "./App.tsx";
 import { Theme } from "@radix-ui/themes";
 import "./index.css";
 
@@ -18,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
       <Theme accentColor="orange" radius="small" scaling="90%">
-        <AppLoader />
+        <App />
       </Theme>
     </AppProvider>
   </React.StrictMode>

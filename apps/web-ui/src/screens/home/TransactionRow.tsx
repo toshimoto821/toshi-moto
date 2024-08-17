@@ -4,18 +4,18 @@ import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Transaction } from "@models/Transaction";
 import { Utxo } from "@models/Utxo";
 import { cn, trimAddress, padBtcZeros, formatPrice } from "@lib/utils";
-import { AppContext } from "@root/providers/AppProvider";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { ICurrency } from "@root/types";
 import cloneDeep from "lodash/cloneDeep";
 import { currencySymbols } from "@root/lib/currencies";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectBaseNodeUrl } from "@root/lib/slices/config.slice";
 type ITransactionRow = {
   transaction: Transaction;
   address: Utxo;
   index: number;
   walletColor: string;
   className?: string;
-  selectedTxs: Set<string>;
   onClickTx: () => void;
   currency: ICurrency;
 };
@@ -35,7 +35,7 @@ export const TransactionRow = ({
   transaction,
   address,
   index,
-  // selectedTxs,
+
   // onClickTx,
   walletColor,
   currency,
@@ -44,9 +44,7 @@ export const TransactionRow = ({
 
   const [isTxDetailsExpanded, setIsTxDetailsExpanded] = useState(false);
 
-  const bitcoinNodeUrl = AppContext.useSelector(
-    (current) => current.context.meta.config.bitcoinNodeUrl
-  );
+  const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
 
   const getVins = () => {
     return transaction.vin.map(
@@ -107,7 +105,7 @@ export const TransactionRow = ({
         (vinOrVout.type === "VOUT" && vinOrVout.vout !== address.address);
 
       const btcAmount = (vinOrVout.btc || 0) / 100000000;
-      const btcValue = (address.settings.btcPrice || 0) * btcAmount;
+      const btcValue = address.value;
       return (
         <div
           key={key}
@@ -179,13 +177,13 @@ export const TransactionRow = ({
         >
           {isTxDetailsExpanded && (
             <>
-              <EyeClosedIcon width="16" height="15" />
+              <EyeOpenIcon width="16" height="15" />
               Hide Other ({vins.length} Inputs / {vouts.length} Outputs)
             </>
           )}
           {!isTxDetailsExpanded && (
             <>
-              <EyeOpenIcon width="16" height="15" />
+              <EyeClosedIcon width="16" height="15" />
               Show All ({vins.length} Inputs / {vouts.length} Outputs)
             </>
           )}

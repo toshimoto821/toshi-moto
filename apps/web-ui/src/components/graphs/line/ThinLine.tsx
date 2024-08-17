@@ -2,9 +2,10 @@ import { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
-import { IPlotData } from "@root/machines/walletListUIMachine";
-import { AppContext } from "@root/providers/AppProvider";
-import { type IChartTimeframeGroups } from "@root/machines/appMachine";
+import type { IPlotData, IChartTimeframeGroups } from "@root/types";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectForecast } from "@root/lib/slices/price.slice";
+
 // https://observablehq.com/@d3/bar-line-chart
 export type Plot = {
   x: number;
@@ -43,9 +44,7 @@ export const ThinLine = (props: ILine) => {
     ? "y1SumInDollars"
     : "y2";
 
-  const forcastModel = AppContext.useSelector(
-    (current) => current.context.meta.forcastModel
-  );
+  const { forecastModel } = useAppSelector(selectForecast);
 
   const breakpoint = useBreakpoints();
 
@@ -387,7 +386,7 @@ export const ThinLine = (props: ILine) => {
       svg.selectAll(".plot").remove();
       svg.selectAll(".plot-marker").remove();
     };
-  }, [height, width, lineData, breakpoint, btcPrice, forcastModel]);
+  }, [height, width, lineData, breakpoint, btcPrice, forecastModel]);
 
   return (
     <svg

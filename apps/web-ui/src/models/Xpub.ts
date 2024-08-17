@@ -1,32 +1,14 @@
 import { trimAddress } from "@lib/utils";
-import { IUtxoInput, type Utxo } from "./Utxo";
-import { IUtxoRequest } from "@machines/appMachine";
 
 const VITE_BITCOIN_NETWORK: "mainnet" | "testnet" =
   import.meta.env.VITE_BITCOIN_NETWORK || "mainnet";
 
-export type IXpubInput = {
-  address: string;
-  utxos?: Record<string, IUtxoInput>;
-};
-
-type ISettings = {
-  cur: string;
-  blockExplorer: string;
-  btcPrice?: number;
-  utxos?: Record<string, IUtxoRequest>;
-};
-
 export class Xpub {
   address: string;
-  // utxo doesn't have to have a balance, they are really just addresses
-  utxos: Record<string, Utxo> = {};
 
-  settings?: ISettings;
   bitcoinjs?: any;
-  constructor(data: IXpubInput, settings: ISettings) {
-    this.address = data.address;
-    this.settings = settings;
+  constructor(address: string) {
+    this.address = address;
   }
 
   static async scanXpubMultiSigAddresses(
@@ -87,6 +69,23 @@ export class Xpub {
     return Xpub.getBitcoinjs();
   }
 
+  static async scanXpubs(
+    xpub: string | string[],
+    {
+      start = 0,
+      limit = 10,
+      isChange = false,
+    }: { start?: number; limit?: number; isChange?: boolean } = {}
+  ): Promise<string[]> {
+    if (Array.isArray(xpub) && xpub.length > 1) {
+      return Xpub.scanXpubMultiSigAddresses(xpub, { start, limit, isChange });
+    }
+    if (Array.isArray(xpub)) {
+      return Xpub.scanXpubAddresses(xpub[0], { start, limit, isChange });
+    }
+
+    return Xpub.scanXpubAddresses(xpub, { start, limit, isChange });
+  }
   static async scanXpubAddresses(
     xpub: string,
     {
@@ -117,13 +116,14 @@ export class Xpub {
   }
 
   static async getAddressAtIndex(
-    xpub: string | string[],
+    xpubInput: string | string[],
     index: number,
     isChange: boolean
   ) {
-    const bitcoinjs = await Xpub.getBitcoinjs();
+    const xpub = Array.isArray(xpubInput) ? xpubInput : [xpubInput];
 
-    if (Array.isArray(xpub)) {
+    const bitcoinjs = await Xpub.getBitcoinjs();
+    if (xpub.length > 1) {
       const pubkeys = xpub
         .map((xp) => {
           const node = bitcoinjs.bip32
@@ -158,7 +158,7 @@ export class Xpub {
       return address;
     }
     const node = bitcoinjs.bip32.fromBase58(
-      xpub,
+      xpub[0],
       VITE_BITCOIN_NETWORK === "mainnet"
         ? bitcoinjs.networks.bitcoin
         : bitcoinjs.networks.testnet

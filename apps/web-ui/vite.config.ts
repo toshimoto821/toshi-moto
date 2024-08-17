@@ -12,9 +12,10 @@ import packageJson from "./package.json";
 
 const isCypressRunning = process.env.CI;
 // https://vitejs.dev/config/
+
 export default defineConfig({
   root: __dirname,
-  cacheDir: "../../node_modules/.vite/apps/web-ui",
+  // cacheDir: "../../node_modules/.vite/apps/web-ui",
   server: {
     hmr: !isCypressRunning,
   },

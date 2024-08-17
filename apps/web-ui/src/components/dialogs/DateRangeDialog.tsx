@@ -3,8 +3,10 @@ import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import * as d3 from "d3";
-import { AppContext } from "@root/providers/AppProvider";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI, setUI } from "@root/lib/slices/ui.slice";
+
 type IDateRangeDialog = {
   open: boolean;
   onClose: () => void;
@@ -16,23 +18,22 @@ const oneYearAgo = d3.timeDay(
 
 export const DateRangeDialog = (props: IDateRangeDialog) => {
   const { open, onClose, defaultTab = "start" } = props;
+  const dispatch = useAppDispatch();
 
-  const { send } = AppContext.useActorRef();
-
-  const meta = AppContext.useSelector((current) => current.context.meta);
+  const { graphStartDate, graphEndDate } = useAppSelector(selectUI);
 
   const [startDate, setStartDate] = useState<Date>(
-    meta.chartStartDate ? new Date(meta.chartStartDate) : oneYearAgo
+    graphStartDate ? new Date(graphStartDate) : oneYearAgo
   );
 
   const [endDate, setEndDate] = useState<Date>(
-    meta.chartStartDate ? new Date(meta.chartStartDate) : d3.timeDay(new Date())
+    graphStartDate ? new Date(graphStartDate) : d3.timeDay(new Date())
   );
 
   useEffect(() => {
-    setStartDate(new Date(meta.chartStartDate));
-    setEndDate(new Date(meta.chartEndDate));
-  }, [meta.chartEndDate, meta.chartStartDate]);
+    setStartDate(new Date(graphStartDate));
+    setEndDate(new Date(graphEndDate));
+  }, [graphEndDate, graphStartDate]);
 
   const handleStartDate = (date: Date) => {
     if (date) {
@@ -47,12 +48,12 @@ export const DateRangeDialog = (props: IDateRangeDialog) => {
   };
 
   const handleSave = (sd = startDate, ed = endDate) => {
-    const data = {
-      chartStartDate: sd.getTime(),
-      chartEndDate: ed.getTime(),
-    };
-
-    send({ type: "APP_MACHINE_UPDATE_CHART_RANGE_BY_DATE", data });
+    dispatch(
+      setUI({
+        graphStartDate: sd.getTime(),
+        graphEndDate: ed.getTime(),
+      })
+    );
 
     onClose();
   };

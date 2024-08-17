@@ -1,58 +1,85 @@
 import { useState, useEffect } from "react";
 import { Flex, TextField, Text, Button, Callout } from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { AppContext } from "@root/providers/AppProvider";
-import { type IAppMetaConfig } from "@machines/appMachine";
 
-// @todo user should be able to set cache time for pricing data (simple),
-// historic should be immutable
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import {
+  selectApiConfig,
+  selectNetworkConfig,
+  setConfig,
+  type ConfigState,
+} from "@root/lib/slices/config.slice";
+
+export type IAppMetaConfig = {
+  bitcoinNodeUrl: string;
+  historicalPriceUrl: string;
+  priceUrl: string;
+  restTimeBetweenRequests: number;
+  maxConcurrentRequests: number;
+};
 
 type IMessage = {
   message: string;
   type: "warning" | "error" | "success";
 };
 export const SettingsForm = () => {
-  const defaultConfig = AppContext.useSelector(
-    (current) => current.context.meta.config
-  );
+  const apiConfig = useAppSelector(selectApiConfig);
+  const networkConfig = useAppSelector(selectNetworkConfig);
 
   const [message, setMessage] = useState<IMessage | null>(null);
 
-  const { send } = AppContext.useActorRef();
+  const dispatch = useAppDispatch();
 
   const [formState, setFormState] = useState({
-    bitcoinNodeUrl: defaultConfig.bitcoinNodeUrl,
-    historicalPriceUrl: defaultConfig.historicalPriceUrl,
-    priceUrl: defaultConfig.priceUrl,
-    maxConcurrentRequests: `${defaultConfig.maxConcurrentRequests}`,
-    restTimeBetweenRequests: `${defaultConfig.restTimeBetweenRequests}`,
+    api: {
+      priceUrl: apiConfig.priceUrl,
+      nodeUrl: apiConfig.nodeUrl,
+      historicPriceUrl: apiConfig.historicPriceUrl,
+      url: apiConfig.url,
+    },
+    network: {
+      conconcurrentRequests: networkConfig.conconcurrentRequests,
+      timeBetweenRequests: networkConfig.timeBetweenRequests,
+    },
   });
 
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    const maxConcurrentRequests = parseInt(formState.maxConcurrentRequests, 10);
-    const restTimeBetweenRequests = parseInt(
-      formState.restTimeBetweenRequests,
-      10
+    // @todo error handline
+    dispatch(
+      setConfig({
+        network: formState.network,
+        api: formState.api,
+      })
     );
-
-    const data = {
-      meta: {
-        config: {
-          ...formState,
-          maxConcurrentRequests,
-          restTimeBetweenRequests,
-        },
-      },
-    };
-    send({ type: "APP_MACHINE_UPDATE_META", data });
     setMessage({ message: "Settings Saved", type: "success" });
   };
 
-  const setField = (name: keyof IAppMetaConfig) => {
+  const setApiField = (name: keyof ConfigState["api"]) => {
     return (evt: React.ChangeEvent<HTMLInputElement>) => {
       const value = evt.target.value as string;
-      setFormState((prev) => ({ ...prev, [name]: value }));
+
+      setFormState((existing) => ({
+        ...existing,
+        api: {
+          ...existing.api,
+          [name]: value,
+        },
+      }));
+    };
+  };
+
+  const setNetworkField = (name: keyof ConfigState["network"]) => {
+    return (evt: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(evt.target.value, 10);
+
+      setFormState((existing) => ({
+        ...existing,
+        network: {
+          ...existing.network,
+          [name]: isNaN(value) ? "" : value,
+        },
+      }));
     };
   };
 
@@ -72,8 +99,8 @@ export const SettingsForm = () => {
             Node URL
           </Text>
           <TextField.Root
-            defaultValue={defaultConfig.bitcoinNodeUrl}
-            onChange={setField("bitcoinNodeUrl")}
+            value={formState.api.nodeUrl}
+            onChange={setApiField("nodeUrl")}
             placeholder="Enter a name for this wallet (can be anything)"
           />
         </label>
@@ -82,8 +109,8 @@ export const SettingsForm = () => {
             Max Concurrent Requests
           </Text>
           <TextField.Root
-            onChange={setField("maxConcurrentRequests")}
-            defaultValue={defaultConfig.maxConcurrentRequests}
+            onChange={setNetworkField("conconcurrentRequests")}
+            value={formState.network.conconcurrentRequests}
           />
         </label>
 
@@ -94,8 +121,8 @@ export const SettingsForm = () => {
 
           <div className="mb-2">
             <TextField.Root
-              onChange={setField("restTimeBetweenRequests")}
-              defaultValue={defaultConfig.restTimeBetweenRequests}
+              onChange={setNetworkField("timeBetweenRequests")}
+              value={formState.network.timeBetweenRequests}
             />
           </div>
         </label>
@@ -107,8 +134,8 @@ export const SettingsForm = () => {
             Historical Pricing Url
           </Text>
           <TextField.Root
-            defaultValue={defaultConfig.historicalPriceUrl}
-            onChange={setField("historicalPriceUrl")}
+            value={formState.api.historicPriceUrl}
+            onChange={setApiField("historicPriceUrl")}
             placeholder="https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range"
           />
         </label>
@@ -117,8 +144,8 @@ export const SettingsForm = () => {
             Price URL
           </Text>
           <TextField.Root
-            onChange={setField("priceUrl")}
-            defaultValue={defaultConfig.priceUrl}
+            onChange={setApiField("priceUrl")}
+            value={formState.api.priceUrl}
             placeholder="https://api.coingecko.com/api/v3/simple/price"
           />
         </label>

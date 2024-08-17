@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
 import { GearIcon } from "@radix-ui/react-icons";
-import { type IAppAddressFilters } from "@machines/appMachine";
+import { type IAppAddressFilters } from "@root/types";
 import { AddWalletDialog } from "@root/components/wallet/WalletDialog/AddWalletDialog";
 import { ExportWalletDialog } from "@root/components/wallet/WalletDialog/ExportWalletDialog";
 import { Wallet } from "@models/Wallet";
@@ -88,7 +88,7 @@ export const AddressFilterDropdown = (props: IAddressFilterDropdown) => {
               <DropdownMenu.Item
                 shortcut={filters.utxoOnly ? "✓" : ""}
                 onClick={() => {
-                  onClickFilter({ ...filters, utxoOnly: !filters.utxoOnly });
+                  onClickFilter({ utxoOnly: !filters.utxoOnly });
                 }}
               >
                 UTXOs Only

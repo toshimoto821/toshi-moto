@@ -1,33 +1,9 @@
-import { Utxo, IUtxoInput } from "./Utxo";
-import { Xpub, IXpubInput } from "./Xpub";
+import { Utxo } from "./Utxo";
+import { Xpub } from "./Xpub";
 import { Transaction } from "@models/Transaction";
-import { IUtxoRequest } from "@machines/appMachine";
 import { ICurrency } from "@root/types";
 import { currencySymbols } from "@root/lib/currencies";
-
-export type IWalletInput = {
-  name: string;
-  id: string;
-  color: string;
-  archived: boolean;
-  utxos?: Record<string, IUtxoInput>; // @deprecated
-  xpubs?: Record<string, IXpubInput>;
-  addresses: Record<string, IUtxoInput>;
-  transactions: Record<string, ITxLite>;
-  accountType: "MULTI_SIG" | "SINGLE_SIG";
-  changeMeta: AddressMeta;
-  receiveMeta: AddressMeta;
-  earliestTxDate: number;
-  refreshedAt?: Date;
-  settings: {
-    cur?: string;
-    blockExplorer?: string;
-    btcPrice?: number;
-    addresses?: Record<string, IUtxoRequest>;
-    transactions?: ITxsInput;
-    addressFilters: IWalletAddressFilters;
-  };
-};
+import { type Wallet as WalletSliceModel } from "@lib/slices/wallets.slice";
 
 export type IWalletExport = {
   name: string;
@@ -41,13 +17,6 @@ export type IWalletManifest = {
   color: number;
   xpubs: number;
   utxos: number;
-};
-
-export type IWalletAddressFilters = {
-  change: boolean;
-  receive: boolean;
-  utxoOnly: boolean;
-  // inputAddresses: boolean;
 };
 
 export type ITxLite = {
@@ -76,42 +45,14 @@ export type AddressMeta = {
 
 type IWalletSettings = {
   cur: ICurrency;
-  blockExplorer: string;
   btcPrice?: number;
-  addresses: Record<string, IUtxoRequest>;
-  transactions: ITxsInput;
-  addressFilters: IWalletAddressFilters;
 };
 
-const defaultSettings: IWalletSettings = {
-  cur: "usd",
-  blockExplorer: "mempool.space",
-  addresses: {},
-  transactions: {
-    txs: {},
-    addr: {},
-  },
-  addressFilters: {
-    change: true,
-    receive: true,
-    utxoOnly: false,
-  },
-};
-
+// @todo rename WalletDto
 export class Wallet {
-  archived: boolean;
-  name: string;
-  id: string;
-  color: string;
-  utxos: Record<string, Utxo> = {};
   addresses: Record<string, Utxo> = {};
-  xpubs: Record<string, Xpub> = {};
-  settings: IWalletSettings;
-  btcPrice?: number;
-  accountType: "MULTI_SIG" | "SINGLE_SIG" = "SINGLE_SIG";
-  receiveMeta: AddressMeta;
-  changeMeta: AddressMeta;
-  private _earliestTxDate: number;
+  xpubs: Xpub[] = [];
+
   addressMeta: {
     addressWithBalances: Set<string>;
   } = {
@@ -119,82 +60,37 @@ export class Wallet {
   };
 
   private _balance?: number;
-  refreshedAt?: Date;
   // private bitcoinjs?: any;
+  private _data: WalletSliceModel;
+  private _settings: IWalletSettings;
+  constructor(walletData: WalletSliceModel, settings: IWalletSettings) {
+    this._settings = settings;
+    this._data = walletData;
 
-  constructor(data: IWalletInput, settings: IWalletSettings) {
-    this.name = data.name;
-    this.id = data.id;
-    this.color = data.color;
-    this.btcPrice = settings.btcPrice;
-    this.accountType = data.accountType;
-    this.refreshedAt = data.refreshedAt;
-    this._earliestTxDate = data.earliestTxDate;
-    this.archived = data.archived || false;
-
-    this.receiveMeta = data.receiveMeta || {
-      startIndex: 0,
-      limit: 10,
-      lastAddressIndex: 10,
-    };
-
-    this.changeMeta = data.changeMeta || {
-      startIndex: 0,
-      limit: 10,
-      lastAddressIndex: 10,
-    };
-
-    this.addresses = Object.keys(data.addresses || {}).reduce((acc, cur) => {
-      const address = data.addresses?.[cur];
-      if (!address) return acc;
-      const responseData = settings.addresses?.[cur]?.response;
-      const utxoResponse = responseData
-        ? {
-            stats: responseData.data,
-            details: responseData.details,
-          }
-        : undefined;
-
-      // console.log("txs", address.transactions);
-
-      // const txResponseData = settings.transactions?.[cur]?.response;
-      return {
-        ...acc,
-        [cur]: new Utxo(
-          {
-            ...address,
-            walletId: this.id,
-            status: settings.addresses?.[cur]?.status,
-          },
-          {
-            ...settings,
-            btcPrice: this.btcPrice,
-            utxoResponse,
-          }
-        ),
-      };
-    }, {});
-
-    this.xpubs = Object.keys(data.xpubs || {}).reduce((acc, cur) => {
-      const xpub = data.xpubs?.[cur];
-      if (!xpub) return acc;
-      return {
-        ...acc,
-        [cur]: new Xpub(xpub, {
-          ...settings,
-          btcPrice: this.btcPrice,
-        }),
-      };
-    }, {});
-
-    this.settings = {
-      ...defaultSettings,
-      ...settings,
-      addressFilters: {
-        ...defaultSettings.addressFilters,
-        ...settings.addressFilters,
+    this.addresses = Object.values(walletData.addresses.entities).reduce(
+      (acc, address) => {
+        return {
+          ...acc,
+          [address.id]: new Utxo(
+            {
+              ...address,
+              walletId: this.id,
+              status: address.status,
+            },
+            {
+              ...settings,
+              btcPrice: this._settings.btcPrice,
+            }
+          ),
+        };
       },
-    };
+      {}
+    );
+
+    this.xpubs = walletData.xpubs.map((xpub) => {
+      return new Xpub(xpub);
+    });
+
     this.setMeta();
   }
 
@@ -204,6 +100,22 @@ export class Wallet {
         this.addressMeta.addressWithBalances.add(address.address);
       }
     }
+  }
+
+  get color() {
+    return this._data.color;
+  }
+
+  get name() {
+    return this._data.name;
+  }
+
+  get id() {
+    return this._data.id;
+  }
+
+  get archived() {
+    return this._data.archived || false;
   }
 
   get balance() {
@@ -219,21 +131,43 @@ export class Wallet {
   }
 
   get value() {
-    const sum = this.listUtxos.reduce((acc, xpub) => {
-      return acc + xpub.value;
+    const sum = this.listUtxos.reduce((acc, address) => {
+      return acc + address.value;
     }, 0);
     return sum;
   }
 
+  get btcPrice() {
+    return this._settings.btcPrice;
+  }
+
+  get settings() {
+    return this._settings;
+  }
+
+  get receiveMeta() {
+    return this._data.meta.receive;
+  }
+
+  get changeMeta() {
+    return this._data.meta.change;
+  }
+
+  get refreshedAt() {
+    return this._data.meta.refreshedAt;
+  }
+
+  // @deprecated
   get earliestTxDate() {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setFullYear(d.getFullYear() - 1);
-    const asNumber = d.getTime();
-    if (this._earliestTxDate < asNumber) {
-      return this._earliestTxDate;
-    }
-    return asNumber;
+    throw new Error("implement earliestTxDate");
+    // const d = new Date();
+    // d.setHours(0, 0, 0, 0);
+    // d.setFullYear(d.getFullYear() - 1);
+    // const asNumber = d.getTime();
+    // if (this._earliestTxDate < asNumber) {
+    //   return this._earliestTxDate;
+    // }
+    return null;
   }
 
   allocation(totalBalance: number) {
@@ -272,14 +206,13 @@ export class Wallet {
     return xpubs;
   }
 
-  get listAddresses() {
-    return Object.values(this.addresses);
+  get listXpubsStrings() {
+    const xpubs = this.listXpubs;
+    return xpubs.map((xpub) => xpub.address);
   }
 
-  get listManualAddresses() {
-    return this.listAddresses.filter((address) => {
-      return address.manual;
-    });
+  get listAddresses() {
+    return Object.values(this.addresses);
   }
 
   get listChangeAddresses() {
@@ -297,7 +230,7 @@ export class Wallet {
   get updatedAtNumber(): number {
     const utxos = this.listUtxos;
     if (utxos.length === 0) return 0;
-    const dates = utxos.map((utxo) => utxo.utxoResponse?.details?.endTime || 0);
+    const dates = utxos.map((utxo) => utxo.updatedAtNumber);
     const max = Math.max(...dates);
     return max;
   }
@@ -326,7 +259,7 @@ export class Wallet {
   }
 
   get currencySymbol() {
-    return currencySymbols[this.settings.cur];
+    return currencySymbols[this._settings.cur];
   }
 
   /**
@@ -341,40 +274,6 @@ export class Wallet {
     return !!this.addresses[address];
   }
 
-  hasLoadingUtxos(addressType?: "RECEIVE" | "CHANGE") {
-    let list = [] as string[];
-    if (addressType === "RECEIVE") {
-      list = this.listReceiveAddresses.map((address) => address.address);
-    } else if (addressType === "CHANGE") {
-      list = this.listChangeAddresses.map((address) => address.address);
-    } else {
-      list = this.listAddresses.map((address) => address.address);
-    }
-    return list.some(
-      (address) => !!this.settings?.addresses?.[address]?.loading
-    );
-  }
-  // @ts-expect-error deprecated
-  private paginationFilter(change: boolean) {
-    return (address: Utxo) => {
-      // always show manual addresses
-      if (address.manual) return true;
-      if (change) {
-        if (address.index === undefined) return false;
-        if (address.index < this.changeMeta.startIndex) return false;
-        if (address.index > this.changeMeta.startIndex + this.changeMeta.limit)
-          return false;
-        return true;
-      }
-
-      if (address.index === undefined) return false;
-      if (address.index < this.receiveMeta.startIndex) return false;
-      if (address.index > this.receiveMeta.startIndex + this.receiveMeta.limit)
-        return false;
-
-      return true;
-    };
-  }
   /**
    *
    * @param onlyUtxos only return addresses with utxos
@@ -571,7 +470,7 @@ export class Wallet {
   }
   export(): IWalletExport {
     const xpubs = Object.keys(this.xpubs);
-    const utxos = Object.keys(this.utxos);
+    const utxos = Object.keys(this.addresses);
     return {
       name: this.name,
       color: this.color,
