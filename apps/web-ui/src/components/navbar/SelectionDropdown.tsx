@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI, setUI } from "@lib/slices/ui.slice";
 
 type ISelectionDropdown = {
-  onClearSelection: () => void;
   onClickToggleInputAddresses: ({
     selected,
     filter,

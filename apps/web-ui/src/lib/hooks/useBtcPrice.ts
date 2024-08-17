@@ -19,7 +19,7 @@ export const useBtcPrice = () => {
   const refresh = refetch;
 
   const forcastPrice = useAppSelector(selectForecastPrice);
-  console.log(forcastPrice, "forcastPrice");
+
   const updatedTime = updatedAt ? new Date(updatedAt).toLocaleString() : "";
   return {
     btcPrice,

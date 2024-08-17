@@ -123,7 +123,7 @@ export const setGraphByRange = (
   // default to 5 years;
   let startDate = timeDay(sub(now, { years: 5 })).getTime();
   const endDate = timeHour(now).getTime();
-  let graphTimeFrameGroup: GroupBy = "1D";
+  let graphTimeFrameGroup: GroupBy = "1W";
   let graphTimeFrameRange: GraphTimeFrameRange = "5Y";
 
   if (range === "1D") {
@@ -148,7 +148,7 @@ export const setGraphByRange = (
     graphTimeFrameRange = "1Y";
   } else if (range === "2Y") {
     startDate = timeDay(sub(now, { years: 2 })).getTime();
-    graphTimeFrameGroup = "1D";
+    graphTimeFrameGroup = "1W";
     graphTimeFrameRange = "2Y";
   }
   return {

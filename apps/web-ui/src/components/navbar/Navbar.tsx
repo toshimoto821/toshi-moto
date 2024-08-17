@@ -358,7 +358,6 @@ export const Navbar = () => {
               <div>
                 <div className="flex items-center">
                   <SelectionDropdown
-                    onClearSelection={handleClearSelected}
                     onClickToggleInputAddresses={handleSelectInputAddresses}
                   />
                 </div>

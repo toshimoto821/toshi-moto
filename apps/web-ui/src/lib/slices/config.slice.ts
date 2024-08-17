@@ -10,7 +10,9 @@ const priceUrl = import.meta.env.VITE_COINGECKO_PRICE_API_URL;
 
 const nodeUrl = import.meta.env.VITE_BITCOIN_NODE_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
-console.log("apiUrli", apiUrl);
+const conconcurrentRequests = import.meta.env.VITE_MAX_CONCURRENT_REQUESTS;
+const timeBetweenRequests = import.meta.env.VITE_REST_TIME_BETWEEN_REQUESTS;
+
 export interface ConfigState {
   appVersion: string;
   api: {
@@ -34,8 +36,8 @@ export const initialState: ConfigState = {
     url: apiUrl,
   },
   network: {
-    conconcurrentRequests: 4,
-    timeBetweenRequests: 0,
+    conconcurrentRequests,
+    timeBetweenRequests,
   },
 };
 

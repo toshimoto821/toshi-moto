@@ -32,7 +32,7 @@ export const dynamicBaseQuery: BaseQueryFn<
     baseUrl = selectBaseApiUrl(state);
   }
   const baseQuery = fetchBaseQuery({ baseUrl });
-  console.log("args", args, baseUrl);
+
   return baseQuery(args, api, extraOptions);
 };
 

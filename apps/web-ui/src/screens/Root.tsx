@@ -16,7 +16,7 @@ export const Root = () => {
 
   useEffect(() => {
     if (pathname !== "/onboarding" && btcWallets.length === 0) {
-      // navigate("/onboarding");
+      navigate("/onboarding");
     }
   }, [pathname, btcWallets.length, navigate]);
 
