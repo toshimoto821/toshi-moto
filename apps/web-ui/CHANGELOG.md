@@ -1,4 +1,20 @@
 # UI Changelog
+## [1.8.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.8.0...web-ui-1.8.1) (2024-08-17)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/8f593782fbadeba8c17dcd8827021144c5b47b52/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/8f593782fbadeba8c17dcd8827021144c5b47b52/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* import wallet ([8dc1389](https://github.com/toshimoto821/toshi-moto/commit/8dc13898803ef3e69fc4e92f24c11344a24c79b3))
+* rejected request handling ([9d8a68b](https://github.com/toshimoto821/toshi-moto/commit/9d8a68b5bbae9b2cafabde35a9ab2f738ffec742))
+* umbrel node url ([0dd3108](https://github.com/toshimoto821/toshi-moto/commit/0dd3108dcf3bedf7ad973d5513620e5feab422ce))
+* updates graph when new tx comes in ([e75e7fd](https://github.com/toshimoto821/toshi-moto/commit/e75e7fdcafa2cc19e656d02d1a76cbda89a5077f))
+
 ## [1.8.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.7.16...web-ui-1.8.0) (2024-08-17)
 
   |    |    |
