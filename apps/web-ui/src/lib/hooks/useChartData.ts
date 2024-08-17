@@ -151,6 +151,10 @@ export const useChartData = (opts: IUseChartData) => {
     } as IRawNode;
   });
 
+  const totalTransactions = filteredWallets.reduce(
+    (acc, wallet) => wallet.loadedTransactionCount + acc,
+    0
+  );
   const { nodes, inputNodes } = useMemo(() => {
     const nodes = [] as StackedBarData[];
     const inputNodes = [] as StackedBarData[];
@@ -213,6 +217,7 @@ export const useChartData = (opts: IUseChartData) => {
     prices.length,
     selectedWalletId,
     chartTimeDiffInDays,
+    totalTransactions,
   ]);
 
   const allNodes = [
@@ -307,6 +312,7 @@ export const useChartData = (opts: IUseChartData) => {
     groupedKeys.length,
     groupedKeys[0],
     chartTimeDiffInDays,
+    totalTransactions,
   ]);
 
   const { lineData, lineMap } = useMemo(() => {
