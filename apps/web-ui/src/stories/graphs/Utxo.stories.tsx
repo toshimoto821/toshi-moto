@@ -31,7 +31,7 @@ const UtxoSankeyWrapper = () => {
   return (
     <div>
       <UtxoSankey
-        selectedTxs={new Set()}
+        selectedTxs={[]}
         utxo={address}
         width={900}
         height={300}

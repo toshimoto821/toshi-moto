@@ -2,13 +2,13 @@ import { forwardRef, ReactNode } from "react";
 import JsonView from "@uiw/react-json-view";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { type IRequest } from "@machines/network.types";
 import { LogResponseData } from "./LogResponseData";
 import { cn as classNames } from "@lib/utils";
+import type { APIRequestResponse } from "@lib/slices/network.slice.types";
 import "./log-detail-tab.css";
 
 type ILogDetailTab = {
-  request: IRequest;
+  request: APIRequestResponse;
 };
 export const LogDetailTab = (props: ILogDetailTab) => {
   const { request } = props;
@@ -20,7 +20,11 @@ export const LogDetailTab = (props: ILogDetailTab) => {
         <AccordionContent className="text-xs ">
           <div className="flex border border-x-0 border-t-0 p-2">
             <div className="w-36 font-bold">Request URL</div>
-            <div className="flex-1 overflow-auto">{request.url}</div>
+            <div className="flex-1 overflow-auto">
+              {request.url.origin}
+              {request.url.pathname}
+              {request.url.search}
+            </div>
           </div>
           <div className="flex border border-x-0 border-t-0  p-2">
             <div className="w-36 font-bold">Type</div>
@@ -33,7 +37,8 @@ export const LogDetailTab = (props: ILogDetailTab) => {
           <div className="flex  p-2">
             <div className="w-36 font-bold">Timestamp</div>
             <div className="flex-1">
-              {new Date(request.createdAt).toLocaleString()}
+              {request.fulfilledTimeStamp &&
+                new Date(request.fulfilledTimeStamp).toLocaleString()}
             </div>
           </div>
         </AccordionContent>
@@ -47,9 +52,7 @@ export const LogDetailTab = (props: ILogDetailTab) => {
       <AccordionItem value="item-3">
         <AccordionTrigger>Response</AccordionTrigger>
         <AccordionContent className="text-xs p-2 pb-1">
-          {request?.response?.data && (
-            <JsonView value={request?.response?.data} />
-          )}
+          {request?.response?.data && <JsonView value={request?.response} />}
         </AccordionContent>
       </AccordionItem>
     </Accordion.Root>

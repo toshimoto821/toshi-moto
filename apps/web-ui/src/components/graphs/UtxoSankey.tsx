@@ -8,7 +8,7 @@ type IUtxoSankey = {
   width: number;
   height: number;
   wallets: Wallet[];
-  selectedTxs: Set<string>;
+  selectedTxs: string[];
   toggleTx: (tx: Transaction) => void;
   index: number;
 };

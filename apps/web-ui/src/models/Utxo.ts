@@ -1,20 +1,8 @@
-import { type ITxsInput } from "./Wallet";
 import { Transaction } from "./Transaction";
 import { getBitcoinNodeUrl } from "@root/lib/utils";
+import { Address as AddressSliceModel } from "@lib/slices/wallets.slice";
+import { AddressArgs } from "@root/lib/slices/api.slice.types";
 const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();
-
-type UtxoStats = {
-  funded_txo_count: number;
-  funded_txo_sum: number;
-  spent_txo_count: number;
-  spent_txo_sum: number;
-  tx_count: number;
-};
-export type UtxoData = {
-  address: string;
-  chain_stats: UtxoStats;
-  mempool_stats: UtxoStats;
-};
 
 // @todo use and place in settings
 // these are external to the core utxo data.
@@ -23,18 +11,7 @@ export type UtxoData = {
 // whereas the Utxo data is more static
 type ISettings = {
   cur: string;
-  blockExplorer: string;
   btcPrice?: number;
-  utxoResponse?: {
-    stats: UtxoData;
-    details: {
-      duration: number;
-      status: number;
-      startTime: number;
-      endTime: number;
-    };
-  };
-  transactions?: ITxsInput;
   // transactionsResponse?: Record<string, any>;
 };
 
@@ -45,60 +22,59 @@ export type IUtxoInput = {
   xpub?: string;
   manual?: boolean;
   isChange?: boolean;
-  transactions?: string[];
   walletId: string;
-  // @dep
-  details?: {
-    duration: number;
-    status: number;
-    startTime: number;
-    endTime: number;
-  };
 };
 
 export class Utxo {
-  address: string;
-  walletId: string;
-  // if the utxo was added manually
-  manual: boolean = false;
-  // used to determine if the utxo address is derived from change
-  isChange?: boolean;
-  // the index used on xpub to derive this address
-  index?: number;
+  private _data: AddressSliceModel;
   // the xpub used to derive this address
   xpub?: string;
   transactionIds: string[] = [];
   transactions: Record<string, Transaction> = {};
-  status: string;
-  settings: ISettings;
 
+  private _settings: ISettings;
+  details?: AddressSliceModel["details"];
   // status: string = "";
   constructor(
-    data: IUtxoInput,
+    addressSliceData: AddressSliceModel,
     settings: ISettings = {
       cur: "BTC",
-
-      blockExplorer: VITE_BITCOIN_NODE_URL,
     }
   ) {
-    this.address = data.address;
-    this.walletId = data.walletId;
-    this.index = data.index;
-    this.xpub = data.xpub;
-    this.isChange = data.isChange;
-    this.status = data.status || "loaded";
-    this.settings = settings;
+    this._data = addressSliceData;
 
-    this.manual = data.manual ?? false;
-    this.transactionIds = data.transactions ?? [];
+    this._settings = settings;
+    this.transactionIds = addressSliceData.transactions.ids;
+    this.details = addressSliceData.details;
 
-    for (const txid of data?.transactions || []) {
-      if (settings.transactions?.txs?.[txid]) {
-        this.transactions[txid] = new Transaction(
-          settings.transactions?.txs[txid].response
-        );
-      }
-    }
+    this.transactions = Object.values(
+      addressSliceData.transactions.entities
+    ).reduce((acc, transaction) => {
+      return {
+        ...acc,
+        [transaction.id]: new Transaction(transaction.data),
+      };
+    }, {});
+  }
+
+  get address() {
+    return this._data.id;
+  }
+
+  get walletId() {
+    return this._data.walletId;
+  }
+
+  get index() {
+    return this._data.index;
+  }
+
+  get isChange() {
+    return this._data.isChange;
+  }
+
+  get status() {
+    return this._data.status || "unknown";
   }
 
   get loading() {
@@ -106,38 +82,54 @@ export class Utxo {
   }
 
   get utxoResponse() {
-    return this.settings.utxoResponse;
+    return this.details?.data;
+  }
+
+  get updatedAtNumber() {
+    if (!this.details?.fulfilledTimeStamp) return 0;
+
+    return this.details?.fulfilledTimeStamp;
   }
 
   get updatedAt() {
-    if (!this.utxoResponse?.details?.endTime) return "";
+    if (!this.details?.fulfilledTimeStamp) return "";
 
-    return new Date(this.utxoResponse?.details?.endTime).toLocaleString();
+    return new Date(this.details?.fulfilledTimeStamp).toLocaleString();
   }
 
   get updatedAtShort() {
-    if (!this.utxoResponse?.details?.endTime) return "";
+    if (!this.details?.fulfilledTimeStamp) return "";
 
-    return new Date(this.utxoResponse?.details?.endTime).toLocaleDateString();
+    return new Date(this.details.fulfilledTimeStamp).toLocaleDateString();
   }
 
+  get isLoading() {
+    return this._data.status === "PENDING";
+  }
+
+  get addressArgs(): AddressArgs {
+    return {
+      address: this.address,
+      walletId: this.walletId,
+      index: this.index,
+      isChange: this.isChange,
+    };
+  }
   blockExplorerLink(bitcoinNodeUrl = VITE_BITCOIN_NODE_URL) {
     // @todo use settings
     return `${bitcoinNodeUrl}/address/${this.address}`;
   }
 
   get utxoSum() {
-    const fundedTwoSum =
-      this.utxoResponse?.stats?.chain_stats.funded_txo_sum || 0;
+    const fundedTwoSum = this.details?.data.chain_stats.funded_txo_sum || 0;
 
     const mempoolFundedTwoSum =
-      this.utxoResponse?.stats?.mempool_stats.funded_txo_sum || 0;
+      this.details?.data.mempool_stats.funded_txo_sum || 0;
 
-    const spentTwoSum =
-      this.utxoResponse?.stats?.chain_stats.spent_txo_sum || 0;
+    const spentTwoSum = this.details?.data.chain_stats.spent_txo_sum || 0;
 
     const mempoolSpentTwoSum =
-      this.utxoResponse?.stats?.mempool_stats.spent_txo_sum || 0;
+      this.details?.data.mempool_stats.spent_txo_sum || 0;
 
     const val =
       fundedTwoSum + mempoolFundedTwoSum - (spentTwoSum + mempoolSpentTwoSum);
@@ -152,34 +144,22 @@ export class Utxo {
   }
 
   get value() {
-    if (!this.settings.btcPrice) return 0;
+    if (!this._settings.btcPrice) return 0;
     if (!this.utxoSum) return 0;
 
-    return this.settings.btcPrice * this.utxoSum;
+    return this._settings.btcPrice * this.utxoSum;
   }
 
   get transactionCount() {
     // return this.transactionIds.length || 0;
-    return this.utxoResponse?.stats?.chain_stats.tx_count || 0;
+    return this.details?.data.chain_stats.tx_count || 0;
   }
 
-  get listTransactions() {
-    return this.transactionIds
-      .map((txid) => {
-        return this.transactions[txid];
-      })
-      .filter((val) => val)
-      .sort((a, b) => {
-        if (a.date && b.date) {
-          return b.date.getTime() - a.date.getTime();
-        }
-        return 0;
-      });
+  get listTransactions(): Transaction[] {
+    return Object.values(this.transactions);
   }
 
   get indexString() {
-    if (this.manual) return "n";
-
     return this.index;
   }
 

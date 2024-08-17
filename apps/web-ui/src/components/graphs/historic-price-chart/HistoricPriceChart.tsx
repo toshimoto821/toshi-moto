@@ -1,21 +1,22 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import debounce from "lodash/debounce";
 import { Flex, Separator, Button } from "@radix-ui/themes";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { Line } from "../line/Line";
 import { Wallet } from "@models/Wallet";
-import { AppContext, WalletUIContext } from "@providers/AppProvider";
 import { ChartLegend } from "./ChartLegend";
-import type {
-  IChartTimeFrameRange,
-  IChartTimeframeGroups,
-  IForcastModelType,
-} from "@machines/appMachine";
-import type { IPlotData } from "@machines/walletListUIMachine";
-import { useWindowFocus } from "@lib/hooks/useWindowFocus";
+import type { IChartTimeFrameRange } from "@root/types";
+import type { IForcastModelType } from "@lib/slices/price.slice";
+import type { IPlotData } from "@root/types";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { generateRandomPriceSeries } from "../graph-utils";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { setForecast, selectForecast } from "@lib/slices/price.slice";
+import {
+  selectUI,
+  setGraphByRange,
+  chartByDateRangeAction,
+} from "@root/lib/slices/ui.slice";
 
 type IHistoricPriceChart = {
   height: number;
@@ -23,59 +24,33 @@ type IHistoricPriceChart = {
   wallets: Wallet[];
   prices?: [number, number][];
   btcPrice?: number;
-  selectedWallets: Set<string>;
-  netAssetValue: boolean;
 };
 
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
-  const { height, width, wallets, btcPrice, netAssetValue, selectedWallets } =
-    props;
+  const { height, width, wallets, btcPrice } = props;
   const clearSelectionRef = useRef<() => void>();
   const btcPrices = useBtcHistoricPrices();
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
-  const { loadedChartTimeFrameRange } = btcPrices;
+  const { graphTimeFrameRange, netAssetValue } = useAppSelector(selectUI);
 
-  const { send } = AppContext.useActorRef();
-  const walletActorRef = WalletUIContext.useActorRef();
+  const dispatch = useAppDispatch();
 
-  const refreshKey = useWindowFocus(1000 * 60 * 10); // every 10 minutes
+  const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
+    useAppSelector(selectUI);
 
-  const showPlotDots = AppContext.useSelector(
-    (current) => current.context.meta.showPlotDots
-  );
-
-  const forcastModel = AppContext.useSelector(
-    (current) => current.context.meta.forcastModel
-  );
-
-  const showBtcAllocation = AppContext.useSelector(
-    (current) => current.context.meta.showBtcAllocation
-  );
+  const { forecastModel } = useAppSelector(selectForecast);
 
   const result = useChartData({
-    netAssetValue,
     btcPrice,
     wallets,
-    selectedWallets,
   });
-  // this is kinda broken.  the chart flickers because the
-  // group updates immediately but the data doesn't
-  // the group should be driven off the data
-  const chartTimeframeGroupState = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeframeGroup
-  );
-  const chartTimeFrameGroupRef = useRef<IChartTimeframeGroups>(
-    chartTimeframeGroupState
-  );
 
-  const chartTimeframeRange = AppContext.useSelector(
-    (current) => current.context.meta.chartTimeFrameRange || "5Y"
-  );
+  const chartTimeframeRange = graphTimeFrameRange;
 
   // add the current price
   let timeDiff = 1000 * 60 * 60 * 24;
   const now = new Date().getTime();
-  if (prices?.length > 2 && btcPrice && !forcastModel) {
+  if (prices?.length > 2 && btcPrice && !forecastModel) {
     const lastPrice = prices[prices.length - 1][0];
     const secondToLastPrice = prices[prices.length - 2][0];
 
@@ -87,33 +62,16 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     }
   }
 
-  if (chartTimeframeRange === "1D") {
-    chartTimeFrameGroupRef.current = "5M";
-  } else if (chartTimeframeRange === "1W" || chartTimeframeRange === "1M") {
-    chartTimeFrameGroupRef.current = "1H";
-  } else if (chartTimeframeRange === "3M" || chartTimeframeRange === "1Y") {
-    chartTimeFrameGroupRef.current = "1D";
-  } else {
-    chartTimeFrameGroupRef.current = "1W";
-  }
-
-  const filteredWallets =
-    props.selectedWallets.size > 0
-      ? wallets.filter((wallet) => {
-          return props.selectedWallets.has(wallet.id);
-        })
-      : wallets;
-
   const handleUpdateTimeframe = (timeframe: IChartTimeFrameRange) => {
     return () => {
-      send({
-        type: "APP_MACHINE_UPDATE_CHART_RANGE",
-        data: { group: timeframe },
-      });
-      walletActorRef.send({
-        type: "SET_SELECTED_LOT_DATA_INDEX",
-        data: { date: -1 },
-      });
+      dispatch(setGraphByRange(timeframe));
+
+      // @todo
+      console.log("@todo implement");
+      // walletActorRef.send({
+      //   type: "SET_SELECTED_LOT_DATA_INDEX",
+      //   data: { date: -1 },
+      // });
     };
   };
 
@@ -129,7 +87,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     let nextModel = "SAYLOR" as IForcastModelType | null;
     let bullishFactor = 0.08;
     let bearishFactor = 0.001;
-    switch (forcastModel) {
+    switch (forecastModel) {
       case "SAYLOR":
         nextModel = "BULL";
         bullishFactor = 0.04;
@@ -150,7 +108,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
         break;
     }
 
-    const forcastPrices = generateRandomPriceSeries({
+    const forecastPrices = generateRandomPriceSeries({
       initialPrice: btcPrice!,
       gap: "1W",
       startDate,
@@ -158,52 +116,34 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       bullishFactor,
       bearishFactor,
     });
-    send({
-      type: "APP_MACHINE_UPDATE_FORCAST_MODEL",
-      data: { forcastModel: nextModel, forcastPrices },
-    });
+    dispatch(
+      setForecast({
+        forecastModel: nextModel,
+        forecastPrices,
+      })
+    );
   };
 
   const { lineData, plotData } = result;
 
-  const walletIds = filteredWallets.map((w) => w.id).join(",");
-  useEffect(() => {
-    walletActorRef.send({
-      type: "SET_LINE_DATA",
-      data: {
-        lineData,
-        plotData,
-      },
-    });
-  }, [
-    lineData[0]?.x,
-    lineData[0]?.y1SumInDollars,
-    lineData.length,
-    plotData.length,
-    netAssetValue,
-    chartTimeFrameGroupRef?.current,
-    refreshKey,
-    walletIds,
-    forcastModel,
-  ]);
-
   const onSelectPlot = (plot: IPlotData, clearSelection: () => void) => {
     // setSelectedPlot(plot);
     clearSelectionRef.current = clearSelection;
-    walletActorRef.send({
-      type: "SET_SELECTED_LOT_DATA_INDEX",
-      data: { date: plot.x, clearSelection },
-    });
+    console.log("@todo implement", plot);
+    // walletActorRef.send({
+    //   type: "SET_SELECTED_LOT_DATA_INDEX",
+    //   data: { date: plot.x, clearSelection },
+    // });
   };
 
   const handleClearPlotSelection = () => {
     if (clearSelectionRef.current) {
       clearSelectionRef.current();
-
-      walletActorRef.send({
-        type: "SET_SELECTED_LOT_DATA_INDEX",
-        data: { date: -1 },
-      });
+      console.log("@todo implement");
+      // walletActorRef.send({
+      //   type: "SET_SELECTED_LOT_DATA_INDEX",
+      //   data: { date: -1 },
+      // });
     }
   };
 
@@ -211,22 +151,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     const [start, end] = values;
     // if (!historicBounds) return;
     if (!start || !end) {
-      walletActorRef.send({
-        type: "SET_LINE_DATA",
-        data: {
-          lineData: [],
-          plotData: [],
-        },
-      });
       return;
     }
-    send({
-      type: "APP_MACHINE_UPDATE_CHART_RANGE_BY_DATE",
-      data: {
-        chartStartDate: start,
-        chartEndDate: end,
-      },
-    });
+
+    dispatch(chartByDateRangeAction(start, end));
   }, 200);
 
   const handleRangeChange = (range: [Date, Date]) => {
@@ -235,13 +163,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleReset = () => {
-    walletActorRef.send({
-      type: "SET_LINE_DATA",
-      data: {
-        lineData: [],
-        plotData: [],
-      },
-    });
     handleUpdateTimeframe(chartTimeframeRange)();
   };
 
@@ -312,10 +233,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           </Button>
           <Separator orientation="vertical" />
           <Button
-            variant={forcastModel ? "outline" : "ghost"}
+            variant={forecastModel ? "outline" : "ghost"}
             onClick={handleForcast}
           >
-            {forcastModel ?? "Forcast"}
+            {forecastModel ?? "Forcast"}
           </Button>
         </Flex>
       </div>
@@ -332,14 +253,13 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           dots={showPlotDots}
           btcPrice={btcPrice ?? 0}
           showBtcAllocation={showBtcAllocation}
-          forcastModel={forcastModel}
         />
       </div>
       <div>
         <ChartLegend
           height={30}
           width={width}
-          chartTimeFrameRange={loadedChartTimeFrameRange}
+          chartTimeFrameRange={graphTimeFrameRange}
           onChange={handleRangeChange}
           onReset={handleReset}
         />

@@ -3,12 +3,18 @@ import { Text, Button, Tabs, Box, Separator } from "@radix-ui/themes";
 import { CaretUpIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import { LogTable } from "./components/LogTable";
 import { LogDetail } from "./components/LogDetail/LogDetail";
-import { NetworkContext, AppContext } from "@providers/AppProvider";
 import { IconButton } from "@radix-ui/themes";
 import { LogProgress } from "./components/LogProgress";
 import { cn, deleteAllCookies } from "@lib/utils";
 import { SettingsForm } from "../settings/SettingsForm";
 import { Popover } from "../popover/Popover";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import {
+  selectRequests,
+  selectCountRequests,
+  deleteAllRequests,
+} from "@root/lib/slices/network.slice";
+import { selectAppVersion } from "@root/lib/slices/config.slice";
 
 type INetworkLog = {
   expanded?: boolean;
@@ -16,10 +22,9 @@ type INetworkLog = {
 
 export const NetworkLog = (props: INetworkLog) => {
   const { expanded: defaultExpanded = false } = props;
-  const storedVersion = AppContext.useSelector(
-    (current) => current.context.meta.appVersion
-  );
-  const { send: networkActorSend } = NetworkContext.useActorRef();
+
+  const storedVersion = useAppSelector(selectAppVersion);
+
   const [expanded, setExpanded] = useState<boolean>(defaultExpanded);
 
   const [activeRequestIndex, setActiveRequestIndex] = useState<number | null>(
@@ -44,27 +49,9 @@ export const NetworkLog = (props: INetworkLog) => {
     };
   }, [expanded]);
 
-  const requests = NetworkContext.useSelector((current) => {
-    return current.context.requests.sort((a, b) => {
-      return a.createdAt - b.createdAt;
-    });
-  });
-
-  const queuedRequests = NetworkContext.useSelector((current) => {
-    return current.context.queuedRequests;
-  });
-
-  const loadingOrQueuedRequest = NetworkContext.useSelector((current) => {
-    return current.context.loadingOrQueued;
-  });
-
-  const loadingRequests = NetworkContext.useSelector((current) => {
-    return current.context.loadingRequests;
-  });
-
-  const completedRequests = NetworkContext.useSelector((current) => {
-    return current.context.completedRequests;
-  });
+  const requests = useAppSelector(selectRequests);
+  const dispatch = useAppDispatch();
+  const counts = useAppSelector(selectCountRequests);
 
   const handleRowClick = ({ index }: { index: number }) => {
     setActiveRequestIndex(index);
@@ -74,7 +61,7 @@ export const NetworkLog = (props: INetworkLog) => {
   };
 
   const handleDeleteAll = () => {
-    networkActorSend({ type: "DELETE_ALL" });
+    dispatch(deleteAllRequests());
   };
 
   const handleReload = () => {
@@ -123,8 +110,8 @@ export const NetworkLog = (props: INetworkLog) => {
         })}
       >
         <LogProgress
-          value={completedRequests.size}
-          max={loadingOrQueuedRequest.size}
+          value={counts.complete + 1}
+          max={counts.queued + counts.pending + counts.complete + 1}
         />
 
         <Tabs.Root defaultValue="network" className="border-t">
@@ -158,14 +145,14 @@ export const NetworkLog = (props: INetworkLog) => {
                         size="1"
                         className={`${classNames} text-gray-500 pr-1 `}
                       >
-                        <span>{queuedRequests.size}</span>
+                        <span>{counts.queued}</span>
                         <span className="hidden md:inline pl-1">
                           queued
                         </span>{" "}
                       </Text>
                     )}
                   >
-                    There are {queuedRequests.size} waiting to be sent. Not all
+                    There are {counts.queued} waiting to be sent. Not all
                     requests are fire at the same time to prevent server
                     overload and so that public apis such as Mempool.space dont
                     block the request.
@@ -178,14 +165,14 @@ export const NetworkLog = (props: INetworkLog) => {
                         size="1"
                         className={`${classNames} text-gray-500  pl-1 pr-1 `}
                       >
-                        <span>{loadingRequests.size}</span>
+                        <span>{counts.pending}</span>
                         <span className="hidden md:inline pl-1">
                           loading
                         </span>{" "}
                       </Text>
                     )}
                   >
-                    Ther are {loadingRequests.size} currently in loading state,
+                    Ther are {counts.pending} currently in loading state,
                     waiting for the server to respond.
                   </Popover>
 
@@ -197,13 +184,12 @@ export const NetworkLog = (props: INetworkLog) => {
                         size="1"
                         className={`${classNames} text-gray-500 pl-1`}
                       >
-                        <span>{completedRequests.size}</span>
+                        <span>{counts.complete}</span>
                         <span className="hidden md:inline pl-1">completed</span>
                       </Text>
                     )}
                   >
-                    Ther are {completedRequests.size} currently in complete
-                    state.
+                    Ther are {counts.complete} currently in complete state.
                   </Popover>
                 </div>
                 <div className="p-2 flex items-center mr-2">

@@ -2,72 +2,31 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { type Html5Qrcode } from "html5-qrcode";
 import { Button, Separator, Text, Callout } from "@radix-ui/themes";
 import { CameraIcon, UploadIcon, InfoCircledIcon } from "@radix-ui/react-icons";
-import { type IWalletManagerEvents } from "@root/machines/walletManagerMachine";
 import { type IWalletManifest } from "@root/models/Wallet";
-type IResult = {
+
+export type ImportResult = {
   name: string;
   color: string;
-  xpubs: Set<string>;
-  utxos: Set<string>;
+  xpubs: string[];
+  utxos: string[];
 };
-type IWalletImport = {
-  name: string;
-  color: string;
-  xpubs: Set<string>;
-  utxos: Set<string>;
-};
-type IAccountType = "SINGLE_SIG" | "MULTI_SIG";
+
 type IImportWallet = {
-  send: ({ type, data }: IWalletManagerEvents) => void;
-  onDone: (accountType: IAccountType, result: IResult) => void;
+  onDone: (result: ImportResult) => void;
 };
-export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
+export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
   const previewRef = useRef<HTMLDivElement>(null);
   const [willScan, setWillScan] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [scannedElements, setScannedElements] = useState(new Set<string>());
+  const [scannedElements, setScannedElements] = useState<string[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
 
   const onResult = (result: string) => {
     // console.log(result);
-    setScannedElements((prev) => new Set([...prev, result]));
+    setScannedElements((prev) => [...prev, result]);
   };
-  const onDone = (result: IWalletImport) => {
-    let AccountType: IAccountType = "SINGLE_SIG";
-    const xpubs = Array.from(result.xpubs);
-    if (xpubs.length > 1) {
-      AccountType = "MULTI_SIG";
-      // multisig
-      for (let i = 0; i < xpubs.length; i++) {
-        send({
-          type: "BLUR_FIELD",
-          data: { index: i, value: xpubs[i], xpub: true },
-        });
-        if (i > 2) {
-          // send({ type: "ADD_EMPTY_FIELD", data: { xpub: true } });
-        }
-      }
-    } else if (xpubs.length === 1) {
-      AccountType = "SINGLE_SIG";
-      send({
-        type: "BLUR_FIELD",
-        data: { index: 0, value: xpubs[0], xpub: true },
-      });
-    }
-
-    send({
-      type: "SET_NAME",
-      data: { name: result.name },
-    });
-    send({
-      type: "SET_VALUE",
-      data: {
-        key: "color",
-        value: result.color,
-      },
-    });
-
-    onDoneProp(AccountType, result);
+  const onDone = (result: ImportResult) => {
+    onDoneProp(result);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -83,13 +42,13 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
     setIsScanning(false);
   };
 
-  const isValidManifest = (data: IWalletImport, manifest?: IWalletManifest) => {
+  const isValidManifest = (data: ImportResult, manifest?: IWalletManifest) => {
     if (!manifest) return false;
     try {
       if (data.name.length !== manifest.name) return false;
       if (data.color.length !== manifest.color) return false;
-      if (data.xpubs.size !== manifest.xpubs) return false;
-      if (data.utxos.size !== manifest.utxos) return false;
+      if (data.xpubs.length !== manifest.xpubs) return false;
+      if (data.utxos.length !== manifest.utxos) return false;
       return true;
     } catch (ex) {
       return false;
@@ -105,9 +64,9 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
     const data = {
       name: "",
       color: "",
-      xpubs: new Set<string>(),
-      utxos: new Set<string>(),
-    } as IWalletImport;
+      xpubs: [],
+      utxos: [],
+    } as ImportResult;
 
     const didStart = await html5QrcodeScanner
       .start(
@@ -125,9 +84,7 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
               console.log(ex);
             }
           } else if (key === "xpub") {
-            data.xpubs.add(value);
-          } else if (key === "utxo") {
-            data.utxos.add(value);
+            data.xpubs.push(value);
           } else if (key === "name") {
             data.name = value;
           } else if (key === "color") {
@@ -184,8 +141,8 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
         const json = JSON.parse(event.target.result as string);
         const data = {
           ...json,
-          xpubs: new Set(json.xpubs),
-          utxos: new Set(json.utxos),
+          xpubs: json.xpubs,
+          utxos: json.utxos,
         };
         const manifest = {
           name: json.name?.length,
@@ -234,7 +191,7 @@ export const ImportWallet = ({ send, onDone: onDoneProp }: IImportWallet) => {
       </div>
       <div className="my-2 flex justify-between">
         {/* @todo turn into progress bar */}
-        <Text size="2">Scanned Elements: {scannedElements.size}</Text>
+        <Text size="2">Scanned Elements: {scannedElements.length}</Text>
         <Button variant="soft" color="gray" onClick={handleImport}>
           <UploadIcon /> Import Manifest
           <input
