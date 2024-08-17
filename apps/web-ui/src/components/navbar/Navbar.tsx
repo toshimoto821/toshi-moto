@@ -168,17 +168,6 @@ export const Navbar = () => {
     setDateRangeOpen(false);
   };
 
-  const handleClearSelected = () => {
-    console.log("@todo");
-    // send({
-    //   type: "APP_MACHINE_CLEAR_SELECTED_TXS",
-    // });
-    // walletActorRef.send({
-    //   type: "SET_SELECTED_LOT_DATA_INDEX",
-    //   data: { date: -1 },
-    // });
-  };
-
   const handleSelectInputAddresses = () => {
     actions.selectInputAddresses();
   };
