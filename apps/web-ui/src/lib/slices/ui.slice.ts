@@ -7,6 +7,7 @@ import { sub, add } from "date-fns";
 import { timeDay, timeHour, timeMinute } from "d3";
 import type { UIState, GroupBy, GraphTimeFrameRange } from "./ui.slice.types";
 import { type RootState } from "../store";
+import { API_REQUEST_REJECTED } from "./network.slice";
 
 export const defaultGraphStartDate = timeDay(
   sub(new Date(), { years: 5 })
@@ -96,6 +97,17 @@ export const uiSlice = createSlice({
       }
       state.walletExpandedAddresses = Array.from(set);
     },
+  },
+  extraReducers(builder) {
+    builder.addMatcher(API_REQUEST_REJECTED, (state, action) => {
+      state.toastOpen = true;
+      const message = {
+        line1: `${action.meta.arg.endpointName} error`,
+        // @ts-expect-error error
+        line2: `${action.payload?.error}`,
+      };
+      state.toastMessage = message;
+    });
   },
 });
 
