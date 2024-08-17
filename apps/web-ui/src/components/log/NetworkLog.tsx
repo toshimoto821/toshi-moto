@@ -143,7 +143,7 @@ export const NetworkLog = (props: INetworkLog) => {
                     text={(classNames) => (
                       <Text
                         size="1"
-                        className={`${classNames} text-gray-500 pr-1 `}
+                        className={`${classNames} text-gray-500 pr-1 font-mono`}
                       >
                         <span>{counts.queued}</span>
                         <span className="hidden md:inline pl-1">
@@ -163,7 +163,7 @@ export const NetworkLog = (props: INetworkLog) => {
                     text={(classNames) => (
                       <Text
                         size="1"
-                        className={`${classNames} text-gray-500  pl-1 pr-1 `}
+                        className={`${classNames} text-gray-500  pl-1 pr-1 font-mono`}
                       >
                         <span>{counts.pending}</span>
                         <span className="hidden md:inline pl-1">
@@ -182,7 +182,7 @@ export const NetworkLog = (props: INetworkLog) => {
                     text={(classNames) => (
                       <Text
                         size="1"
-                        className={`${classNames} text-gray-500 pl-1`}
+                        className={`${classNames} text-gray-500 pl-1 font-mono`}
                       >
                         <span>{counts.complete}</span>
                         <span className="hidden md:inline pl-1">completed</span>
