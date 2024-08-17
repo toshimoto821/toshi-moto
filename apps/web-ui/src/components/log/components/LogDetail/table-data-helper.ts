@@ -59,7 +59,7 @@ export const toTabularData = (request: APIRequestResponse) => {
     rows.push(...data);
   }
 
-  if (request.meta.type === "txs") {
+  if (request.meta.type === "transactions") {
     headers.push(
       "fee",
       "locktime",
@@ -89,7 +89,7 @@ export const toTabularData = (request: APIRequestResponse) => {
     rows.push(...data);
   }
 
-  if (request.meta.type === "utxo") {
+  if (request.meta.type === "address") {
     headers.push("Key", "Value");
     const response = request.response?.data as AddressResponse;
     const flatObject = flattenObject(response || {});
