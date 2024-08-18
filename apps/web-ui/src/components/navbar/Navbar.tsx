@@ -1,11 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Text, Flex, Switch, Button } from "@radix-ui/themes";
 import { format } from "date-fns";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ArrowRightIcon,
-} from "@radix-ui/react-icons";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import * as d3 from "d3";
 import { DateRangeDialog } from "../dialogs/DateRangeDialog";
 import { useWallets } from "@root/lib/hooks/useWallets";
