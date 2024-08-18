@@ -1,4 +1,18 @@
 # UI Changelog
+## [1.9.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.9.0...web-ui-1.9.1) (2024-08-18)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/110fe4136f4726f4e33d6293f4ffa7570465ad3a/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/110fe4136f4726f4e33d6293f4ffa7570465ad3a/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* cleans up websocket listener ([8fd8282](https://github.com/toshimoto821/toshi-moto/commit/8fd828291f55100d9b9e5d3e609013b1c8e53fca))
+* websocket closed ([dcebe69](https://github.com/toshimoto821/toshi-moto/commit/dcebe6929b8cd8891f85815806ac6cc15cd531be))
+
 ## [1.9.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.8.3...web-ui-1.9.0) (2024-08-18)
 
   |    |    |
