@@ -65,13 +65,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const handleUpdateTimeframe = (timeframe: IChartTimeFrameRange) => {
     return () => {
       dispatch(setGraphByRange(timeframe));
-
-      // @todo
-      console.log("@todo implement");
-      // walletActorRef.send({
-      //   type: "SET_SELECTED_LOT_DATA_INDEX",
-      //   data: { date: -1 },
-      // });
     };
   };
 
