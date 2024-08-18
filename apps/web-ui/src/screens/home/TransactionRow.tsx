@@ -45,7 +45,7 @@ export const TransactionRow = ({
 
   const [isTxDetailsExpanded, setIsTxDetailsExpanded] = useState(false);
   const { btcPrice } = useAppSelector(selectBtcPrice);
-  console.log(btcPrice);
+
   const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
   // const price
 
@@ -108,7 +108,7 @@ export const TransactionRow = ({
         (vinOrVout.type === "VOUT" && vinOrVout.vout !== address.address);
 
       const btcAmount = (vinOrVout.btc || 0) / 100000000;
-      const btcValue = address.value;
+
       return (
         <div
           key={key}
