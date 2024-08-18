@@ -131,7 +131,13 @@ export const openPriceSocket = createAsyncThunk(
   "price/openSocket",
   async (_, { dispatch }) => {
     if (ws) {
-      return;
+      if (ws.readyState === WebSocket.CLOSED) {
+        console.log("closing ws");
+        ws.close();
+        ws = null;
+      } else {
+        return;
+      }
     }
 
     ws = new WebSocket(
@@ -143,7 +149,7 @@ export const openPriceSocket = createAsyncThunk(
       dispatch(
         showToast({
           line1: "Websocket Error",
-          line2: error.toString(),
+          line2: JSON.stringify(error.toString()),
         })
       );
     };
