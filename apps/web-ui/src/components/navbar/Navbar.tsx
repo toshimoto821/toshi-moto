@@ -119,9 +119,9 @@ export const Navbar = () => {
         "" + Math.max(1 - opacity / 100, 50 / 100);
     }
 
-    if (myBtcRef.current) {
-      myBtcRef.current.style.opacity = "" + (1 - opacity / 100);
-    }
+    // if (myBtcRef.current) {
+    //   myBtcRef.current.style.opacity = "" + (1 - opacity / 100);
+    // }
 
     if (headerControlsRef.current) {
       headerControlsRef.current.style.opacity = "" + (1 - opacity / 100);
@@ -206,7 +206,7 @@ export const Navbar = () => {
           className="flex flex-col absolute z-40 w-screen h-[140px]"
           ref={topHeaderToFifty}
         >
-          <div className="flex px-6 pt-6 backface-visibility-none">
+          <div className="flex px-4 pt-6 backface-visibility-none">
             <div ref={myBtcRef}>
               <Button variant="ghost" onClick={toggleBalance}>
                 <Text
@@ -240,13 +240,13 @@ export const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="md:container md:mx-auto flex px-6 justify-center flex-1 backface-visibility-none font-mono">
-            <div className=""></div>
-            <div className="flex flex-col text-right">
+          <div className="flex px-4 justify-between flex-1 backface-visibility-none font-mono">
+            <div className=" flex flex-1 flex-col text-left">
               <Text
                 data-testid="btc-price"
-                className="font-bold"
+                className="font-bold font-mono"
                 style={{ color: fontColor }}
+                size="6"
               >
                 {priceToShow > 0 &&
                   currencySymbol +
@@ -255,35 +255,45 @@ export const Navbar = () => {
                       : formatPrice(priceToShow))}
                 {!priceToShow && currencySymbol + "..."}
               </Text>
-              {priceToShow > 0 && valueChange && (
-                <div ref={priceChangeRef} className="text-right -mt-2">
-                  <Text style={{ color: fontColor }} size="1">
-                    {currencySymbol}
-                    {netAssetValue
-                      ? privateNumber(formatPrice(valueChange))
-                      : formatPrice(valueChange)}
-                  </Text>
-                </div>
-              )}
-            </div>
-            <div className="flex items-start">
-              {change < Infinity && (
-                <Text
-                  className="flex items-center"
-                  size="1"
-                  style={{ color: fontColor }}
-                >
-                  {change < Infinity && change && change > 0 && change ? (
-                    <ChevronUpIcon />
-                  ) : (
-                    <ChevronDownIcon />
-                  )}
-                  {change && change.toFixed(2) + "%"}
-                </Text>
-              )}
-            </div>
 
-            <div></div>
+              <Text size="1" color="gray">
+                {netAssetValue ? "USD" : "1 BTC/USD"}
+              </Text>
+            </div>
+            <div className="text-right">
+              <div className="flex justify-end items-center">
+                {priceToShow > 0 && valueChange && (
+                  <div ref={priceChangeRef}>
+                    <Text style={{ color: fontColor }} size="1">
+                      {currencySymbol}
+                      {netAssetValue
+                        ? privateNumber(formatPrice(valueChange))
+                        : formatPrice(valueChange)}
+                    </Text>
+                    {priceToShow > 0 &&
+                      valueChange &&
+                      priceToShow > 0 &&
+                      valueChange &&
+                      change < Infinity && (
+                        <Text size="1" style={{ color: fontColor }}>
+                          {" "}
+                          /{" "}
+                        </Text>
+                      )}
+                    {priceToShow > 0 && valueChange && change < Infinity && (
+                      <Text className="" size="1" style={{ color: fontColor }}>
+                        {change && change.toFixed(2) + "%"}
+                      </Text>
+                    )}
+                    <div className="-mt-1">
+                      <Text size="1" color="gray">
+                        {uiState.graphTimeFrameRange} &Delta;
+                      </Text>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <div className="border border-b-0 border-x-0 ">
             <div

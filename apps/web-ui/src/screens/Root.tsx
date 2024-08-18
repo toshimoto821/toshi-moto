@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { selectAllWallets } from "@lib/slices/wallets.slice";
 import { Toast } from "@components/toast/Toast";
@@ -28,13 +28,13 @@ export const Root = () => {
 
   const currentVersion = "__VERSION__";
 
-  const visibilitychange = () => {
+  const visibilitychange = useCallback(() => {
     if (document.visibilityState === "visible") {
       dispatch(openPriceSocket());
     } else {
       dispatch(closePriceSocket());
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     visibilitychange();
@@ -43,7 +43,7 @@ export const Root = () => {
     return () => {
       document.removeEventListener("visibilitychange", visibilitychange);
     };
-  }, []);
+  }, [visibilitychange]);
 
   useEffect(() => {
     if (storedVersion !== currentVersion) {
