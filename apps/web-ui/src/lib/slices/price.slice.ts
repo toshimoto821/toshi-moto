@@ -1,5 +1,5 @@
 import { createSlice, createSelector, PayloadAction } from "@reduxjs/toolkit";
-import { apiSlice } from "./api.slice";
+import { getPrice, getCirculatingSupply } from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
 import { uiSlice } from "./ui.slice";
@@ -41,28 +41,26 @@ export const priceSlice = createSlice({
       state.forecastModel = action.payload.forecastModel;
       state.forecastPrices = action.payload.forecastPrices || [];
     },
+    setPrice(state, action: PayloadAction<number>) {
+      state.btcPrice = action.payload;
+      state.last_updated_at = Date.now();
+    },
   },
   extraReducers(builder) {
-    builder.addMatcher(
-      apiSlice.endpoints.getPrice.matchFulfilled,
-      (state, action) => {
-        state.btcPrice = action.payload.bitcoin.usd;
-        state.last_updated_at = action.payload.bitcoin.last_updated_at * 1000;
-        state.usd_24h_change = action.payload.bitcoin.usd_24h_change;
-        state.usd_24h_vol = action.payload.bitcoin.usd_24h_vol;
-      }
-    );
+    builder.addMatcher(getPrice.matchFulfilled, (state, action) => {
+      state.btcPrice = action.payload.bitcoin.usd;
+      state.last_updated_at = action.payload.bitcoin.last_updated_at * 1000;
+      state.usd_24h_change = action.payload.bitcoin.usd_24h_change;
+      state.usd_24h_vol = action.payload.bitcoin.usd_24h_vol;
+    });
 
-    builder.addMatcher(
-      apiSlice.endpoints.getCirculatingSupply.matchFulfilled,
-      (state, action) => {
-        state.circulatingSupply = action.payload;
-      }
-    );
+    builder.addMatcher(getCirculatingSupply.matchFulfilled, (state, action) => {
+      state.circulatingSupply = action.payload;
+    });
   },
 });
 
-export const { setForecast } = priceSlice.actions;
+export const { setForecast, setPrice } = priceSlice.actions;
 export const priceReducer = priceSlice.reducer;
 
 export const selectBtcPrice = createSelector(

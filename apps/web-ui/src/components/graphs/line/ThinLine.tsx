@@ -392,7 +392,7 @@ export const ThinLine = (props: ILine) => {
     <svg
       height={height}
       viewBox={[0, 0, width, height].join(",")}
-      style={{ maxWidth: "100%", height: "auto", fontSize: 10 }}
+      style={{ maxWidth: "100%", fontSize: 10 }}
       width={width}
       ref={svgRef}
     />
