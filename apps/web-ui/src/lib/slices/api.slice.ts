@@ -86,35 +86,6 @@ export const apiSlice = createApi({
     }),
     getPrice: builder.query<PriceResponse, { queueId?: string } | void>({
       query: getPriceQuery,
-      async onCacheEntryAdded(_, api) {
-        // @todo allow user to manaully disable streaming price.
-        // const state = api.getState();
-
-        await api.cacheDataLoaded;
-        const ws = new WebSocket(
-          "wss://data-stream.binance.vision:9443/ws/btcusdt@ticker"
-        );
-
-        ws.onerror = (error) => {
-          console.error("WebSocket error:", error);
-        };
-        try {
-          ws.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            if (data.e === "ping") {
-              ws.send(JSON.stringify({ e: "pong", ...data }));
-            } else {
-              const newPrice = parseFloat(data.c);
-              api.dispatch(setPrice(newPrice));
-            }
-          };
-        } catch (e) {
-          console.log("exception", e);
-        }
-
-        await api.cacheEntryRemoved;
-        ws.close();
-      },
     }),
     getHistoricPrice: builder.query<PriceHistoryResponse, PriceHistoricArgs>({
       query: (args) => {
