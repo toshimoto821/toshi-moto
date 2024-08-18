@@ -10,6 +10,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { currencySymbols } from "@root/lib/currencies";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectBaseNodeUrl } from "@root/lib/slices/config.slice";
+import { selectBtcPrice } from "@root/lib/slices/price.slice";
 type ITransactionRow = {
   transaction: Transaction;
   address: Utxo;
@@ -43,8 +44,10 @@ export const TransactionRow = ({
   const breakpointIndex = useBreakpoints();
 
   const [isTxDetailsExpanded, setIsTxDetailsExpanded] = useState(false);
-
+  const { btcPrice } = useAppSelector(selectBtcPrice);
+  console.log(btcPrice);
   const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
+  // const price
 
   const getVins = () => {
     return transaction.vin.map(
@@ -155,9 +158,11 @@ export const TransactionRow = ({
           <div className="col-span-3 lg:col-span-4 text-right font-mono">
             <Text>
               {currencySymbols[currency]}
-              <span className="hidden lg:inline">{formatPrice(btcValue)}</span>
+              <span className="hidden lg:inline">
+                {formatPrice(btcAmount * btcPrice)}
+              </span>
               <span className="inline lg:hidden">
-                {formatPrice(btcValue, 0)}
+                {formatPrice(btcAmount * btcPrice, 0)}
               </span>
             </Text>
           </div>
