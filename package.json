@@ -7,7 +7,7 @@
     "dev": "nx run-many --target=dev --projects=web-ui,api",
     "dev:ui": "nx run-many --target=dev --projects=web-ui",
     "dev:api": "nx run-many --target=dev --projects=api",
-    "dev:mongo": "npx nx run api:mongo",
+    "dev:mongo": "nx run api:mongo",
     "build": "npx nx build web-ui",
     "build:api": "npx nx build api",
     "build:umbrel": "npx nx build-umbrel web-ui",

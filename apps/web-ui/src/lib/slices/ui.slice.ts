@@ -7,7 +7,7 @@ import { sub, add } from "date-fns";
 import { timeDay, timeHour, timeMinute } from "d3";
 import type { UIState, GroupBy, GraphTimeFrameRange } from "./ui.slice.types";
 import { type RootState } from "../store";
-import { API_REQUEST_REJECTED } from "./network.slice";
+import { API_REQUEST_REJECTED } from "./api.slice";
 
 export const defaultGraphStartDate = timeDay(
   sub(new Date(), { years: 5 })
