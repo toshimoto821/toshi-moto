@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.8.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.8.1...web-ui-1.8.2) (2024-08-18)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/ad542105617b97392eae02e22320a41a7b206994/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/ad542105617b97392eae02e22320a41a7b206994/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* utxo price ([6352647](https://github.com/toshimoto821/toshi-moto/commit/63526470160cb778a9e037b5872ff8e402f3e08c))
+
 ## [1.8.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.8.0...web-ui-1.8.1) (2024-08-17)
 
   |    |    |
