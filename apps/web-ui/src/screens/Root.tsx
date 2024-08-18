@@ -30,7 +30,7 @@ export const Root = () => {
 
   const visibilitychange = useCallback(() => {
     if (document.visibilityState === "visible") {
-      dispatch(openPriceSocket());
+      dispatch(openPriceSocket(true));
     } else {
       dispatch(closePriceSocket());
     }

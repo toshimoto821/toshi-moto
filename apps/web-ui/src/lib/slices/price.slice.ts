@@ -8,6 +8,7 @@ import { getPrice, getCirculatingSupply } from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
 import { showToast, uiSlice } from "./ui.slice";
+import { wait } from "../utils";
 
 interface PriceState {
   btcPrice: number;
@@ -127,9 +128,9 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 /// WebSocket
 ////////////////////////////////////////
 let ws: WebSocket | null = null;
-export const openPriceSocket = createAsyncThunk(
+export const openPriceSocket = createAsyncThunk<void, boolean>(
   "price/openSocket",
-  async (_, { dispatch }) => {
+  async (retry, { dispatch }) => {
     if (ws) {
       if (ws.readyState === WebSocket.CLOSED) {
         console.log("closing ws");
@@ -146,12 +147,20 @@ export const openPriceSocket = createAsyncThunk(
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
+
       dispatch(
         showToast({
           line1: "Websocket Error",
-          line2: JSON.stringify(error.toString()),
+          // @ts-expect-error message
+          line2: JSON.stringify(error.message),
         })
       );
+      dispatch(closePriceSocket());
+      if (retry) {
+        wait(1000).then(() => {
+          dispatch(openPriceSocket(false));
+        });
+      }
     };
     try {
       ws.onmessage = (e) => {
