@@ -1,9 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { Text, Flex, Switch, Separator, Button } from "@radix-ui/themes";
-import { IconButton } from "@radix-ui/themes";
+import { Text, Flex, Switch, Button } from "@radix-ui/themes";
 import { format } from "date-fns";
 import {
-  UpdateIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   ArrowRightIcon,
@@ -14,11 +12,9 @@ import { useWallets } from "@root/lib/hooks/useWallets";
 import { ThinLine } from "@root/components/graphs/line/ThinLine";
 import { useBtcPrice } from "@root/lib/hooks/useBtcPrice";
 import { SelectionDropdown } from "./SelectionDropdown";
-import { Popover } from "@root/components/popover/Popover";
 import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
 import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
-import { cn } from "@root/lib/utils";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
@@ -50,12 +46,9 @@ const bottomScale = d3
 
 export const Navbar = () => {
   const {
-    refresh,
     btcPrice: rawPrice,
     forcastPrice,
     change: btcChangePrice,
-    loading,
-    updatedTime,
   } = useBtcPrice();
   // const dispatch = useAppDispatch();
 
@@ -214,6 +207,41 @@ export const Navbar = () => {
           ref={topHeaderToFifty}
         >
           <div className="flex px-6 pt-6 backface-visibility-none">
+            <div ref={myBtcRef}>
+              <Button variant="ghost" onClick={toggleBalance}>
+                <Text
+                  size="4"
+                  color="orange"
+                  className={uiState.navbarBalanceVisibility ? "font-mono" : ""}
+                >
+                  {uiState.navbarBalanceVisibility
+                    ? padBtcZeros(data.totalBalance)
+                    : "My"}
+                  &nbsp;BTC
+                </Text>
+              </Button>
+            </div>
+
+            <div className="flex-1"></div>
+            <div className="flex flex-col">
+              <div className="flex items-center justify-end">
+                <div className="flex items-center">
+                  <Text as="label" size="2">
+                    <Flex gap="2">
+                      Net
+                      <Switch
+                        disabled={wallets.length === 0}
+                        checked={netAssetValue}
+                        onClick={() => actions.toggleNetAssetValue()}
+                      />{" "}
+                    </Flex>
+                  </Text>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="md:container md:mx-auto flex px-6 justify-center flex-1 backface-visibility-none font-mono">
+            <div className=""></div>
             <div className="flex flex-col text-right">
               <Text
                 data-testid="btc-price"
@@ -254,65 +282,7 @@ export const Navbar = () => {
                 </Text>
               )}
             </div>
-            <div className="flex-1"></div>
-            <div className="flex flex-col">
-              <div className="flex items-center justify-end">
-                <div className="flex items-center mr-2">
-                  <Text as="label" size="2">
-                    <Flex gap="2">
-                      Net
-                      <Switch
-                        disabled={wallets.length === 0}
-                        checked={netAssetValue}
-                        onClick={() => actions.toggleNetAssetValue()}
-                      />{" "}
-                    </Flex>
-                  </Text>
-                </div>
-                <div className="mr-2 flex items-center">
-                  <Separator orientation="vertical" />
-                </div>
-                <div className="flex items-center">
-                  <IconButton variant="ghost" onClick={refresh}>
-                    <UpdateIcon
-                      className={cn({
-                        "animate-spin": loading,
-                      })}
-                    />
-                  </IconButton>
-                </div>
-              </div>
-              <div className="-mt-1">
-                <Popover
-                  text={(classNames) => (
-                    <Text size="1" color="gray" className={classNames}>
-                      <i>{updatedTime}</i>
-                    </Text>
-                  )}
-                  title="Last Updated Time"
-                >
-                  This is the BTC price last updated at {updatedTime}. This is
-                  cached every 5 minutes to save resources on the server
-                  receiving too many requests.
-                </Popover>
-              </div>
-            </div>
-          </div>
-          <div className="md:container md:mx-auto flex px-6 justify-between flex-1 backface-visibility-none">
-            <div className=""></div>
-            <div
-              ref={myBtcRef}
-              className={`md:container md:mx-auto flex items-start transition-opacity justify-center px-6 flex-1`}
-            >
-              <Button variant="ghost" onClick={toggleBalance}>
-                <Text size="6" color="orange">
-                  {uiState.navbarBalanceVisibility
-                    ? padBtcZeros(data.totalBalance)
-                    : "My"}
-                  &nbsp;BTC
-                </Text>
-              </Button>
-            </div>
+
             <div></div>
           </div>
           <div className="border border-b-0 border-x-0 ">

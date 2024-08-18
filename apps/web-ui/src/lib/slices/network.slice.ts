@@ -1,7 +1,6 @@
 import {
   createEntityAdapter,
   createSlice,
-  isAnyOf,
   createSelector,
   PayloadAction,
   nanoid,
@@ -29,6 +28,12 @@ import {
   type ConfigState,
 } from "./config.slice";
 import type { AppStartListening } from "../store/middleware/listener";
+import {
+  API_REQUEST_PENDING,
+  API_REQUEST_FULFILLED,
+  API_REQUEST_REJECTED,
+  API_REQUEST_FULFILLED_REJECTED,
+} from "./api.slice";
 
 export const requestsAdapter = createEntityAdapter<APIRequestResponse>({
   sortComparer: (a, b) => a.startedTimeStamp - b.startedTimeStamp,
@@ -46,37 +51,6 @@ const initialState: NetworkState = {
   requests: requestsAdapter.getInitialState(),
 };
 
-const API_REQUEST_FULFILLED = isAnyOf(
-  apiSlice.endpoints.getAddress.matchFulfilled,
-  apiSlice.endpoints.getTransactions.matchFulfilled,
-  apiSlice.endpoints.getPrice.matchFulfilled,
-  apiSlice.endpoints.getCirculatingSupply.matchFulfilled
-);
-
-export const API_REQUEST_REJECTED = isAnyOf(
-  apiSlice.endpoints.getAddress.matchRejected,
-  apiSlice.endpoints.getTransactions.matchRejected,
-  apiSlice.endpoints.getPrice.matchRejected,
-  apiSlice.endpoints.getCirculatingSupply.matchRejected
-);
-
-const API_REQUEST_PENDING = isAnyOf(
-  apiSlice.endpoints.getAddress.matchPending,
-  apiSlice.endpoints.getTransactions.matchPending,
-  apiSlice.endpoints.getPrice.matchPending,
-  apiSlice.endpoints.getCirculatingSupply.matchPending
-);
-
-const API_REQUEST_FULFILLED_REJECTED = isAnyOf(
-  apiSlice.endpoints.getAddress.matchFulfilled,
-  apiSlice.endpoints.getAddress.matchRejected,
-  apiSlice.endpoints.getTransactions.matchFulfilled,
-  apiSlice.endpoints.getTransactions.matchRejected,
-  apiSlice.endpoints.getPrice.matchFulfilled,
-  apiSlice.endpoints.getPrice.matchRejected,
-  apiSlice.endpoints.getCirculatingSupply.matchFulfilled,
-  apiSlice.endpoints.getCirculatingSupply.matchRejected
-);
 ///////////////////////////////////////////
 // Slice
 ///////////////////////////////////////////

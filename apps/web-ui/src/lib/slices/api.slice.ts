@@ -5,6 +5,7 @@ import {
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
+import { isAnyOf } from "@reduxjs/toolkit";
 import { selectBaseApiUrl, selectBaseNodeUrl } from "./config.slice";
 import type { RootState } from "../store";
 import { ONE_HUNDRED_MILLION } from "../utils";
@@ -17,6 +18,7 @@ import type {
   PriceHistoricArgs,
   TransactionsResponse,
 } from "./api.slice.types";
+import { setPrice } from "./price.slice";
 
 export const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
@@ -84,6 +86,35 @@ export const apiSlice = createApi({
     }),
     getPrice: builder.query<PriceResponse, { queueId?: string } | void>({
       query: getPriceQuery,
+      async onCacheEntryAdded(_, api) {
+        // @todo allow user to manaully disable streaming price.
+        // const state = api.getState();
+
+        await api.cacheDataLoaded;
+        const ws = new WebSocket(
+          "wss://data-stream.binance.vision:9443/ws/btcusdt@ticker"
+        );
+
+        ws.onerror = (error) => {
+          console.error("WebSocket error:", error);
+        };
+        try {
+          ws.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            if (data.e === "ping") {
+              ws.send(JSON.stringify({ e: "pong", ...data }));
+            } else {
+              const newPrice = parseFloat(data.c);
+              api.dispatch(setPrice(newPrice));
+            }
+          };
+        } catch (e) {
+          console.log("exception", e);
+        }
+
+        await api.cacheEntryRemoved;
+        ws.close();
+      },
     }),
     getHistoricPrice: builder.query<PriceHistoryResponse, PriceHistoricArgs>({
       query: (args) => {
@@ -100,8 +131,41 @@ export const {
   useGetCirculatingSupplyQuery,
 } = apiSlice;
 
-export const { getAddress, getTransactions } = apiSlice.endpoints;
+export const { getAddress, getTransactions, getPrice, getCirculatingSupply } =
+  apiSlice.endpoints;
 
 //////////////////////////////////////
-// Selectors
+// actions
 //////////////////////////////////////
+
+export const API_REQUEST_FULFILLED = isAnyOf(
+  getAddress.matchFulfilled,
+  getTransactions.matchFulfilled,
+  getPrice.matchFulfilled,
+  getCirculatingSupply.matchFulfilled
+);
+
+export const API_REQUEST_REJECTED = isAnyOf(
+  getAddress.matchRejected,
+  getTransactions.matchRejected,
+  getPrice.matchRejected,
+  getCirculatingSupply.matchRejected
+);
+
+export const API_REQUEST_PENDING = isAnyOf(
+  getAddress.matchPending,
+  getTransactions.matchPending,
+  getPrice.matchPending,
+  getCirculatingSupply.matchPending
+);
+
+export const API_REQUEST_FULFILLED_REJECTED = isAnyOf(
+  getAddress.matchFulfilled,
+  getAddress.matchRejected,
+  getTransactions.matchFulfilled,
+  getTransactions.matchRejected,
+  getPrice.matchFulfilled,
+  getPrice.matchRejected,
+  getCirculatingSupply.matchFulfilled,
+  getCirculatingSupply.matchRejected
+);
