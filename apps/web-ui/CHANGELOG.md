@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.9.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.9.2...web-ui-1.9.3) (2024-08-18)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/66659966ba9710e1331bc783a86eb552ef56129d/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/66659966ba9710e1331bc783a86eb552ef56129d/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* adds socket retry ([6665996](https://github.com/toshimoto821/toshi-moto/commit/66659966ba9710e1331bc783a86eb552ef56129d))
+
 ## [1.9.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.9.1...web-ui-1.9.2) (2024-08-18)
 
   |    |    |
