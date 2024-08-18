@@ -7,7 +7,7 @@ import {
 import { getPrice, getCirculatingSupply } from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
-import { setUI, showToast, uiSlice } from "./ui.slice";
+import { showToast, uiSlice } from "./ui.slice";
 
 interface PriceState {
   btcPrice: number;

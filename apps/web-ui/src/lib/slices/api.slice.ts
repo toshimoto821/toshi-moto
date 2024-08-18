@@ -18,7 +18,6 @@ import type {
   PriceHistoricArgs,
   TransactionsResponse,
 } from "./api.slice.types";
-import { setPrice } from "./price.slice";
 
 export const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
