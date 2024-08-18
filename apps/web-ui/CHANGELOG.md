@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.9.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.8.3...web-ui-1.9.0) (2024-08-18)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/e9f76224358a725b2ea63b1499dc4de32044f0ac/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/e9f76224358a725b2ea63b1499dc4de32044f0ac/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### ✨ Features
+
+* adds streaming price ([707194a](https://github.com/toshimoto821/toshi-moto/commit/707194a0ec5c7e99b5ccbf78580ee36967a6747c))
+
 ## [1.8.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.8.2...web-ui-1.8.3) (2024-08-18)
 
   |    |    |
