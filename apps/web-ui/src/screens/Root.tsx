@@ -6,6 +6,10 @@ import { Navbar } from "@components/navbar/Navbar";
 import { Xpub } from "@root/models/Xpub";
 import { useAppDispatch, useAppSelector } from "@lib/hooks/store.hooks";
 import { setAppVersion, selectAppVersion } from "@root/lib/slices/config.slice";
+import {
+  openPriceSocket,
+  closePriceSocket,
+} from "@root/lib/slices/price.slice";
 
 export const Root = () => {
   const { pathname } = useLocation();
@@ -23,6 +27,23 @@ export const Root = () => {
   const storedVersion = useAppSelector(selectAppVersion);
 
   const currentVersion = "__VERSION__";
+
+  const visibilitychange = () => {
+    if (document.visibilityState === "visible") {
+      dispatch(openPriceSocket());
+    } else {
+      dispatch(closePriceSocket());
+    }
+  };
+
+  useEffect(() => {
+    visibilitychange();
+    document.addEventListener("visibilitychange", visibilitychange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", visibilitychange);
+    };
+  }, []);
 
   useEffect(() => {
     if (storedVersion !== currentVersion) {

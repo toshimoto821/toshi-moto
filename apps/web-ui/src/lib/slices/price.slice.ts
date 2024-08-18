@@ -1,8 +1,13 @@
-import { createSlice, createSelector, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createSelector,
+  PayloadAction,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
 import { getPrice, getCirculatingSupply } from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
-import { uiSlice } from "./ui.slice";
+import { showToast, uiSlice } from "./ui.slice";
 
 interface PriceState {
   btcPrice: number;
@@ -117,3 +122,61 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
     },
   });
 };
+
+////////////////////////////////////////
+/// WebSocket
+////////////////////////////////////////
+let ws: WebSocket | null = null;
+export const openPriceSocket = createAsyncThunk(
+  "price/openSocket",
+  async (_, { dispatch }) => {
+    if (ws) {
+      if (ws.readyState === WebSocket.CLOSED) {
+        console.log("closing ws");
+        ws.close();
+        ws = null;
+      } else {
+        return;
+      }
+    }
+
+    ws = new WebSocket(
+      "wss://data-stream.binance.vision:9443/ws/btcusdt@ticker"
+    );
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      dispatch(
+        showToast({
+          line1: "Websocket Error",
+          line2: JSON.stringify(error.toString()),
+        })
+      );
+    };
+    try {
+      ws.onmessage = (e) => {
+        if (!ws) return;
+        const data = JSON.parse(e.data);
+        if (data.e === "ping") {
+          ws.send(JSON.stringify({ e: "pong", ...data }));
+        } else {
+          const newPrice = parseFloat(data.c);
+
+          dispatch(setPrice(newPrice));
+        }
+      };
+    } catch (e) {
+      console.log("exception", e);
+    }
+  }
+);
+
+export const closePriceSocket = createAsyncThunk(
+  "price/closeSocket",
+  async () => {
+    if (ws) {
+      ws.close();
+      ws = null;
+    }
+  }
+);
