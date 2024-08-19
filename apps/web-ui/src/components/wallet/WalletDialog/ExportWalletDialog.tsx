@@ -19,7 +19,6 @@ export const ExportWalletDialog = ({
   const [runCount, setRunCount] = useState<number>(0);
   const [qrcodeString, setQrcodeString] = useState<string>("");
   const data = wallet.export();
-  console.log(data);
   const buidlManifest = (data: IWalletExport) => {
     return JSON.stringify({
       name: data.name.length,

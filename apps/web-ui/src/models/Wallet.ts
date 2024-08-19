@@ -15,7 +15,6 @@ export type IWalletManifest = {
   name: number;
   color: number;
   xpubs: number;
-  utxos: number;
 };
 
 export type ITxLite = {
