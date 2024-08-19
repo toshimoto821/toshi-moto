@@ -9,14 +9,12 @@ export type IWalletExport = {
   name: string;
   color: string;
   xpubs: string[];
-  utxos: string[];
 };
 
 export type IWalletManifest = {
   name: number;
   color: number;
   xpubs: number;
-  utxos: number;
 };
 
 export type ITxLite = {
@@ -475,13 +473,11 @@ export class Wallet {
     return this.addresses[address];
   }
   export(): IWalletExport {
-    const xpubs = Object.keys(this.xpubs);
-    const utxos = Object.keys(this.addresses);
+    const xpubs = this.xpubs.map((xpub) => xpub.address);
     return {
       name: this.name,
       color: this.color,
       xpubs,
-      utxos,
     };
   }
 }
