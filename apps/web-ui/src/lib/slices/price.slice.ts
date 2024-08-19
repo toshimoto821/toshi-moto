@@ -7,7 +7,7 @@ import {
 import { getPrice, getCirculatingSupply } from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
-import { showToast, uiSlice } from "./ui.slice";
+import { uiSlice } from "./ui.slice";
 import { wait } from "../utils";
 
 interface PriceState {
@@ -148,13 +148,13 @@ export const openPriceSocket = createAsyncThunk<void, boolean>(
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
 
-      dispatch(
-        showToast({
-          line1: "Websocket Error",
-          // @ts-expect-error message
-          line2: JSON.stringify(error.message),
-        })
-      );
+      // dispatch(
+      //   showToast({
+      //     line1: "Websocket Error",
+      //     // @ts-expect-error message
+      //     line2: JSON.stringify(error.message),
+      //   })
+      // );
       dispatch(closePriceSocket());
       if (retry) {
         wait(1000).then(() => {

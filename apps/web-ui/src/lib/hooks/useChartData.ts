@@ -67,17 +67,17 @@ export const useChartData = (opts: IUseChartData) => {
 
   // add the current price
   let timeDiff = 1000 * 60 * 60 * 24;
-  const now = new Date().getTime();
+  // const now = new Date().getTime();
   if (prices?.length > 2 && btcPrice && !forecastModel) {
     const lastPrice = prices[prices.length - 1][0];
     const secondToLastPrice = prices[prices.length - 2][0];
 
     timeDiff = lastPrice - secondToLastPrice;
 
-    if (lastPrice < now && now - lastPrice < timeDiff) {
-      const newLastPrice = lastPrice + timeDiff;
-      prices.push([newLastPrice, btcPrice]);
-    }
+    // if (lastPrice < now && now - lastPrice < timeDiff) {
+    const newLastPrice = lastPrice + timeDiff;
+    prices.push([newLastPrice, btcPrice]);
+    // }
   }
 
   const dateToKeyFn = getGroupKey(graphTimeFrameGroup);

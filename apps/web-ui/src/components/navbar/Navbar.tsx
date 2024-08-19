@@ -12,9 +12,9 @@ import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
 import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
+import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
-import { useChartData } from "@root/lib/hooks/useChartData";
 
 const colorScale = d3
   .scaleLinear<string>()
