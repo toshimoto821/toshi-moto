@@ -8,7 +8,6 @@ export type ImportResult = {
   name: string;
   color: string;
   xpubs: string[];
-  utxos: string[];
 };
 
 type IImportWallet = {
@@ -48,7 +47,6 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       if (data.name.length !== manifest.name) return false;
       if (data.color.length !== manifest.color) return false;
       if (data.xpubs.length !== manifest.xpubs) return false;
-      if (data.utxos.length !== manifest.utxos) return false;
       return true;
     } catch (ex) {
       return false;
@@ -65,7 +63,6 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       name: "",
       color: "",
       xpubs: [],
-      utxos: [],
     } as ImportResult;
 
     const didStart = await html5QrcodeScanner
@@ -74,6 +71,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
         { fps: 10 },
         (decodedText) => {
           let manifest: IWalletManifest | undefined;
+          // console.log("decided", decodedText);
           const index = decodedText.indexOf(":");
           const key = decodedText.substring(0, index);
           const value = decodedText.substring(index + 1);
@@ -142,13 +140,11 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
         const data = {
           ...json,
           xpubs: json.xpubs,
-          utxos: json.utxos,
         };
         const manifest = {
           name: json.name?.length,
           color: json.color?.length,
           xpubs: json.xpubs?.length,
-          utxos: json.utxos?.length,
         };
         if (isValidManifest(data, manifest)) {
           onDone(data);

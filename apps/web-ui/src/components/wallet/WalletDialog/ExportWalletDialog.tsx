@@ -19,17 +19,16 @@ export const ExportWalletDialog = ({
   const [runCount, setRunCount] = useState<number>(0);
   const [qrcodeString, setQrcodeString] = useState<string>("");
   const data = wallet.export();
-
+  console.log(data);
   const buidlManifest = (data: IWalletExport) => {
     return JSON.stringify({
       name: data.name.length,
       color: data.color.length,
       xpubs: data.xpubs.length,
-      utxos: data.utxos.length,
     });
   };
   const run = async () => {
-    const { xpubs, utxos, name, color } = data;
+    const { xpubs, name, color } = data;
     setQrcodeString(`manifest:${buidlManifest(data)}`);
     await wait(1000);
     setQrcodeString(`name:${name}`);
@@ -38,10 +37,6 @@ export const ExportWalletDialog = ({
     await wait(1000);
     for (const pub of xpubs) {
       setQrcodeString(`xpub:${pub}`);
-      await wait(1000);
-    }
-    for (const utxo of utxos) {
-      setQrcodeString(`utxo:${utxo}`);
       await wait(1000);
     }
     setRunCount(runCount + 1);
