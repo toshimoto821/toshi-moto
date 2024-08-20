@@ -666,6 +666,7 @@ export const Line = (props: ILine) => {
         }
       })
       .on("mouseout touchend", () => {
+        dispatch(setStreamPause(false));
         tooltip.style("opacity", 0);
         // toolTipLine.style("opacity", 0);
         if (currentVerticalPriceLine.current) {
