@@ -3,8 +3,6 @@ import { type Html5Qrcode } from "html5-qrcode";
 import { Button, Separator, Text, Callout } from "@radix-ui/themes";
 import { CameraIcon, UploadIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { type IWalletManifest } from "@root/models/Wallet";
-import { showToast } from "@root/lib/slices/ui.slice";
-import { useAppDispatch } from "@root/lib/hooks/store.hooks";
 
 export type ImportResult = {
   name: string;
@@ -20,9 +18,8 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
   const [willScan, setWillScan] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scannedElements, setScannedElements] = useState<string[]>([]);
-  const [latestScane, setLatestScan] = useState("");
+  const [latestScan, setLatestScan] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
-  const dispatch = useAppDispatch();
   const onResult = (result: string) => {
     // console.log(result);
     setScannedElements((prev) => [...prev, result]);
@@ -78,33 +75,15 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
           const index = decodedText.indexOf(":");
           const key = decodedText.substring(0, index);
           const value = decodedText.substring(index + 1);
-          setLatestScan(key + ":" + value);
+          setLatestScan(key);
           if (key === "manifest") {
             try {
               manifest = JSON.parse(value);
-              dispatch(
-                showToast({
-                  line1: "Manifest Scanned",
-                  line2: JSON.stringify(manifest),
-                })
-              );
             } catch (ex) {
               console.log(ex);
-              dispatch(
-                showToast({
-                  line1: "Manifest Scanned",
-                  line2: "failed to parse manifest",
-                })
-              );
             }
           } else if (key === "xpub") {
             xpubs.add(value);
-            dispatch(
-              showToast({
-                line1: "Manifest Scanned",
-                line2: value,
-              })
-            );
           } else if (key === "name") {
             data.name = value;
           } else if (key === "color") {
@@ -112,21 +91,8 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
           }
           data.xpubs = Array.from(xpubs);
           if (isValidManifest(data, manifest)) {
-            dispatch(
-              showToast({
-                line1: "valid manifest",
-                line2: "",
-              })
-            );
             onDone(data);
             stop();
-          } else {
-            dispatch(
-              showToast({
-                line1: "error manifest",
-                line2: `name: ${data.name.length} | ${manifest?.name}, color: ${data.color.length} | ${manifest?.color}, xpubs:${data.xpubs.length} | ${manifest?.xpubs}`,
-              })
-            );
           }
 
           onResult(decodedText);
@@ -223,7 +189,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       <div className="my-2 flex justify-between">
         {/* @todo turn into progress bar */}
         <Text size="2">
-          {latestScane} / Scanned Elements: {scannedElements.length}
+          Scanned Elements: {scannedElements.length} | {latestScan}
         </Text>
         <Button variant="soft" color="gray" onClick={handleImport}>
           <UploadIcon /> Import Manifest
