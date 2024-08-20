@@ -67,6 +67,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       color: "",
       xpubs: [],
     } as ImportResult;
+    const xpubs = new Set<string>();
     let manifest: IWalletManifest | undefined;
     const didStart = await html5QrcodeScanner
       .start(
@@ -97,7 +98,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
               );
             }
           } else if (key === "xpub") {
-            data.xpubs.push(value);
+            xpubs.add(value);
             dispatch(
               showToast({
                 line1: "Manifest Scanned",
@@ -109,7 +110,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
           } else if (key === "color") {
             data.color = value;
           }
-
+          data.xpubs = Array.from(xpubs);
           if (isValidManifest(data, manifest)) {
             dispatch(
               showToast({
@@ -123,7 +124,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
             dispatch(
               showToast({
                 line1: "error manifest",
-                line2: `name: ${data.name.length} | ${manifest?.name}, color: ${data.color} | ${manifest?.color}, xpubs:${data.xpubs.length} | ${manifest?.xpubs}`,
+                line2: `name: ${data.name.length} | ${manifest?.name}, color: ${data.color.length} | ${manifest?.color}, xpubs:${data.xpubs.length} | ${manifest?.xpubs}`,
               })
             );
           }
