@@ -67,13 +67,12 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       color: "",
       xpubs: [],
     } as ImportResult;
-
+    let manifest: IWalletManifest | undefined;
     const didStart = await html5QrcodeScanner
       .start(
         { facingMode: "environment" },
         { fps: 10 },
         (decodedText) => {
-          let manifest: IWalletManifest | undefined;
           // console.log("decided", decodedText);
           const index = decodedText.indexOf(":");
           const key = decodedText.substring(0, index);
