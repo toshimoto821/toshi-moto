@@ -184,7 +184,7 @@ export const Navbar = () => {
         {lineData && (
           <div
             ref={lineWrapperRef}
-            className={`absolute px-5 opacity-0 z-30 w-[${dimensions.width}]px`}
+            className={`absolute px-4 opacity-0 z-30 w-[${dimensions.width}]px`}
           >
             <ThinLine
               lineData={lineData}
@@ -211,9 +211,8 @@ export const Navbar = () => {
                   className={uiState.navbarBalanceVisibility ? "font-mono" : ""}
                 >
                   {uiState.navbarBalanceVisibility
-                    ? padBtcZeros(data.totalBalance)
+                    ? `₿${padBtcZeros(data.totalBalance)}`
                     : "My"}
-                  &nbsp;BTC
                 </Text>
               </Button>
             </div>
@@ -253,7 +252,7 @@ export const Navbar = () => {
               </Text>
 
               <Text size="1" color="gray">
-                {netAssetValue ? "USD" : "1 BTC/USD"}
+                {netAssetValue ? "USD" : "BTC/USD"}
               </Text>
             </div>
             <div className="text-right">

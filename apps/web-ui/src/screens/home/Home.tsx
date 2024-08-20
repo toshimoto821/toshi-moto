@@ -1,8 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Button } from "@radix-ui/themes";
-import { useBtcPrice } from "@lib/hooks/useBtcPrice";
-import { useWallets } from "@lib/hooks/useWallets";
 import { useElementDimensions } from "@lib/hooks/useElementDimensions";
 import { Footer } from "@components/footer/Footer";
 import { HistoricPriceChart } from "@components/graphs/historic-price-chart/HistoricPriceChart";
@@ -12,23 +10,21 @@ import { AddWalletDialog } from "@components/wallet/WalletDialog/AddWalletDialog
 export const Home = () => {
   const { pathname } = useLocation();
   const [addWalletOpen, setAddWalletOpen] = useState(false);
-  const { btcPrice } = useBtcPrice();
-  const { wallets } = useWallets();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useElementDimensions(containerRef);
-
+  const setDialogOpen = useCallback(() => {
+    setAddWalletOpen(true);
+  }, []);
+  const setDialogClosed = useCallback(() => {
+    setAddWalletOpen(false);
+  }, []);
   const paddingTop = 140;
   return (
     <>
       <div style={{ paddingTop }}>
         <div ref={containerRef} className="mb-4 pt-2">
-          <HistoricPriceChart
-            wallets={wallets}
-            height={400}
-            btcPrice={btcPrice}
-            width={dimensions.width}
-          />
+          <HistoricPriceChart height={400} width={dimensions.width} />
         </div>
         <div className="mx-4 min-h-[400px]">
           <Outlet />
@@ -39,14 +35,11 @@ export const Home = () => {
                 variant="surface"
                 color="gray"
                 className="drop-shadow-lg"
-                onClick={() => setAddWalletOpen(true)}
+                onClick={setDialogOpen}
               >
                 Add Wallet
               </Button>
-              <AddWalletDialog
-                open={addWalletOpen}
-                onClose={() => setAddWalletOpen(false)}
-              />
+              <AddWalletDialog open={addWalletOpen} onClose={setDialogClosed} />
             </div>
           )}
         </div>
