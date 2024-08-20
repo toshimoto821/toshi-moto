@@ -18,9 +18,8 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
   const [willScan, setWillScan] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scannedElements, setScannedElements] = useState<string[]>([]);
-  const [latestScane, setLatestScan] = useState("");
+  const [latestScan, setLatestScan] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
-
   const onResult = (result: string) => {
     // console.log(result);
     setScannedElements((prev) => [...prev, result]);
@@ -65,18 +64,18 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       color: "",
       xpubs: [],
     } as ImportResult;
-
+    const xpubs = new Set<string>();
+    let manifest: IWalletManifest | undefined;
     const didStart = await html5QrcodeScanner
       .start(
         { facingMode: "environment" },
         { fps: 10 },
         (decodedText) => {
-          let manifest: IWalletManifest | undefined;
           // console.log("decided", decodedText);
           const index = decodedText.indexOf(":");
           const key = decodedText.substring(0, index);
           const value = decodedText.substring(index + 1);
-          setLatestScan(key + ":" + value);
+          setLatestScan(key);
           if (key === "manifest") {
             try {
               manifest = JSON.parse(value);
@@ -84,13 +83,13 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
               console.log(ex);
             }
           } else if (key === "xpub") {
-            data.xpubs.push(value);
+            xpubs.add(value);
           } else if (key === "name") {
             data.name = value;
           } else if (key === "color") {
             data.color = value;
           }
-
+          data.xpubs = Array.from(xpubs);
           if (isValidManifest(data, manifest)) {
             onDone(data);
             stop();
@@ -190,7 +189,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       <div className="my-2 flex justify-between">
         {/* @todo turn into progress bar */}
         <Text size="2">
-          {latestScane} / Scanned Elements: {scannedElements.length}
+          Scanned Elements: {scannedElements.length} | {latestScan}
         </Text>
         <Button variant="soft" color="gray" onClick={handleImport}>
           <UploadIcon /> Import Manifest
