@@ -18,6 +18,8 @@ interface PriceState {
   circulatingSupply: number;
   forecastPrices: IPrices;
   forecastModel: IForcastModelType | null;
+  streamStatus: "CONNECTED" | "DISCONNECTED";
+  streamPaused: boolean;
 }
 
 export type IPrices = [number, number][];
@@ -31,12 +33,20 @@ const initialState: PriceState = {
   circulatingSupply: 0,
   forecastPrices: [],
   forecastModel: null,
+  streamStatus: "DISCONNECTED",
+  streamPaused: false,
 };
 
 export const priceSlice = createSlice({
   name: "price",
   initialState,
   reducers: {
+    setStreamStatus(state, action: PayloadAction<PriceState["streamStatus"]>) {
+      state.streamStatus = action.payload;
+    },
+    setStreamPause(state, action: PayloadAction<boolean>) {
+      state.streamPaused = action.payload;
+    },
     setForecast(
       state,
       action: PayloadAction<{
@@ -66,7 +76,8 @@ export const priceSlice = createSlice({
   },
 });
 
-export const { setForecast, setPrice } = priceSlice.actions;
+export const { setForecast, setPrice, setStreamStatus, setStreamPause } =
+  priceSlice.actions;
 export const priceReducer = priceSlice.reducer;
 
 export const selectBtcPrice = createSelector(
@@ -130,10 +141,11 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 let ws: WebSocket | null = null;
 export const openPriceSocket = createAsyncThunk<void, boolean>(
   "price/openSocket",
-  async (retry, { dispatch }) => {
+  async (retry, { dispatch, getState }) => {
     if (ws) {
       if (ws.readyState === WebSocket.CLOSED) {
         console.log("closing ws");
+        dispatch(setStreamStatus("DISCONNECTED"));
         ws.close();
         ws = null;
       } else {
@@ -144,7 +156,7 @@ export const openPriceSocket = createAsyncThunk<void, boolean>(
     ws = new WebSocket(
       "wss://data-stream.binance.vision:9443/ws/btcusdt@ticker"
     );
-
+    dispatch(setStreamStatus("CONNECTED"));
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
 
@@ -170,8 +182,10 @@ export const openPriceSocket = createAsyncThunk<void, boolean>(
           ws.send(JSON.stringify({ e: "pong", ...data }));
         } else {
           const newPrice = parseFloat(data.c);
-
-          dispatch(setPrice(newPrice));
+          const state = getState() as RootState;
+          if (newPrice !== state.price.btcPrice && !state.price.streamPaused) {
+            dispatch(setPrice(newPrice));
+          }
         }
       };
     } catch (e) {
@@ -182,7 +196,8 @@ export const openPriceSocket = createAsyncThunk<void, boolean>(
 
 export const closePriceSocket = createAsyncThunk(
   "price/closeSocket",
-  async () => {
+  async (_, { dispatch }) => {
+    dispatch(setStreamStatus("DISCONNECTED"));
     if (ws) {
       ws.close();
       ws = null;
