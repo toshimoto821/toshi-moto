@@ -3,7 +3,6 @@ import debounce from "lodash/debounce";
 import { Flex, Separator, Button } from "@radix-ui/themes";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { Line } from "../line/Line";
-import { Wallet } from "@models/Wallet";
 import { ChartLegend } from "./ChartLegend";
 import type { IChartTimeFrameRange } from "@root/types";
 import type { IForcastModelType } from "@lib/slices/price.slice";
