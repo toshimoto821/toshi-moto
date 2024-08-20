@@ -18,6 +18,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
   const [willScan, setWillScan] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scannedElements, setScannedElements] = useState<string[]>([]);
+  const [latestScane, setLatestScan] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
 
   const onResult = (result: string) => {
@@ -75,6 +76,7 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
           const index = decodedText.indexOf(":");
           const key = decodedText.substring(0, index);
           const value = decodedText.substring(index + 1);
+          setLatestScan(key + ":" + value);
           if (key === "manifest") {
             try {
               manifest = JSON.parse(value);
@@ -187,7 +189,9 @@ export const ImportWallet = ({ onDone: onDoneProp }: IImportWallet) => {
       </div>
       <div className="my-2 flex justify-between">
         {/* @todo turn into progress bar */}
-        <Text size="2">Scanned Elements: {scannedElements.length}</Text>
+        <Text size="2">
+          {latestScane} / Scanned Elements: {scannedElements.length}
+        </Text>
         <Button variant="soft" color="gray" onClick={handleImport}>
           <UploadIcon /> Import Manifest
           <input
