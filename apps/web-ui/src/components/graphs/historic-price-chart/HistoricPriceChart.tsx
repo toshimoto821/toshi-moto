@@ -3,7 +3,6 @@ import debounce from "lodash/debounce";
 import { Flex, Separator, Button } from "@radix-ui/themes";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { Line } from "../line/Line";
-import { Wallet } from "@models/Wallet";
 import { ChartLegend } from "./ChartLegend";
 import type { IChartTimeFrameRange } from "@root/types";
 import type { IForcastModelType } from "@lib/slices/price.slice";
@@ -17,22 +16,24 @@ import {
   setGraphByRange,
   chartByDateRangeAction,
 } from "@root/lib/slices/ui.slice";
+import { useBtcPrice } from "@lib/hooks/useBtcPrice";
+import { useWallets } from "@root/lib/hooks/useWallets";
+import { cn } from "@root/lib/utils";
 
 type IHistoricPriceChart = {
   height: number;
   width: number;
-  wallets: Wallet[];
-  prices?: [number, number][];
   btcPrice?: number;
 };
 
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
-  const { height, width, wallets, btcPrice } = props;
+  const { height, width } = props;
   const clearSelectionRef = useRef<() => void>();
   const btcPrices = useBtcHistoricPrices();
+  const { wallets } = useWallets();
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
   const { graphTimeFrameRange, netAssetValue } = useAppSelector(selectUI);
-
+  const { btcPrice } = useBtcPrice();
   const dispatch = useAppDispatch();
 
   const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
@@ -233,7 +234,12 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           </Button>
         </Flex>
       </div>
-      <div style={{ height }}>
+      <div
+        style={{ height }}
+        className={cn({
+          "opacity-50": btcPrices.loading,
+        })}
+      >
         <Line
           graphAssetValue={netAssetValue}
           lineData={lineData}

@@ -6,7 +6,8 @@ import findLastIndex from "lodash/findLastIndex";
 import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { IPlotData } from "@root/types";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { setStreamPause } from "@lib/slices/price.slice";
 import "./tooltip.css";
 import {
   ONE_HUNDRED_MILLION,
@@ -85,6 +86,8 @@ export const Line = (props: ILine) => {
     showBtcAllocation,
     // onScroll,
   } = props;
+
+  const dispatch = useAppDispatch();
 
   const [activePlotTs, setActivePlotTs] = useState<number | null>(null);
   const [focusedPlotTs, setFocusedPlotTs] = useState<number | null>(null);
@@ -526,6 +529,12 @@ export const Line = (props: ILine) => {
         .style("opacity", 0.5)
         .style("stroke-width", 0.5);
     }
+    svgParent.on("touchstart", () => {
+      dispatch(setStreamPause(true));
+    });
+    svgParent.on("touchend", () => {
+      dispatch(setStreamPause(false));
+    });
     svgParent
       .on("mousemove touchmove", function (event) {
         if (currentVerticalPriceLine.current) {

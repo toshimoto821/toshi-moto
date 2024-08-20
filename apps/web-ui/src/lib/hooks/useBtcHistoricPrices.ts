@@ -28,7 +28,7 @@ export const useBtcHistoricPrices = () => {
     console.error(error);
   }
 
-  const loading = isLoading;
+  const loading = isLoading || `${data?.meta?.from || ""}` !== `${from}`;
 
   const prices = data?.prices;
 
@@ -54,7 +54,6 @@ export const useBtcHistoricPrices = () => {
   //     chartTimeframeGroup = range;
   //   }
   // }
-
   return {
     prices,
     from: data?.meta?.from,
