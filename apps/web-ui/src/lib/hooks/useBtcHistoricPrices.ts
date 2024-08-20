@@ -28,7 +28,7 @@ export const useBtcHistoricPrices = () => {
     console.error(error);
   }
 
-  const loading = isLoading || `${data?.meta.from || ""}` !== `${from}`;
+  const loading = isLoading || `${data?.meta?.from || ""}` !== `${from}`;
 
   const prices = data?.prices;
 

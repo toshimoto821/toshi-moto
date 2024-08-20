@@ -212,7 +212,7 @@ export const Navbar = () => {
                 >
                   {uiState.navbarBalanceVisibility
                     ? `₿${padBtcZeros(data.totalBalance)}`
-                    : "My"}
+                    : "My BTC"}
                 </Text>
               </Button>
             </div>
