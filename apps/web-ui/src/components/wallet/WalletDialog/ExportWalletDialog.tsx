@@ -29,14 +29,15 @@ export const ExportWalletDialog = ({
   const run = async () => {
     const { xpubs, name, color } = data;
     setQrcodeString(`manifest:${buidlManifest(data)}`);
-    await wait(1000);
+    await wait(2000);
     setQrcodeString(`name:${name}`);
-    await wait(1000);
+
+    await wait(2000);
     setQrcodeString(`color:${color}`);
-    await wait(1000);
+    await wait(2000);
     for (const pub of xpubs) {
       setQrcodeString(`xpub:${pub}`);
-      await wait(1000);
+      await wait(2000);
     }
     setRunCount(runCount + 1);
   };
