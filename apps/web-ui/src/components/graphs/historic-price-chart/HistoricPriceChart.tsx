@@ -24,8 +24,6 @@ import { cn } from "@root/lib/utils";
 type IHistoricPriceChart = {
   height: number;
   width: number;
-  wallets: Wallet[];
-  prices?: [number, number][];
   btcPrice?: number;
 };
 
