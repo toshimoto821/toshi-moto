@@ -6,7 +6,7 @@ import findLastIndex from "lodash/findLastIndex";
 import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { IPlotData } from "@root/types";
-import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { useAppSelector } from "@root/lib/hooks/store.hooks";
 // import { setStreamPause } from "@lib/slices/price.slice";
 import "./tooltip.css";
 import {
