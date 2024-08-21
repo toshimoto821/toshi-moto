@@ -183,7 +183,7 @@ export const openPriceSocket = createAsyncThunk<void, boolean>(
         } else {
           const newPrice = parseFloat(data.c);
           const state = getState() as RootState;
-          if (newPrice !== state.price.btcPrice && !state.price.streamPaused) {
+          if (newPrice !== state.price.btcPrice) {
             dispatch(setPrice(newPrice));
           }
         }
