@@ -7,7 +7,7 @@ import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { IPlotData } from "@root/types";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { setStreamPause } from "@lib/slices/price.slice";
+// import { setStreamPause } from "@lib/slices/price.slice";
 import "./tooltip.css";
 import {
   ONE_HUNDRED_MILLION,
@@ -87,7 +87,7 @@ export const Line = (props: ILine) => {
     // onScroll,
   } = props;
 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const [activePlotTs, setActivePlotTs] = useState<number | null>(null);
   const [focusedPlotTs, setFocusedPlotTs] = useState<number | null>(null);
@@ -529,12 +529,12 @@ export const Line = (props: ILine) => {
         .style("opacity", 0.5)
         .style("stroke-width", 0.5);
     }
-    svgParent.on("touchstart", () => {
-      dispatch(setStreamPause(true));
-    });
-    svgParent.on("touchend", () => {
-      dispatch(setStreamPause(false));
-    });
+    // svgParent.on("touchstart", () => {
+    //   dispatch(setStreamPause(true));
+    // });
+    // svgParent.on("touchend", () => {
+    //   dispatch(setStreamPause(false));
+    // });
     svgParent
       .on("mousemove touchmove", function (event) {
         if (currentVerticalPriceLine.current) {
@@ -666,7 +666,7 @@ export const Line = (props: ILine) => {
         }
       })
       .on("mouseout touchend", () => {
-        dispatch(setStreamPause(false));
+        // dispatch(setStreamPause(false));
         tooltip.style("opacity", 0);
         // toolTipLine.style("opacity", 0);
         if (currentVerticalPriceLine.current) {
