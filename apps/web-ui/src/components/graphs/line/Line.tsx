@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import * as d3 from "d3";
 import { format } from "date-fns";
 import { jade, ruby } from "@radix-ui/colors";
@@ -8,6 +8,7 @@ import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { IPlotData } from "@root/types";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 // import { setStreamPause } from "@lib/slices/price.slice";
+import { selectOrAppend } from "./d3.utils";
 import "./tooltip.css";
 import {
   ONE_HUNDRED_MILLION,
@@ -90,7 +91,7 @@ export const Line = (props: ILine) => {
   // const dispatch = useAppDispatch();
 
   const [activePlotTs, setActivePlotTs] = useState<number | null>(null);
-  const [focusedPlotTs, setFocusedPlotTs] = useState<number | null>(null);
+
   const privateNumber = useNumberObfuscation();
   const { forecastModel } = useAppSelector(selectForecast);
 
@@ -103,34 +104,6 @@ export const Line = (props: ILine) => {
   // create a ref to store the circle
   const pulsingCircleRef = useRef<d3.Selection<
     SVGCircleElement,
-    unknown,
-    null,
-    undefined
-  > | null>(null);
-
-  const btcAllocationDotRef = useRef<d3.Selection<
-    SVGCircleElement,
-    unknown,
-    null,
-    undefined
-  > | null>(null);
-
-  const currentPriceLine = useRef<d3.Selection<
-    SVGLineElement,
-    unknown,
-    null,
-    undefined
-  > | null>(null);
-
-  const currentVerticalPriceLine = useRef<d3.Selection<
-    SVGLineElement,
-    unknown,
-    null,
-    undefined
-  > | null>(null);
-
-  const mainGroup = useRef<d3.Selection<
-    SVGGElement,
     unknown,
     null,
     undefined
@@ -154,6 +127,7 @@ export const Line = (props: ILine) => {
   const grayRGB = "rgb(243 244 246)";
 
   const svgRef = useRef<SVGSVGElement>(null);
+
   const margin = {
     top: 70,
     right: 0,
@@ -179,7 +153,7 @@ export const Line = (props: ILine) => {
 
   const plotExt = d3.extent(plotData, (d) => d.value) as [number, number];
   const y3 = d3.scaleLinear().domain(plotExt).range([0.25, 0.75]);
-  // const rScale = d3.scaleLinear().domain(plotExt).range([2, 3]);
+  
 
   const y1 = d3
     .scaleLinear()
@@ -354,105 +328,115 @@ export const Line = (props: ILine) => {
   const createGradients = () => {
     const svg = d3.select(svgRef.current);
 
-    const defs = svg.append("defs");
+    const defs = selectOrAppend(svg, "defs", "defs");
 
     if (defs) {
-      const loaderGradient = defs
-        .append("linearGradient")
+      const loaderGradient = selectOrAppend(
+        defs,
+        "#loader-gradient",
+        "linearGradient"
+      )
         .attr("id", "loader-gradient")
         .attr("x1", "0%")
         .attr("y1", "0%")
         .attr("x2", "0%")
         .attr("y2", "100%");
 
-      loaderGradient
-        .append("stop")
+      selectOrAppend(loaderGradient, "light-gray-stop", "stop")
+        .attr("id", "light-gray-stop")
         .attr("offset", "0%")
         .attr("stop-color", "lightgray")
         .attr("stop-opacity", 1);
 
-      loaderGradient
-        .append("stop")
+      selectOrAppend(loaderGradient, "dark-gray-stop", "stop")
+        .attr("id", "dark-gray-stop")
         .attr("offset", "70%")
         .attr("stop-color", grayRGB)
         .attr("stop-opacity", 1);
       // Create a pulse effect
 
-      defs
-        .append("marker")
-        .attr("id", "arrowheadDown")
-        .attr("viewBox", "0 -5 20 20") // Position and size of the arrowhead
-        .attr("refX", 0)
-        .attr("refY", 5)
-        .attr("orient", "90deg")
-        .attr("markerWidth", 40)
-        .attr("markerHeight", 40)
-        .append("svg:path")
-        .attr("d", "M 0,0 L 10 ,5 L 0,10") // Shape of the arrowhead
-        .attr("fill", ruby.ruby11);
+      // selectOrAppend(defs, "#arrowheadDown", "marker")
+      //   .attr("id", "arrowheadDown")
+      //   .attr("viewBox", "0 -5 20 20") // Position and size of the arrowhead
+      //   .attr("refX", 0)
+      //   .attr("refY", 5)
+      //   .attr("orient", "90deg")
+      //   .attr("markerWidth", 40)
+      //   .attr("markerHeight", 40)
+      //   .append("svg:path")
+      //   .attr("d", "M 0,0 L 10 ,5 L 0,10") // Shape of the arrowhead
+      //   .attr("fill", ruby.ruby11);
 
       // Define the gradient
-      const gradientRed = defs
-        .append("linearGradient")
+      const gradientRed = selectOrAppend(
+        defs,
+        "#gradient-red",
+        "linearGradient"
+      )
         .attr("id", "gradient-red")
         .attr("x1", "0%")
         .attr("y1", "0%")
         .attr("x2", "0%")
         .attr("y2", "100%");
 
-      const gradientGreen = defs
-        .append("linearGradient")
+      const gradientGreen = selectOrAppend(
+        defs,
+        "#gradient-green",
+        "linearGradient"
+      )
         .attr("id", "gradient-green")
         .attr("x1", "0%")
         .attr("y1", "0%")
         .attr("x2", "0%")
         .attr("y2", "100%");
 
-      // console.log(lineData);
-      // Set the gradient colors
-
-      gradientRed
-        .append("stop")
+      selectOrAppend(gradientRed, "#ruby-stop", "stop")
+        .attr("id", "ruby-stop")
         .attr("offset", "0%")
         .attr("stop-color", ruby.ruby11)
         .attr("stop-opacity", 1);
 
-      gradientGreen
-        .append("stop")
+      selectOrAppend(gradientGreen, "#jade-stop", "stop")
+        .attr("id", "jade-stop")
         .attr("offset", "0%")
         .attr("stop-color", jade.jade11)
         .attr("stop-opacity", 1);
 
-      gradientRed
-        .append("stop")
+      selectOrAppend(gradientRed, "gray-stop", "stop")
+        .attr("id", "gray-stop")
         .attr("offset", "100%")
         .attr("stop-color", grayRGB)
         .attr("stop-opacity", 1);
 
-      gradientGreen
-        .append("stop")
+      selectOrAppend(gradientGreen, "gray-stop-2", "stop")
+        .attr("id", "gray-stop-2")
         .attr("offset", "100%")
         .attr("stop-color", grayRGB)
         .attr("stop-opacity", 1);
 
-      defs
-        .append("marker")
-        .attr("id", "arrowheadUp")
-        .attr("viewBox", "-0 -5 20 20") // Position and size of the arrowhead
-        .attr("refX", 0)
-        .attr("refY", 0)
-        .attr("orient", "auto")
-        .attr("markerWidth", 40)
-        .attr("markerHeight", 40)
-        .append("svg:path")
-        .attr("d", "M 0,-5 L 10 ,0 L 0,5") // Shape of the arrowhead
-        .attr("fill", "green");
+      // const arrowHeadUp = selectOrAppend(defs, "#arrowheadUp", "marker")
+      //   .attr("id", "arrowheadUp")
+      //   .attr("viewBox", "-0 -5 20 20") // Position and size of the arrowhead
+      //   .attr("refX", 0)
+      //   .attr("refY", 0)
+      //   .attr("orient", "auto")
+      //   .attr("markerWidth", 40)
+      //   .attr("markerHeight", 40);
+
+      // selectOrAppend(arrowHeadUp, "svg:path", "svg:path")
+      //   .attr("d", "M 0,-5 L 10 ,0 L 0,5") // Shape of the arrowhead
+      //   .attr("fill", "green");
     }
   };
 
   const renderLineArea = () => {
-    const svg = mainGroup.current;
+    // const svg = mainGroup.current;
+
     const svgParent = d3.select(svgRef.current);
+    const svg = selectOrAppend(svgParent, "#main-group", "g").attr(
+      "id",
+      "main-group"
+    );
     if (!svg) return;
 
     const area = d3
@@ -478,10 +462,11 @@ export const Line = (props: ILine) => {
     if (futureLineData?.length) {
       pastLineData.push(futureLineData[0]);
     }
-    svg
-      .append("path")
+    selectOrAppend(svg, "#fill", "path", { prepend: true })
+      .attr("id", "fill")
       .datum(lineData)
       .attr("opacity", 0.2)
+
       .attr(
         "fill",
         `url(#${direction > 0 ? "gradient-green" : "gradient-red"})`
@@ -490,8 +475,8 @@ export const Line = (props: ILine) => {
       .attr("d", area);
 
     // Add the line
-    svg
-      .append("path")
+    selectOrAppend(svg, "#past-line", "path", { prepend: true })
+      .attr("id", "past-line")
       .attr("fill", "none")
       .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
       .attr("stroke-miterlimit", 1)
@@ -499,8 +484,8 @@ export const Line = (props: ILine) => {
       .attr("stroke-width", 1.5)
       .attr("d", line(pastLineData));
 
-    svg
-      .append("path")
+    selectOrAppend(svg, "#future-line", "path", { prepend: true })
+      .attr("id", "future-line")
       .attr("fill", "none")
       .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
       .attr("stroke-miterlimit", 1)
@@ -519,26 +504,27 @@ export const Line = (props: ILine) => {
 
     const tooltip = d3.select("#price-tooltip");
     // const lineTooltipTable = d3.select("#line-tooltip");
-    currentVerticalPriceLine.current =
-      currentVerticalPriceLine.current || svg.append("line");
-    if (currentVerticalPriceLine.current) {
-      currentVerticalPriceLine.current
-        .classed("vertical-tooltip-line", true)
-        .style("stroke", "black") // Change the color as needed
-        .style("stroke-dasharray", "3,3")
-        .style("opacity", 0.5)
-        .style("stroke-width", 0.5);
-    }
+
+    selectOrAppend(svg, "#vertical-tooltip-line", "line")
+      .attr("id", "vertical-tooltip-line")
+      .classed("vertical-tooltip-line", true)
+      .style("stroke", "black") // Change the color as needed
+      .style("stroke-dasharray", "3,3")
+      .style("opacity", 0.5)
+      .style("stroke-width", 0.5);
     // svgParent.on("touchstart", () => {
     //   dispatch(setStreamPause(true));
     // });
     // svgParent.on("touchend", () => {
     //   dispatch(setStreamPause(false));
     // });
+    svgParent.on("mousemove touchmove", null);
+    svgParent.on("mouseout touchend", null);
     svgParent
       .on("mousemove touchmove", function (event) {
-        if (currentVerticalPriceLine.current) {
-          currentVerticalPriceLine.current
+        const currentVerticalLine = d3.select("#vertical-tooltip-line");
+        if (currentVerticalLine) {
+          currentVerticalLine
             .classed("vertical-tooltip-line", true)
             .style("stroke", "black") // Change the color as needed
             .style("stroke-dasharray", "3,3")
@@ -557,23 +543,6 @@ export const Line = (props: ILine) => {
         const d0 = lineData[i - 1];
 
         const d1 = lineData[i];
-
-        const matched = plotData.find((plot) => {
-          const plotTime = d3.timeMinute(new Date(plot.x)).getTime();
-          const d0Time = d3.timeMinute(new Date(d0.x)).getTime();
-
-          // Calculate the difference in minutes
-          const diffInMinutes = Math.abs(plotTime - d0Time) / (1000 * 60);
-
-          // Check if the difference is less than or equal to 60 minutes
-          return diffInMinutes <= 60;
-        });
-
-        if (matched) {
-          setFocusedPlotTs(matched.x);
-        } else {
-          setFocusedPlotTs(null);
-        }
 
         const dFirst = lineData[0];
         const changeVal =
@@ -638,9 +607,9 @@ export const Line = (props: ILine) => {
           );
 
         const leftX = Math.min(xVal + 10, xVal);
-
-        if (currentVerticalPriceLine.current) {
-          currentVerticalPriceLine.current
+        const veritcalLine = d3.select("#vertical-tooltip-line");
+        if (veritcalLine) {
+          veritcalLine
             .attr("x1", leftX)
             .attr("y1", 40) // Start at the top of the SVG
             .attr("x2", leftX)
@@ -650,15 +619,15 @@ export const Line = (props: ILine) => {
         }
 
         // move the current price line to the current price
-        if (pulsingCircleRef.current) {
-          pulsingCircleRef.current
-            .attr("cx", xVal)
-            .attr("cy", y2(d[yValueToUse]));
+        const currentPriceDot = d3.select("#pulsing-circle");
+        if (currentPriceDot) {
+          currentPriceDot.attr("cx", xVal).attr("cy", y2(d[yValueToUse]));
         }
         updateBtcDot(xVal, y4(d.y1Sum * btcPrice!));
 
-        if (currentPriceLine.current) {
-          currentPriceLine.current
+        const currentPrice = d3.select("#current-price-line");
+        if (currentPrice) {
+          currentPrice
             .attr("x1", 0)
             .attr("y1", y2(d[yValueToUse]))
             .attr("x2", width)
@@ -669,8 +638,9 @@ export const Line = (props: ILine) => {
         // dispatch(setStreamPause(false));
         tooltip.style("opacity", 0);
         // toolTipLine.style("opacity", 0);
-        if (currentVerticalPriceLine.current) {
-          currentVerticalPriceLine.current.style("opacity", 0);
+        const currentVerticalLine = d3.select("#vertical-tooltip-line");
+        if (currentVerticalLine) {
+          currentVerticalLine.style("opacity", 0);
         }
         // reset the current price to the last
         if (pulsingCircleRef.current) {
@@ -685,11 +655,12 @@ export const Line = (props: ILine) => {
           }
         }
         // move the line
-        if (currentPriceLine.current) {
+        const currentPrice = d3.select("#current-price-line");
+        if (currentPrice) {
           const last = lineData[lineData.length - 1];
           if (last) {
             const lastY = y2(last[yValueToUse]);
-            currentPriceLine.current
+            currentPrice
               .attr("x1", 0)
               .attr("y1", lastY)
               .attr("x2", width)
@@ -701,23 +672,17 @@ export const Line = (props: ILine) => {
       });
   };
 
-  const renderPlots = () => {
-    const svg = mainGroup.current;
+  const renderPlots = useCallback(() => {
+    const svg = d3.select("#main-group");
 
     const lineTooltipTable = d3.select("#line-tooltip");
 
     if (svg && plotData?.length) {
       const bisect = d3.bisector((d: Plot) => new Date(d.x)).left;
-      // const [xAndYPotion] = d3.pointers(event, svg.node());
-      // const direction =
-      //   lineData[0]?.[yValueToUse] <
-      //   lineData[lineData.length - 1]?.[yValueToUse]
-      //     ? 1
-      //     : -1;
-      svg
-        .selectAll("plot")
-        .data(plotData)
-        .enter()
+
+      const lines = svg.selectAll(".plot-line").data(plotData).enter();
+
+      lines
         .append("line")
         .attr("x1", margin.left)
         .attr("y1", (d) => {
@@ -743,7 +708,7 @@ export const Line = (props: ILine) => {
           const color = d.data.color;
           return color;
         })
-        .attr("class", "plot")
+        .attr("class", "plot-line")
         .attr("stroke-dasharray", (d) => {
           if (d.type === "VOUT") return "";
           return "3,3";
@@ -759,10 +724,9 @@ export const Line = (props: ILine) => {
         })
         .attr("stroke-width", 0.5);
 
-      svg
-        .selectAll("circle")
-        .data(plotData)
-        .enter()
+      const plots = svg.selectAll(".plot-marker").data(plotData).enter();
+
+      plots
         .append("circle")
         .attr("cx", (d) => {
           const val = x(new Date(d.x));
@@ -777,42 +741,28 @@ export const Line = (props: ILine) => {
           return val;
         })
         .attr("r", (d) => {
-          // const r = rScale(d.value);
-
-          if (d.x === focusedPlotTs) {
-            return 7;
+          if (d.x === tooltipDatas[0]?.x) {
+            return 12;
           }
-          return 3;
+          return 6;
         })
         .attr("fill", (d) => {
-          // const redOrGreen = direction > 0 ? jade.jade11 : ruby.ruby11;
-
-          if (d === tooltipDatas[0]) {
+          if (d.x === tooltipDatas[0]?.x) {
             return grayRGB;
           }
           return d.data.color;
         })
-        .attr("stroke", (d) => {
-          if (d === tooltipDatas[0]) {
-            return d.data.color;
-          }
-          return "none";
-        })
-        // .attr("stroke", "gray")
+
+        .attr("stroke", "gray")
         .attr("class", "plot-marker")
-        .attr("stroke-width", 0.5)
+        .attr("stroke-width", 1)
+        .style("z-index", "100000")
         .attr("opacity", (d) => {
           if (!dots) return 0;
           if (d.data.visible) return 1;
           return 0;
         })
-        // .on("mouseover", function () {
-        //   d3.select(this).transition().duration(200).attr("r", 7); // Increase the radius size on hover
-        // })
-        // .on("mouseout", function () {
-        //   // const r = rScale(d.value);
-        //   d3.select(this).transition().duration(200).attr("r", 3); // Increase the radius size on hover
-        // })
+
         .on("click", (_, d) => {
           closePriceTooltip();
           setActivePlotTs(d.x);
@@ -978,30 +928,50 @@ export const Line = (props: ILine) => {
         }
       }
     }
-  };
+  }, [
+    activePlotTs,
+    breakpoint,
+    dots,
+    plotData,
+    tooltipDatas,
+    lineData,
+    margin.left,
+    margin.right,
+    onClearSelection,
+    onSelectPlot,
+    tooltipDatasIndex,
+    tooltipDatasLastIndex,
+    width,
+    x,
+    y2,
+    y3,
+    yValueToUse,
+  ]);
 
   const updateBtcDot = (cx?: number, cy?: number) => {
-    if (showBtcAllocation && btcAllocationDotRef.current) {
+    const dot = d3.select("#orange-dot");
+    if (showBtcAllocation && dot) {
       if (cx && cy) {
-        btcAllocationDotRef.current.attr("cx", cx).attr("cy", cy);
-      } else {
+        dot.attr("cx", cx).attr("cy", cy);
+      } else if (dot) {
         const last = getLatestDateInPast(lineData);
         if (last) {
           const lastX = x(new Date(last.x));
           const lastY = y4(last.y1Sum * btcPrice!);
-          btcAllocationDotRef.current.attr("cx", lastX).attr("cy", lastY);
+          dot.attr("cx", lastX).attr("cy", lastY);
         }
       }
     }
   };
   const renderBtcAllocation = () => {
-    const svg = mainGroup.current;
+    const svgParent = d3.select(svgRef.current);
+    const svg = svgParent.select("#main-group");
     if (!svg) return null;
 
     if (ext3[1] === 0) return null;
 
-    btcAllocationDotRef.current = svg
-      .append("circle")
+    selectOrAppend(svg, "#orange-dot", "circle")
+      .attr("id", "orange-dot")
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("r", 3)
@@ -1029,8 +999,8 @@ export const Line = (props: ILine) => {
 
       const pastLineData = lineData.filter((d) => d.x <= lastDate);
       const futureLineData = lineData.filter((d) => d.x >= lastDate);
-      svg
-        .append("path")
+      selectOrAppend(svg, "#btc-past-line", "path", { prepend: true })
+        .attr("id", "btc-past-line")
         .attr("fill", "none")
         .attr("stroke", "orange")
         .attr("stroke-miterlimit", 1)
@@ -1038,8 +1008,8 @@ export const Line = (props: ILine) => {
         .attr("stroke-width", 1)
         .attr("d", btcLine(pastLineData));
 
-      svg
-        .append("path")
+      selectOrAppend(svg, "#btc-future-line", "path", { prepend: true })
+        .attr("id", "btc-future-line")
         .attr("fill", "none")
         .attr("stroke", "orange")
         .attr("stroke-miterlimit", 1)
@@ -1069,7 +1039,8 @@ export const Line = (props: ILine) => {
   };
 
   const renderCurrentPrice = () => {
-    const svg = mainGroup.current;
+    const parent = d3.select(svgRef.current);
+    const svg = parent.select("#main-group");
     if (!svg) return null;
     const direction =
       lineData[0]?.[yValueToUse] < lineData[lineData.length - 1]?.[yValueToUse]
@@ -1081,8 +1052,8 @@ export const Line = (props: ILine) => {
     const lastX = x(new Date(last.x));
     const lastY = y2(last[yValueToUse]);
 
-    pulsingCircleRef.current = svg
-      .append("circle")
+    selectOrAppend(svg, "#pulsing-circle", "circle")
+      .attr("id", "pulsing-circle")
       .attr("cx", lastX)
       .attr("cy", lastY)
       .attr("r", 3)
@@ -1105,8 +1076,8 @@ export const Line = (props: ILine) => {
     // pulse();
 
     // create a dashed line at current price
-    currentPriceLine.current = svg
-      .append("line")
+    selectOrAppend(svg, "#current-price-line", "line")
+      .attr("id", "current-price-line")
       .classed("current-price-line", true)
       .attr("x1", 0)
       .attr("y1", lastY)
@@ -1144,16 +1115,16 @@ export const Line = (props: ILine) => {
 
     // Append the area
 
-    svg
-      .append("path")
+    selectOrAppend(svg, "#loader-area", "path")
+      .attr("id", "loader-area")
       .datum(fakeDate)
       .attr("opacity", 0.3)
       .attr("fill", "url(#loader-gradient)")
       .attr("d", area);
 
     // Append the line
-    svg
-      .append("path")
+    selectOrAppend(svg, "#loader-line", "path")
+      .attr("id", "loader-line")
       .datum(fakeDate)
       .attr("fill", "none")
       .attr("stroke", "lightgray")
@@ -1163,11 +1134,13 @@ export const Line = (props: ILine) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const render = () => {
     const svg = d3.select(svgRef.current);
+    if (!svg) return;
+    selectOrAppend(svg, "#main-group", "g").attr("id", "main-group");
 
-    mainGroup.current = svg.append("g");
-    // mainGroup.current.attr("transform", "translate(0,0)");
     createGradients();
     if (ready) {
+      svg.selectAll("#loader-area").remove();
+      svg.selectAll("#loader-line").remove();
       renderLineArea();
       renderPlots();
       renderBtcAllocation();
@@ -1176,50 +1149,30 @@ export const Line = (props: ILine) => {
       renderLoaderGraph();
     }
 
-    svg.append("g").call(y2Axis);
+    selectOrAppend(svg, "#y2-axis", "g").attr("id", "y2-axis").call(y2Axis);
     if (showBtcAllocation && btcPrice && maxExt3 > 0) {
-      svg.append("g").call(y4Axis);
+      selectOrAppend(svg, "#y4-axis", "g").attr("id", "y4-axis").call(y4Axis);
     }
   };
 
   useEffect(() => {
+    renderPlots();
+    return () => {
+      d3.selectAll(".plot-line").remove();
+      d3.selectAll(".plot-marker").remove();
+    };
+  }, [renderPlots, plotData?.length]);
+  useEffect(() => {
     if (width > 0 && height > 0) {
       render();
     }
-    const svg = d3.select(svgRef.current);
-    return () => {
-      svg.selectAll("g").remove();
-      svg.selectAll("text").remove();
-      svg.selectAll("path").remove();
-      svg.selectAll("defs").remove();
-      svg.selectAll(".plot").remove();
-      svg.selectAll("circle").remove();
-      svg.selectAll("line").remove();
-      svg.selectAll(".line-tooltip").remove();
-      // zoom.on("zoom", null);
-      if (pulsingCircleRef.current) {
-        pulsingCircleRef.current.remove();
-      }
-      if (currentPriceLine.current) {
-        currentPriceLine.current.remove();
-      }
-
-      if (currentVerticalPriceLine.current) {
-        currentVerticalPriceLine.current.remove();
-        currentVerticalPriceLine.current = null;
-      }
-    };
   }, [
     height,
     width,
-    lineData,
     breakpoint,
     activePlotTs,
-    btcPrice,
-    maxExt3,
     forecastModel,
-    focusedPlotTs,
-    lineData.length,
+    btcPrice,
     render,
   ]);
 
@@ -1246,7 +1199,7 @@ export const Line = (props: ILine) => {
 
   const onMouseLeave = () => {
     closePriceTooltip();
-    setActivePlotTs(null);
+    // setActivePlotTs(null);
   };
 
   return (
