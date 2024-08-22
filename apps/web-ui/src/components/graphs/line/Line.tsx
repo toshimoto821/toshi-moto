@@ -101,14 +101,6 @@ export const Line = (props: ILine) => {
   // this may cause issues
   const TOMORROW_START = startOfDay(tomorrow);
 
-  // create a ref to store the circle
-  const pulsingCircleRef = useRef<d3.Selection<
-    SVGCircleElement,
-    unknown,
-    null,
-    undefined
-  > | null>(null);
-
   const yValueToUse: "y1SumInDollars" | "y2" = graphAssetValue
     ? "y1SumInDollars"
     : "y2";
@@ -635,18 +627,6 @@ export const Line = (props: ILine) => {
         const currentVerticalLine = d3.select("#vertical-tooltip-line");
         if (currentVerticalLine) {
           currentVerticalLine.style("opacity", 0);
-        }
-        // // reset the current price to the last
-        if (pulsingCircleRef.current) {
-          const last = getLatestDateInPast(lineData);
-          if (last) {
-            const lastX = x(new Date(last.x));
-            const lastY = y2(last[yValueToUse]);
-            pulsingCircleRef.current
-              .attr("cx", lastX)
-              .attr("cy", lastY)
-              .attr("r", 3);
-          }
         }
 
         renderCurrentPrice();
