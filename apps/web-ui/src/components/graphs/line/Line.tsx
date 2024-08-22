@@ -153,7 +153,7 @@ export const Line = (props: ILine) => {
 
   const plotExt = d3.extent(plotData, (d) => d.value) as [number, number];
   const y3 = d3.scaleLinear().domain(plotExt).range([0.25, 0.75]);
-  // const rScale = d3.scaleLinear().domain(plotExt).range([2, 3]);
+  
 
   const y1 = d3
     .scaleLinear()
