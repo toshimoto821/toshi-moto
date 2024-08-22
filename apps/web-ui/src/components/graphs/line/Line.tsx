@@ -153,7 +153,6 @@ export const Line = (props: ILine) => {
 
   const plotExt = d3.extent(plotData, (d) => d.value) as [number, number];
   const y3 = d3.scaleLinear().domain(plotExt).range([0.25, 0.75]);
-  
 
   const y1 = d3
     .scaleLinear()
@@ -510,14 +509,9 @@ export const Line = (props: ILine) => {
       .classed("vertical-tooltip-line", true)
       .style("stroke", "black") // Change the color as needed
       .style("stroke-dasharray", "3,3")
-      .style("opacity", 0.5)
+      .style("opacity", 0)
       .style("stroke-width", 0.5);
-    // svgParent.on("touchstart", () => {
-    //   dispatch(setStreamPause(true));
-    // });
-    // svgParent.on("touchend", () => {
-    //   dispatch(setStreamPause(false));
-    // });
+
     svgParent.on("mousemove touchmove", null);
     svgParent.on("mouseout touchend", null);
     svgParent
@@ -642,18 +636,21 @@ export const Line = (props: ILine) => {
         if (currentVerticalLine) {
           currentVerticalLine.style("opacity", 0);
         }
-        // reset the current price to the last
-        if (pulsingCircleRef.current) {
-          const last = getLatestDateInPast(lineData);
-          if (last) {
-            const lastX = x(new Date(last.x));
-            const lastY = y2(last[yValueToUse]);
-            pulsingCircleRef.current
-              .attr("cx", lastX)
-              .attr("cy", lastY)
-              .attr("r", 3);
-          }
-        }
+        // // reset the current price to the last
+        // if (pulsingCircleRef.current) {
+        //   const last = getLatestDateInPast(lineData);
+        //   if (last) {
+        //     const lastX = x(new Date(last.x));
+        //     const lastY = y2(last[yValueToUse]);
+        //     pulsingCircleRef.current
+        //       .attr("cx", lastX)
+        //       .attr("cy", lastY)
+        //       .attr("r", 3);
+        //   }
+        // }
+
+        renderCurrentPrice();
+
         // move the line
         const currentPrice = d3.select("#current-price-line");
         if (currentPrice) {
