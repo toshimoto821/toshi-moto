@@ -637,17 +637,17 @@ export const Line = (props: ILine) => {
           currentVerticalLine.style("opacity", 0);
         }
         // // reset the current price to the last
-        // if (pulsingCircleRef.current) {
-        //   const last = getLatestDateInPast(lineData);
-        //   if (last) {
-        //     const lastX = x(new Date(last.x));
-        //     const lastY = y2(last[yValueToUse]);
-        //     pulsingCircleRef.current
-        //       .attr("cx", lastX)
-        //       .attr("cy", lastY)
-        //       .attr("r", 3);
-        //   }
-        // }
+        if (pulsingCircleRef.current) {
+          const last = getLatestDateInPast(lineData);
+          if (last) {
+            const lastX = x(new Date(last.x));
+            const lastY = y2(last[yValueToUse]);
+            pulsingCircleRef.current
+              .attr("cx", lastX)
+              .attr("cy", lastY)
+              .attr("r", 3);
+          }
+        }
 
         renderCurrentPrice();
 
