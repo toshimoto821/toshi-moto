@@ -1,4 +1,11 @@
 # API Changelog
+## [1.3.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.3.0...api-1.3.1) (2024-08-24)
+
+
+### Bug Fixes
+
+* api build ([a5da08c](https://github.com/toshimoto821/toshi-moto/commit/a5da08cc7b5c5969497f05831d43538eebd26f33))
+
 ## [1.3.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.2.3...api-1.3.0) (2024-08-24)
 
 
