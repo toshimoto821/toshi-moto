@@ -91,3 +91,4 @@ jobs:
           VITE_REST_TIME_BETWEEN_REQUESTS: 0
           VITE_MAX_CONCURRENT_REQUESTS: 8
           VITE_BITCOIN_NETWORK: mainnet
+          VITE_API_URL: http://umbrel.local:8021

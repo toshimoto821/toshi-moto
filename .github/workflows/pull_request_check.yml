@@ -49,6 +49,7 @@ jobs:
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
           echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env.cy
+          echo "VITE_API_URL=https://api.toshimoto.app" = >> apps/web-ui/.env.cy
       - name: Lint
         run: npx nx affected --target=lint --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
