@@ -1,4 +1,11 @@
 # API Changelog
+## [1.3.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.2.3...api-1.3.0) (2024-08-24)
+
+
+### Features
+
+* adds color and len to chart buttons ([bc9b7b5](https://github.com/toshimoto821/toshi-moto/commit/bc9b7b5eed60cab47530923d7c9e711640875920))
+
 ## [1.2.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.2.2...api-1.2.3) (2024-08-17)
 
 ## [1.2.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.2.1...api-1.2.2) (2024-07-13)
