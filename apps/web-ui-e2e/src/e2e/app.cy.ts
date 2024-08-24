@@ -11,7 +11,7 @@ describe("web-ui-e2e", () => {
     console.log("cleaned db");
   });
 
-  it.only("Hero", () => {
+  it("Hero", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );

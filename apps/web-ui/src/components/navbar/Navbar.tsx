@@ -15,7 +15,6 @@ import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
-import { selectBaseApiUrl } from "@root/lib/slices/config.slice";
 
 const colorScale = d3
   .scaleLinear<string>()
@@ -48,7 +47,6 @@ export const Navbar = () => {
     change: btcChangePrice,
   } = useBtcPrice();
   // const dispatch = useAppDispatch();
-  const url = useAppSelector(selectBaseApiUrl);
   const btcPrice = forcastPrice ?? rawPrice;
   const { actions, data, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
@@ -210,7 +208,6 @@ export const Navbar = () => {
                 onClick={toggleBalance}
                 data-testid="my-btc-btn"
               >
-                <Text>{url}</Text>
                 <Text
                   size="4"
                   color="orange"
