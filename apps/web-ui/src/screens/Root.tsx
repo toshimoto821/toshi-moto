@@ -11,6 +11,9 @@ import {
   closePriceSocket,
 } from "@root/lib/slices/price.slice";
 
+const VITE_PRICING_STREAM_DISABLED = import.meta.env
+  .VITE_PRICING_STREAM_DISABLED;
+
 export const Root = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -37,11 +40,14 @@ export const Root = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    visibilitychange();
-    document.addEventListener("visibilitychange", visibilitychange);
-
+    if (!VITE_PRICING_STREAM_DISABLED) {
+      visibilitychange();
+      document.addEventListener("visibilitychange", visibilitychange);
+    }
     return () => {
-      document.removeEventListener("visibilitychange", visibilitychange);
+      if (!VITE_PRICING_STREAM_DISABLED) {
+        document.removeEventListener("visibilitychange", visibilitychange);
+      }
     };
   }, [visibilitychange]);
 

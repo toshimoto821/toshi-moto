@@ -19,5 +19,6 @@ export default defineConfig({
     baseUrl: "http://localhost:9330",
     screenshotsFolder: "cypress/screenshots",
     trashAssetsBeforeRuns: true,
+    chromeWebSecurity: false,
   },
 });
