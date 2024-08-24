@@ -230,10 +230,12 @@ export const selectGroupByHistoric = createSelector(
 export const selectGraphDates = createSelector(
   (state: RootState) => state.ui.graphStartDate,
   (state: RootState) => state.ui.graphEndDate,
-  (graphStartDate, graphEndDate) => {
+  (state: RootState) => state.ui.graphTimeFrameRange,
+  (graphStartDate, graphEndDate, graphTimeFrameRange) => {
     return {
       graphStartDate: graphStartDate || defaultGraphStartDate,
       graphEndDate: graphEndDate || defaultGraphEndDate,
+      graphTimeFrameRange,
     };
   }
 );

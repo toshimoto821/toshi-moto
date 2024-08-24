@@ -1,8 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { type Model, type PipelineStage } from "mongoose";
 import axios from "axios";
 import csv from "csv-parser";
+
 import { Price } from "./schemas/price.schema";
 import { CreatePriceDto } from "./dto/create-price.dto";
 import { wait } from "@lib/utils";
@@ -268,6 +269,293 @@ export class PriceService {
     return prices;
   }
 
+  async findRangeDiff() {
+    const pipeline = [
+      {
+        $facet:
+          /**
+           * outputFieldN: The first output field.
+           * stageN: The first aggregation stage.
+           */
+          {
+            "1D": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("1D"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  timestamp: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "1D",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+            "1W": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("1W"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  timestamp: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "1W",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+            "1M": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("1M"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  date: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "1M",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+            "3M": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("3M"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  timestamp: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "3M",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+            "1Y": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("1Y"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  timestamp: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "1Y",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+            "2Y": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("2Y"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  timestamp: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "2Y",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+            "5Y": [
+              {
+                $match: {
+                  timestamp: {
+                    $gte: this.getStartDate("5Y"),
+                  },
+                },
+              },
+              {
+                $sort: {
+                  timestamp: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: null,
+                  firstPrice: {
+                    $first: "$price",
+                  },
+                  lastPrice: {
+                    $last: "$price",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  period: "5Y",
+                  diff: {
+                    $subtract: ["$lastPrice", "$firstPrice"],
+                  },
+                },
+              },
+            ],
+          },
+      },
+      {
+        $project:
+          /**
+           * specifications: The fields to
+           *   include or exclude.
+           */
+          {
+            results: {
+              $concatArrays: ["$1D", "$1W", "$1M", "$3M", "$1Y", "$2Y", "$5Y"],
+            },
+          },
+      },
+      {
+        $unwind:
+          /**
+           * path: Path to the array field.
+           * includeArrayIndex: Optional name for index.
+           * preserveNullAndEmptyArrays: Optional
+           *   toggle to unwind null and empty values.
+           */
+          {
+            path: "$results",
+          },
+      },
+      {
+        $replaceRoot:
+          /**
+           * replacementDocument: A document or string.
+           */
+          {
+            newRoot: "$results",
+          },
+      },
+    ];
+
+    return this.priceModel.aggregate(pipeline as PipelineStage[]);
+  }
+
   async firstPrice(cur: string) {
     return this.priceModel
       .findOne({ currency: cur })
@@ -373,5 +661,43 @@ export class PriceService {
       this.logger.error(ex.message);
     }
     return true;
+  }
+
+  private getStartDate(range: "1D" | "1W" | "1M" | "3M" | "1Y" | "2Y" | "5Y") {
+    const now = this.getNow();
+    let startDate;
+    switch (range) {
+      case "1D":
+        startDate = new Date(now.setDate(now.getDate() - 1));
+        break;
+      case "1W":
+        startDate = new Date(now.setDate(now.getDate() - 7));
+        break;
+      case "1M":
+        startDate = new Date(now.setMonth(now.getMonth() - 1));
+        break;
+      case "3M":
+        startDate = new Date(now.setMonth(now.getMonth() - 3));
+        break;
+      case "1Y":
+        startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+        break;
+      case "2Y":
+        startDate = new Date(now.setFullYear(now.getFullYear() - 2));
+        break;
+      case "5Y":
+        startDate = new Date(now.setFullYear(now.getFullYear() - 5));
+        break;
+      default:
+        startDate = new Date(now.setFullYear(now.getFullYear() - 5));
+        break;
+    }
+    return startDate;
+  }
+  private getNow() {
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    now.setMinutes(0, 0, 0); // Round down to the nearest hour
+    return now;
   }
 }

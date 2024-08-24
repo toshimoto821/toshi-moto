@@ -1,16 +1,13 @@
 import { useRef } from "react";
 import debounce from "lodash/debounce";
-import { Flex, Separator, Button } from "@radix-ui/themes";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { Line } from "../line/Line";
 import { ChartLegend } from "./ChartLegend";
-import type { IChartTimeFrameRange } from "@root/types";
-import type { IForcastModelType } from "@lib/slices/price.slice";
+
 import type { IPlotData } from "@root/types";
 import { useChartData } from "@root/lib/hooks/useChartData";
-import { generateRandomPriceSeries } from "../graph-utils";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { setForecast, selectForecast } from "@lib/slices/price.slice";
+import { selectForecast } from "@lib/slices/price.slice";
 import {
   selectUI,
   setGraphByRange,
@@ -19,6 +16,9 @@ import {
 import { useBtcPrice } from "@lib/hooks/useBtcPrice";
 import { useWallets } from "@root/lib/hooks/useWallets";
 import { cn } from "@root/lib/utils";
+import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
+import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
+import { TimeRangeButtons } from "./TimeRangeButtons";
 
 type IHistoricPriceChart = {
   height: number;
@@ -36,6 +36,8 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const { btcPrice } = useBtcPrice();
   const dispatch = useAppDispatch();
 
+  useGetHistoricPriceDiffQuery();
+  // console.log(response);
   const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
     useAppSelector(selectUI);
 
@@ -63,59 +65,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     }
   }
 
-  const handleUpdateTimeframe = (timeframe: IChartTimeFrameRange) => {
+  const handleUpdateTimeframe = (timeframe: GraphTimeFrameRange) => {
     return () => {
       dispatch(setGraphByRange(timeframe));
     };
-  };
-
-  const handleForcast = () => {
-    // this doesnt work great because async issues
-    // for now just leaving the forcast to be based
-    // off the current time range.
-    // handleUpdateTimeframe("5Y")();
-    const firstDate = prices[0][0];
-    const lastDate = prices[prices.length - 1][0];
-    const startDate = lastDate;
-    const endDate = lastDate + (lastDate - firstDate);
-    let nextModel = "SAYLOR" as IForcastModelType | null;
-    let bullishFactor = 0.08;
-    let bearishFactor = 0.001;
-    switch (forecastModel) {
-      case "SAYLOR":
-        nextModel = "BULL";
-        bullishFactor = 0.04;
-        bearishFactor = 0.001;
-        break;
-      case "BULL":
-        nextModel = "CRAB";
-        bullishFactor = 0.12;
-        bearishFactor = 0.1;
-        break;
-      case "CRAB":
-        nextModel = "BEAR";
-        bullishFactor = 0.01;
-        bearishFactor = 0.04;
-        break;
-      case "BEAR":
-        nextModel = null;
-        break;
-    }
-
-    const forecastPrices = generateRandomPriceSeries({
-      initialPrice: btcPrice!,
-      gap: "1W",
-      startDate,
-      endDate,
-      bullishFactor,
-      bearishFactor,
-    });
-    dispatch(
-      setForecast({
-        forecastModel: nextModel,
-        forecastPrices,
-      })
-    );
   };
 
   const { lineData, plotData } = result;
@@ -157,82 +110,13 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleReset = () => {
-    handleUpdateTimeframe(chartTimeframeRange)();
+    handleUpdateTimeframe(chartTimeframeRange || "5Y")();
   };
 
   return (
     <div className="w-full h-full relative">
-      <div className="absolute w-full z-40"></div>
-      <div className="flex justify-between items-center px-6 md:container">
-        <div className="flex">
-          <div className="items-center flex px-2">
-            {/* <Badge variant="outline">1 of n</Badge> */}
-          </div>
-        </div>
-        <Flex
-          gap={{
-            initial: "2",
-            md: "4",
-          }}
-          align="center"
-        >
-          <Button
-            variant={chartTimeframeRange === "1D" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("1D")}
-          >
-            1D
-          </Button>
-
-          <Separator orientation="vertical" />
-          <Button
-            variant={chartTimeframeRange === "1W" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("1W")}
-          >
-            1W
-          </Button>
-          <Separator orientation="vertical" />
-          <Button
-            variant={chartTimeframeRange === "1M" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("1M")}
-          >
-            1M
-          </Button>
-          <Separator orientation="vertical" />
-          <Button
-            variant={chartTimeframeRange === "3M" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("3M")}
-          >
-            3M
-          </Button>
-          <Separator orientation="vertical" />
-          <Button
-            variant={chartTimeframeRange === "1Y" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("1Y")}
-          >
-            1Y
-          </Button>
-          <Separator orientation="vertical" />
-          <Button
-            variant={chartTimeframeRange === "2Y" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("2Y")}
-          >
-            2Y
-          </Button>
-          <Separator orientation="vertical" />
-          <Button
-            variant={chartTimeframeRange === "5Y" ? "outline" : "ghost"}
-            onClick={handleUpdateTimeframe("5Y")}
-          >
-            5Y
-          </Button>
-          <Separator orientation="vertical" />
-          <Button
-            variant={forecastModel ? "outline" : "ghost"}
-            onClick={handleForcast}
-          >
-            {forecastModel ?? "Forcast"}
-          </Button>
-        </Flex>
+      <div className="flex justify-end items-center px-4 sticky top-[9.5rem]">
+        <TimeRangeButtons />
       </div>
       <div
         style={{ height }}

@@ -1,6 +1,6 @@
 import type { ICurrency } from "@root/types";
 import { type GroupBy } from "@lib/slices/ui.slice.types";
-
+import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 export interface PriceResponse {
   bitcoin: {
     last_updated_at: number;
@@ -15,8 +15,16 @@ export interface PriceHistoryResponse {
     from: number;
     to: number;
     groupBy: GroupBy;
+    range: GraphTimeFrameRange | null;
   };
   prices: [number, number][];
+}
+
+export interface PriceHistoryDiffResponse {
+  data: {
+    period: GraphTimeFrameRange;
+    diff: number;
+  }[];
 }
 
 export interface PriceHistoricArgs {
@@ -24,6 +32,7 @@ export interface PriceHistoricArgs {
   to: number;
   currency?: ICurrency;
   groupBy: GroupBy;
+  range?: GraphTimeFrameRange;
 }
 
 export interface AddressArgs {
