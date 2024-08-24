@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.10.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.9.12...web-ui-1.10.0) (2024-08-24)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero (failed).png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/9e1a5d31d73ef059b6da1f48db2dd6403657dc88/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero%20(failed).png)|![web-ui-e2e -- should import the wallet (failed).png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/9e1a5d31d73ef059b6da1f48db2dd6403657dc88/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet%20(failed).png)|
+
+  
+
+
+### ✨ Features
+
+* adds color and len to chart buttons ([bc9b7b5](https://github.com/toshimoto821/toshi-moto/commit/bc9b7b5eed60cab47530923d7c9e711640875920))
+
 ## [1.9.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.9.11...web-ui-1.9.12) (2024-08-22)
 
   |    |    |
