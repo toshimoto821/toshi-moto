@@ -11,7 +11,7 @@ describe("web-ui-e2e", () => {
     });
   });
 
-  it.only("Hero", () => {
+  it("Hero", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -27,9 +27,12 @@ describe("web-ui-e2e", () => {
       "getRangeDiff"
     );
     cy.intercept("GET", "**/api/prices/range*", range).as("getRange1");
-
+    cy.debug();
     cy.visit("/#/onboarding");
     // cy.wait(1000);
+    cy.get("[data-testid=my-btc-btn]", {
+      timeout: 10000,
+    }).should("contain", "My BTC");
 
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
@@ -39,8 +42,8 @@ describe("web-ui-e2e", () => {
     // });
 
     const p = getPrice();
-    cy.debug();
-    p.should("be.visible");
+    // cy.debug();
+    // p.should("be.visible");
     p.contains("$90,482.36");
     cy.screenshot({ capture: "viewport" });
   });

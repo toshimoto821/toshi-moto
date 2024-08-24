@@ -12,7 +12,7 @@ import {
 } from "@root/lib/slices/price.slice";
 
 const VITE_PRICING_STREAM_DISABLED = import.meta.env
-  .VITE_PRICING_STREAM_ENABLED;
+  .VITE_PRICING_STREAM_DISABLED;
 
 export const Root = () => {
   const { pathname } = useLocation();
