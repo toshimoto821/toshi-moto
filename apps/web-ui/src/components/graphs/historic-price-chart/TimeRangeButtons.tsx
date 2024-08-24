@@ -27,9 +27,9 @@ export const TimeRangeButtons = () => {
 
   const widths = useMemo(() => {
     // const diff = priceDiffs[timeframe];
-    const maxWidth = 100 / Object.keys(priceDiffs).length;
+    const maxWidth = 100 / Object.keys(priceDiffs || {}).length;
 
-    const values = Object.entries(priceDiffs);
+    const values = Object.entries(priceDiffs || {});
     const absoluteValues = values.map((v) => Math.abs(v[1]));
     const [min, max] = extent(absoluteValues);
     const widthScale = scaleLinear()
@@ -49,7 +49,7 @@ export const TimeRangeButtons = () => {
   }, [priceDiffs]);
 
   const colors = useMemo(() => {
-    const values = Object.entries(priceDiffs);
+    const values = Object.entries(priceDiffs || {});
     const percentageValues: [string, number][] = values.map((v) => [
       v[0],
       (v[1] / btcPrice) * 100,

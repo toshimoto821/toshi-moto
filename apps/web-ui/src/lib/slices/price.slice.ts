@@ -103,7 +103,7 @@ export const priceSlice = createSlice({
 
     builder.addMatcher(getHistoricPrice.matchFulfilled, (state, action) => {
       // console.log("action", action);
-      const { range } = action.payload.meta;
+      const { range } = action.payload.meta || {};
       if (range) {
         const prices = action.payload.prices || [];
         const [first] = prices;
