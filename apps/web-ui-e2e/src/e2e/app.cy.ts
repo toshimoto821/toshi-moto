@@ -3,16 +3,15 @@ import range from "../fixtures/range.json";
 import rangeDiff from "../fixtures/range-diff.json";
 
 describe("web-ui-e2e", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     cy.clearLocalStorage();
-    indexedDB.databases().then((databases) => {
-      databases.forEach((db) => {
-        indexedDB.deleteDatabase(db.name);
-      });
+    const databases = await indexedDB.databases();
+    databases.forEach((db) => {
+      indexedDB.deleteDatabase(db.name);
     });
   });
 
-  it("Hero", () => {
+  it.only("Hero", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -28,7 +27,10 @@ describe("web-ui-e2e", () => {
       "getRangeDiff"
     );
     cy.intercept("GET", "**/api/prices/range*", range).as("getRange1");
-    cy.visit("/");
+
+    cy.visit("/#/onboarding");
+    // cy.wait(1000);
+
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
     cy.wait("@getPrice1", { timeout: 20000 });
