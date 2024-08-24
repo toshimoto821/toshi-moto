@@ -47,7 +47,6 @@ export const Navbar = () => {
     change: btcChangePrice,
   } = useBtcPrice();
   // const dispatch = useAppDispatch();
-
   const btcPrice = forcastPrice ?? rawPrice;
   const { actions, data, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
@@ -204,7 +203,11 @@ export const Navbar = () => {
         >
           <div className="flex px-4 pt-6 backface-visibility-none">
             <div ref={myBtcRef}>
-              <Button variant="ghost" onClick={toggleBalance}>
+              <Button
+                variant="ghost"
+                onClick={toggleBalance}
+                data-testid="my-btc-btn"
+              >
                 <Text
                   size="4"
                   color="orange"
