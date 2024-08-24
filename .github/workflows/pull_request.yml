@@ -83,7 +83,8 @@ jobs:
           echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env.cy
           echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env.cy
-          echo "VITE_API_URL=https://api.toshimoto.app" = >> apps/web-ui/.env.cy
+          echo "VITE_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
+          echo "VITE_PRICING_STREAM_DISABLED=1" >> apps/web-ui/.env.cy
       - name: Test
         run: npx nx affected --target=test --base=$BASE --head=$HEAD
 
