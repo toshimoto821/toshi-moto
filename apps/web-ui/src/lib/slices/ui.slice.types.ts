@@ -8,7 +8,7 @@ interface ToastMessage {
 export interface UIState {
   currency: ICurrency;
   filterUtxoOnly: string[];
-  graphTimeFrameRange: GraphTimeFrameRange;
+  graphTimeFrameRange: GraphTimeFrameRange | null;
   graphTimeFrameGroup: GroupBy;
   graphStartDate: number;
   graphEndDate: number;
@@ -31,7 +31,6 @@ export type GraphTimeFrameRange =
   | "3M"
   | "1Y"
   | "2Y"
-  | "5Y"
-  | "ALL";
+  | "5Y";
 
 export type GroupBy = "5M" | "1H" | "1D" | "1W";

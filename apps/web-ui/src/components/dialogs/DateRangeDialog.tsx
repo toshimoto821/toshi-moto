@@ -52,6 +52,7 @@ export const DateRangeDialog = (props: IDateRangeDialog) => {
       setUI({
         graphStartDate: sd.getTime(),
         graphEndDate: ed.getTime(),
+        graphTimeFrameRange: null,
       })
     );
 

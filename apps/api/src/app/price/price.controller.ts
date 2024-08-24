@@ -9,8 +9,6 @@ import {
 } from "@nestjs/common";
 import { PriceService } from "./price.service";
 import { RangeQueryDto, SimplePriceDto } from "./dto/create-price.dto";
-// import { CreateCatDto } from './dto/create-cat.dto';
-// import { CreatePriceDto } from "./dto/create-price.dto";
 import { Price } from "./schemas/price.schema";
 
 type IRangeResponse = {
@@ -18,8 +16,16 @@ type IRangeResponse = {
     groupBy: string;
     from: number;
     to: number;
+    range: string;
   };
   prices: [number, number][];
+};
+
+export type IRangeDiffResponse = {
+  data: {
+    period: string;
+    diff: number;
+  }[];
 };
 
 type ISimplePriceResponse<T extends string> = {
@@ -78,8 +84,19 @@ export class PriceController {
         groupBy: query.group_by,
         from: query.from,
         to: query.to,
+        range: query.range,
       },
       prices: range.map((r) => [r.timestamp.getTime(), r.price]),
+    };
+  }
+
+  @Get("range/diff")
+  @Header("Cache-Control", "public, max-age=300")
+  async findRangeDiff(): Promise<IRangeDiffResponse> {
+    const data = await this.priceService.findRangeDiff();
+
+    return {
+      data,
     };
   }
 
