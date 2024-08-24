@@ -185,8 +185,10 @@ export const networkSlice = createSlice({
       if (id) {
         processingAdapter.removeOne(state.processing, id);
       }
+      console.log(action.meta);
+      console.log(action.payload);
       // @ts-expect-error baseQueryMeta is not in the type
-      const url = new URL(action.meta.baseQueryMeta.request.url);
+      const url = new URL(action.meta.baseQueryMeta?.request.url);
 
       requestsAdapter.updateOne(state.requests, {
         id,

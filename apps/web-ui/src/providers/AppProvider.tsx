@@ -8,6 +8,7 @@ interface IAppProvider {
   children: React.ReactNode;
 }
 const persistor = persistStore(store);
+
 export const AppProvider = ({ children }: IAppProvider) => {
   return (
     <Provider store={store}>
