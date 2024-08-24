@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Separator, Button } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { scaleLinear, extent, interpolateRgb } from "d3";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
 import { setGraphByRange } from "@root/lib/slices/ui.slice";
 import { type GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
+import { cn } from "@root/lib/utils";
 
 const colorScale = scaleLinear<string>()
   .domain([-5, 0, 5])
@@ -71,105 +72,49 @@ export const TimeRangeButtons = () => {
     selected: "surface",
     deselected: "outline",
   };
+
+  const NavButton = ({ range }: { range: GraphTimeFrameRange }) => {
+    return (
+      <div
+        style={{ width: `${widths.get(range)}%` }}
+        className={cn("flex items-center justify-center w-full pb-1", {
+          "border-b": graphTimeFrameRange === range,
+          "border-gray-400": graphTimeFrameRange == range,
+        })}
+      >
+        <Button
+          style={{
+            color: colors.get(range),
+            width: "100%",
+          }}
+          color="gray"
+          variant={
+            graphTimeFrameRange === range
+              ? buttons.selected
+              : buttons.deselected
+          }
+          onClick={handleUpdateTimeframe(range)}
+        >
+          {range}
+        </Button>
+      </div>
+    );
+  };
   return (
-    <div className="flex space-x-2 items-center justify-end">
-      <Button
-        style={{
-          width: `${widths.get("1D")}%`,
-          color: colors.get("1D"),
-        }}
-        color="gray"
-        variant={
-          graphTimeFrameRange === "1D" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("1D")}
-      >
-        1D
-      </Button>
-      <Separator orientation="vertical" />
-      <Button
-        color="gray"
-        style={{
-          width: `${widths.get("1W")}%`,
-          color: colors.get("1W"),
-        }}
-        variant={
-          graphTimeFrameRange === "1W" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("1W")}
-      >
-        1W
-      </Button>
-      <Separator orientation="vertical" />
-      <Button
-        color="gray"
-        style={{
-          width: `${widths.get("1M")}%`,
-          color: colors.get("1M"),
-        }}
-        variant={
-          graphTimeFrameRange === "1M" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("1M")}
-      >
-        1M
-      </Button>
-      <Separator orientation="vertical" />
-      <Button
-        color="gray"
-        style={{
-          width: `${widths.get("3M")}%`,
-          color: colors.get("3M"),
-        }}
-        variant={
-          graphTimeFrameRange === "3M" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("3M")}
-      >
-        3M
-      </Button>
-      <Separator orientation="vertical" />
-      <Button
-        color="gray"
-        style={{
-          width: `${widths.get("1Y")}%`,
-          color: colors.get("1Y"),
-        }}
-        variant={
-          graphTimeFrameRange === "1Y" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("1Y")}
-      >
-        1Y
-      </Button>
-      <Separator orientation="vertical" />
-      <Button
-        color="gray"
-        style={{
-          width: `${widths.get("2Y")}%`,
-          color: colors.get("2Y"),
-        }}
-        variant={
-          graphTimeFrameRange === "2Y" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("2Y")}
-      >
-        2Y
-      </Button>
-      <Separator orientation="vertical" />
-      <Button
-        color="gray"
-        style={{
-          width: `${widths.get("5Y")}%`,
-          color: colors.get("5Y"),
-        }}
-        variant={
-          graphTimeFrameRange === "5Y" ? buttons.selected : buttons.deselected
-        }
-        onClick={handleUpdateTimeframe("5Y")}
-      >
-        5Y
-      </Button>
+    <div className="flex space-x-2 items-center justify-end w-full">
+      <NavButton range="1D" />
+
+      <NavButton range="1W" />
+
+      <NavButton range="1M" />
+
+      <NavButton range="3M" />
+
+      <NavButton range="1Y" />
+
+      <NavButton range="2Y" />
+
+      <NavButton range="5Y" />
     </div>
   );
 };
