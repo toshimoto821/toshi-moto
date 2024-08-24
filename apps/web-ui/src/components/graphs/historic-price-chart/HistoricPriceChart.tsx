@@ -115,7 +115,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
 
   return (
     <div className="w-full h-full relative">
-      <div className="flex justify-end items-center px-4 sticky top-[9.5rem]">
+      <div className="flex justify-end items-center px-4 sticky top-[9.5rem] z-50">
         <TimeRangeButtons />
       </div>
       <div
