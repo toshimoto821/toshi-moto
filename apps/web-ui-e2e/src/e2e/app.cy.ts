@@ -15,7 +15,7 @@ describe("web-ui-e2e", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
-    cy.intercept("GET", /\/api\/prices\/simple.*/, {
+    cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
         usd: 90482.36,
         usd_24h_vol: 16690539371.276321,
