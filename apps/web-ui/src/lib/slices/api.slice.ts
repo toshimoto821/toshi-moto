@@ -17,6 +17,7 @@ import type {
   PriceHistoryResponse,
   PriceHistoricArgs,
   TransactionsResponse,
+  PriceHistoryDiffResponse,
 } from "./api.slice.types";
 
 export const dynamicBaseQuery: BaseQueryFn<
@@ -88,9 +89,12 @@ export const apiSlice = createApi({
     }),
     getHistoricPrice: builder.query<PriceHistoryResponse, PriceHistoricArgs>({
       query: (args) => {
-        const { from, to, groupBy, currency = "usd" } = args;
-        return `/api/prices/range?vs_currency=${currency}&from=${from}&to=${to}&group_by=${groupBy}`;
+        const { from, to, groupBy, currency = "usd", range = "" } = args;
+        return `/api/prices/range?vs_currency=${currency}&from=${from}&to=${to}&group_by=${groupBy}&range=${range}`;
       },
+    }),
+    getHistoricPriceDiff: builder.query<PriceHistoryDiffResponse, void>({
+      query: () => "/api/prices/range/diff",
     }),
   }),
 });
@@ -99,10 +103,17 @@ export const {
   useGetPriceQuery,
   useGetHistoricPriceQuery,
   useGetCirculatingSupplyQuery,
+  useGetHistoricPriceDiffQuery,
 } = apiSlice;
 
-export const { getAddress, getTransactions, getPrice, getCirculatingSupply } =
-  apiSlice.endpoints;
+export const {
+  getAddress,
+  getTransactions,
+  getPrice,
+  getCirculatingSupply,
+  getHistoricPriceDiff,
+  getHistoricPrice,
+} = apiSlice.endpoints;
 
 //////////////////////////////////////
 // actions

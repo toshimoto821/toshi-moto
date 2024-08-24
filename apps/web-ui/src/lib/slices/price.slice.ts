@@ -4,10 +4,16 @@ import {
   PayloadAction,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { getPrice, getCirculatingSupply } from "./api.slice";
+import {
+  getPrice,
+  getCirculatingSupply,
+  getHistoricPriceDiff,
+  getHistoricPrice,
+} from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
 import { uiSlice } from "./ui.slice";
+import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 
 interface PriceState {
@@ -20,6 +26,7 @@ interface PriceState {
   forecastModel: IForcastModelType | null;
   streamStatus: "CONNECTED" | "DISCONNECTED";
   streamPaused: boolean;
+  priceDiffs: Record<GraphTimeFrameRange, number>;
 }
 
 export type IPrices = [number, number][];
@@ -35,6 +42,15 @@ const initialState: PriceState = {
   forecastModel: null,
   streamStatus: "DISCONNECTED",
   streamPaused: false,
+  priceDiffs: {
+    "1D": 0,
+    "1W": 0,
+    "1M": 0,
+    "3M": 0,
+    "1Y": 0,
+    "2Y": 0,
+    "5Y": 0,
+  },
 };
 
 export const priceSlice = createSlice({
@@ -72,6 +88,30 @@ export const priceSlice = createSlice({
 
     builder.addMatcher(getCirculatingSupply.matchFulfilled, (state, action) => {
       state.circulatingSupply = action.payload;
+    });
+
+    builder.addMatcher(getHistoricPriceDiff.matchFulfilled, (state, action) => {
+      const value = action.payload.data.reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur.period]: cur.diff,
+        };
+      }, {} as Record<GraphTimeFrameRange, number>);
+
+      state.priceDiffs = value;
+    });
+
+    builder.addMatcher(getHistoricPrice.matchFulfilled, (state, action) => {
+      // console.log("action", action);
+      const { range } = action.payload.meta;
+      if (range) {
+        const prices = action.payload.prices || [];
+        const [first] = prices;
+
+        // const last = prices[prices.length - 1];
+        const diff = state.btcPrice - first[1];
+        state.priceDiffs[range] = diff;
+      }
     });
   },
 });

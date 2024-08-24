@@ -10,6 +10,7 @@ export class RangeQueryDto {
   readonly from: number;
   readonly to: number;
   readonly group_by: "5M" | "1H" | "1D" | "1W";
+  readonly range: string;
 }
 
 export class SimplePriceDto {
