@@ -1,10 +1,15 @@
 import { getPrice } from "../support/app.po";
-import localForage from "localforage";
 import range from "../fixtures/range.json";
+import rangeDiff from "../fixtures/range-diff.json";
 
 describe("web-ui-e2e", () => {
   beforeEach(() => {
-    localForage.clear();
+    cy.clearLocalStorage();
+    indexedDB.databases().then((databases) => {
+      databases.forEach((db) => {
+        indexedDB.deleteDatabase(db.name);
+      });
+    });
   });
 
   it("Hero", () => {
@@ -19,6 +24,9 @@ describe("web-ui-e2e", () => {
         last_updated_at: 1720107348,
       },
     }).as("getPrice1");
+    cy.intercept("GET", "**/api/prices/range/diff*", rangeDiff).as(
+      "getRangeDiff"
+    );
     cy.intercept("GET", "**/api/prices/range*", range).as("getRange1");
     cy.visit("/");
     // Custom command example, see `../support/commands.ts` file
@@ -29,7 +37,7 @@ describe("web-ui-e2e", () => {
     // });
 
     const p = getPrice();
-
+    cy.debug();
     p.should("be.visible");
     p.contains("$90,482.36");
     cy.screenshot({ capture: "viewport" });
