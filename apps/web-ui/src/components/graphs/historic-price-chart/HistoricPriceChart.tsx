@@ -38,8 +38,11 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
 
   useGetHistoricPriceDiffQuery();
   // console.log(response);
-  const { graphPlotDots: showPlotDots, graphBtcAllocation: showBtcAllocation } =
-    useAppSelector(selectUI);
+  const {
+    graphPlotDots: showPlotDots,
+    graphBtcAllocation: showBtcAllocation,
+    previousGraphTimeFrameRange,
+  } = useAppSelector(selectUI);
 
   const { forecastModel } = useAppSelector(selectForecast);
 
@@ -110,7 +113,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleReset = () => {
-    handleUpdateTimeframe(chartTimeframeRange || "5Y")();
+    handleUpdateTimeframe(
+      chartTimeframeRange || previousGraphTimeFrameRange || "5Y"
+    )();
   };
 
   return (

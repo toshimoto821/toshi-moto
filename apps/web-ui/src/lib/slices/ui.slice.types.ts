@@ -9,6 +9,7 @@ export interface UIState {
   currency: ICurrency;
   filterUtxoOnly: string[];
   graphTimeFrameRange: GraphTimeFrameRange | null;
+  previousGraphTimeFrameRange: GraphTimeFrameRange | null;
   graphTimeFrameGroup: GroupBy;
   graphStartDate: number;
   graphEndDate: number;
