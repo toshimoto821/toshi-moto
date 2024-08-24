@@ -25,7 +25,7 @@ export const useBtcHistoricPrices = () => {
     to,
     groupBy,
     currency,
-    range: graphTimeFrameRange,
+    range: graphTimeFrameRange!,
   });
 
   if (error) {

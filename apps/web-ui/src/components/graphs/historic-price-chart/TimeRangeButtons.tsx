@@ -69,7 +69,7 @@ export const TimeRangeButtons = () => {
     "classic" | "solid" | "soft" | "surface" | "outline" | "ghost"
   > = {
     selected: "surface",
-    deselected: "soft",
+    deselected: "outline",
   };
   return (
     <div className="flex space-x-2 items-center justify-end">
