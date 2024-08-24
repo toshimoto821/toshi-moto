@@ -11,6 +11,7 @@ import { cn } from "@root/lib/utils";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
+import { selectOrAppend } from "../line/d3.utils";
 
 type IChartLegendProps = {
   height: number;
@@ -141,16 +142,16 @@ export const ChartLegend = ({
         ? d3.timeFormat("%b %d, %Y")
         : d3.timeFormat("%b %d, %y");
 
-    g.append("g")
-      .call(
-        //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
-        d3
-          .axisBottom(x)
-          .tickValues(ticks)
-          // @ts-expect-error d3 issues
-          .tickFormat(tickFormat) // Format the tick labels as needed
-        // .tickSizeOuter(0)
-      )
+    const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
+    el.call(
+      //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
+      d3
+        .axisBottom(x)
+        .tickValues(ticks)
+        // @ts-expect-error d3 issues
+        .tickFormat(tickFormat) // Format the tick labels as needed
+      // .tickSizeOuter(0)
+    )
       .call((g: any) => {
         g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
@@ -168,6 +169,7 @@ export const ChartLegend = ({
       .attr("stroke-width", 1);
 
     g.selectAll("text")
+      .attr("display", "")
       .filter((_: any, i: number) => {
         if (chartTimeFrameRange === "1D") {
           return i % 8 !== 0;
@@ -175,7 +177,7 @@ export const ChartLegend = ({
 
         return i % 4 !== 0;
       }) // Filter out every other text node
-      .remove();
+      .attr("display", "none");
 
     g.selectAll(".tick line")
       .filter((_: any, i: number) => i % 4 === 0)
@@ -197,21 +199,20 @@ export const ChartLegend = ({
         ? d3.timeFormat("%b %d, %Y")
         : d3.timeFormat("%b %d, %y");
 
-    g.append("g")
-      .call(
-        //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
-        d3
-          .axisBottom(x)
-          .tickValues(ticks)
-          // @ts-expect-error d3 issues
-          .tickFormat(tickFormat) // Format the tick labels as needed
-        // .tickSizeOuter(0)
-      )
+    const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
+    el.call(
+      //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
+      d3
+        .axisBottom(x)
+        .tickValues(ticks)
+        // @ts-expect-error d3 issues
+        .tickFormat(tickFormat) // Format the tick labels as needed
+      // .tickSizeOuter(0)
+    )
       .call((g: any) => {
         g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
-
       .selectAll("text")
       .attr("dy", "1.5em")
       .attr("opacity", 0.5)
@@ -223,7 +224,10 @@ export const ChartLegend = ({
       .attr("opacity", 0.5)
       .attr("stroke-width", 1);
 
-    g.selectAll("text")
+    const nodes = g.selectAll("text");
+
+    nodes
+      .attr("display", "")
       .filter((_: any, i: number) => {
         if (chartTimeFrameRange === "1M" || chartTimeFrameRange === "2Y") {
           return i % 6 !== 0;
@@ -231,7 +235,7 @@ export const ChartLegend = ({
 
         return i % 12 !== 0;
       }) // Filter out every other text node
-      .remove();
+      .attr("display", "none");
 
     g.selectAll(".tick line")
       .filter((_: any, i: number) => i % 6 === 0)
@@ -243,14 +247,21 @@ export const ChartLegend = ({
     const svg = d3.select(svgRef.current);
 
     if (breakpoint > 3) {
-      svg.append("g").call(xAxis);
+      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
     } else {
-      svg.append("g").call(xAxisMobile);
+      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
     }
 
     if (!forecastModel) {
-      const brushSelection = svg.append("g");
-
+      // const brushSelection = svg.append("g");
+      const brushSelection: d3.Selection<
+        SVGGElement,
+        unknown,
+        null,
+        undefined
+      > = selectOrAppend(svg, "#brush-g", "g", {
+        id: "brush-g",
+      });
       brushSelection.attr("class", "brush").call(brush);
     }
   };
@@ -261,14 +272,14 @@ export const ChartLegend = ({
     render();
 
     return () => {
-      const svg = d3.select(svgRef.current);
-      svg.selectAll("g").remove();
-      svg.selectAll("text").remove();
-      svg.selectAll("path").remove();
-      svg.selectAll("defs").remove();
-      svg.selectAll(".plot").remove();
-      svg.selectAll("circle").remove();
-      svg.selectAll("line").remove();
+      // const svg = d3.select(svgRef.current);
+      // svg.selectAll("g").remove();
+      // svg.selectAll("text").remove();
+      // svg.selectAll("path").remove();
+      // svg.selectAll("defs").remove();
+      // svg.selectAll(".plot").remove();
+      // svg.selectAll("circle").remove();
+      // svg.selectAll("line").remove();
     };
   }, [hasPrices, chartTimeFrameRange, screensize, forecastModel]);
 

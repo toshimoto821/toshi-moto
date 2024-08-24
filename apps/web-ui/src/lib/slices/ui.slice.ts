@@ -21,6 +21,7 @@ const initialState: UIState = {
   filterUtxoOnly: [],
   graphTimeFrameRange: "5Y",
   graphTimeFrameGroup: "1W",
+  previousGraphTimeFrameRange: null,
   graphStartDate: defaultGraphStartDate,
   graphEndDate: defaultGraphEndDate,
   graphBtcAllocation: true,
@@ -40,9 +41,15 @@ export const uiSlice = createSlice({
   initialState,
   reducers: {
     setUI(state, action: PayloadAction<Partial<UIState>>) {
+      const { graphTimeFrameRange } = state;
+      const overrides = {} as Partial<UIState>;
+      if (action.payload.graphTimeFrameRange === null && graphTimeFrameRange) {
+        overrides.previousGraphTimeFrameRange = graphTimeFrameRange;
+      }
       return {
         ...state,
         ...action.payload,
+        ...overrides,
       };
     },
     showToast(state, action: PayloadAction<UIState["toastMessage"]>) {
@@ -198,6 +205,7 @@ export const chartByDateRangeAction = (
       graphTimeFrameGroup,
       graphStartDate: start,
       graphEndDate: end,
+      graphTimeFrameRange: null,
     },
   };
 };
