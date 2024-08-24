@@ -182,7 +182,6 @@ let ws: WebSocket | null = null;
 export const openPriceSocket = createAsyncThunk<void, boolean>(
   "price/openSocket",
   async (retry, { dispatch, getState }) => {
-    return;
     if (ws) {
       if (ws.readyState === WebSocket.CLOSED) {
         console.log("closing ws");
