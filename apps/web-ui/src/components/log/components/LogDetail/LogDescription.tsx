@@ -6,7 +6,7 @@ type ILogDescription = {
   request: APIRequestResponse;
 };
 export const LogDescription = (props: ILogDescription) => {
-  const type = props.request.meta?.type;
+  const type = props.request?.meta?.type;
 
   if (type === "btc-historic-price") {
     return (
