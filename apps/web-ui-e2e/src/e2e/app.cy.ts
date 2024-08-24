@@ -1,13 +1,17 @@
 import { getPrice } from "../support/app.po";
-import localForage from "localforage";
 import range from "../fixtures/range.json";
+import rangeDiff from "../fixtures/range-diff.json";
 
 describe("web-ui-e2e", () => {
-  beforeEach(() => {
-    localForage.clear();
+  beforeEach(async () => {
+    cy.clearLocalStorage();
+    const databases = await indexedDB.databases();
+    databases.forEach((db) => {
+      indexedDB.deleteDatabase(db.name);
+    });
   });
 
-  it("Hero", () => {
+  it.only("Hero", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -19,8 +23,14 @@ describe("web-ui-e2e", () => {
         last_updated_at: 1720107348,
       },
     }).as("getPrice1");
+    cy.intercept("GET", "**/api/prices/range/diff*", rangeDiff).as(
+      "getRangeDiff"
+    );
     cy.intercept("GET", "**/api/prices/range*", range).as("getRange1");
-    cy.visit("/");
+
+    cy.visit("/#/onboarding");
+    // cy.wait(1000);
+
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
     cy.wait("@getPrice1", { timeout: 20000 });
@@ -29,7 +39,7 @@ describe("web-ui-e2e", () => {
     // });
 
     const p = getPrice();
-
+    cy.debug();
     p.should("be.visible");
     p.contains("$90,482.36");
     cy.screenshot({ capture: "viewport" });
