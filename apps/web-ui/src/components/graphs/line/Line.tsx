@@ -551,7 +551,7 @@ export const Line = (props: ILine) => {
           width - 186
         );
 
-        const top = 180;
+        const top = 200;
 
         tooltip
           .style("opacity", 0.7)

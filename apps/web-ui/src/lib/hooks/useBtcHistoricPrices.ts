@@ -9,8 +9,11 @@ import {
 export const useBtcHistoricPrices = () => {
   const { currency } = useAppSelector(selectUI);
 
-  const { graphStartDate: chartStartDate, graphEndDate: chartEndDate } =
-    useAppSelector(selectGraphDates);
+  const {
+    graphStartDate: chartStartDate,
+    graphEndDate: chartEndDate,
+    graphTimeFrameRange,
+  } = useAppSelector(selectGraphDates);
 
   const from = Math.floor(chartStartDate / 1000);
   const to = Math.floor(chartEndDate / 1000);
@@ -22,6 +25,7 @@ export const useBtcHistoricPrices = () => {
     to,
     groupBy,
     currency,
+    range: graphTimeFrameRange!,
   });
 
   if (error) {
