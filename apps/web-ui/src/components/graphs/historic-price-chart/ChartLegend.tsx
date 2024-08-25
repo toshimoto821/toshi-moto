@@ -40,14 +40,16 @@ export const ChartLegend = ({
 
   const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
-  const chartTimeFrameRange = useAppSelector(
-    (state) =>
-      state.ui.graphTimeFrameRange || state.ui.previousGraphTimeFrameRange
-  );
-
   const graphTimeFrameRange = useAppSelector(
     (state) => state.ui.graphTimeFrameRange
   );
+
+  const previousGraphTimeFrameRange = useAppSelector(
+    (state) => state.ui.previousGraphTimeFrameRange
+  );
+
+  const chartTimeFrameRange =
+    graphTimeFrameRange || previousGraphTimeFrameRange;
 
   const len = prices?.length || 0;
   const cachedPrices = useMemo(() => {
@@ -55,7 +57,13 @@ export const ChartLegend = ({
       return prices?.concat(forecastPrices);
     }
     return prices;
-  }, [chartTimeFrameRange, forecastModel, len > 0]);
+  }, [
+    loading,
+    chartTimeFrameRange,
+    forecastModel,
+    len > 0,
+    previousGraphTimeFrameRange,
+  ]);
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
