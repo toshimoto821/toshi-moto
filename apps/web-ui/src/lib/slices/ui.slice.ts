@@ -47,6 +47,8 @@ export const uiSlice = createSlice({
       const overrides = {} as Partial<UIState>;
       if (action.payload.graphTimeFrameRange === null && graphTimeFrameRange) {
         overrides.previousGraphTimeFrameRange = graphTimeFrameRange;
+      } else {
+        overrides.previousGraphTimeFrameRange = null;
       }
       return {
         ...state,
