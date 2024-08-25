@@ -115,6 +115,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
 
   const handleReset = () => {
     // this causes build issues when i dont assign a var first, dont know why
+    // perhaps bundle issue?
     // const action = setRange({
     //   graphStartDate: null,
     //   graphEndDate: null,
