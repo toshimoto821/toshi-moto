@@ -3,9 +3,6 @@ import { useRef, useEffect, useMemo, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection } from "d3";
 import debounce from "lodash/debounce";
-
-import { type IChartTimeFrameRange } from "@root/types";
-
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { cn } from "@root/lib/utils";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
@@ -16,16 +13,18 @@ import { selectOrAppend } from "../line/d3.utils";
 type IChartLegendProps = {
   height: number;
   width: number;
-  chartTimeFrameRange: IChartTimeFrameRange | null;
   onChange: (range: [Date, Date]) => void;
   onReset: () => void;
+  onBrushMove?: (dates: [Date, Date]) => void;
+  onBrushEnd?: () => void;
 };
 export const ChartLegend = ({
   height,
   width,
-  chartTimeFrameRange,
   onChange,
   onReset,
+  onBrushMove,
+  onBrushEnd,
 }: IChartLegendProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
@@ -37,16 +36,26 @@ export const ChartLegend = ({
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices } = useBtcHistoricPrices();
+  const { prices, loading } = useBtcHistoricPrices();
 
   const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
+  const chartTimeFrameRange = useAppSelector(
+    (state) =>
+      state.ui.graphTimeFrameRange || state.ui.previousGraphTimeFrameRange
+  );
+
+  const graphTimeFrameRange = useAppSelector(
+    (state) => state.ui.graphTimeFrameRange
+  );
+
+  const len = prices?.length || 0;
   const cachedPrices = useMemo(() => {
     if (forecastModel && forecastPrices) {
       return prices?.concat(forecastPrices);
     }
     return prices;
-  }, [chartTimeFrameRange, forecastModel, prices?.length]);
+  }, [chartTimeFrameRange, forecastModel, len > 0]);
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
@@ -115,16 +124,29 @@ export const ChartLegend = ({
   }
 
   // fix margin offsets
+  // const interval = d3.timeMinute.every(30);
   const brush = d3
     .brushX()
     .extent([
       [margin.left, 1],
       [width - margin.right, height - 1],
     ])
+    .on("brush", (event: any) => {
+      if (onBrushMove && event.selection) {
+        // let interval = d3.timeMinute.every(30);
+        const d0 = event.selection.map(x.invert);
+        // const d1 = d0.map(interval.round);
+
+        onBrushMove(d0);
+      }
+    })
     // .on("brush", brushed)
     .on("end", (selection: BrushSelection) => {
       currentSelecion.current = selection;
       updateChart(selection);
+      if (onBrushEnd) {
+        onBrushEnd();
+      }
     });
 
   const xAxis = (g: any) => {
@@ -134,13 +156,7 @@ export const ChartLegend = ({
         ? d3.timeFormat("%b %d, %I:%M %p")
         : chartTimeFrameRange === "1W"
         ? d3.timeFormat("%b %d, %I:%M %p")
-        : chartTimeFrameRange === "1M"
-        ? d3.timeFormat("%b %d, %Y")
-        : chartTimeFrameRange == "3M" ||
-          chartTimeFrameRange == "1Y" ||
-          chartTimeFrameRange == "5Y"
-        ? d3.timeFormat("%b %d, %Y")
-        : d3.timeFormat("%b %d, %y");
+        : d3.timeFormat("%b %d, %Y");
 
     const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
     el.call(
@@ -175,7 +191,11 @@ export const ChartLegend = ({
           return i % 8 !== 0;
         }
 
-        return i % 4 !== 0;
+        if (chartTimeFrameRange === "2Y") {
+          return i % 8 !== 0;
+        }
+
+        return i % 6 !== 0;
       }) // Filter out every other text node
       .attr("display", "none");
 
@@ -246,10 +266,14 @@ export const ChartLegend = ({
     if (!prices?.length) return;
     const svg = d3.select(svgRef.current);
 
-    if (breakpoint > 3) {
-      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
-    } else {
-      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
+    // only repain the chart if the graphTimeFrameRange is not null.
+    // it gets set to null when user drags on brush
+    if (graphTimeFrameRange) {
+      if (breakpoint > 3) {
+        selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
+      } else {
+        selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
+      }
     }
 
     if (!forecastModel) {
@@ -269,9 +293,29 @@ export const ChartLegend = ({
   const hasPrices = (cachedPrices?.length || 0) > 0;
 
   useEffect(() => {
-    render();
+    if (graphTimeFrameRange) {
+      const svg = d3.select(svgRef.current);
+      const brushSelection: d3.Selection<
+        SVGGElement,
+        unknown,
+        null,
+        undefined
+      > = svg.select("#brush-g");
+      brushSelection.call(brush.move, null);
+    }
+  }, [graphTimeFrameRange, chartTimeFrameRange]);
 
+  useEffect(() => {
+    render();
+    // const svg = d3.select(svgRef.current);
     return () => {
+      // const brushSelection: d3.Selection<
+      //   SVGGElement,
+      //   unknown,
+      //   null,
+      //   undefined
+      // > = svg.select("#brush-g");
+      // brushSelection.call(brush.move, null);
       // const svg = d3.select(svgRef.current);
       // svg.selectAll("g").remove();
       // svg.selectAll("text").remove();
@@ -281,7 +325,7 @@ export const ChartLegend = ({
       // svg.selectAll("circle").remove();
       // svg.selectAll("line").remove();
     };
-  }, [hasPrices, chartTimeFrameRange, screensize, forecastModel]);
+  }, [loading, hasPrices, chartTimeFrameRange, screensize, forecastModel]);
 
   useEffect(() => {
     // Function to execute when the window is resized

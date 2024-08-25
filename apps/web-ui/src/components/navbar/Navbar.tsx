@@ -15,6 +15,7 @@ import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
+import { selectGraphRange } from "@root/lib/slices/navbar.slice";
 
 const colorScale = d3
   .scaleLinear<string>()
@@ -168,8 +169,10 @@ export const Navbar = () => {
   //   ? prices[prices.length - 1][0]
   //   : meta.chartEndDate;
 
-  const firstDateAsNumber = uiState.graphStartDate;
-  const lastDateAsNumber = uiState.graphEndDate;
+  const navbarRanges = useAppSelector(selectGraphRange);
+  const firstDateAsNumber =
+    navbarRanges.graphStartDate || uiState.graphStartDate;
+  const lastDateAsNumber = navbarRanges.graphEndDate || uiState.graphEndDate;
 
   const firstDate = new Date(firstDateAsNumber);
   const lastDate = new Date(lastDateAsNumber);
@@ -305,7 +308,9 @@ export const Navbar = () => {
                     variant="ghost"
                     onClick={onClickDate("start")}
                   >
-                    <Text size="1">{format(firstDate, "PP, pp")}</Text>
+                    <Text size="1" className="italic">
+                      {format(firstDate, " pp, PP")}
+                    </Text>
                   </Button>
                 </div>
                 <div className="flex items-center mx-2">
@@ -313,7 +318,9 @@ export const Navbar = () => {
                 </div>
                 <div className="flex items-center">
                   <Button size="1" variant="ghost" onClick={onClickDate("end")}>
-                    <Text size="1">{format(lastDate, "PP, pp")}</Text>
+                    <Text size="1" className="italic">
+                      {format(lastDate, "pp, PP")}
+                    </Text>
                   </Button>
                 </div>
               </div>
