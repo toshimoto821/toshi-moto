@@ -109,8 +109,10 @@ export const priceSlice = createSlice({
         const [first] = prices;
 
         // const last = prices[prices.length - 1];
-        const diff = state.btcPrice - first[1];
-        state.priceDiffs[range] = diff;
+        if (first) {
+          const diff = state.btcPrice - first[1];
+          state.priceDiffs[range] = diff;
+        }
       }
     });
   },

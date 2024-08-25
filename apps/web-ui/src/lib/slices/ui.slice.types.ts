@@ -12,7 +12,9 @@ export interface UIState {
   previousGraphTimeFrameRange: GraphTimeFrameRange | null;
   graphTimeFrameGroup: GroupBy;
   graphStartDate: number;
+  graphStartDateNext: number | null;
   graphEndDate: number;
+  graphEndDateNext: number | null;
   graphBtcAllocation: boolean;
   graphPlotDots: boolean;
   graphSelectedTransactions: string[];
