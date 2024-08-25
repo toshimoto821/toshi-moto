@@ -24,12 +24,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Clear GitHub Actions Cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-
       # - name: Cache pnpm dependencies
       #   id: pnpm-cache
       #   uses: actions/cache@v3
