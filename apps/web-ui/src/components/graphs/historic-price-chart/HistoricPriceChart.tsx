@@ -19,6 +19,7 @@ import { cn } from "@root/lib/utils";
 import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
 import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { TimeRangeButtons } from "./TimeRangeButtons";
+import { setRange } from "@root/lib/slices/navbar.slice";
 
 type IHistoricPriceChart = {
   height: number;
@@ -118,6 +119,18 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     )();
   };
 
+  const handleBrushMove = ([startTime, endTime]: [Date, Date]) => {
+    dispatch(
+      setRange({
+        graphStartDate: startTime.getTime(),
+        graphEndDate: endTime.getTime(),
+      })
+    );
+  };
+  const handleBrushEnd = () => {
+    dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
+  };
+
   return (
     <div className="w-full h-full relative">
       <div className="flex justify-end items-center px-4 sticky top-[9.5rem] z-40">
@@ -147,9 +160,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
         <ChartLegend
           height={30}
           width={width}
-          chartTimeFrameRange={graphTimeFrameRange}
           onChange={handleRangeChange}
           onReset={handleReset}
+          onBrushMove={handleBrushMove}
+          onBrushEnd={handleBrushEnd}
         />
       </div>
     </div>

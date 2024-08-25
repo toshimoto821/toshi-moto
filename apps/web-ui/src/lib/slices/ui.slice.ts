@@ -23,7 +23,9 @@ const initialState: UIState = {
   graphTimeFrameGroup: "1W",
   previousGraphTimeFrameRange: null,
   graphStartDate: defaultGraphStartDate,
+  graphStartDateNext: null,
   graphEndDate: defaultGraphEndDate,
+  graphEndDateNext: null,
   graphBtcAllocation: true,
   graphPlotDots: false,
   graphSelectedTransactions: [],
@@ -219,7 +221,10 @@ export const selectUI = (state: RootState) => state.ui;
 
 export const selectGroupByHistoric = createSelector(
   (state: RootState) => state.ui.graphTimeFrameRange,
-  (range) => {
+  (state: RootState) => state.ui.previousGraphTimeFrameRange,
+  (currentRange, previousRange) => {
+    console.log("cu", currentRange, "pr", previousRange);
+    const range = previousRange || currentRange;
     let groupBy: GroupBy = "5M";
     if (range === "1D") {
       groupBy = "5M";
