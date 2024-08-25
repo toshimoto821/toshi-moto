@@ -19,7 +19,7 @@ import { cn } from "@root/lib/utils";
 import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
 import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { TimeRangeButtons } from "./TimeRangeButtons";
-import { setRange } from "@root/lib/slices/navbar.slice";
+import { setRange } from "@lib/slices/navbar.slice";
 
 type IHistoricPriceChart = {
   height: number;
@@ -114,7 +114,13 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleReset = () => {
-    dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
+    // this causes build issues when i dont assign a var first, dont know why
+    // const action = setRange({
+    //   graphStartDate: null,
+    //   graphEndDate: null,
+    // });
+    // console.log(action);
+    // dispatch(action);
     handleUpdateTimeframe(
       chartTimeframeRange || previousGraphTimeFrameRange || "5Y"
     )();
@@ -129,7 +135,11 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     );
   };
   const handleBrushEnd = () => {
-    dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
+    const action = setRange({
+      graphStartDate: null,
+      graphEndDate: null,
+    });
+    dispatch(action);
   };
 
   return (
