@@ -114,6 +114,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleReset = () => {
+    dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
     handleUpdateTimeframe(
       chartTimeframeRange || previousGraphTimeFrameRange || "5Y"
     )();

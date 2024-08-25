@@ -3,6 +3,7 @@ import { Button } from "@radix-ui/themes";
 import { scaleLinear, extent, interpolateRgb } from "d3";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
+import { setRange } from "@root/lib/slices/navbar.slice";
 import { setGraphByRange } from "@root/lib/slices/ui.slice";
 import { type GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { cn } from "@root/lib/utils";
@@ -22,6 +23,7 @@ export const TimeRangeButtons = () => {
 
   const handleUpdateTimeframe = (timeframe: GraphTimeFrameRange) => {
     return () => {
+      dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
       dispatch(setGraphByRange(timeframe));
     };
   };
