@@ -62,6 +62,7 @@ export const useBtcHistoricPrices = () => {
     prices,
     from: data?.meta?.from,
     to: data?.meta?.to,
+    range: data?.meta?.range,
     loading,
   };
 };

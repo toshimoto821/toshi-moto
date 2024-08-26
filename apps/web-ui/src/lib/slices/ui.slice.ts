@@ -225,7 +225,6 @@ export const selectGroupByHistoric = createSelector(
   (state: RootState) => state.ui.graphTimeFrameRange,
   (state: RootState) => state.ui.previousGraphTimeFrameRange,
   (currentRange, previousRange) => {
-    console.log("cu", currentRange, "pr", previousRange);
     const range = previousRange || currentRange;
     let groupBy: GroupBy = "5M";
     if (range === "1D") {
