@@ -77,6 +77,7 @@ export const useChartData = (opts: IUseChartData) => {
 
     if (lastPrice < now && now - lastPrice < timeDiff) {
       const newLastPrice = lastPrice + timeDiff;
+      prices.pop();
       prices.push([newLastPrice, btcPrice]);
     }
   }

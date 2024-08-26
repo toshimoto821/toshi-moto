@@ -16,7 +16,7 @@ type IChartLegendProps = {
   onChange: (range: [Date, Date]) => void;
   onReset: () => void;
   onBrushMove?: (dates: [Date, Date]) => void;
-  onBrushEnd?: () => void;
+  onBrushEnd?: (dates: [Date, Date]) => void;
 };
 export const ChartLegend = ({
   height,
@@ -36,18 +36,20 @@ export const ChartLegend = ({
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices, loading } = useBtcHistoricPrices();
+  const { prices, loading, range } = useBtcHistoricPrices();
 
   const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
-
-  const chartTimeFrameRange = useAppSelector(
-    (state) =>
-      state.ui.graphTimeFrameRange || state.ui.previousGraphTimeFrameRange
-  );
 
   const graphTimeFrameRange = useAppSelector(
     (state) => state.ui.graphTimeFrameRange
   );
+
+  const previousGraphTimeFrameRange = useAppSelector(
+    (state) => state.ui.previousGraphTimeFrameRange
+  );
+
+  const chartTimeFrameRange =
+    graphTimeFrameRange || previousGraphTimeFrameRange;
 
   const len = prices?.length || 0;
   const cachedPrices = useMemo(() => {
@@ -55,7 +57,13 @@ export const ChartLegend = ({
       return prices?.concat(forecastPrices);
     }
     return prices;
-  }, [chartTimeFrameRange, forecastModel, len > 0]);
+  }, [
+    loading,
+    chartTimeFrameRange,
+    forecastModel,
+    len > 0,
+    previousGraphTimeFrameRange,
+  ]);
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
@@ -141,11 +149,12 @@ export const ChartLegend = ({
       }
     })
     // .on("brush", brushed)
-    .on("end", (selection: BrushSelection) => {
-      currentSelecion.current = selection;
-      updateChart(selection);
+    .on("end", (event: any) => {
+      currentSelecion.current = event;
+      updateChart(event);
       if (onBrushEnd) {
-        onBrushEnd();
+        const [x1, x2] = (event.selection || []).map(x.invert);
+        onBrushEnd([x1, x2]);
       }
     });
 
@@ -306,6 +315,10 @@ export const ChartLegend = ({
   }, [graphTimeFrameRange, chartTimeFrameRange]);
 
   useEffect(() => {
+    // @ts-expect-error fix me, api returns string "null"
+    if (!range || range === "null" || loading) {
+      return;
+    }
     render();
     // const svg = d3.select(svgRef.current);
     return () => {
@@ -325,7 +338,14 @@ export const ChartLegend = ({
       // svg.selectAll("circle").remove();
       // svg.selectAll("line").remove();
     };
-  }, [loading, hasPrices, chartTimeFrameRange, screensize, forecastModel]);
+  }, [
+    loading,
+    hasPrices,
+    chartTimeFrameRange,
+    screensize,
+    forecastModel,
+    range,
+  ]);
 
   useEffect(() => {
     // Function to execute when the window is resized
