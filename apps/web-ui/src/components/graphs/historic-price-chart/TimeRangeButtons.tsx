@@ -88,6 +88,10 @@ export const TimeRangeButtons = () => {
           style={{
             color: colors.get(range),
             width: "100%",
+            backgroundColor:
+              graphTimeFrameRange === range
+                ? "rgba(255, 255, 255, 0.7)"
+                : "rgba(229, 231, 235, 0.7)",
           }}
           color="gray"
           variant={
