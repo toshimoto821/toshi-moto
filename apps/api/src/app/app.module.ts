@@ -12,6 +12,9 @@ import { TasksService } from "./services/TasksService";
 import { PriceModule } from "./price/price.module";
 import { ApiKeyMiddleware } from "src/middleware/ApiKeyMiddleware";
 import { LoggerMiddleware } from "src/middleware/LoggerMiddleware";
+import { ConfigModule } from "./config/config.module";
+import { DeviceModule } from "./device/device.module";
+
 const uri = process.env.MONGODB_URI;
 
 const providers = [AppService] as Provider[];
@@ -19,7 +22,13 @@ if (!process.env.TASK_SERVICE_DISABLED) {
   providers.push(TasksService);
 }
 @Module({
-  imports: [ScheduleModule.forRoot(), MongooseModule.forRoot(uri), PriceModule],
+  imports: [
+    ScheduleModule.forRoot(),
+    MongooseModule.forRoot(uri),
+    PriceModule,
+    ConfigModule,
+    DeviceModule,
+  ],
   controllers: [AppController],
   providers,
 })

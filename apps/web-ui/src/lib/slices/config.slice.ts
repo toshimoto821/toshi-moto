@@ -5,6 +5,8 @@ import {
 } from "@reduxjs/toolkit";
 import type { RootState } from "@lib/store";
 import { getBitcoinNodeUrl } from "../utils";
+import { getConfig } from "./api.slice";
+import { Config } from "./api.slice.types";
 
 const historicPriceUrl = import.meta.env.VITE_COINGECKO_API_URL;
 const priceUrl = import.meta.env.VITE_COINGECKO_PRICE_API_URL;
@@ -26,6 +28,11 @@ export interface ConfigState {
     conconcurrentRequests: number;
     timeBetweenRequests: number;
   };
+  pushNotifications: {
+    enabled: boolean;
+    publicKey: string;
+  };
+  configs: Config[];
 }
 
 export const initialState: ConfigState = {
@@ -40,6 +47,11 @@ export const initialState: ConfigState = {
     conconcurrentRequests,
     timeBetweenRequests,
   },
+  pushNotifications: {
+    enabled: false,
+    publicKey: "",
+  },
+  configs: [],
 };
 
 const configSlice = createSlice({
@@ -58,6 +70,10 @@ const configSlice = createSlice({
         ...state.network,
         ...action.payload.network,
       };
+      const pushNotifications = {
+        ...state.pushNotifications,
+        ...action.payload.pushNotifications,
+      };
       return {
         ...state,
         api: {
@@ -66,8 +82,26 @@ const configSlice = createSlice({
         network: {
           ...networkConfig,
         },
+        pushNotifications: {
+          ...pushNotifications,
+        },
       };
     },
+  },
+  extraReducers(builder) {
+    builder.addMatcher(getConfig.matchFulfilled, (state, action) => {
+      const publicKeyConfig = action.payload.configs.find(
+        (config) => config.key === "push.public-key"
+      );
+      if (publicKeyConfig) {
+        state.pushNotifications = state.pushNotifications || {
+          enabled: false,
+          publicKey: "",
+        };
+        state.pushNotifications.publicKey = publicKeyConfig.value;
+      }
+      state.configs = action.payload.configs;
+    });
   },
 });
 export const { setConfig } = configSlice.actions;
@@ -76,6 +110,8 @@ export const configReducer = configSlice.reducer;
 export const selectAppVersion = (state: RootState) => state.config.appVersion;
 export const setAppVersion = createAction<string>("config/setAppVersion");
 export const selectApiConfig = (state: RootState) => state.config.api;
+export const selectPushNotificationsConfig = (state: RootState) =>
+  state.config.pushNotifications;
 export const selectNetworkConfig = (state: RootState) => state.config.network;
 
 export const selectBaseNodeUrl = (state: RootState) => state.config.api.nodeUrl;

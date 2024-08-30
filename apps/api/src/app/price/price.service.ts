@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { type Model, type PipelineStage } from "mongoose";
 import axios from "axios";
 import csv from "csv-parser";
-
+import type { IRangeDiffResponse } from "./price.controller";
 import { Price } from "./schemas/price.schema";
 import { CreatePriceDto } from "./dto/create-price.dto";
 import { wait } from "@lib/utils";
@@ -269,7 +269,7 @@ export class PriceService {
     return prices;
   }
 
-  async findRangeDiff() {
+  async findRangeDiff(): Promise<IRangeDiffResponse["data"]> {
     const pipeline = [
       {
         $facet:
@@ -694,6 +694,15 @@ export class PriceService {
     }
     return startDate;
   }
+
+  async getLastPrice() {
+    const lastPrice = await this.priceModel
+      .findOne()
+      .sort({ timestamp: -1 })
+      .exec();
+    return lastPrice;
+  }
+
   private getNow() {
     const now = new Date();
     now.setHours(now.getHours() + 1);
