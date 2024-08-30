@@ -61,53 +61,51 @@ export default defineConfig({
       ],
     }),
     react(),
-    ...(!isCypressRunning
-      ? VitePWA({
-          injectRegister: "script",
-          registerType: "autoUpdate",
-          strategies: "injectManifest",
-          srcDir: "src",
-          filename: "sw.ts",
-          workbox: {
-            sourcemap: true,
+    VitePWA({
+      injectRegister: "script",
+      registerType: "autoUpdate",
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
+      workbox: {
+        sourcemap: true,
+      },
+      devOptions: {
+        enabled: true,
+        type: "module",
+        /* other options */
+      },
+      manifest: {
+        name: "Toshi Moto",
+        short_name: "Toshi Moto",
+        description: "Visualize Bitcoin transactions in real time",
+        theme_color: "rgb(229, 231, 235)",
+        icons: [
+          {
+            src: "assets/pwa/android/android-launchericon-192-192.png",
+            sizes: "192x192",
+            type: "image/png",
           },
-          devOptions: {
-            enabled: true,
-            type: "module",
-            /* other options */
+          {
+            src: "assets/pwa/android/android-launchericon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
           },
-          manifest: {
-            name: "Toshi Moto",
-            short_name: "Toshi Moto",
-            description: "Visualize Bitcoin transactions in real time",
-            theme_color: "rgb(229, 231, 235)",
-            icons: [
-              {
-                src: "assets/pwa/android/android-launchericon-192-192.png",
-                sizes: "192x192",
-                type: "image/png",
-              },
-              {
-                src: "assets/pwa/android/android-launchericon-512x512.png",
-                sizes: "512x512",
-                type: "image/png",
-              },
-              {
-                src: "assets/pwa/android/android-launchericon-512x512.png",
-                sizes: "512x512",
-                type: "image/png",
-                purpose: "any",
-              },
-              {
-                src: "assets/pwa/android/android-launchericon-512x512.png",
-                sizes: "512x512",
-                type: "image/png",
-                purpose: "maskable",
-              },
-            ],
+          {
+            src: "assets/pwa/android/android-launchericon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any",
           },
-        })
-      : []),
+          {
+            src: "assets/pwa/android/android-launchericon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
+      },
+    }),
     svgr(),
     nxViteTsPaths(),
     // visualizer({ template: "raw-data", filename: "apps/web-ui/stats.json" }),

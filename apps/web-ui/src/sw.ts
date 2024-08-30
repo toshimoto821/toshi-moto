@@ -26,3 +26,33 @@ self.addEventListener("activate", function () {
   // The promise that clients.claim() returns can be safely ignored.
   self.clients.claim();
 });
+
+self.addEventListener("push", function (event) {
+  const data = event.data?.json();
+  const options = {
+    body: data.body,
+    icon: data.icon,
+    badge: data.badge,
+  };
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
+});
+
+let HOST: string;
+
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+  if (HOST) {
+    // @ts-expect-error clients
+    event.waitUntil(clients.openWindow(HOST));
+  }
+});
+
+// simple message / data handling
+self.addEventListener("message", (event) => {
+  const { type, payload } = event.data;
+  if (type === "SET_HOSTNAME") {
+    console.log("setting host", payload);
+    HOST = payload;
+  }
+});

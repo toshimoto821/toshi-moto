@@ -18,6 +18,9 @@ import type {
   PriceHistoricArgs,
   TransactionsResponse,
   PriceHistoryDiffResponse,
+  ConfigResponse,
+  PushSubscription,
+  GenericResponse,
 } from "./api.slice.types";
 
 export const dynamicBaseQuery: BaseQueryFn<
@@ -96,6 +99,26 @@ export const apiSlice = createApi({
     getHistoricPriceDiff: builder.query<PriceHistoryDiffResponse, void>({
       query: () => "/api/prices/range/diff",
     }),
+    getConfig: builder.query<ConfigResponse, void>({
+      query: () => "/api/config/list",
+    }),
+    savePushSubscription: builder.mutation<GenericResponse, PushSubscription>({
+      query: (subscription) => ({
+        url: "/api/device/subscribe",
+        method: "POST",
+        body: subscription,
+      }),
+    }),
+    unsubscribePushSubscription: builder.mutation<
+      GenericResponse,
+      PushSubscription
+    >({
+      query: (subscription) => ({
+        url: "/api/device/unsubscribe",
+        method: "POST",
+        body: subscription,
+      }),
+    }),
   }),
 });
 
@@ -104,6 +127,9 @@ export const {
   useGetHistoricPriceQuery,
   useGetCirculatingSupplyQuery,
   useGetHistoricPriceDiffQuery,
+  useGetConfigQuery,
+  useSavePushSubscriptionMutation,
+  useUnsubscribePushSubscriptionMutation,
 } = apiSlice;
 
 export const {
@@ -113,6 +139,8 @@ export const {
   getCirculatingSupply,
   getHistoricPriceDiff,
   getHistoricPrice,
+  getConfig,
+  savePushSubscription,
 } = apiSlice.endpoints;
 
 //////////////////////////////////////
