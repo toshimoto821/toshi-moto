@@ -1,4 +1,11 @@
 # API Changelog
+## [1.4.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.0...api-1.4.1) (2024-08-30)
+
+
+### Bug Fixes
+
+* testing deployment ([d2e7513](https://github.com/toshimoto821/toshi-moto/commit/d2e751366626b1702e70dc05574e16bad84985c1))
+
 ## [1.4.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.3.1...api-1.4.0) (2024-08-30)
 
 
