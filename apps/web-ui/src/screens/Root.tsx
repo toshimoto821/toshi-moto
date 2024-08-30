@@ -64,7 +64,7 @@ export const Root = () => {
   }, []);
 
   useEffect(() => {
-    if (navigator.serviceWorker.controller) {
+    if (navigator.serviceWorker?.controller) {
       navigator.serviceWorker.ready.then(() => {
         const hostname = window.location.origin;
         if (navigator.serviceWorker.controller) {
