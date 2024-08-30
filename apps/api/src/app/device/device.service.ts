@@ -58,12 +58,12 @@ export class DeviceService {
       price: null,
       lastThreshold: 0,
     };
-    this.rules = rules;
+    this.rules = [...rules];
   }
   private readonly logger = new Logger(DeviceService.name);
 
   resetRules() {
-    this.rules = rules;
+    this.rules = [...rules];
   }
 
   static getSortedRules(rules: Rule[]) {
