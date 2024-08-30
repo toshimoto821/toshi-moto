@@ -25,6 +25,9 @@ import {
 } from "@root/lib/slices/api.slice";
 import { PushSubscription } from "@root/lib/slices/api.slice.types";
 
+const VITE_PUSH_NOTIFICATIONS_DISABLED = import.meta.env
+  .VITE_PUSH_NOTIFICATIONS_DISABLED;
+
 export type IAppMetaConfig = {
   bitcoinNodeUrl: string;
   historicalPriceUrl: string;
@@ -148,6 +151,24 @@ export const SettingsForm = () => {
     }
   };
 
+  const pushDisabled = !!VITE_PUSH_NOTIFICATIONS_DISABLED;
+
+  useEffect(() => {
+    getSubscription().then((subscription) => {
+      if (subscription) {
+        const asJson = subscription.toJSON() as PushSubscription;
+        setPushSubscription(asJson);
+        setFormState((existing) => ({
+          ...existing,
+          pushNotifications: {
+            ...existing.pushNotifications,
+            enabled: true,
+          },
+        }));
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (message) {
       setTimeout(() => {
@@ -224,6 +245,7 @@ export const SettingsForm = () => {
           <Text as="label">
             <Flex as="span" gap="2" className="items-center">
               <Checkbox
+                disabled={pushDisabled}
                 checked={formState.pushNotifications.enabled}
                 onCheckedChange={() => {
                   const enabled = !formState.pushNotifications.enabled;

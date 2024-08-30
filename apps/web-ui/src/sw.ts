@@ -52,7 +52,6 @@ self.addEventListener("notificationclick", function (event) {
 self.addEventListener("message", (event) => {
   const { type, payload } = event.data;
   if (type === "SET_HOSTNAME") {
-    console.log("setting host", payload);
     HOST = payload;
   }
 });
