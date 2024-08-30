@@ -15,7 +15,7 @@ export class TasksService {
   ) {}
   private readonly logger = new Logger(TasksService.name);
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_DAY_AT_7AM)
   resetRules() {
     console.log("resetting rules");
     this.deviceService.resetRules();

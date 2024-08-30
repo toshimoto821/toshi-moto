@@ -66,7 +66,7 @@ export const Root = () => {
   useEffect(() => {
     if (navigator.serviceWorker.controller) {
       navigator.serviceWorker.ready.then(() => {
-        const hostname = window.location.href;
+        const hostname = window.location.origin;
         if (navigator.serviceWorker.controller) {
           navigator.serviceWorker.controller.postMessage({
             type: "SET_HOSTNAME",
