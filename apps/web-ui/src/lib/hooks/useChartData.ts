@@ -37,7 +37,6 @@ export const useChartData = (opts: IUseChartData) => {
 
   const {
     graphSelectedTransactions: selectedTxs,
-    graphTimeFrameGroup,
     graphStartDate,
     graphEndDate,
     netAssetValue,
@@ -45,6 +44,8 @@ export const useChartData = (opts: IUseChartData) => {
   } = useAppSelector(selectUI);
 
   const btcPrices = useBtcHistoricPrices();
+
+  const { group: graphTimeFrameGroup } = btcPrices;
 
   let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
