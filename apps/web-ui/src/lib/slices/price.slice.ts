@@ -111,6 +111,7 @@ export const priceSlice = createSlice({
         // const last = prices[prices.length - 1];
         if (first) {
           const diff = state.btcPrice - first[1];
+          state.priceDiffs = state.priceDiffs || {};
           state.priceDiffs[range] = diff;
         }
       }
