@@ -6,7 +6,7 @@ import {
 import type { RootState } from "@lib/store";
 import { getBitcoinNodeUrl } from "../utils";
 import { getConfig } from "./api.slice";
-import { Config } from "./api.slice.types";
+import type { Config } from "./api.slice.types";
 
 const historicPriceUrl = import.meta.env.VITE_COINGECKO_API_URL;
 const priceUrl = import.meta.env.VITE_COINGECKO_PRICE_API_URL;
