@@ -83,7 +83,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
   }
 
-  const dateToKeyFn = getGroupKey(graphTimeFrameGroup);
+  const dateToKeyFn = getGroupKey(graphTimeFrameGroup!);
 
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
@@ -113,7 +113,7 @@ export const useChartData = (opts: IUseChartData) => {
         acc[key] = {
           date: d,
           startDate: d,
-          endDate: addTime(graphTimeFrameGroup, d),
+          endDate: addTime(graphTimeFrameGroup!, d),
           sum: price,
           last: price,
           avg: price,
@@ -266,7 +266,7 @@ export const useChartData = (opts: IUseChartData) => {
         const { start, end } = getDatesForChartGroup(
           group.startDate,
           group.endDate,
-          graphTimeFrameGroup,
+          graphTimeFrameGroup!,
           groupValues[j + 1]?.startDate
         );
         if (
@@ -289,7 +289,7 @@ export const useChartData = (opts: IUseChartData) => {
         const { start, end } = getDatesForChartGroup(
           group.startDate,
           group.endDate,
-          graphTimeFrameGroup,
+          graphTimeFrameGroup!,
           groupValues[j + 1]?.startDate
         );
         if (node.vin > 0 && node.date >= start && node.date < end) {
