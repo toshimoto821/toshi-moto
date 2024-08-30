@@ -7,7 +7,6 @@ import { ConfigService } from "../config/config.service";
 
 @Injectable()
 export class TasksService {
-  œ;
   constructor(
     readonly priceService: PriceService,
     readonly configService: ConfigService,
@@ -48,18 +47,18 @@ export class TasksService {
   async runPushNotificationTask() {
     // run the push notification task
 
-    console.log("running notification service");
+    this.logger.log("running notification service");
     const result = await this.priceService.findRangeDiff();
     const [range] = result || [];
-    console.log("found range", range.diff, range.period);
+    this.logger.log("found range", range.diff, range.period);
 
     const lastPrice = await this.priceService.getLastPrice();
-    console.log("last price", lastPrice.price);
+    this.logger.log("last price", lastPrice.price);
     const { diff = 0 } = range || {};
-    console.log("diff", (diff / lastPrice.price) * 100);
+    this.logger.log("diff", (diff / lastPrice.price) * 100);
 
     const currentPrice = lastPrice.price + range.diff;
-    console.log("current price", currentPrice);
+    this.logger.log("current price", currentPrice);
     const rules = this.deviceService.spliceRulesForThreshold(
       this.deviceService.lastNotification.lastThreshold
     );
@@ -83,6 +82,7 @@ export class TasksService {
           )}`,
         };
 
+        this.logger.log(`Pushing notification for ${threshold}`);
         await this.deviceService.push(message, keys);
         const index = this.deviceService.rules.findIndex(
           (r) => r.threshold === threshold
