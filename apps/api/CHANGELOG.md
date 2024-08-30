@@ -1,4 +1,11 @@
 # API Changelog
+## [1.4.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.3.1...api-1.4.0) (2024-08-30)
+
+
+### Features
+
+* adds push notifications ([aa014bd](https://github.com/toshimoto821/toshi-moto/commit/aa014bd62b0351b143d809a316983cf5db1ae24d))
+
 ## [1.3.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.3.0...api-1.3.1) (2024-08-24)
 
 
