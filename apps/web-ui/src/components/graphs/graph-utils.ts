@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import type { StackedBar } from "./line/Line";
 import type { IChartTimeframeGroups, IChartTimeFrameRange } from "@root/types";
-import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
+import { GraphTimeFrameRange, GroupBy } from "@lib/slices/ui.slice.types";
 let count = 0;
 
 class Id {
@@ -21,7 +21,10 @@ export function uid(name: string) {
   return new Id("O-" + (name == null ? "" : name + "-") + ++count);
 }
 
-export const addTime = (groupBy: IChartTimeframeGroups, date: Date) => {
+export const addTime = (
+  groupBy: IChartTimeframeGroups | GroupBy,
+  date: Date
+) => {
   const d = new Date(date.getTime());
   switch (groupBy) {
     case "5M":
@@ -42,7 +45,7 @@ export const addTime = (groupBy: IChartTimeframeGroups, date: Date) => {
   }
 };
 
-export const getGroupKey = (groupBy: IChartTimeframeGroups) => {
+export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
   const toString = (d: Date, groupBy: IChartTimeframeGroups) => {
     const year = d.getFullYear();
     const month = (d.getMonth() + 1).toString().padStart(2, "0");
@@ -165,7 +168,7 @@ export const getRangeFromTime = (time: number): GraphTimeFrameRange => {
 export const getDatesForChartGroup = (
   start: Date,
   end: Date,
-  range: IChartTimeframeGroups,
+  range: IChartTimeframeGroups | GroupBy,
   nextDate: Date
 ) => {
   // @todo need to account for weekly and monthly
