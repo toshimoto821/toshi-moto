@@ -108,3 +108,24 @@ export type APIResponse =
   | AddressResponse
   | TransactionsResponse
   | PriceHistoryResponse;
+
+export interface Config {
+  key: string;
+  value: string;
+}
+export interface ConfigResponse {
+  configs: Config[];
+}
+
+export interface PushSubscription {
+  endpoint: string;
+  expirationTime: number | null;
+  keys: {
+    auth: string;
+    p256dh: string;
+  };
+}
+
+export interface GenericResponse {
+  message: string;
+}

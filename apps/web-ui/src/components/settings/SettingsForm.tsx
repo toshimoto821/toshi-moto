@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Flex, TextField, Text, Button, Callout } from "@radix-ui/themes";
+import {
+  Flex,
+  TextField,
+  Text,
+  Button,
+  Callout,
+  Checkbox,
+} from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
 
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
@@ -8,7 +15,15 @@ import {
   selectNetworkConfig,
   setConfig,
   type ConfigState,
+  selectPushNotificationsConfig,
 } from "@root/lib/slices/config.slice";
+import { subscribeUserToPush, getSubscription } from "./settings.util";
+import {
+  useGetConfigQuery,
+  useSavePushSubscriptionMutation,
+  useUnsubscribePushSubscriptionMutation,
+} from "@root/lib/slices/api.slice";
+import { PushSubscription } from "@root/lib/slices/api.slice.types";
 
 export type IAppMetaConfig = {
   bitcoinNodeUrl: string;
@@ -25,8 +40,14 @@ type IMessage = {
 export const SettingsForm = () => {
   const apiConfig = useAppSelector(selectApiConfig);
   const networkConfig = useAppSelector(selectNetworkConfig);
+  const pushNotificationConfig = useAppSelector(selectPushNotificationsConfig);
 
+  const [pushSubscription, setPushSubscription] =
+    useState<PushSubscription | null>(null);
+  const [savePushNotification] = useSavePushSubscriptionMutation();
+  const [unsubscribeFromPush] = useUnsubscribePushSubscriptionMutation();
   const [message, setMessage] = useState<IMessage | null>(null);
+  useGetConfigQuery();
 
   const dispatch = useAppDispatch();
 
@@ -41,9 +62,12 @@ export const SettingsForm = () => {
       conconcurrentRequests: networkConfig.conconcurrentRequests,
       timeBetweenRequests: networkConfig.timeBetweenRequests,
     },
+    pushNotifications: {
+      enabled: pushNotificationConfig?.enabled || false,
+    },
   });
 
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     // @todo error handline
     dispatch(
@@ -53,6 +77,21 @@ export const SettingsForm = () => {
       })
     );
     setMessage({ message: "Settings Saved", type: "success" });
+    if (pushSubscription && formState.pushNotifications.enabled) {
+      const resp = await savePushNotification(pushSubscription);
+      console.log(resp);
+    } else if (!formState.pushNotifications.enabled) {
+      const subscription = await getSubscription();
+      console.log(subscription);
+      if (subscription) {
+        const asJson = subscription.toJSON() as PushSubscription;
+        subscription.unsubscribe();
+        const resp = await unsubscribeFromPush(asJson);
+        console.log(resp);
+      }
+
+      // @todo remove push subscription
+    }
   };
 
   const setApiField = (name: keyof ConfigState["api"]) => {
@@ -81,6 +120,32 @@ export const SettingsForm = () => {
         },
       }));
     };
+  };
+
+  const subscribeToPushNotifications = () => {
+    if (
+      "serviceWorker" in navigator &&
+      "PushManager" in window &&
+      pushNotificationConfig.publicKey
+    ) {
+      navigator.serviceWorker.ready.then(async (registration) => {
+        try {
+          const subscription = await subscribeUserToPush(
+            registration,
+            pushNotificationConfig.publicKey
+          );
+
+          if (subscription) {
+            const asJSON = subscription.toJSON() as PushSubscription;
+            if (asJSON.endpoint) {
+              setPushSubscription(asJSON);
+            }
+          }
+        } catch (ex) {
+          console.error(ex);
+        }
+      });
+    }
   };
 
   useEffect(() => {
@@ -148,6 +213,37 @@ export const SettingsForm = () => {
             value={formState.api.priceUrl}
             placeholder="https://api.coingecko.com/api/v3/simple/price"
           />
+        </label>
+      </Flex>
+
+      <Flex direction="column" gap="3" className="my-4">
+        <label>
+          <Text as="div" size="2" mb="1" weight="bold">
+            Push Notifications
+          </Text>
+          <Text as="label">
+            <Flex as="span" gap="2" className="items-center">
+              <Checkbox
+                checked={formState.pushNotifications.enabled}
+                onCheckedChange={() => {
+                  const enabled = !formState.pushNotifications.enabled;
+                  setFormState((existing) => ({
+                    ...existing,
+                    pushNotifications: {
+                      ...existing.pushNotifications,
+                      enabled,
+                    },
+                  }));
+                  if (enabled) {
+                    subscribeToPushNotifications();
+                  } else {
+                    setPushSubscription(null);
+                  }
+                }}
+              />{" "}
+              Subscribe To Push Notifications
+            </Flex>
+          </Text>
         </label>
       </Flex>
       <Flex direction="column" gap="3" className="mt-4">

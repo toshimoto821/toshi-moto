@@ -63,6 +63,20 @@ export const Root = () => {
     }, 3000);
   }, []);
 
+  useEffect(() => {
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(() => {
+        const hostname = window.location.href;
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: "SET_HOSTNAME",
+            payload: hostname,
+          });
+        }
+      });
+    }
+  }, []);
+
   return (
     <div className="">
       <Toast />
