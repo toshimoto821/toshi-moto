@@ -1,4 +1,11 @@
 # API Changelog
+## [1.4.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.1...api-1.4.2) (2024-08-30)
+
+
+### Bug Fixes
+
+* reset rules ([07aefe7](https://github.com/toshimoto821/toshi-moto/commit/07aefe7a3c32d945b1dbda2cb4032061d42b4b18))
+
 ## [1.4.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.0...api-1.4.1) (2024-08-30)
 
 
