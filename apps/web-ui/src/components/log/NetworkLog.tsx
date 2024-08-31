@@ -5,7 +5,7 @@ import { LogTable } from "./components/LogTable";
 import { LogDetail } from "./components/LogDetail/LogDetail";
 import { IconButton } from "@radix-ui/themes";
 import { LogProgress } from "./components/LogProgress";
-import { cn, deleteAllCookies } from "@lib/utils";
+import { cn } from "@lib/utils";
 import { SettingsForm } from "../settings/SettingsForm";
 import { Popover } from "../popover/Popover";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
