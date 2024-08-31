@@ -24,6 +24,7 @@ import {
   useUnsubscribePushSubscriptionMutation,
 } from "@root/lib/slices/api.slice";
 import { PushSubscription } from "@root/lib/slices/api.slice.types";
+import { showToast } from "@root/lib/slices/ui.slice";
 
 const VITE_PUSH_NOTIFICATIONS_DISABLED = import.meta.env
   .VITE_PUSH_NOTIFICATIONS_DISABLED;
@@ -154,19 +155,35 @@ export const SettingsForm = () => {
   const pushDisabled = !!VITE_PUSH_NOTIFICATIONS_DISABLED;
 
   useEffect(() => {
-    getSubscription().then((subscription) => {
-      if (subscription) {
-        const asJson = subscription.toJSON() as PushSubscription;
-        setPushSubscription(asJson);
-        setFormState((existing) => ({
-          ...existing,
-          pushNotifications: {
-            ...existing.pushNotifications,
-            enabled: true,
-          },
-        }));
-      }
-    });
+    getSubscription()
+      .then((subscription) => {
+        dispatch(
+          showToast({
+            line1: "Push Notifications",
+            line2: subscription ? "Subscribed" : "Not Subscribed",
+          })
+        );
+        if (subscription) {
+          const asJson = subscription.toJSON() as PushSubscription;
+          setPushSubscription(asJson);
+          setFormState((existing) => ({
+            ...existing,
+            pushNotifications: {
+              ...existing.pushNotifications,
+              enabled: true,
+            },
+          }));
+        }
+      })
+      .catch((ex) => {
+        console.log(ex);
+        dispatch(
+          showToast({
+            line1: "Push Notifications",
+            line2: ex.toString(),
+          })
+        );
+      });
   }, []);
 
   useEffect(() => {
