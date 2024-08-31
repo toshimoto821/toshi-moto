@@ -1,4 +1,11 @@
 # API Changelog
+## [1.4.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.2...api-1.4.3) (2024-08-31)
+
+
+### Bug Fixes
+
+* subscription bugs ([8b56f1b](https://github.com/toshimoto821/toshi-moto/commit/8b56f1bcc1cfe979721a3723a46c819e37aee68c))
+
 ## [1.4.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.1...api-1.4.2) (2024-08-30)
 
 
