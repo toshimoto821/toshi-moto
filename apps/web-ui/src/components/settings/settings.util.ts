@@ -11,6 +11,14 @@ export function urlB64ToUint8Array(base64String: string): Uint8Array {
   return outputArray;
 }
 
+export async function unsubscribeUserFromBrowserPush(): Promise<boolean> {
+  const subscription = await getSubscription();
+  if (subscription) {
+    return subscription.unsubscribe();
+  }
+  return false;
+}
+
 export function subscribeUserToPush(
   registration: ServiceWorkerRegistration,
   publicKey: string

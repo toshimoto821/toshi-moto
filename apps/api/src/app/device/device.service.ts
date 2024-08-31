@@ -164,6 +164,11 @@ export class DeviceService {
       try {
         await webpush.sendNotification(subscription, payload, options);
       } catch (ex) {
+        if (ex.statusCode === 410) {
+          await this.deviceModel.deleteOne({
+            endpoint: device.endpoint,
+          });
+        }
         console.log(ex);
       }
     }

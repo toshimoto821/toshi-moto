@@ -66,20 +66,22 @@ export const NetworkLog = (props: INetworkLog) => {
 
   const handleReload = () => {
     try {
-      const registrations = navigator.serviceWorker
-        .getRegistrations()
-        .then(function (registrations) {
-          for (const registration of registrations) {
-            registration.unregister();
-          }
-        });
-      const names = caches.keys().then(function (names) {
-        for (const name of names) {
-          caches.delete(name);
-        }
-      });
-      deleteAllCookies();
-      Promise.all([registrations, names]).then(() => window.location.reload());
+      // this breaks push notifications subscriptions
+      // const registrations = navigator.serviceWorker
+      //   .getRegistrations()
+      //   .then(function (registrations) {
+      //     for (const registration of registrations) {
+      //       registration.unregister();
+      //     }
+      //   });
+      // const names = caches.keys().then(function (names) {
+      //   for (const name of names) {
+      //     caches.delete(name);
+      //   }
+      // });
+      // deleteAllCookies();
+      // Promise.all([names]).then(() => window.location.reload());
+      window.location.reload();
     } catch (ex) {
       // http can throw errors for serviceWorker
       console.log(ex);
