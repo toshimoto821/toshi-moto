@@ -83,6 +83,9 @@ export const AddressRow = (prop: IAddressRow) => {
         className={cn("bg-white ", {
           // "sticky top-[140px] ": isUtxoExpanded,
           "bg-red-50": address.status === "error",
+          sticky: isUtxoExpanded,
+          "top-[270px]": isUtxoExpanded,
+          "z-40": isUtxoExpanded,
         })}
       >
         <div
