@@ -2,7 +2,7 @@
 // @ts-expect-error workbox
 self.__WB_DISABLE_DEV_LOGS = true;
 
-import { precacheAndRoute } from "workbox-precaching";
+import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 // const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
 // import { NavigationRoute, registerRoute } from "workbox-routing";
 
@@ -10,6 +10,7 @@ declare let self: ServiceWorkerGlobalScope;
 
 // self.__WB_MANIFEST is default injection point
 precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches();
 
 // to allow work offline
 const cacheName = "api-cache-v1";
@@ -22,9 +23,9 @@ self.addEventListener("install", function (event) {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", function () {
+self.addEventListener("activate", function (event) {
   // The promise that clients.claim() returns can be safely ignored.
-  self.clients.claim();
+  event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener("push", function (event) {
