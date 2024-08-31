@@ -80,8 +80,8 @@ export default defineConfig({
         short_name: "Toshi Moto",
         display: "standalone",
         description: "Visualize Bitcoin transactions in real time",
-        theme_color: "#ffcc00",
-        background_color: "#ffcc00",
+        theme_color: "#e5e7eb",
+        background_color: "#e5e7eb",
 
         icons: [
           {
