@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.13.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.12.0...web-ui-1.13.0) (2024-08-31)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/c7127d06980d68dc5312fcb00f1a059bc4c791db/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/c7127d06980d68dc5312fcb00f1a059bc4c791db/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### ✨ Features
+
+* status bar color ([c86c85c](https://github.com/toshimoto821/toshi-moto/commit/c86c85c7ee9551ff13813636d940c018c06c224f))
+
 ## [1.12.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.10...web-ui-1.12.0) (2024-08-31)
 
   |    |    |
