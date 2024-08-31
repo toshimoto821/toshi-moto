@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Button } from "@radix-ui/themes";
 import { scaleLinear, extent, interpolateRgb } from "d3";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
@@ -23,9 +23,31 @@ export const TimeRangeButtons = () => {
 
   const handleUpdateTimeframe = (timeframe: GraphTimeFrameRange) => {
     return () => {
+      buzzBuzz();
       dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
       dispatch(setGraphByRange(timeframe));
     };
+  };
+
+  useEffect(() => {
+    const visbilityChange = () => {
+      if (document.visibilityState === "visible" && graphTimeFrameRange) {
+        dispatch(setGraphByRange(graphTimeFrameRange));
+      }
+    };
+    document.addEventListener("visibilitychange", visbilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", visbilityChange);
+    };
+  }, [dispatch, graphTimeFrameRange]);
+
+  const buzzBuzz = () => {
+    if ("vibrate" in navigator) {
+      // Trigger a vibration pattern: Vibrate for 200ms, pause for 100ms, then vibrate for 200ms
+      navigator.vibrate(50);
+    } else {
+      console.log("Vibration API is not supported on this device.");
+    }
   };
 
   const widths = useMemo(() => {
@@ -81,24 +103,21 @@ export const TimeRangeButtons = () => {
         style={{ width: `${widths.get(range)}%` }}
         className={cn("flex items-center justify-center w-full pb-1", {
           "border-b": graphTimeFrameRange === range,
-          "border-gray-400": graphTimeFrameRange == range,
+          "border-orange-300": graphTimeFrameRange == range,
         })}
       >
         <Button
           style={{
             color: colors.get(range),
             width: "100%",
-            backgroundColor:
-              graphTimeFrameRange === range
-                ? "rgba(255, 255, 255, 0.7)"
-                : "rgba(229, 231, 235, 0.7)",
           }}
-          color="gray"
+          color={graphTimeFrameRange === range ? "orange" : "gray"}
           variant={
             graphTimeFrameRange === range
               ? buttons.selected
               : buttons.deselected
           }
+          className="bg-gray-400"
           onClick={handleUpdateTimeframe(range)}
         >
           {range}
@@ -107,7 +126,7 @@ export const TimeRangeButtons = () => {
     );
   };
   return (
-    <div className="flex space-x-2 items-center justify-end w-full">
+    <div className="flex space-x-2 items-center justify-end w-full pt-2 py-1 px-4">
       <NavButton range="1D" />
 
       <NavButton range="1W" />
