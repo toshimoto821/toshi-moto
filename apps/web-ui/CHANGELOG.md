@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.12.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.10...web-ui-1.12.0) (2024-08-31)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/c2c83ebdeca19b83c3e5b24500054ebb6d7dea22/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/c2c83ebdeca19b83c3e5b24500054ebb6d7dea22/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### ✨ Features
+
+* **ux:** navbar vibration and look ([776bdad](https://github.com/toshimoto821/toshi-moto/commit/776bdad1f69abd4580634f26a32379d81df37e27))
+
 ## [1.11.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.9...web-ui-1.11.10) (2024-08-31)
 
   |    |    |
