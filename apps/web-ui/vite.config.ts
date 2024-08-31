@@ -87,18 +87,18 @@ export default defineConfig({
             type: "image/png",
           },
           {
-            src: "assets/pwa/android/android-launchericon-512x512.png",
+            src: "assets/pwa/android/android-launchericon-512-512.png",
             sizes: "512x512",
             type: "image/png",
           },
           {
-            src: "assets/pwa/android/android-launchericon-512x512.png",
+            src: "assets/pwa/android/android-launchericon-512-512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "assets/pwa/android/android-launchericon-512x512.png",
+            src: "assets/pwa/android/android-launchericon-512-512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
