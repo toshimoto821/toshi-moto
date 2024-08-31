@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.11.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.9...web-ui-1.11.10) (2024-08-31)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/b627436d76ec6774731b8a593ae85fe0821e8f9f/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/b627436d76ec6774731b8a593ae85fe0821e8f9f/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* nginx root ([add9d25](https://github.com/toshimoto821/toshi-moto/commit/add9d255c51dc2335252074cbb67083b1ca8c5f6))
+
 ## [1.11.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.8...web-ui-1.11.9) (2024-08-31)
 
   |    |    |
