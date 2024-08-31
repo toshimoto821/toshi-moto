@@ -5,7 +5,7 @@ import { LogTable } from "./components/LogTable";
 import { LogDetail } from "./components/LogDetail/LogDetail";
 import { IconButton } from "@radix-ui/themes";
 import { LogProgress } from "./components/LogProgress";
-import { cn, deleteAllCookies } from "@lib/utils";
+import { cn } from "@lib/utils";
 import { SettingsForm } from "../settings/SettingsForm";
 import { Popover } from "../popover/Popover";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
@@ -66,20 +66,22 @@ export const NetworkLog = (props: INetworkLog) => {
 
   const handleReload = () => {
     try {
-      const registrations = navigator.serviceWorker
-        .getRegistrations()
-        .then(function (registrations) {
-          for (const registration of registrations) {
-            registration.unregister();
-          }
-        });
-      const names = caches.keys().then(function (names) {
-        for (const name of names) {
-          caches.delete(name);
-        }
-      });
-      deleteAllCookies();
-      Promise.all([registrations, names]).then(() => window.location.reload());
+      // this breaks push notifications subscriptions
+      // const registrations = navigator.serviceWorker
+      //   .getRegistrations()
+      //   .then(function (registrations) {
+      //     for (const registration of registrations) {
+      //       registration.unregister();
+      //     }
+      //   });
+      // const names = caches.keys().then(function (names) {
+      //   for (const name of names) {
+      //     caches.delete(name);
+      //   }
+      // });
+      // deleteAllCookies();
+      // Promise.all([names]).then(() => window.location.reload());
+      window.location.reload();
     } catch (ex) {
       // http can throw errors for serviceWorker
       console.log(ex);
