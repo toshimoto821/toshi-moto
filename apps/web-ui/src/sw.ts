@@ -2,7 +2,7 @@
 // @ts-expect-error workbox
 self.__WB_DISABLE_DEV_LOGS = true;
 
-import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
+import { precacheAndRoute } from "workbox-precaching";
 // const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
 // import { NavigationRoute, registerRoute } from "workbox-routing";
 
@@ -10,7 +10,6 @@ declare let self: ServiceWorkerGlobalScope;
 
 // self.__WB_MANIFEST is default injection point
 precacheAndRoute(self.__WB_MANIFEST);
-cleanupOutdatedCaches();
 
 // to allow work offline
 const cacheName = "api-cache-v1";
