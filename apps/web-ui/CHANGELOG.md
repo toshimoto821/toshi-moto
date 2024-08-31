@@ -1,4 +1,18 @@
 # UI Changelog
+## [1.11.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.4...web-ui-1.11.5) (2024-08-31)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/9fab05b50ff3f69933b4fc24e3d2e38d773f7841/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/9fab05b50ff3f69933b4fc24e3d2e38d773f7841/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* sticky address row ([ab7aafd](https://github.com/toshimoto821/toshi-moto/commit/ab7aafdc1caf6de8bc8ae51b6ae1fbe7d046090a))
+* subscription bugs ([8b56f1b](https://github.com/toshimoto821/toshi-moto/commit/8b56f1bcc1cfe979721a3723a46c819e37aee68c))
+
 ## [1.11.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.11.3...web-ui-1.11.4) (2024-08-31)
 
   |    |    |
