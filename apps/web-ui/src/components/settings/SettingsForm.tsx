@@ -17,7 +17,11 @@ import {
   type ConfigState,
   selectPushNotificationsConfig,
 } from "@root/lib/slices/config.slice";
-import { subscribeUserToPush, getSubscription } from "./settings.util";
+import {
+  subscribeUserToPush,
+  getSubscription,
+  unsubscribeUserFromBrowserPush,
+} from "./settings.util";
 import {
   useGetConfigQuery,
   useSavePushSubscriptionMutation,
@@ -157,12 +161,6 @@ export const SettingsForm = () => {
   useEffect(() => {
     getSubscription()
       .then((subscription) => {
-        dispatch(
-          showToast({
-            line1: "Push Notifications",
-            line2: subscription ? "Subscribed" : "Not Subscribed",
-          })
-        );
         if (subscription) {
           const asJson = subscription.toJSON() as PushSubscription;
           setPushSubscription(asJson);
@@ -179,12 +177,12 @@ export const SettingsForm = () => {
         console.log(ex);
         dispatch(
           showToast({
-            line1: "Push Notifications",
+            line1: "Error: push sub.",
             line2: ex.toString(),
           })
         );
       });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (message) {
@@ -276,6 +274,7 @@ export const SettingsForm = () => {
                   if (enabled) {
                     subscribeToPushNotifications();
                   } else {
+                    unsubscribeUserFromBrowserPush();
                     setPushSubscription(null);
                   }
                 }}
