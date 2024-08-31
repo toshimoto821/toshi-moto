@@ -9,14 +9,12 @@ import {
   getCirculatingSupply,
   getHistoricPriceDiff,
   getHistoricPrice,
-  apiSlice,
 } from "./api.slice";
 import type { RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
 import { uiSlice } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
-import { ICurrency } from "@root/types";
 
 interface PriceState {
   btcPrice: number;
