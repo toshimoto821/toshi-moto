@@ -23,7 +23,7 @@ export const Home = () => {
   return (
     <>
       <div style={{ paddingTop }}>
-        <div ref={containerRef} className="mb-4 pt-2">
+        <div ref={containerRef} className="mb-4">
           <HistoricPriceChart height={400} width={dimensions.width} />
         </div>
         <div className="mx-4 min-h-[400px]">
