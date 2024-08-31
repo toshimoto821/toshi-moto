@@ -23,9 +23,11 @@ export class TasksService {
   @Cron("1/5 * * * *" /* every 5 minutes */)
   async handleCron() {
     this.logger.debug("Fetching new data!");
+    let price: number | null = null;
     try {
       const currency = "usd";
-      const { price, timestamp, volume } = await getPrice(currency);
+      const { price: p, timestamp, volume } = await getPrice(currency);
+      price = p;
       // @todo save to db
       this.logger.debug(
         `Price: $${price} at ${new Date(timestamp).toLocaleString()}`
@@ -41,23 +43,38 @@ export class TasksService {
       this.logger.error(ex.message);
     }
 
-    this.runPushNotificationTask();
+    this.runPushNotificationTask(price);
   }
 
-  async runPushNotificationTask() {
+  async runPushNotificationTask(price?: number) {
     // run the push notification task
 
     this.logger.log("running notification service");
-    const result = await this.priceService.findRangeDiff();
-    const [range] = result || [];
-    this.logger.log("found range", range.diff, range.period);
+    const previousPrice = await this.priceService.priceOneDayAgo();
+    this.logger.log("previous price", previousPrice?.price);
+    if (!previousPrice) {
+      return;
+    }
 
-    const lastPrice = await this.priceService.getLastPrice();
-    this.logger.log("last price", lastPrice.price);
-    const { diff = 0 } = range || {};
-    this.logger.log("diff", (diff / lastPrice.price) * 100);
+    let lastPrice = price;
 
-    const currentPrice = lastPrice.price + range.diff;
+    if (!lastPrice) {
+      const response = await this.priceService.getLastPrice();
+      if (response) {
+        lastPrice = response.price;
+      }
+    }
+
+    this.logger.log("last price", lastPrice);
+    if (!lastPrice) {
+      return;
+    }
+
+    const diff = lastPrice - previousPrice.price;
+
+    this.logger.log("diff", (diff / lastPrice) * 100);
+
+    const currentPrice = lastPrice + diff;
     this.logger.log("current price", currentPrice);
     const rules = this.deviceService.spliceRulesForThreshold(
       this.deviceService.lastNotification.lastThreshold
@@ -69,14 +86,14 @@ export class TasksService {
       const rule = sortedRules[i];
       const { threshold } = rule;
       const notify = this.deviceService.shouldNotify(
-        lastPrice.price,
+        lastPrice,
         diff,
         threshold
       );
       if (notify) {
         const percentChange = ((diff / currentPrice) * 100).toFixed(2);
         const message = {
-          title: "Price Alert",
+          title: "BTC Alert",
           body: `Price has changed by ${percentChange}% to $${currentPrice.toFixed(
             2
           )}`,

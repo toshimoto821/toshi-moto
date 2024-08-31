@@ -42,10 +42,27 @@ let HOST: string;
 
 self.addEventListener("notificationclick", function (event) {
   event.notification.close();
-  if (HOST) {
-    // @ts-expect-error clients
-    event.waitUntil(clients.openWindow(HOST));
-  }
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then(function (clientList) {
+        // If there is already a PWA window open, focus it
+        for (let i = 0; i < clientList.length; i++) {
+          const client = clientList[i];
+          console.log("client url", client.url);
+          console.log("host", HOST);
+          if (client.url === HOST && "focus" in client) {
+            return client.focus();
+          }
+        }
+
+        // If no PWA window is open, open a new window
+        if (self.clients.openWindow && HOST) {
+          return self.clients.openWindow(HOST);
+        }
+      })
+  );
 });
 
 // simple message / data handling
