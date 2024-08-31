@@ -231,38 +231,6 @@ export const openPriceSocket = createAsyncThunk<void, boolean>(
           if (newPrice !== state.price.btcPrice) {
             dispatch(setPrice(newPrice));
           }
-          const eventTime = data.E || Date.now();
-          // need to stream prices to chart as well
-          console.log(data);
-          const {
-            graphStartDate,
-            graphEndDate,
-            graphTimeFrameGroup,
-            graphTimeFrameRange,
-          } = state.ui;
-
-          const from = Math.floor(graphStartDate / 1000);
-          const to = Math.floor(graphEndDate / 1000);
-
-          const args = {
-            currency: "usd" as ICurrency,
-            from,
-            to,
-            groupBy: graphTimeFrameGroup!,
-            range: graphTimeFrameRange!,
-          };
-          apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
-            console.log("callback");
-            // going to have to do work more complex than this:
-            // the shift and push only happens if the time is within the range
-            // for example, on a 5 year chart, only the last data point should be updated
-            // but on the daily chart, every 5 minutes, a new price shoul be pushed onto the end
-            // and only then should the first price be shifted off.
-
-            const current = [...draft.prices];
-            current.shift();
-            draft.prices = [...current, [eventTime, newPrice]];
-          });
         }
       };
     } catch (e) {
