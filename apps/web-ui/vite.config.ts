@@ -78,6 +78,7 @@ export default defineConfig({
       manifest: {
         name: "Toshi Moto",
         short_name: "Toshi Moto",
+        display: "standalone",
         description: "Visualize Bitcoin transactions in real time",
         theme_color: "#e5e7eb",
         background_color: "#e5e7eb",
