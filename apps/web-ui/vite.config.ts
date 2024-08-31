@@ -69,7 +69,6 @@ export default defineConfig({
       filename: "sw.ts",
       workbox: {
         sourcemap: true,
-        swDest: "sw-[hash].js",
       },
       devOptions: {
         enabled: true,
