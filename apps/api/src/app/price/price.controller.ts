@@ -129,6 +129,11 @@ export class PriceController {
     return response;
   }
 
+  @Get("one-day-ago")
+  async oneDayAgo(): Promise<Price> {
+    return this.priceService.priceOneDayAgo();
+  }
+
   @Post()
   // async create(@Body() createPriceDto: CreatePriceDto) {
 

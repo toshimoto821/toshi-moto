@@ -264,6 +264,7 @@ export class PriceService {
         },
       },
     ];
+
     const prices = this.priceModel.aggregate(pipeline);
 
     return prices;
@@ -552,7 +553,6 @@ export class PriceService {
           },
       },
     ];
-
     return this.priceModel.aggregate(pipeline as PipelineStage[]);
   }
 
@@ -568,6 +568,16 @@ export class PriceService {
       .findOne({ currency: cur })
       .sort({ timestamp: -1 })
       .exec();
+  }
+
+  async priceOneDayAgo(): Promise<Price> {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    date.setMinutes(date.getMinutes() - 5);
+
+    return this.priceModel.findOne({
+      timestamp: { $gte: date },
+    });
   }
 
   async findOne(id: string): Promise<Price> {

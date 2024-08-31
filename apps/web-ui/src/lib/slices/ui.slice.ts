@@ -12,6 +12,7 @@ import { API_REQUEST_REJECTED } from "./api.slice";
 export const defaultGraphStartDate = timeDay(
   sub(new Date(), { years: 5 })
 ).getTime();
+
 export const defaultGraphEndDate = timeDay(
   add(new Date(), { hours: 1 })
 ).getTime();
@@ -142,7 +143,7 @@ export const {
 export const setGraphByRange = (
   range: GraphTimeFrameRange
 ): PayloadAction<Partial<UIState>> => {
-  const now = add(new Date(), { hours: 1 });
+  const now = new Date(); //add(, { hours: 1 });
   // default to 5 years;
   let startDate = timeDay(sub(now, { years: 5 })).getTime();
   const endDate = timeHour(now).getTime();
