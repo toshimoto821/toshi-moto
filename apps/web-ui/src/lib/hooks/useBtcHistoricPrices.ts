@@ -14,6 +14,7 @@ export const useBtcHistoricPrices = () => {
     graphStartDate: chartStartDate,
     graphEndDate: chartEndDate,
     graphTimeFrameRange,
+    // previousGraphTimeFrameRange,
   } = useAppSelector(selectGraphDates);
 
   const endTimestamp = new Date(chartEndDate);
@@ -23,14 +24,18 @@ export const useBtcHistoricPrices = () => {
   const to = Math.floor(roundedEnd.getTime() / 1000);
 
   const groupBy = useAppSelector(selectGroupByHistoric);
-
-  const { data, isLoading, error } = useGetHistoricPriceQuery({
-    from,
-    to,
-    groupBy,
-    currency,
-    range: graphTimeFrameRange!,
-  });
+  const { data, isLoading, error } = useGetHistoricPriceQuery(
+    {
+      from,
+      to,
+      groupBy: groupBy!,
+      currency,
+      range: graphTimeFrameRange!,
+    },
+    {
+      skip: !groupBy,
+    }
+  );
 
   if (error) {
     console.error(error);

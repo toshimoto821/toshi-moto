@@ -4,7 +4,10 @@ import { scaleLinear, extent, interpolateRgb } from "d3";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
 import { setRange } from "@root/lib/slices/navbar.slice";
-import { setGraphByRange } from "@root/lib/slices/ui.slice";
+import {
+  setGraphByRange,
+  resetGraphIfEmptyRange,
+} from "@root/lib/slices/ui.slice";
 import { type GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { cn } from "@root/lib/utils";
 
@@ -40,6 +43,10 @@ export const TimeRangeButtons = () => {
       document.removeEventListener("visibilitychange", visbilityChange);
     };
   }, [dispatch, graphTimeFrameRange]);
+
+  useEffect(() => {
+    dispatch(resetGraphIfEmptyRange());
+  }, []);
 
   const buzzBuzz = () => {
     if ("vibrate" in navigator) {

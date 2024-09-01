@@ -4,6 +4,7 @@ import {
   PayloadAction,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
+import { add } from "date-fns";
 import {
   getPrice,
   getCirculatingSupply,
@@ -18,6 +19,7 @@ import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
 import type { PriceHistoricArgs } from "./api.slice.types";
+import { timeMinute } from "d3";
 
 interface PriceState {
   btcPrice: number;
@@ -240,13 +242,14 @@ export const openPriceSocket = createAsyncThunk<
           graphEndDate,
           graphTimeFrameGroup,
           graphTimeFrameRange,
+          previousGraphTimeFrameRange,
         } = state.ui;
 
         const end = roundUpToNearHour(new Date(graphEndDate!));
 
         const from = Math.floor(graphStartDate! / 1000);
         const to = Math.floor(end.getTime() / 1000);
-
+        const range = graphTimeFrameRange || previousGraphTimeFrameRange;
         const args: PriceHistoricArgs = {
           currency: "usd" as ICurrency,
           from,
@@ -255,26 +258,39 @@ export const openPriceSocket = createAsyncThunk<
           range: graphTimeFrameRange!,
         };
         const eventTime: number = data.E;
-        dispatch(
-          apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
-            const current = [...draft.prices];
-            const lastPrice = current[current.length - 1];
-            const secondToLastPrice = current[current.length - 2];
-            const diff = lastPrice[0] - secondToLastPrice[0];
-            // const FIVE_MINUTES = 1000 * 60 * 5;
-            const shouldAppend = shouldAppendPrice(graphTimeFrameRange!, diff);
-            if (shouldAppend) {
-              // console.log("appending", new Date(eventTime), newPrice);
-              current.push([eventTime, newPrice]);
-              current.shift();
-            } else {
-              // console.log("replacing", new Date(eventTime), newPrice);
-              current[current.length - 1] = [eventTime, newPrice];
-            }
+        if (range) {
+          dispatch(
+            apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
+              const current = [...draft.prices];
+              const lastPrice = current[current.length - 1];
+              const secondToLastPrice = current[current.length - 2];
+              const diff = lastPrice[0] - secondToLastPrice[0];
+              // console.log("lastPrice", new Date(lastPrice[0]), lastPrice[1]);
+              // console.log(
+              //   "secondToLastPrice",
+              //   new Date(secondToLastPrice[0]),
+              //   secondToLastPrice[1]
+              // );
+              // const FIVE_MINUTES = 1000 * 60 * 5;
 
-            draft.prices = current;
-          })
-        );
+              const shouldAppend = shouldAppendPrice(range, diff);
+              if (shouldAppend) {
+                // console.log("appending", new Date(eventTime), newPrice);
+                const rounded = timeMinute(
+                  add(new Date(eventTime), { seconds: 30 })
+                ).getTime();
+
+                current.push([rounded, newPrice]);
+                current.shift();
+              } else {
+                // console.log("replacing", new Date(eventTime), newPrice);
+                current[current.length - 1] = [eventTime, newPrice];
+              }
+
+              draft.prices = current;
+            })
+          );
+        }
       }
     };
   } catch (e) {

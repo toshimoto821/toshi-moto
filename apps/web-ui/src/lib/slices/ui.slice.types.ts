@@ -10,7 +10,7 @@ export interface UIState {
   filterUtxoOnly: string[];
   graphTimeFrameRange: GraphTimeFrameRange | null;
   previousGraphTimeFrameRange: GraphTimeFrameRange | null;
-  graphTimeFrameGroup: GroupBy;
+  graphTimeFrameGroup: GroupBy | null;
   graphStartDate: number;
   graphStartDateNext: number | null;
   graphEndDate: number;
