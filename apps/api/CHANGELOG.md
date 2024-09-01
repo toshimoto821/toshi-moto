@@ -1,4 +1,11 @@
 # API Changelog
+## [1.4.5](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.4...api-1.4.5) (2024-09-01)
+
+
+### Bug Fixes
+
+* notification values ([f290ce1](https://github.com/toshimoto821/toshi-moto/commit/f290ce14a671b76149446b9a4cc8e5b057af9d19))
+
 ## [1.4.4](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.3...api-1.4.4) (2024-08-31)
 
 
