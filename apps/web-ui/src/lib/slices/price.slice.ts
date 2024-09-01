@@ -9,12 +9,15 @@ import {
   getCirculatingSupply,
   getHistoricPriceDiff,
   getHistoricPrice,
+  apiSlice,
 } from "./api.slice";
-import type { RootState } from "../store";
+import type { AppDispatch, RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
 import { uiSlice } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
+import { ICurrency } from "@root/types";
+import type { PriceHistoricArgs } from "./api.slice.types";
 
 interface PriceState {
   btcPrice: number;
@@ -182,60 +185,121 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 /// WebSocket
 ////////////////////////////////////////
 let ws: WebSocket | null = null;
-export const openPriceSocket = createAsyncThunk<void, boolean>(
-  "price/openSocket",
-  async (retry, { dispatch, getState }) => {
-    if (ws) {
-      if (ws.readyState === WebSocket.CLOSED) {
-        console.log("closing ws");
-        dispatch(setStreamStatus("DISCONNECTED"));
-        ws.close();
-        ws = null;
-      } else {
-        return;
-      }
-    }
-
-    ws = new WebSocket(
-      "wss://data-stream.binance.vision:9443/ws/btcusdt@ticker"
-    );
-    dispatch(setStreamStatus("CONNECTED"));
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-
-      // dispatch(
-      //   showToast({
-      //     line1: "Websocket Error",
-      //     // @ts-expect-error message
-      //     line2: JSON.stringify(error.message),
-      //   })
-      // );
-      dispatch(closePriceSocket());
-      if (retry) {
-        wait(1000).then(() => {
-          dispatch(openPriceSocket(false));
-        });
-      }
-    };
-    try {
-      ws.onmessage = (e) => {
-        if (!ws) return;
-        const data = JSON.parse(e.data);
-        if (data.e === "ping") {
-          ws.send(JSON.stringify({ e: "pong", ...data }));
-        } else {
-          const newPrice = parseFloat(data.c);
-          const state = getState() as RootState;
-          if (newPrice !== state.price.btcPrice) {
-            dispatch(setPrice(newPrice));
-          }
-        }
-      };
-    } catch (e) {
-      console.log("exception", e);
+export const openPriceSocket = createAsyncThunk<
+  void,
+  boolean,
+  { dispatch: AppDispatch }
+>("price/openSocket", async (retry, { dispatch, getState }) => {
+  if (ws) {
+    if (ws.readyState === WebSocket.CLOSED) {
+      console.log("closing ws");
+      dispatch(setStreamStatus("DISCONNECTED"));
+      ws.close();
+      ws = null;
+    } else {
+      return;
     }
   }
-);
+
+  ws = new WebSocket("wss://data-stream.binance.vision:9443/ws/btcusdt@ticker");
+  dispatch(setStreamStatus("CONNECTED"));
+  ws.onerror = (error) => {
+    console.error("WebSocket error:", error);
+
+    // dispatch(
+    //   showToast({
+    //     line1: "Websocket Error",
+    //     // @ts-expect-error message
+    //     line2: JSON.stringify(error.message),
+    //   })
+    // );
+    dispatch(closePriceSocket());
+    if (retry) {
+      wait(1000).then(() => {
+        dispatch(openPriceSocket(false));
+      });
+    }
+  };
+  try {
+    ws.onmessage = (e) => {
+      if (!ws) return;
+      const data = JSON.parse(e.data);
+      if (data.e === "ping") {
+        ws.send(JSON.stringify({ e: "pong", ...data }));
+      } else {
+        const newPrice = parseFloat(data.c);
+        const state = getState() as RootState;
+        if (newPrice !== state.price.btcPrice) {
+          dispatch(setPrice(newPrice));
+        }
+        // const inputs = setGraphByRange(state.ui.graphTimeFrameRange!);
+        // need to stream prices to chart as well
+
+        const {
+          graphStartDate,
+          graphEndDate,
+          graphTimeFrameGroup,
+          graphTimeFrameRange,
+        } = state.ui;
+
+        const from = Math.floor(graphStartDate! / 1000);
+        const to = Math.floor(graphEndDate! / 1000);
+
+        const args: PriceHistoricArgs = {
+          currency: "usd" as ICurrency,
+          from,
+          to,
+          groupBy: graphTimeFrameGroup!,
+          range: graphTimeFrameRange!,
+        };
+        const eventTime: number = data.E;
+        dispatch(
+          apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
+            const current = [...draft.prices];
+            const lastPrice = current[current.length - 1];
+            const secondToLastPrice = current[current.length - 2];
+            const diff = lastPrice[0] - secondToLastPrice[0];
+            const shouldAppend = shouldAppendPrice(graphTimeFrameRange!, diff);
+            if (shouldAppend) {
+              current.push([eventTime, newPrice]);
+              current.shift();
+            } else {
+              current[current.length - 1] = [eventTime, newPrice];
+            }
+
+            draft.prices = current;
+          })
+        );
+      }
+    };
+  } catch (e) {
+    console.log("exception", e);
+  }
+});
+
+export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
+  const FIVE_MINUTES = 1000 * 60 * 5;
+  const HOURLY = 1000 * 60 * 60;
+  const DAILY = 1000 * 60 * 60 * 24;
+  const WEEKLY = DAILY * 7;
+
+  switch (range) {
+    case "1D":
+      return diff >= FIVE_MINUTES;
+    case "1W":
+      return diff >= HOURLY;
+    case "1M":
+      return diff >= HOURLY;
+    case "3M":
+      return diff >= DAILY;
+    case "1Y":
+      return diff >= DAILY;
+    case "2Y":
+      return diff >= WEEKLY;
+    case "5Y":
+      return diff >= WEEKLY;
+  }
+};
 
 export const closePriceSocket = createAsyncThunk(
   "price/closeSocket",

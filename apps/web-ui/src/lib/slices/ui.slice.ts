@@ -144,9 +144,10 @@ export const setGraphByRange = (
   range: GraphTimeFrameRange
 ): PayloadAction<Partial<UIState>> => {
   const now = new Date(); //add(, { hours: 1 });
+  const oneHourFromNow = add(now, { hours: 1 });
   // default to 5 years;
   let startDate = timeDay(sub(now, { years: 5 })).getTime();
-  const endDate = timeHour(now).getTime();
+  const endDate = timeHour(oneHourFromNow).getTime();
   let graphTimeFrameGroup: GroupBy = "1W";
   let graphTimeFrameRange: GraphTimeFrameRange = "5Y";
 

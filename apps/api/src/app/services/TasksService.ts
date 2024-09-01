@@ -74,8 +74,6 @@ export class TasksService {
 
     this.logger.log("diff", (diff / lastPrice) * 100);
 
-    const currentPrice = lastPrice + diff;
-    this.logger.log("current price", currentPrice);
     const rules = this.deviceService.spliceRulesForThreshold(
       this.deviceService.lastNotification.lastThreshold
     );
@@ -91,10 +89,10 @@ export class TasksService {
         threshold
       );
       if (notify) {
-        const percentChange = ((diff / currentPrice) * 100).toFixed(2);
+        const percentChange = ((diff / lastPrice) * 100).toFixed(2);
         const message = {
           title: "BTC Alert",
-          body: `Price has changed by ${percentChange}% to $${currentPrice.toFixed(
+          body: `Price has changed by ${percentChange}% to $${lastPrice.toFixed(
             2
           )}`,
         };
@@ -106,7 +104,7 @@ export class TasksService {
         );
         this.deviceService.rules.splice(index, 1);
         this.deviceService.lastNotification.timestamp = new Date().getTime();
-        this.deviceService.lastNotification.price = currentPrice;
+        this.deviceService.lastNotification.price = lastPrice;
         this.deviceService.lastNotification.lastThreshold = threshold;
         break;
       }
