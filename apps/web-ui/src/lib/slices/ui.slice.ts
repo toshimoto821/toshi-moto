@@ -140,6 +140,11 @@ export const {
   clearToast,
 } = uiSlice.actions;
 
+export const roundUpToNearHour = (date: Date) => {
+  const oneHourFromDate = add(date, { hours: 1 });
+  return timeHour(oneHourFromDate);
+};
+
 export const setGraphByRange = (
   range: GraphTimeFrameRange
 ): PayloadAction<Partial<UIState>> => {

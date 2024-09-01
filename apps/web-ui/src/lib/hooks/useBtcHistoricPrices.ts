@@ -4,6 +4,7 @@ import {
   selectUI,
   selectGroupByHistoric,
   selectGraphDates,
+  roundUpToNearHour,
 } from "../slices/ui.slice";
 
 export const useBtcHistoricPrices = () => {
@@ -15,8 +16,11 @@ export const useBtcHistoricPrices = () => {
     graphTimeFrameRange,
   } = useAppSelector(selectGraphDates);
 
+  const endTimestamp = new Date(chartEndDate);
+  const roundedEnd = roundUpToNearHour(endTimestamp);
+
   const from = Math.floor(chartStartDate / 1000);
-  const to = Math.floor(chartEndDate / 1000);
+  const to = Math.floor(roundedEnd.getTime() / 1000);
 
   const groupBy = useAppSelector(selectGroupByHistoric);
 
