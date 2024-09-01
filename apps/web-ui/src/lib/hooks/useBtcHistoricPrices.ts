@@ -24,18 +24,13 @@ export const useBtcHistoricPrices = () => {
   const to = Math.floor(roundedEnd.getTime() / 1000);
 
   const groupBy = useAppSelector(selectGroupByHistoric);
-  const { data, isLoading, error } = useGetHistoricPriceQuery(
-    {
-      from,
-      to,
-      groupBy: groupBy!,
-      currency,
-      range: graphTimeFrameRange!,
-    },
-    {
-      skip: !groupBy,
-    }
-  );
+  const { data, isLoading, error } = useGetHistoricPriceQuery({
+    from,
+    to,
+    groupBy,
+    currency,
+    range: graphTimeFrameRange!,
+  });
 
   if (error) {
     console.error(error);

@@ -282,14 +282,12 @@ export const selectGraphDates = createSelector(
 // };
 
 export const resetGraphIfEmptyRange = createAsyncThunk(
-  "price/resetGraphIfEmptyRange",
+  "ui/resetGraphIfEmptyRange",
   async (_, { dispatch, getState }) => {
     const state = getState() as RootState;
     if (!state.ui.graphTimeFrameRange) {
       if (state.ui.previousGraphTimeFrameRange) {
         dispatch(setGraphByRange(state.ui.previousGraphTimeFrameRange));
-        // state.graphTimeFrameRange = state.previousGraphTimeFrameRange;
-        // state.previousGraphTimeFrameRange = null;
       }
     }
   }
