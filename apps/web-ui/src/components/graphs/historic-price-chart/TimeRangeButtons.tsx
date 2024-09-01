@@ -45,8 +45,10 @@ export const TimeRangeButtons = () => {
   }, [dispatch, graphTimeFrameRange]);
 
   useEffect(() => {
+    // if the user selects a range and reloads,
+    // need to reset the graph to the default range
     dispatch(resetGraphIfEmptyRange());
-  }, []);
+  }, [dispatch]);
 
   const buzzBuzz = () => {
     if ("vibrate" in navigator) {

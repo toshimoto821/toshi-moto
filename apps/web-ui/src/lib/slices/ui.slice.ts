@@ -21,7 +21,7 @@ export const defaultGraphEndDate = timeDay(
 const initialState: UIState = {
   currency: "usd",
   filterUtxoOnly: [],
-  graphTimeFrameRange: null,
+  graphTimeFrameRange: "5Y",
   graphTimeFrameGroup: "1W",
   previousGraphTimeFrameRange: null,
   graphStartDate: defaultGraphStartDate,
