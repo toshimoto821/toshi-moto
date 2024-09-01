@@ -13,7 +13,7 @@ import {
 } from "./api.slice";
 import type { AppDispatch, RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
-import { uiSlice, setGraphByRange } from "./ui.slice";
+import { uiSlice } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
