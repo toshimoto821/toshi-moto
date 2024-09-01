@@ -258,38 +258,54 @@ export const openPriceSocket = createAsyncThunk<
           range: graphTimeFrameRange!,
         };
         const eventTime: number = data.E;
+        const now = Date.now();
+        const diff = now - graphEndDate;
+
+        // only keep active if its greater than the
         if (range) {
-          dispatch(
-            apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
-              const current = [...draft.prices];
-              const lastPrice = current[current.length - 1];
-              const secondToLastPrice = current[current.length - 2];
-              const diff = lastPrice[0] - secondToLastPrice[0];
-              // console.log("lastPrice", new Date(lastPrice[0]), lastPrice[1]);
-              // console.log(
-              //   "secondToLastPrice",
-              //   new Date(secondToLastPrice[0]),
-              //   secondToLastPrice[1]
-              // );
-              // const FIVE_MINUTES = 1000 * 60 * 5;
+          const isLive = shouldBeLive(range, diff);
+          // console.log("isLive", isLive);
+          if (isLive) {
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getHistoricPrice",
+                args,
+                (draft) => {
+                  const current = [...draft.prices];
+                  const lastPrice = current[current.length - 1];
+                  const secondToLastPrice = current[current.length - 2];
+                  const diff = lastPrice[0] - secondToLastPrice[0];
+                  // console.log(
+                  //   "lastPrice",
+                  //   new Date(lastPrice[0]),
+                  //   lastPrice[1]
+                  // );
+                  // console.log(
+                  //   "secondToLastPrice",
+                  //   new Date(secondToLastPrice[0]),
+                  //   secondToLastPrice[1]
+                  // );
+                  // const FIVE_MINUTES = 1000 * 60 * 5;
 
-              const shouldAppend = shouldAppendPrice(range, diff);
-              if (shouldAppend) {
-                // console.log("appending", new Date(eventTime), newPrice);
-                const rounded = timeMinute(
-                  add(new Date(eventTime), { seconds: 30 })
-                ).getTime();
+                  const shouldAppend = shouldAppendPrice(range, diff);
+                  if (shouldAppend) {
+                    // console.log("appending", new Date(eventTime), newPrice);
+                    const rounded = timeMinute(
+                      add(new Date(eventTime), { seconds: 30 })
+                    ).getTime();
 
-                current.push([rounded, newPrice]);
-                current.shift();
-              } else {
-                // console.log("replacing", new Date(eventTime), newPrice);
-                current[current.length - 1] = [eventTime, newPrice];
-              }
+                    current.push([rounded, newPrice]);
+                    current.shift();
+                  } else {
+                    // console.log("replacing", new Date(eventTime), newPrice);
+                    current[current.length - 1] = [eventTime, newPrice];
+                  }
 
-              draft.prices = current;
-            })
-          );
+                  draft.prices = current;
+                }
+              )
+            );
+          }
         }
       }
     };
@@ -297,6 +313,30 @@ export const openPriceSocket = createAsyncThunk<
     console.log("exception", e);
   }
 });
+
+export const shouldBeLive = (range: GraphTimeFrameRange, diff: number) => {
+  const FIVE_MINUTES = 1000 * 60 * 5;
+  const HOURLY = 1000 * 60 * 60;
+  const DAILY = 1000 * 60 * 60 * 24;
+  const WEEKLY = DAILY * 7;
+
+  switch (range) {
+    case "1D":
+      return diff <= FIVE_MINUTES * 2;
+    case "1W":
+      return diff <= HOURLY * 2;
+    case "1M":
+      return diff <= HOURLY * 2;
+    case "3M":
+      return diff <= DAILY;
+    case "1Y":
+      return diff <= DAILY;
+    case "2Y":
+      return diff <= WEEKLY;
+    case "5Y":
+      return diff <= WEEKLY;
+  }
+};
 
 export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
   const FIVE_MINUTES = 1000 * 60 * 5;
