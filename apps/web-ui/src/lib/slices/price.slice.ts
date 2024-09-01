@@ -13,7 +13,7 @@ import {
 } from "./api.slice";
 import type { AppDispatch, RootState } from "../store";
 import { type AppStartListening } from "../store/middleware/listener";
-import { uiSlice } from "./ui.slice";
+import { uiSlice, roundUpToNearHour } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
@@ -242,8 +242,10 @@ export const openPriceSocket = createAsyncThunk<
           graphTimeFrameRange,
         } = state.ui;
 
+        const end = roundUpToNearHour(new Date(graphEndDate!));
+
         const from = Math.floor(graphStartDate! / 1000);
-        const to = Math.floor(graphEndDate! / 1000);
+        const to = Math.floor(end.getTime() / 1000);
 
         const args: PriceHistoricArgs = {
           currency: "usd" as ICurrency,
@@ -259,11 +261,14 @@ export const openPriceSocket = createAsyncThunk<
             const lastPrice = current[current.length - 1];
             const secondToLastPrice = current[current.length - 2];
             const diff = lastPrice[0] - secondToLastPrice[0];
+            // const FIVE_MINUTES = 1000 * 60 * 5;
             const shouldAppend = shouldAppendPrice(graphTimeFrameRange!, diff);
             if (shouldAppend) {
+              // console.log("appending", new Date(eventTime), newPrice);
               current.push([eventTime, newPrice]);
               current.shift();
             } else {
+              // console.log("replacing", new Date(eventTime), newPrice);
               current[current.length - 1] = [eventTime, newPrice];
             }
 
