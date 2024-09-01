@@ -58,7 +58,6 @@ export const ChartLegend = ({
     }
     return prices;
   }, [
-    loading,
     chartTimeFrameRange,
     forecastModel,
     len > 0,
