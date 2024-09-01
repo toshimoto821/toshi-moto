@@ -2,6 +2,7 @@ import {
   createSlice,
   type PayloadAction,
   createSelector,
+  createAsyncThunk,
 } from "@reduxjs/toolkit";
 import { sub, add } from "date-fns";
 import { timeDay, timeHour, timeMinute } from "d3";
@@ -48,8 +49,8 @@ export const uiSlice = createSlice({
       const overrides = {} as Partial<UIState>;
       if (action.payload.graphTimeFrameRange === null && graphTimeFrameRange) {
         overrides.previousGraphTimeFrameRange = graphTimeFrameRange;
-      } else {
-        overrides.previousGraphTimeFrameRange = null;
+      } else if (graphTimeFrameRange) {
+        overrides.previousGraphTimeFrameRange = graphTimeFrameRange;
       }
       return {
         ...state,
@@ -233,15 +234,18 @@ export const selectGroupByHistoric = createSelector(
   (state: RootState) => state.ui.previousGraphTimeFrameRange,
   (currentRange, previousRange) => {
     const range = previousRange || currentRange;
-    let groupBy: GroupBy = "5M";
+    let groupBy: GroupBy | null = null;
     if (range === "1D") {
       groupBy = "5M";
     } else if (range === "1W" || range === "1M") {
       groupBy = "1H";
     } else if (range === "3M" || range === "1Y") {
       groupBy = "1D";
+    } else if (range === "2Y" || range === "5Y") {
+      groupBy = "1W";
     } else {
       groupBy = "1W";
+      console.error("unknown range", range);
     }
 
     return groupBy;
@@ -276,3 +280,15 @@ export const selectGraphDates = createSelector(
 //   },
 // });
 // };
+
+export const resetGraphIfEmptyRange = createAsyncThunk(
+  "ui/resetGraphIfEmptyRange",
+  async (_, { dispatch, getState }) => {
+    const state = getState() as RootState;
+    if (!state.ui.graphTimeFrameRange) {
+      if (state.ui.previousGraphTimeFrameRange) {
+        dispatch(setGraphByRange(state.ui.previousGraphTimeFrameRange));
+      }
+    }
+  }
+);
