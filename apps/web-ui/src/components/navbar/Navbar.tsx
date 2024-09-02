@@ -126,12 +126,13 @@ export const Navbar = () => {
     //   myBtcRef.current.style.opacity = "" + (1 - opacity / 100);
     // }
 
+    const bottomNavOpacity = 1 - opacityFull / 100;
     if (headerControlsRef.current) {
       headerControlsRef.current.style.opacity = "" + (1 - opacityFull / 100);
-      if (opacityFull === 100) {
+      if (bottomNavOpacity === 0) {
         headerControlsRef.current.style.display = "none";
       } else {
-        headerControlsRef.current.style.display = "flex";
+        headerControlsRef.current.style.display = "block";
       }
     }
 
