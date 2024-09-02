@@ -36,7 +36,7 @@ export const ChartLegend = ({
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices, loading, range } = useBtcHistoricPrices();
+  const { prices, loading, range, group } = useBtcHistoricPrices();
 
   const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
 
@@ -57,12 +57,7 @@ export const ChartLegend = ({
       return prices?.concat(forecastPrices);
     }
     return prices;
-  }, [
-    chartTimeFrameRange,
-    forecastModel,
-    len > 0,
-    previousGraphTimeFrameRange,
-  ]);
+  }, [group, forecastModel, len > 0, previousGraphTimeFrameRange]);
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
