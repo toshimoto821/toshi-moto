@@ -32,7 +32,7 @@ const colorScale = d3
 const opacityScale = d3
   .scaleLinear()
   .domain([20, 400]) // Input range
-  .range([0, 100]) // Output range
+  .range([0, 70]) // Output range
   .clamp(true); //
 
 const bottomScale = d3
