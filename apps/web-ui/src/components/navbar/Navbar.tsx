@@ -110,10 +110,10 @@ export const Navbar = () => {
       lineWrapperRef.current.style.opacity = `${opacity / 100}`;
       lineWrapperRef.current.style.transform = `translate(0, ${bottom}px)`;
     }
-    if (topHeaderToFifty.current) {
-      topHeaderToFifty.current.style.opacity =
-        "" + Math.max(1 - opacity / 100, 50 / 100);
-    }
+    // if (topHeaderToFifty.current) {
+    //   topHeaderToFifty.current.style.opacity =
+    //     "" + Math.max(1 - opacity / 100, 50 / 100);
+    // }
 
     // if (myBtcRef.current) {
     //   myBtcRef.current.style.opacity = "" + (1 - opacity / 100);
@@ -128,9 +128,9 @@ export const Navbar = () => {
       }
     }
 
-    if (priceChangeRef.current) {
-      priceChangeRef.current.style.opacity = "" + (1 - opacity / 100); //
-    }
+    // if (priceChangeRef.current) {
+    //   priceChangeRef.current.style.opacity = "" + (1 - opacity / 100); //
+    // }
   };
 
   useEffect(() => {
