@@ -1,4 +1,43 @@
 # UI Changelog
+## [1.13.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.13.7...web-ui-1.13.8) (2024-09-02)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/f10e27b958e0389c7ac3e9771d61ab1083367b4e/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/f10e27b958e0389c7ac3e9771d61ab1083367b4e/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* navbar and legend ([fcc315a](https://github.com/toshimoto821/toshi-moto/commit/fcc315a7ec85c8e7fa54378e9ecd5e91eba409d2))
+
+## [1.13.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.13.6...web-ui-1.13.7) (2024-09-02)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/19804bf4788a798d51456790864d86dc0f06fd7b/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/19804bf4788a798d51456790864d86dc0f06fd7b/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* dom node leak ([4d672bd](https://github.com/toshimoto821/toshi-moto/commit/4d672bddd75228bcf0f35d74940f0647e5412104))
+
+## [1.13.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.13.5...web-ui-1.13.6) (2024-09-02)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/fa70aa15d8b8192204ee1bb822251bc084005950/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/fa70aa15d8b8192204ee1bb822251bc084005950/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* ui fixes ([4121d72](https://github.com/toshimoto821/toshi-moto/commit/4121d72b146dc870fd0a9aa62b8a164942c58ec4))
+
 ## [1.13.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.13.4...web-ui-1.13.5) (2024-09-01)
 
   |    |    |
