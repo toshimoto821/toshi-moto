@@ -40,8 +40,8 @@ export const TransactionDetails = (props: ITransactionDetails) => {
     wallets.find((w) => w.id === address.walletId)?.color || "#ccc";
 
   return (
-    <div className="mb-8">
-      <div className="bg-gray-50 border p-4">
+    <div className="mb-8  bg-gray-50">
+      <div className=" p-4">
         <div className="flex justify-between mb-2 items-end">
           <div>
             <Text className="font-bold text-gray-500" size="6">
@@ -76,7 +76,7 @@ export const TransactionDetails = (props: ITransactionDetails) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-1 items-center text-xs px-2 py-4 font-bold top-[78px] border border-x-0">
+      <div className="grid grid-cols-12 gap-1 items-center text-xs py-4 font-bold top-[330px] border border-x-0 px-6 sticky bg-gray-100 z-30">
         <div className="col-span-3 lg:col-span-4 text-left">
           <Text className="">Adddress</Text>
         </div>

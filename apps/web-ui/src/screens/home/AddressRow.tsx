@@ -86,6 +86,7 @@ export const AddressRow = (prop: IAddressRow) => {
           sticky: isUtxoExpanded,
           "top-[270px]": isUtxoExpanded,
           "z-40": isUtxoExpanded,
+          "bg-gray-50": isUtxoExpanded,
         })}
       >
         <div
