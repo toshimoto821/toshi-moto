@@ -52,8 +52,7 @@ export const TimeRangeButtons = () => {
 
   const buzzBuzz = () => {
     if ("vibrate" in navigator) {
-      // Trigger a vibration pattern: Vibrate for 200ms, pause for 100ms, then vibrate for 200ms
-      navigator.vibrate(50);
+      navigator.vibrate(10);
     } else {
       console.log("Vibration API is not supported on this device.");
     }

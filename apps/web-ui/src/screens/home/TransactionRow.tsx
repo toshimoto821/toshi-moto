@@ -115,9 +115,9 @@ export const TransactionRow = ({
           data-component="TransactionRow"
           style={{ color: isNotCurrentWallet ? "" : walletColor }}
           className={cn(
-            "grid grid-cols-12 gap-1 items-center text-xs px-2 py-2 mx-0 border border-x-0 border-t-0 border-gray-200",
+            "grid grid-cols-12 gap-1 items-center text-xs px-6 py-2 mx-0 border border-x-0 border-t-0 border-gray-200",
             {
-              "bg-gray-50": key % 2 === 0,
+              "bg-white": key % 2 === 0,
               "opacity-70": isNotCurrentWallet,
             }
           )}

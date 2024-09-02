@@ -14,7 +14,7 @@ export class TasksService {
   ) {}
   private readonly logger = new Logger(TasksService.name);
 
-  @Cron(CronExpression.EVERY_DAY_AT_7AM)
+  @Cron(CronExpression.EVERY_DAY_AT_3AM)
   resetRules() {
     console.log("resetting rules");
     this.deviceService.resetRules();
@@ -90,11 +90,12 @@ export class TasksService {
       );
       if (notify) {
         const percentChange = ((diff / lastPrice) * 100).toFixed(2);
+        const isPositive = diff > 0;
         const message = {
-          title: "BTC Alert",
-          body: `Price has changed by ${percentChange}% to $${lastPrice.toFixed(
-            2
-          )}`,
+          title: `${isPositive ? "🚀" : ""} BTC Alert`,
+          body: `Price is ${
+            isPositive ? "up" : "down"
+          } by ${percentChange}% to $${lastPrice.toFixed(2)}`,
         };
 
         this.logger.log(`Pushing notification for ${threshold}`);
