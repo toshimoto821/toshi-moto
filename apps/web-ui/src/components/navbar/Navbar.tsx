@@ -35,6 +35,12 @@ const opacityScale = d3
   .range([0, 70]) // Output range
   .clamp(true); //
 
+const opacityScaleFull = d3
+  .scaleLinear()
+  .domain([20, 400]) // Input range
+  .range([0, 100]) // Output range
+  .clamp(true); //
+
 const bottomScale = d3
   .scaleLinear()
   .domain([0, 420]) // Input range
@@ -103,6 +109,7 @@ export const Navbar = () => {
     const scrollPosition = window.scrollY;
     // const height = heightScale(scrollPosition);
     const opacity = opacityScale(scrollPosition);
+    const opacityFull = opacityScaleFull(scrollPosition);
     const bottom = bottomScale(scrollPosition);
     // chartOpacityRef.current = opacity;
 
@@ -120,7 +127,7 @@ export const Navbar = () => {
     // }
 
     if (headerControlsRef.current) {
-      headerControlsRef.current.style.opacity = "" + (1 - opacity / 100);
+      headerControlsRef.current.style.opacity = "" + (1 - opacityFull / 100);
       if (opacity === 100) {
         headerControlsRef.current.style.display = "none";
       } else {
@@ -296,11 +303,11 @@ export const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="border border-b-0 border-x-0 ">
-            <div
-              ref={headerControlsRef}
-              className="flex justify-between px-4 text-gray-400 py-2"
-            >
+          <div
+            className="border border-b-0 border-x-0 "
+            ref={headerControlsRef}
+          >
+            <div className="flex justify-between px-4 text-gray-400 py-2">
               <div className="flex">
                 <div className="flex items-center">
                   <Button
