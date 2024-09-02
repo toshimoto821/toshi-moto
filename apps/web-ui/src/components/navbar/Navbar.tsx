@@ -128,7 +128,7 @@ export const Navbar = () => {
 
     if (headerControlsRef.current) {
       headerControlsRef.current.style.opacity = "" + (1 - opacityFull / 100);
-      if (opacity === 100) {
+      if (opacityFull === 100) {
         headerControlsRef.current.style.display = "none";
       } else {
         headerControlsRef.current.style.display = "flex";
