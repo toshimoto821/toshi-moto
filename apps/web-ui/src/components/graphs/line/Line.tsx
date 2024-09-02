@@ -242,19 +242,35 @@ export const Line = (props: ILine) => {
       const text = tick.select("text");
       if (!text) return;
       const bbox = (text.node() as SVGTextElement).getBBox();
-
-      tick
-        .insert("rect", "text")
-        .attr("x", bbox.x - padding.left)
-        .attr("y", bbox.y - padding.top)
-        .attr("width", bbox.width + padding.left + padding.right)
-        .attr("height", bbox.height + padding.top + padding.bottom)
+      const rect = tick.selectAll("rect").data([bbox]);
+      // Update existing rect elements
+      rect
+        .attr("x", (d) => d.x - padding.left)
+        .attr("y", (d) => d.y - padding.top)
+        .attr("width", (d) => d.width + padding.left + padding.right)
+        .attr("height", (d) => d.height + padding.top + padding.bottom)
         .attr("rx", 2) // radius of the corners in the x direction
         .attr("ry", 2) // radius of the corners in the y direction
-        // .attr("stroke", "orange")
         .attr("opacity", 0.4)
         .style("fill", "white");
 
+      // Enter new rect elements if needed
+      rect
+        .enter()
+        .insert("rect", "text")
+        .attr("x", (d) => d.x - padding.left)
+        .attr("y", (d) => d.y - padding.top)
+        .attr("width", (d) => d.width + padding.left + padding.right)
+        .attr("height", (d) => d.height + padding.top + padding.bottom)
+        .attr("rx", 2) // radius of the corners in the x direction
+        .attr("ry", 2) // radius of the corners in the y direction
+        .attr("opacity", 0.4)
+        .style("fill", "white");
+
+      // Remove any exiting rect elements
+      rect.exit().remove();
+
+      // Update text attributes
       text.attr("fill", "orange").attr("opacity", 1);
     });
   };
@@ -299,17 +315,35 @@ export const Line = (props: ILine) => {
       if (!text) return;
       const bbox = (text.node() as SVGTextElement).getBBox();
 
-      tick
-        .insert("rect", "text")
-        .attr("x", bbox.x - padding.left)
-        .attr("y", bbox.y - padding.top)
-        .attr("width", bbox.width + padding.left + padding.right)
-        .attr("height", bbox.height + padding.top + padding.bottom)
+      // Select existing rect elements or create new ones if they don't exist
+      const rect = tick.selectAll("rect").data([bbox]);
+
+      // Update existing rect elements
+      rect
+        .attr("x", (d) => d.x - padding.left)
+        .attr("y", (d) => d.y - padding.top)
+        .attr("width", (d) => d.width + padding.left + padding.right)
+        .attr("height", (d) => d.height + padding.top + padding.bottom)
         .attr("rx", 2) // radius of the corners in the x direction
         .attr("ry", 2) // radius of the corners in the y direction
-        // .attr("stroke", "orange")
         .attr("opacity", 0.4)
         .style("fill", "white");
+
+      // Enter new rect elements if needed
+      rect
+        .enter()
+        .insert("rect", "text")
+        .attr("x", (d) => d.x - padding.left)
+        .attr("y", (d) => d.y - padding.top)
+        .attr("width", (d) => d.width + padding.left + padding.right)
+        .attr("height", (d) => d.height + padding.top + padding.bottom)
+        .attr("rx", 2) // radius of the corners in the x direction
+        .attr("ry", 2) // radius of the corners in the y direction
+        .attr("opacity", 0.4)
+        .style("fill", "white");
+
+      // Remove any exiting rect elements
+      rect.exit().remove();
 
       // text.attr("fill", "orange").attr("opacity", 1);
     });
