@@ -20,23 +20,27 @@ export class TasksService {
     this.deviceService.resetRules();
   }
 
-  @Cron("1/5 * * * *" /* every 5 minutes */)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCron() {
     this.logger.debug("Fetching new data!");
     let price: number | null = null;
     try {
       const currency = "usd";
-      const { price: p, timestamp, volume } = await getPrice(currency);
+      const { price: p, /*timestamp,*/ volume } = await getPrice(currency);
       price = p;
       // @todo save to db
-      this.logger.debug(
-        `Price: $${price} at ${new Date(timestamp).toLocaleString()}`
-      );
+      // the api is not updated every 5 minutes which creates different timestamps
+      // long term need to switch to a differnt api. for now just use current time
+      const ts = new Date();
+      ts.setSeconds(0);
+      ts.setMilliseconds(0);
+
+      this.logger.debug(`Price: $${price} at ${ts.toLocaleString()}`);
       // const prices = await this.priceService.findAll();
       await this.priceService.upsert({
         price,
         currency,
-        timestamp: new Date(timestamp),
+        timestamp: ts,
         volume,
       });
     } catch (ex) {

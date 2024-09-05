@@ -4,7 +4,6 @@ import {
   PayloadAction,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { add } from "date-fns";
 import {
   getPrice,
   getCirculatingSupply,
@@ -19,11 +18,11 @@ import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
 import type { PriceHistoricArgs } from "./api.slice.types";
-import { timeMinute } from "d3";
 
 interface PriceState {
   btcPrice: number;
   last_updated_at: number;
+  last_updated_stream_at: number;
   usd_24h_change: number;
   usd_24h_vol: number;
   circulatingSupply: number;
@@ -40,6 +39,7 @@ export type IForcastModelType = "BEAR" | "BULL" | "CRAB" | "SAYLOR";
 const initialState: PriceState = {
   btcPrice: 0,
   last_updated_at: 0,
+  last_updated_stream_at: 0,
   usd_24h_change: 0,
   usd_24h_vol: 0,
   circulatingSupply: 0,
@@ -81,6 +81,9 @@ export const priceSlice = createSlice({
     setPrice(state, action: PayloadAction<number>) {
       state.btcPrice = action.payload;
       state.last_updated_at = Date.now();
+    },
+    setLastUpdatedStreamAt(state, action: PayloadAction<number>) {
+      state.last_updated_stream_at = action.payload;
     },
   },
   extraReducers(builder) {
@@ -124,8 +127,13 @@ export const priceSlice = createSlice({
   },
 });
 
-export const { setForecast, setPrice, setStreamStatus, setStreamPause } =
-  priceSlice.actions;
+export const {
+  setForecast,
+  setPrice,
+  setStreamStatus,
+  setStreamPause,
+  setLastUpdatedStreamAt,
+} = priceSlice.actions;
 export const priceReducer = priceSlice.reducer;
 
 export const selectBtcPrice = createSelector(
@@ -186,6 +194,79 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 ////////////////////////////////////////
 /// WebSocket
 ////////////////////////////////////////
+
+export const updatePricing = createAsyncThunk<
+  void,
+  { price: number; eventTime: number },
+  { dispatch: AppDispatch }
+>("price/updatePricing", async ({ price }, { dispatch, getState }) => {
+  const state = getState() as RootState;
+  const {
+    graphStartDate,
+    graphEndDate,
+    graphTimeFrameGroup,
+    graphTimeFrameRange,
+    previousGraphTimeFrameRange,
+  } = state.ui;
+
+  const { last_updated_stream_at = graphEndDate } = state.price;
+
+  const end = roundUpToNearHour(new Date(graphEndDate!));
+
+  const from = Math.floor(graphStartDate! / 1000);
+  const to = Math.floor(end.getTime() / 1000);
+  const range = graphTimeFrameRange || previousGraphTimeFrameRange;
+  const args: PriceHistoricArgs = {
+    currency: "usd" as ICurrency,
+    from,
+    to,
+    groupBy: graphTimeFrameGroup!,
+    range: graphTimeFrameRange!,
+  };
+
+  const now = Date.now();
+  const diff = now - last_updated_stream_at;
+  // console.log(diff, "diff");
+  // only keep active if its greater than the
+  if (range && diff > 1000 * 5) {
+    const isLive = shouldBeLive(range, diff);
+    // console.log("isLive", isLive);
+    if (isLive) {
+      dispatch(setLastUpdatedStreamAt(now));
+      dispatch(
+        apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
+          const current = [...draft.prices];
+          const lastPrice = current[current.length - 1];
+          const secondToLastPrice = current[current.length - 2];
+          const diff = lastPrice[0] - secondToLastPrice[0];
+          // console.log("lastPrice", new Date(lastPrice[0]), lastPrice[1]);
+          // console.log(
+          //   "secondToLastPrice",
+          //   new Date(secondToLastPrice[0]),
+          //   secondToLastPrice[1]
+          // );
+          // const FIVE_MINUTES = 1000 * 60 * 5;
+
+          const shouldAppend = shouldAppendPrice(range, diff);
+          if (shouldAppend) {
+            // console.log("ts: appending", new Date(eventTime), price);
+            // const rounded = timeMinute(add(now, { seconds: 0 })).getTime();
+
+            // current.push([now, price]);
+            current.push([now, price]);
+            current.shift();
+          } else {
+            // console.log("ts: replacing", now, price);
+            current[current.length - 1] = [now, price];
+          }
+
+          draft.prices = current;
+        })
+      );
+    }
+  }
+});
+
 let ws: WebSocket | null = null;
 export const openPriceSocket = createAsyncThunk<
   void,
@@ -223,6 +304,7 @@ export const openPriceSocket = createAsyncThunk<
     }
   };
   try {
+    dispatch(setLastUpdatedStreamAt(Date.now()));
     ws.onmessage = (e) => {
       if (!ws) return;
       const data = JSON.parse(e.data);
@@ -233,79 +315,7 @@ export const openPriceSocket = createAsyncThunk<
         const state = getState() as RootState;
         if (newPrice !== state.price.btcPrice) {
           dispatch(setPrice(newPrice));
-        }
-        // const inputs = setGraphByRange(state.ui.graphTimeFrameRange!);
-        // need to stream prices to chart as well
-
-        const {
-          graphStartDate,
-          graphEndDate,
-          graphTimeFrameGroup,
-          graphTimeFrameRange,
-          previousGraphTimeFrameRange,
-        } = state.ui;
-
-        const end = roundUpToNearHour(new Date(graphEndDate!));
-
-        const from = Math.floor(graphStartDate! / 1000);
-        const to = Math.floor(end.getTime() / 1000);
-        const range = graphTimeFrameRange || previousGraphTimeFrameRange;
-        const args: PriceHistoricArgs = {
-          currency: "usd" as ICurrency,
-          from,
-          to,
-          groupBy: graphTimeFrameGroup!,
-          range: graphTimeFrameRange!,
-        };
-        const eventTime: number = data.E;
-        const now = Date.now();
-        const diff = now - graphEndDate;
-
-        // only keep active if its greater than the
-        if (range) {
-          const isLive = shouldBeLive(range, diff);
-          // console.log("isLive", isLive);
-          if (isLive) {
-            dispatch(
-              apiSlice.util.updateQueryData(
-                "getHistoricPrice",
-                args,
-                (draft) => {
-                  const current = [...draft.prices];
-                  const lastPrice = current[current.length - 1];
-                  const secondToLastPrice = current[current.length - 2];
-                  const diff = lastPrice[0] - secondToLastPrice[0];
-                  // console.log(
-                  //   "lastPrice",
-                  //   new Date(lastPrice[0]),
-                  //   lastPrice[1]
-                  // );
-                  // console.log(
-                  //   "secondToLastPrice",
-                  //   new Date(secondToLastPrice[0]),
-                  //   secondToLastPrice[1]
-                  // );
-                  // const FIVE_MINUTES = 1000 * 60 * 5;
-
-                  const shouldAppend = shouldAppendPrice(range, diff);
-                  if (shouldAppend) {
-                    // console.log("appending", new Date(eventTime), newPrice);
-                    const rounded = timeMinute(
-                      add(new Date(eventTime), { seconds: 30 })
-                    ).getTime();
-
-                    current.push([rounded, newPrice]);
-                    current.shift();
-                  } else {
-                    // console.log("replacing", new Date(eventTime), newPrice);
-                    current[current.length - 1] = [eventTime, newPrice];
-                  }
-
-                  draft.prices = current;
-                }
-              )
-            );
-          }
+          dispatch(updatePricing({ price: newPrice, eventTime: data.E }));
         }
       }
     };
