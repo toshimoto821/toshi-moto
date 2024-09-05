@@ -20,6 +20,7 @@ export const defaultGraphEndDate = timeDay(
 
 const initialState: UIState = {
   currency: "usd",
+  debugMode: false,
   filterUtxoOnly: [],
   graphTimeFrameRange: "5Y",
   graphTimeFrameGroup: "1W",
@@ -110,6 +111,9 @@ export const uiSlice = createSlice({
       }
       state.walletExpandedAddresses = Array.from(set);
     },
+    setDebugMode(state, action: PayloadAction<boolean>) {
+      state.debugMode = action.payload;
+    },
   },
   extraReducers(builder) {
     builder.addMatcher(API_REQUEST_REJECTED, (state, action) => {
@@ -139,6 +143,7 @@ export const {
   toggleAddress,
   showToast,
   clearToast,
+  setDebugMode,
 } = uiSlice.actions;
 
 export const roundUpToNearHour = (date: Date) => {
@@ -225,7 +230,7 @@ export const chartByDateRangeAction = (
 ///////////////////////////////////////
 /// Selectors
 ///////////////////////////////////////
-
+export const selectDebugMode = (state: RootState) => state.ui.debugMode;
 export const selectPrivatePrice = (state: RootState) => state.ui.privatePrice;
 export const selectUI = (state: RootState) => state.ui;
 

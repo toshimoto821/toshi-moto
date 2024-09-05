@@ -62,6 +62,11 @@ export const useBtcHistoricPrices = () => {
   //     chartTimeframeGroup = range;
   //   }
   // }
+  // if (prices?.length) {
+  //   const [ts, val] = prices[prices.length - 1];
+  //   console.log(new Date(ts), val, "lastPrice");
+  // }
+
   return {
     prices,
     from: data?.meta?.from,

@@ -7,6 +7,7 @@ interface ToastMessage {
 
 export interface UIState {
   currency: ICurrency;
+  debugMode: boolean;
   filterUtxoOnly: string[];
   graphTimeFrameRange: GraphTimeFrameRange | null;
   previousGraphTimeFrameRange: GraphTimeFrameRange | null;

@@ -6,6 +6,7 @@ import { Navbar } from "@components/navbar/Navbar";
 import { Xpub } from "@root/models/Xpub";
 import { useAppDispatch, useAppSelector } from "@lib/hooks/store.hooks";
 import { setAppVersion, selectAppVersion } from "@root/lib/slices/config.slice";
+import { Debug } from "@components/debug/Debug";
 import {
   openPriceSocket,
   closePriceSocket,
@@ -80,7 +81,7 @@ export const Root = () => {
   return (
     <div className="">
       <Toast />
-
+      <Debug />
       {/* <div id="sidebar">
         <h1>
           <Link to="/">Home</Link>
