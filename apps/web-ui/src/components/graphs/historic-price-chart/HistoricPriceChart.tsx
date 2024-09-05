@@ -20,7 +20,6 @@ import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
 import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { TimeRangeButtons } from "./TimeRangeButtons";
 import { setRange } from "@lib/slices/navbar.slice";
-
 type IHistoricPriceChart = {
   height: number;
   width: number;

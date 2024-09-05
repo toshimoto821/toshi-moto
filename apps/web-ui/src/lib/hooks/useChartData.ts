@@ -68,23 +68,24 @@ export const useChartData = (opts: IUseChartData) => {
   );
 
   // add the current price
-  let timeDiff = 1000 * 60 * 60 * 24;
-  const now = new Date().getTime();
-  if (prices?.length > 2 && btcPrice && !forecastModel) {
-    const lastPrice = prices[prices.length - 1][0];
-    const secondToLastPrice = prices[prices.length - 2][0];
+  // let timeDiff = 1000 * 60 * 60 * 24;
+  // const now = new Date().getTime();
+  // if (prices?.length > 2 && btcPrice && !forecastModel) {
+  //   const lastPrice = prices[prices.length - 1][0];
+  //   const secondToLastPrice = prices[prices.length - 2][0];
 
-    timeDiff = lastPrice - secondToLastPrice;
+  //   timeDiff = lastPrice - secondToLastPrice;
 
-    if (lastPrice < now && now - lastPrice < timeDiff) {
-      const newLastPrice = lastPrice + timeDiff;
-      prices.pop();
-      prices.push([newLastPrice, btcPrice]);
-    }
-  }
+  //   if (lastPrice < now && now - lastPrice < timeDiff) {
+  //     const newLastPrice = lastPrice + timeDiff;
+  //     prices.pop();
+  //     prices.push([newLastPrice, btcPrice]);
+  //   }
+  // }
 
   const dateToKeyFn = getGroupKey(graphTimeFrameGroup!);
-
+  const last = prices[prices.length - 1];
+  const [lastTs] = last || [];
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
     return prices?.reduce((acc, curr) => {
@@ -133,6 +134,7 @@ export const useChartData = (opts: IUseChartData) => {
     prices?.[0]?.[1], // if first date changes, update
     chartTimeDiffInDays,
     forecastModel,
+    lastTs,
   ]);
 
   const filteredWallets = selectedWalletId
