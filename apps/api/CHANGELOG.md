@@ -1,4 +1,11 @@
 # API Changelog
+## [1.4.7](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.6...api-1.4.7) (2024-09-05)
+
+
+### Bug Fixes
+
+* price ([040699f](https://github.com/toshimoto821/toshi-moto/commit/040699fdfd16e5c187e7011057b926c475375f74))
+
 ## [1.4.6](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.5...api-1.4.6) (2024-09-02)
 
 
