@@ -4,7 +4,6 @@ import {
   PayloadAction,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { add } from "date-fns";
 import {
   getPrice,
   getCirculatingSupply,
@@ -19,7 +18,6 @@ import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
 import type { PriceHistoricArgs } from "./api.slice.types";
-import { timeMinute } from "d3";
 
 interface PriceState {
   btcPrice: number;
