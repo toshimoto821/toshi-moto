@@ -26,13 +26,23 @@ export const addTime = (
   date: Date
 ) => {
   const d = new Date(date.getTime());
+
   switch (groupBy) {
-    case "5M":
-      d.setMinutes(d.getMinutes() + 5);
+    case "5M": {
+      const minutes = d.getMinutes();
+      const remainder = minutes % 5;
+      const increment = remainder === 0 ? 0 : 5 - remainder;
+      d.setMinutes(minutes + increment);
       return d;
-    case "1H":
-      d.setHours(d.getHours() + 1);
+    }
+    case "1H": {
+      const minutes = d.getMinutes();
+      if (minutes !== 0) {
+        d.setHours(d.getHours() + 1);
+        d.setMinutes(0);
+      }
       return d;
+    }
     case "1D":
       d.setDate(d.getDate() + 1);
       return d;
@@ -57,7 +67,10 @@ export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
 
     if (groupBy === "5M") {
       // round to every 5 minutes
-      key += `-${d.getMinutes() - (d.getMinutes() % 5)}`;
+      const minutes = d.getMinutes();
+      const roundedMinutes =
+        minutes % 5 === 0 ? minutes : minutes + (5 - (minutes % 5));
+      key += `-${roundedMinutes}`;
     }
 
     return key;
@@ -66,10 +79,10 @@ export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
   switch (groupBy) {
     case "5M":
       return (d: Date) => {
-        //round up the second to minute
-        if (d.getSeconds() >= 30) {
-          d.setMinutes(d.getMinutes() + 1);
-        }
+        // //round up the second to minute
+        // if (d.getSeconds() >= 30) {
+        //   d.setMinutes(d.getMinutes() + 1);
+        // }
         return toString(d3.timeMinute(d), groupBy);
       };
     case "1H":
