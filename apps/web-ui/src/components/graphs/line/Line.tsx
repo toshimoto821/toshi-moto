@@ -216,10 +216,10 @@ export const Line = (props: ILine) => {
       (domain[1] - domain[0]) / ticks
     );
 
-    g.attr("transform", `translate(${width - margin.right},0)`)
+    g.attr("transform", `translate(0,0)`)
       .call(
         d3
-          .axisLeft(y4)
+          .axisRight(y4)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .tickFormat((d: any) => `₿${privateNumber(formatBtc(d / btcPrice))}`)
           .tickValues(tickValues)
@@ -234,7 +234,7 @@ export const Line = (props: ILine) => {
       .attr("fill", "orange")
       .attr("opacity", 1);
 
-    const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
+    const padding = { top: 1, right: 1, bottom: 1, left: 5 }; // Adjust as needed
 
     g.selectAll(".tick").each(function (this: SVGTextElement) {
       const tick = d3.select(this);
@@ -251,7 +251,7 @@ export const Line = (props: ILine) => {
         .attr("height", (d) => d.height + padding.top + padding.bottom)
         .attr("rx", 2) // radius of the corners in the x direction
         .attr("ry", 2) // radius of the corners in the y direction
-        .attr("opacity", 0.4)
+        .attr("opacity", 0.7)
         .style("fill", "white");
 
       // Enter new rect elements if needed
@@ -277,11 +277,11 @@ export const Line = (props: ILine) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const y2Axis = (g: any) => {
     const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
-    g.attr("transform", `translate(20,0)`)
+    g.attr("transform", `translate(${width - margin.right},0)`)
 
       .call(
         d3
-          .axisRight(y2)
+          .axisLeft(y2)
           .tickFormat((d) => {
             if (breakpoint > 2) {
               return `$${
@@ -326,7 +326,7 @@ export const Line = (props: ILine) => {
         .attr("height", (d) => d.height + padding.top + padding.bottom)
         .attr("rx", 2) // radius of the corners in the x direction
         .attr("ry", 2) // radius of the corners in the y direction
-        .attr("opacity", 0.4)
+        .attr("opacity", 0.7)
         .style("fill", "white");
 
       // Enter new rect elements if needed
