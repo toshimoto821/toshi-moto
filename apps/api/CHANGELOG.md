@@ -1,4 +1,11 @@
 # API Changelog
+## [1.5.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.7...api-1.5.0) (2024-09-06)
+
+
+### Features
+
+* debug push ([1cfadd9](https://github.com/toshimoto821/toshi-moto/commit/1cfadd9fc55f20341c5de890d479fe60bf74c9ba))
+
 ## [1.4.7](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.6...api-1.4.7) (2024-09-05)
 
 
