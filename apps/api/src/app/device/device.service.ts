@@ -131,6 +131,41 @@ export class DeviceService {
     });
   }
 
+  async pushToDevice(
+    device: Device,
+    message: { title: string; body: string },
+    keys: { privateKey: string; publicKey: string }
+  ) {
+    webpush.setVapidDetails(
+      "mailto:toshimoto821@proton.me",
+      keys.publicKey,
+      keys.privateKey
+    );
+    const subscription = {
+      endpoint: device.endpoint,
+      keys: {
+        auth: device.keys.auth,
+        p256dh: device.keys.p256dh,
+      },
+    };
+
+    const payload = JSON.stringify({
+      title: message.title,
+      body: message.body,
+      icon: "/toshi-256.svg",
+      url: "https://t.toshimoto.dev",
+    });
+
+    const options = {
+      TTL: 60, // Time to live in seconds
+    };
+    try {
+      await webpush.sendNotification(subscription, payload, options);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
   async push(
     message: { title: string; body: string },
     keys: { privateKey: string; publicKey: string }
@@ -176,5 +211,9 @@ export class DeviceService {
 
   getRules() {
     return this.rules;
+  }
+
+  async findByEndpoint(endpoint: string) {
+    return this.deviceModel.findOne({ endpoint });
   }
 }
