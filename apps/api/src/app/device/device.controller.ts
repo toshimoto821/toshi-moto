@@ -40,6 +40,21 @@ export class DeviceController {
     };
   }
 
+  @Post("push-test")
+  async pushTest(@Body() subscription: SubscriptionDto) {
+    const keys = await this.configService.getPushNotificationKeys();
+    const message = {
+      title: "Testing Push",
+      body: "hodl",
+    };
+    const device = await this.deviceService.findByEndpoint(
+      subscription.endpoint
+    );
+    await this.deviceService.pushToDevice(device, message, keys);
+    return {
+      message: "pushed",
+    };
+  }
   @Get("rules")
   async rules() {
     return this.deviceService.getRules();
