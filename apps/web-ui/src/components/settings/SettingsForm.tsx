@@ -17,11 +17,7 @@ import {
   type ConfigState,
   selectPushNotificationsConfig,
 } from "@root/lib/slices/config.slice";
-import {
-  subscribeUserToPush,
-  getSubscription,
-  unsubscribeUserFromBrowserPush,
-} from "./settings.util";
+import { subscribeUserToPush, getSubscription } from "./settings.util";
 import {
   useGetConfigQuery,
   useSavePushSubscriptionMutation,
@@ -86,16 +82,15 @@ export const SettingsForm = () => {
     );
     setMessage({ message: "Settings Saved", type: "success" });
     if (pushSubscription && formState.pushNotifications.enabled) {
-      const resp = await savePushNotification(pushSubscription);
-      console.log(resp);
+      await savePushNotification(pushSubscription);
     } else if (!formState.pushNotifications.enabled) {
       const subscription = await getSubscription();
-      console.log(subscription);
+
       if (subscription) {
         const asJson = subscription.toJSON() as PushSubscription;
         subscription.unsubscribe();
-        const resp = await unsubscribeFromPush(asJson);
-        console.log(resp);
+        setPushSubscription(null);
+        await unsubscribeFromPush(asJson);
       }
 
       // @todo remove push subscription
@@ -273,9 +268,6 @@ export const SettingsForm = () => {
                   }));
                   if (enabled) {
                     subscribeToPushNotifications();
-                  } else {
-                    unsubscribeUserFromBrowserPush();
-                    setPushSubscription(null);
                   }
                 }}
               />{" "}
