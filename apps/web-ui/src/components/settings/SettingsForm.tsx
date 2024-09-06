@@ -17,11 +17,7 @@ import {
   type ConfigState,
   selectPushNotificationsConfig,
 } from "@root/lib/slices/config.slice";
-import {
-  subscribeUserToPush,
-  getSubscription,
-  unsubscribeUserFromBrowserPush,
-} from "./settings.util";
+import { subscribeUserToPush, getSubscription } from "./settings.util";
 import {
   useGetConfigQuery,
   useSavePushSubscriptionMutation,
