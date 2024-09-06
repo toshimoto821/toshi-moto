@@ -102,6 +102,13 @@ export const apiSlice = createApi({
     getConfig: builder.query<ConfigResponse, void>({
       query: () => "/api/config/list",
     }),
+    testPush: builder.mutation<GenericResponse, PushSubscription>({
+      query: (subscription) => ({
+        url: "/api/device/push-test",
+        method: "POST",
+        body: subscription,
+      }),
+    }),
     savePushSubscription: builder.mutation<GenericResponse, PushSubscription>({
       query: (subscription) => ({
         url: "/api/device/subscribe",
@@ -130,6 +137,7 @@ export const {
   useGetConfigQuery,
   useSavePushSubscriptionMutation,
   useUnsubscribePushSubscriptionMutation,
+  useTestPushMutation,
 } = apiSlice;
 
 export const {

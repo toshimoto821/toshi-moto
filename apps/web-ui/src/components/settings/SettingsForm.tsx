@@ -24,7 +24,11 @@ import {
   useUnsubscribePushSubscriptionMutation,
 } from "@root/lib/slices/api.slice";
 import { PushSubscription } from "@root/lib/slices/api.slice.types";
-import { showToast } from "@root/lib/slices/ui.slice";
+import {
+  selectDebugMode,
+  setDebugMode,
+  showToast,
+} from "@root/lib/slices/ui.slice";
 
 const VITE_PUSH_NOTIFICATIONS_DISABLED = import.meta.env
   .VITE_PUSH_NOTIFICATIONS_DISABLED;
@@ -45,6 +49,8 @@ export const SettingsForm = () => {
   const apiConfig = useAppSelector(selectApiConfig);
   const networkConfig = useAppSelector(selectNetworkConfig);
   const pushNotificationConfig = useAppSelector(selectPushNotificationsConfig);
+
+  const debugMode = useAppSelector(selectDebugMode);
 
   const [pushSubscription, setPushSubscription] =
     useState<PushSubscription | null>(null);
@@ -276,6 +282,27 @@ export const SettingsForm = () => {
           </Text>
         </label>
       </Flex>
+
+      <Flex direction="column" gap="3" className="my-4">
+        <label>
+          <Text as="div" size="2" mb="1" weight="bold">
+            Debug Mode
+          </Text>
+          <Text as="label">
+            <Flex as="span" gap="2" className="items-center">
+              <Checkbox
+                disabled={pushDisabled}
+                checked={debugMode}
+                onCheckedChange={() => {
+                  dispatch(setDebugMode(!debugMode));
+                }}
+              />{" "}
+              Developer mode for testing
+            </Flex>
+          </Text>
+        </label>
+      </Flex>
+
       <Flex direction="column" gap="3" className="mt-4">
         <Button className="btn btn-primary">Save</Button>
         {message && (
