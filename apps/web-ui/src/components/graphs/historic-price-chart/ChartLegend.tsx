@@ -57,7 +57,7 @@ export const ChartLegend = ({
       return prices?.concat(forecastPrices);
     }
     return prices;
-  }, [group, forecastModel, len > 0, previousGraphTimeFrameRange]);
+  }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {

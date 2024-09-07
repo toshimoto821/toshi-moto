@@ -316,8 +316,8 @@ export const Navbar = () => {
                     variant="ghost"
                     onClick={onClickDate("start")}
                   >
-                    <Text size="1" className="italic">
-                      {format(firstDate, " pp, PP")}
+                    <Text size="1" className="font-mono">
+                      {format(firstDate, "PP, hh:mm a")}
                     </Text>
                   </Button>
                 </div>
@@ -326,8 +326,8 @@ export const Navbar = () => {
                 </div>
                 <div className="flex items-center">
                   <Button size="1" variant="ghost" onClick={onClickDate("end")}>
-                    <Text size="1" className="italic">
-                      {format(lastDate, "pp, PP")}
+                    <Text size="1" className="font-mono">
+                      {format(lastDate, "PP, hh:mm a")}
                     </Text>
                   </Button>
                 </div>
