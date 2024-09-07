@@ -92,3 +92,35 @@ jobs:
           VITE_MAX_CONCURRENT_REQUESTS: 8
           VITE_BITCOIN_NETWORK: mainnet
           VITE_API_URL: http://umbrel.local:8021
+  deploy:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: Docker
+    steps:
+      - name: Extract project and version from release
+        id: extract_vars
+        run: |
+          TAG_NAME=${{ github.event.release.tag_name }}
+          PROJECT=$(echo $TAG_NAME | awk -F'-' '{OFS="-"; $NF=""; print $0}' | sed 's/[- ]$//')
+          VERSION=$(echo $TAG_NAME | awk -F'-' '{print $NF}')
+          echo "PROJECT=$PROJECT" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Get Docker Image Digest
+        id: get_digest
+        run: |
+          response=$(curl -s "https://hub.docker.com/v2/repositories/toshimoto821/toshi-moto/tags?page_size=1")
+          NAME=$(echo $response | jq -r '.results[0].name')
+          DIGEST=$(echo $response | jq -r '.results[0].digest')
+          echo "NAME=$NAME" >> $GITHUB_ENV
+          echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+      - name: Trigger workflow in another repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/toshimoto821/toshimoto-app-store/dispatches \
+            -d '{"event_type":"custom_event"}'

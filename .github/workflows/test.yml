@@ -8,12 +8,12 @@ jobs:
     environment: Docker
 
     steps:
-      - name: Trigger target workflow
-        run: |
-          gh api \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -X POST \
-            -F ref=main \
-            /repos/target-owner/target-repo/actions/workflows/create-release-pr.yml/dispatches
+      - name: Trigger workflow in another repo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/toshimoto821/toshimoto-app-store/dispatches \
+            -d '{"event_type":"custom_event"}'
