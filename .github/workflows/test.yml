@@ -12,19 +12,15 @@ jobs:
       contents: write # Ensure the token has write permissions
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
 
       - name: Authenticate GitHub CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh auth setup-git
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: echo $GH_PAT | gh auth login --with-token
 
       - name: Trigger workflow in another repo
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh workflow run create-release-pr.yml --repo toshimoto821/toshimoto-app-store
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: gh workflow run create-release-pr.yml --repo toshimoto821/toshimoto-app-store --ref master
