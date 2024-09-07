@@ -2,6 +2,7 @@ name: test
 
 on:
   workflow_dispatch:
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -11,12 +12,18 @@ jobs:
       contents: write # Ensure the token has write permissions
 
     steps:
-      - name: Trigger workflow in another repo
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Authenticate GitHub CLI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            https://api.github.com/repos/toshimoto821/toshimoto-app-store/dispatches \
-            -d '{"event_type":"custom_event"}'
+          echo $GITHUB_TOKEN | gh auth login --with-token
+
+      - name: Trigger workflow in another repo
+        run: |
+          gh workflow run create-release-pr.yml --repo toshimoto821/toshimoto-app-store
