@@ -137,23 +137,25 @@ export const SettingsForm = () => {
       "PushManager" in window &&
       pushNotificationConfig.publicKey
     ) {
-      navigator.serviceWorker.ready.then(async (registration) => {
-        try {
-          const subscription = await subscribeUserToPush(
-            registration,
-            pushNotificationConfig.publicKey
-          );
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready.then(async (registration) => {
+          try {
+            const subscription = await subscribeUserToPush(
+              registration,
+              pushNotificationConfig.publicKey
+            );
 
-          if (subscription) {
-            const asJSON = subscription.toJSON() as PushSubscription;
-            if (asJSON.endpoint) {
-              setPushSubscription(asJSON);
+            if (subscription) {
+              const asJSON = subscription.toJSON() as PushSubscription;
+              if (asJSON.endpoint) {
+                setPushSubscription(asJSON);
+              }
             }
+          } catch (ex) {
+            console.error(ex);
           }
-        } catch (ex) {
-          console.error(ex);
-        }
-      });
+        });
+      }
     }
   };
 

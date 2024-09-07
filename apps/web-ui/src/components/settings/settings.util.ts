@@ -44,7 +44,10 @@ export function subscribeUserToPush(
 }
 
 export function getSubscription() {
-  return navigator.serviceWorker.ready.then((registration) => {
-    return registration.pushManager.getSubscription();
-  });
+  if ("serviceWorker" in navigator) {
+    return navigator.serviceWorker.ready.then((registration) => {
+      return registration.pushManager.getSubscription();
+    });
+  }
+  return Promise.resolve(null);
 }
