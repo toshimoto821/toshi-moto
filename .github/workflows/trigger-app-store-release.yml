@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  create-pr:
     runs-on: ubuntu-latest
     environment: Docker
 
