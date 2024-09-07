@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: Docker
 
+    permissions:
+      contents: write # Ensure the token has write permissions
+
     steps:
       - name: Trigger workflow in another repo
         env:
