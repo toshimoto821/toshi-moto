@@ -17,7 +17,7 @@ export interface PriceHistoryResponse {
     groupBy: GroupBy;
     range: GraphTimeFrameRange | null;
   };
-  prices: [number, number][];
+  prices: [number, number, number][];
 }
 
 export interface PriceHistoryDiffResponse {

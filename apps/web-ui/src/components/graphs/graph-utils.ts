@@ -234,7 +234,7 @@ export function generateRandomPriceSeries({
   gap,
   startDate,
   endDate,
-}: IGenerateRandomPriceSeries): [number, number][] {
+}: IGenerateRandomPriceSeries): [number, number, number][] {
   let timeDifference;
   if (gap === "5M") {
     timeDifference = 5 * 60 * 1000;
@@ -248,14 +248,15 @@ export function generateRandomPriceSeries({
 
   const count = Math.floor((endDate - startDate) / timeDifference);
 
-  const prices = [[startDate, initialPrice]] as [number, number][];
+  const prices = [[startDate, initialPrice, 0]] as [number, number, number][];
   let date = startDate;
   for (let i = 1; i < count; i++) {
     date += timeDifference;
     const movement = Math.random() * 2 - 1;
     const priceChange =
       movement > 0 ? bullishFactor * movement : bearishFactor * movement;
-    prices.push([date, prices[i - 1][1] * (1 + priceChange)]);
+    const vol = 0;
+    prices.push([date, prices[i - 1][1] * (1 + priceChange), vol]);
   }
   return prices;
 }
