@@ -209,7 +209,7 @@ export const updatePricing = createAsyncThunk<
     previousGraphTimeFrameRange,
   } = state.ui;
 
-  const { last_updated_stream_at = graphEndDate } = state.price;
+  const { last_updated_stream_at } = state.price;
 
   const end = roundUpToNearHour(new Date(graphEndDate!));
 
@@ -225,11 +225,12 @@ export const updatePricing = createAsyncThunk<
   };
 
   const now = Date.now();
-  const diff = now - last_updated_stream_at;
+  const gapBetweenNowAndChartEndTime = now - end.getTime();
   // console.log(diff, "diff");
+  const timeSineLastTick = now - last_updated_stream_at;
   // only keep active if its greater than the
-  if (range && diff > 1000 * 5) {
-    const isLive = shouldBeLive(range, diff);
+  if (range && (!last_updated_stream_at || timeSineLastTick > 1000 * 5)) {
+    const isLive = shouldBeLive(range, gapBetweenNowAndChartEndTime);
     // console.log("isLive", isLive);
     if (isLive) {
       dispatch(setLastUpdatedStreamAt(now));
