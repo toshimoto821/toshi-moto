@@ -34,7 +34,7 @@ export const Root = () => {
 
   const visibilitychange = useCallback(() => {
     if (document.visibilityState === "visible") {
-      dispatch(openPriceSocket(true));
+      dispatch(openPriceSocket({ retry: true }));
     } else {
       dispatch(closePriceSocket());
     }

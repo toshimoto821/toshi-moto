@@ -22,7 +22,7 @@ export const Debug = () => {
   const { btcPrice } = useBtcPrice();
   const fakeTick = () => {
     const price = btcPrice + 100;
-    dispatch(updatePricing({ price, eventTime: Date.now() }));
+    dispatch(updatePricing({ price, eventTime: Date.now(), volume: 100 }));
   };
 
   const render = () => {

@@ -197,9 +197,9 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 
 export const updatePricing = createAsyncThunk<
   void,
-  { price: number; volume?: number; eventTime: number },
+  { price: number; volume: number; eventTime: number },
   { dispatch: AppDispatch }
->("price/updatePricing", async ({ price }, { dispatch, getState }) => {
+>("price/updatePricing", async ({ price, volume }, { dispatch, getState }) => {
   const state = getState() as RootState;
   const {
     graphStartDate,
@@ -249,18 +249,17 @@ export const updatePricing = createAsyncThunk<
           // const FIVE_MINUTES = 1000 * 60 * 5;
 
           const shouldAppend = shouldAppendPrice(range, diff);
-          const lastVolume = lastPrice[2] || 0;
 
           if (shouldAppend) {
             // console.log("ts: appending", new Date(eventTime), price);
             // const rounded = timeMinute(add(now, { seconds: 0 })).getTime();
 
             // current.push([now, price]);
-            current.push([now, price, lastVolume]);
+            current.push([now, price, volume]);
             current.shift();
           } else {
             // console.log("ts: replacing", now, price);
-            current[current.length - 1] = [now, price, lastVolume];
+            current[current.length - 1] = [now, price, volume];
           }
 
           draft.prices = current;
@@ -271,23 +270,57 @@ export const updatePricing = createAsyncThunk<
 });
 
 let ws: WebSocket | null = null;
+// let requestedSocketRange: GraphTimeFrameRange | null = null;
+// let actualSocketRange: GraphTimeFrameRange | null = null;
+interface OpenSocketProps {
+  retry?: boolean;
+  forceRange?: GraphTimeFrameRange;
+}
 export const openPriceSocket = createAsyncThunk<
   void,
-  boolean,
+  OpenSocketProps,
   { dispatch: AppDispatch }
->("price/openSocket", async (retry, { dispatch, getState }) => {
+>("price/openSocket", async (props, { dispatch, getState }) => {
+  const { retry = true, forceRange } = props;
   if (ws) {
-    if (ws.readyState === WebSocket.CLOSED) {
-      console.log("closing ws");
-      dispatch(setStreamStatus("DISCONNECTED"));
-      ws.close();
-      ws = null;
-    } else {
+    if (ws.readyState === WebSocket.CONNECTING) {
       return;
+    } else {
+      ws.close();
     }
   }
 
-  ws = new WebSocket("wss://data-stream.binance.vision:9443/ws/btcusdt@ticker");
+  const state = getState() as RootState;
+  const range =
+    forceRange ||
+    state.ui.graphTimeFrameRange ||
+    state.ui.previousGraphTimeFrameRange;
+
+  let interval = "5m";
+  switch (range) {
+    case "1D":
+      interval = "5m";
+      break;
+    case "1W":
+      interval = "1h";
+      break;
+    case "1M":
+      interval = "1h";
+      break;
+    case "3M":
+    case "1Y":
+      interval = "1d";
+      break;
+    case "2Y":
+    case "5Y":
+      interval = "1w";
+      break;
+    default:
+      interval = "5m";
+  }
+  ws = new WebSocket(
+    `wss://data-stream.binance.vision:9443/ws/btcusdt@kline_${interval}`
+  );
   dispatch(setStreamStatus("CONNECTED"));
   ws.onerror = (error) => {
     console.error("WebSocket error:", error);
@@ -302,7 +335,7 @@ export const openPriceSocket = createAsyncThunk<
     dispatch(closePriceSocket());
     if (retry) {
       wait(1000).then(() => {
-        dispatch(openPriceSocket(false));
+        dispatch(openPriceSocket({ retry: false, forceRange }));
       });
     }
   };
@@ -314,7 +347,9 @@ export const openPriceSocket = createAsyncThunk<
       if (data.e === "ping") {
         ws.send(JSON.stringify({ e: "pong", ...data }));
       } else {
-        const newPrice = parseFloat(data.c);
+        // console.log("data", data);
+        // requestedSocketRange = data.k.i.toUpperCase() as GraphTimeFrameRange;
+        const newPrice = parseFloat(data.k.c);
         const state = getState() as RootState;
         if (newPrice !== state.price.btcPrice) {
           dispatch(setPrice(newPrice));
@@ -322,9 +357,13 @@ export const openPriceSocket = createAsyncThunk<
           // whereas the volume in db is from coingeck and is usd.
           // @todo need to change the stream type when the chart type changes
           // so that i can listen to the kline stream and get the volume accurately
-          // const volume = parseFloat(data.q);
+          const volume = parseFloat(data.k.v);
           // console.log("volume", volume);
-          dispatch(updatePricing({ price: newPrice, eventTime: data.E }));
+          // console.log("range", data.k.i);
+          // console.log("volume", volume);
+          dispatch(
+            updatePricing({ price: newPrice, eventTime: data.E, volume })
+          );
         }
       }
     };
