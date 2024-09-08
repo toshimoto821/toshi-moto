@@ -146,7 +146,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   return (
     <div className="w-full h-full relative">
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
-        <TimeRangeButtons />
+        <TimeRangeButtons loading={btcPrices.loading} />
       </div>
       <div
         style={{ height }}

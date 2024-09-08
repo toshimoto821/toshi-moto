@@ -214,6 +214,47 @@ export class PriceService {
     return this.priceModel.countDocuments().exec();
   }
 
+  async findRangeFromBinance(opts: IFindRange) {
+    const { from, to, groupBy } = opts;
+    const url = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${groupBy.toLowerCase()}&limit=1000&startTime=${from}&endTime=${to}`;
+    console.log(url);
+    const response = await axios.get(url);
+    const data = response.data;
+    return data.map((d) => {
+      const [
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        openTime,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        openPrice,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        highPrice,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        lowPrice,
+        closePrice,
+        vol,
+        closeTime,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        quoteAssetVolume,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        numberOfTrades,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        takerBuyBaseAssetVolume,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        takerBuyQuoteAssetVolume,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ignore,
+      ] = d;
+      return {
+        price: parseFloat(closePrice),
+        volume: parseFloat(vol),
+        timestamp: new Date(closeTime + 1),
+        openTime: new Date(openTime),
+        closeTime: new Date(closeTime),
+        interval: groupBy,
+      };
+    });
+  }
+
   async findRange(
     opts: IFindRange
   ): Promise<{ price: number; volume: number; timestamp: Date }[]> {
