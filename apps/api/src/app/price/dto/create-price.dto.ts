@@ -1,8 +1,11 @@
 export class CreatePriceDto {
   readonly price: number;
   readonly currency: string;
-  readonly timestamp: Date;
+  readonly timestamp?: Date;
+  readonly closeTime: Date;
+  readonly openTime: Date;
   readonly volume: number;
+  readonly interval: string;
 }
 
 export class RangeQueryDto {
