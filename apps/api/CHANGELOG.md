@@ -1,4 +1,11 @@
 # API Changelog
+## [1.6.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.1...api-1.6.2) (2024-09-08)
+
+
+### Bug Fixes
+
+* vol ([a68b7c0](https://github.com/toshimoto821/toshi-moto/commit/a68b7c047bb49ea4b0a7662ca5c57fb543b6883b))
+
 ## [1.6.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.0...api-1.6.1) (2024-09-08)
 
 
