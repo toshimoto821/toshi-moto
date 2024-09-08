@@ -1,4 +1,11 @@
 # API Changelog
+## [1.6.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.0...api-1.6.1) (2024-09-08)
+
+
+### Bug Fixes
+
+* uses binance data ([3ac5a8e](https://github.com/toshimoto821/toshi-moto/commit/3ac5a8e51101c350d305b5aefaa6884fb752d2cd))
+
 ## [1.6.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.5.0...api-1.6.0) (2024-09-08)
 
 
