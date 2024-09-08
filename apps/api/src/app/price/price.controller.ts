@@ -63,8 +63,32 @@ export class PriceController {
   }
 
   @Get("range")
-  @Header("Cache-Control", "public, max-age=300")
+  @Header("Cache-Control", "public, max-age=5")
   async findRange(@Query() query: RangeQueryDto): Promise<IRangeResponse> {
+    const from = query.from * 1000;
+    const to = query.to * 1000;
+
+    const range = await this.priceService.findRangeFromBinance({
+      currency: query.vs_currency,
+      from,
+      to,
+      groupBy: query.group_by,
+    });
+
+    return {
+      meta: {
+        groupBy: query.group_by,
+        from: query.from,
+        to: query.to,
+        range: query.range,
+      },
+      prices: range.map((r) => [r.timestamp.getTime(), r.price, r.volume]),
+    };
+  }
+
+  @Get("range-dep")
+  @Header("Cache-Control", "public, max-age=300")
+  async findRangeDep(@Query() query: RangeQueryDto): Promise<IRangeResponse> {
     const from = query.from * 1000;
     const to = query.to * 1000;
 

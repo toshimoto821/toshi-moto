@@ -1,14 +1,15 @@
 import { useMemo, useEffect } from "react";
 import { Button } from "@radix-ui/themes";
 import { scaleLinear, extent, interpolateRgb } from "d3";
-import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI } from "@root/lib/slices/ui.slice";
-import { setRange } from "@root/lib/slices/navbar.slice";
+import { useAppDispatch, useAppSelector } from "@lib/hooks/store.hooks";
+import { setRange } from "@lib/slices/navbar.slice";
 import {
   setGraphByRange,
   resetGraphIfEmptyRange,
-} from "@root/lib/slices/ui.slice";
-import { type GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
+  selectUI,
+} from "@lib/slices/ui.slice";
+import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
+import { openPriceSocket } from "@lib/slices/price.slice";
 import { cn } from "@root/lib/utils";
 
 const colorScale = scaleLinear<string>()
@@ -16,7 +17,10 @@ const colorScale = scaleLinear<string>()
   .range(["rgba(255, 0, 0, 1)", "rgba(128, 128, 128, 1)", "rgba(0, 128, 0, 1)"])
   .interpolate(interpolateRgb);
 
-export const TimeRangeButtons = () => {
+interface ITimeRangeButtonProps {
+  loading: boolean;
+}
+export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
   const { graphTimeFrameRange } = useAppSelector(selectUI);
   const dispatch = useAppDispatch();
 
@@ -29,6 +33,7 @@ export const TimeRangeButtons = () => {
       buzzBuzz();
       dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
       dispatch(setGraphByRange(timeframe));
+      dispatch(openPriceSocket({ retry: false, forceRange: timeframe }));
     };
   };
 
@@ -119,6 +124,7 @@ export const TimeRangeButtons = () => {
             color: colors.get(range),
             width: "100%",
           }}
+          disabled={loading}
           color={graphTimeFrameRange === range ? "orange" : "gray"}
           variant={
             graphTimeFrameRange === range

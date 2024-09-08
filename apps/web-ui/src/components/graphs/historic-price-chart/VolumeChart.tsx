@@ -63,7 +63,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           return Math.abs(yScale(d[2]) - yScale(0));
         })
-        .attr("fill", "rgba(209, 213, 219, 0.6)");
+        .attr("fill", "rgba(209, 213, 219, 0.9)");
 
       // svg
       //   .append("text")
