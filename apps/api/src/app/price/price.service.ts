@@ -79,8 +79,11 @@ export class PriceService {
     const createdPrice = await this.priceModel.findOneAndUpdate(
       {
         timestamp: createPriceDto.timestamp,
+        openTime: createPriceDto.openTime,
+        closeTime: createPriceDto.closeTime,
         currency: createPriceDto.currency,
         volume: createPriceDto.volume,
+        interval: createPriceDto.interval,
       },
       createPriceDto,
       { upsert: true, new: true }
@@ -97,6 +100,83 @@ export class PriceService {
       await wait(1000);
     }
   }
+
+  // 1502928000000 is the first ts available from binance.
+  async importFromBinance(startTime = 1502928000000, interval = "1d") {
+    // let now = Date.now();
+    const urlTemplate = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=1000&startTime={startTime}`;
+
+    let running = true;
+    const maxApiCalls = 10;
+    let i = 0;
+
+    while (running) {
+      try {
+        const url = urlTemplate.replace("{startTime}", startTime.toString());
+        const resp = await axios.get(url);
+        // add to db
+        for (const data of resp.data) {
+          const [
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            openTime,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            openPrice,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            highPrice,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            lowPrice,
+            closePrice,
+            vol,
+            closeTime,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            quoteAssetVolume,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            numberOfTrades,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            takerBuyBaseAssetVolume,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            takerBuyQuoteAssetVolume,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            ignore,
+          ] = data;
+          const price = parseFloat(closePrice);
+          const volume = parseFloat(vol);
+          const openTimestamp = new Date(openTime);
+          const timestamp = new Date(closeTime + 1);
+          const closeTimestamp = new Date(closeTime);
+          // dont save data that hasnt been complete
+          if (closeTime < Date.now()) {
+            try {
+              await this.upsert({
+                price,
+                currency: "usd",
+                timestamp,
+                openTime: openTimestamp,
+                closeTime: closeTimestamp,
+                volume,
+                interval,
+              });
+            } catch (ex) {
+              console.log(ex);
+            }
+          }
+        }
+
+        if (resp.data.length < 1000 || i > maxApiCalls) {
+          running = false;
+        }
+        startTime = resp.data[resp.data.length - 1][6] + 1;
+        i++;
+      } catch (ex) {
+        console.log(ex);
+        running = false;
+      }
+    }
+
+    return null;
+  }
+
+  // @deprecated
   async import(currency: string) {
     const pipe = await this.importHistoricalCurrency(currency);
     pipe
@@ -112,7 +192,10 @@ export class PriceService {
           price: parseFloat(adjClose),
           currency,
           timestamp,
+          openTime: timestamp,
+          closeTime: timestamp,
           volume: parseFloat(Volume),
+          interval: "1d",
         });
       })
       .on("end", () => {
@@ -264,6 +347,8 @@ export class PriceService {
             $gte: new Date(opts.from),
             $lte: new Date(opts.to),
           },
+          interval:
+            opts.groupBy === "5M" || opts.groupBy === "1H" ? "5m" : "1d",
         },
       },
       groupBy,
@@ -727,6 +812,54 @@ export class PriceService {
       .sort({ timestamp: -1 })
       .exec();
     return lastPrice;
+  }
+
+  async fetchPriceFromBinance(endTime, interval = "5m") {
+    try {
+      // i have to limit 2 because if 1, it goes out into the future
+      const url = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=2&endTime=${endTime}`;
+      const response = await axios.get(url);
+      const data = response.data[0];
+      const [
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        openTime,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        openPrice,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        highPrice,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        lowPrice,
+        closePrice,
+        vol,
+        closeTime,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        quoteAssetVolume,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        numberOfTrades,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        takerBuyBaseAssetVolume,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        takerBuyQuoteAssetVolume,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ignore,
+      ] = data;
+      return {
+        price: parseFloat(closePrice),
+        volume: parseFloat(vol),
+        timestamp: new Date(closeTime + 1),
+        openTime: new Date(openTime),
+        closeTime: new Date(closeTime),
+        interval,
+      };
+    } catch (ex) {
+      console.log(ex);
+      return {
+        price: null,
+        volume: null,
+        timestamp: new Date(),
+        interval,
+      };
+    }
   }
 
   private getNow() {
