@@ -1,4 +1,11 @@
 # API Changelog
+## [1.6.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.2...api-1.6.3) (2024-09-08)
+
+
+### Bug Fixes
+
+* uses binance for range ([ea8abf3](https://github.com/toshimoto821/toshi-moto/commit/ea8abf3abece95383c514d3ff5e479d4a6fd52f0))
+
 ## [1.6.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.1...api-1.6.2) (2024-09-08)
 
 
