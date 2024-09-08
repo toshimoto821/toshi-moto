@@ -42,7 +42,16 @@ export class PriceController {
   constructor(private readonly priceService: PriceService) {
     this.priceService.count().then((count) => {
       if (count === 0) {
-        this.priceService.import("usd");
+        this.priceService.importFromBinance();
+        const start = new Date();
+        // 1 month ago
+        const monthAgo = new Date(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+        monthAgo.setSeconds(0);
+        monthAgo.setMilliseconds(0);
+        monthAgo.setHours(0);
+
+        monthAgo.setMinutes(0);
+        this.priceService.importFromBinance(monthAgo.getTime()), "5m";
       }
     });
   }
@@ -110,12 +119,23 @@ export class PriceController {
     return { first, last };
   }
 
-  // @Get("import")
-  // // @Header("Content-Type", "application/json")
-  // async import(): Promise<{ ok: boolean }> {
-  //   const response = await this.priceService.import("usd");
-  //   return response;
-  // }
+  @Post("import")
+  // @Header("Content-Type", "application/json")
+  async import(): Promise<{ ok: boolean }> {
+    const start = new Date();
+    // 1 month ago
+    const monthAgo = new Date(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+    monthAgo.setSeconds(0);
+    monthAgo.setMilliseconds(0);
+    monthAgo.setHours(0);
+
+    monthAgo.setMinutes(0);
+
+    await this.priceService.importFromBinance();
+    await this.priceService.importFromBinance(monthAgo.getTime(), "5m");
+
+    return { ok: true };
+  }
 
   @Get("simple")
   @Header("Cache-Control", "public, max-age=300")

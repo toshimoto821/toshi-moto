@@ -1,6 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { getPrice } from "@lib/get-price";
 import { PriceService } from "../price/price.service";
 import { DeviceService } from "../device/device.service";
 import { ConfigService } from "../config/config.service";
@@ -23,31 +22,44 @@ export class TasksService {
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCron() {
     this.logger.debug("Fetching new data!");
-    let price: number | null = null;
+
+    const ts = new Date();
+    ts.setSeconds(0);
+    ts.setMilliseconds(0);
+    let p;
+
     try {
       const currency = "usd";
-      const { price: p, /*timestamp,*/ volume } = await getPrice(currency);
-      price = p;
+
+      const { price, /*timestamp,*/ volume, timestamp, openTime, closeTime } =
+        await this.priceService.fetchPriceFromBinance(ts.getTime());
+
+      if (!price) {
+        this.logger.error("No price found");
+        return;
+      }
+      p = price;
       // @todo save to db
       // the api is not updated every 5 minutes which creates different timestamps
       // long term need to switch to a differnt api. for now just use current time
-      const ts = new Date();
-      ts.setSeconds(0);
-      ts.setMilliseconds(0);
 
       this.logger.debug(`Price: $${price} at ${ts.toLocaleString()}`);
       // const prices = await this.priceService.findAll();
       await this.priceService.upsert({
         price,
         currency,
-        timestamp: ts,
+        timestamp,
+        openTime,
+        closeTime,
         volume,
+        interval: "5m",
       });
     } catch (ex) {
       this.logger.error(ex.message);
     }
-
-    this.runPushNotificationTask(price);
+    if (p) {
+      this.runPushNotificationTask(p);
+    }
   }
 
   async runPushNotificationTask(price?: number) {
