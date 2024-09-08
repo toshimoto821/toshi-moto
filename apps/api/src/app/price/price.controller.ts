@@ -40,20 +40,19 @@ type ISimplePriceResponse<T extends string> = {
 @Controller("prices")
 export class PriceController {
   constructor(private readonly priceService: PriceService) {
-    this.priceService.count().then((count) => {
-      if (count === 0) {
-        this.priceService.importFromBinance();
-        const start = new Date();
-        // 1 month ago
-        const monthAgo = new Date(start.getTime() - 1000 * 60 * 60 * 24 * 30);
-        monthAgo.setSeconds(0);
-        monthAgo.setMilliseconds(0);
-        monthAgo.setHours(0);
-
-        monthAgo.setMinutes(0);
-        this.priceService.importFromBinance(monthAgo.getTime()), "5m";
-      }
-    });
+    // this.priceService.count().then((count) => {
+    //   if (count === 0) {
+    //     this.priceService.importFromBinance();
+    //     const start = new Date();
+    //     // 1 month ago
+    //     const monthAgo = new Date(start.getTime() - 1000 * 60 * 60 * 24 * 30);
+    //     monthAgo.setSeconds(0);
+    //     monthAgo.setMilliseconds(0);
+    //     monthAgo.setHours(0);
+    //     monthAgo.setMinutes(0);
+    //     this.priceService.importFromBinance(monthAgo.getTime()), "5m";
+    //   }
+    // });
   }
 
   @Get()
