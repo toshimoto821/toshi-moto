@@ -14,7 +14,7 @@ export const VolumeChart = (props: IVolumeChart) => {
   const data = prices || [];
   const xScale = scaleBand()
     // prices = [date, price, volume]
-    .domain(data.map((d, i) => i.toString()))
+    .domain(data.map((_, i) => i.toString()))
     .range([margin.left, width - margin.right])
     .padding(0.1);
 
