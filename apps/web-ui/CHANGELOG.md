@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.16.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.1...web-ui-1.16.2) (2024-09-08)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/2020fcbffb3397c298c224fd55112d7179c365e3/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/2020fcbffb3397c298c224fd55112d7179c365e3/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* uses binance for range ([ea8abf3](https://github.com/toshimoto821/toshi-moto/commit/ea8abf3abece95383c514d3ff5e479d4a6fd52f0))
+
 ## [1.16.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.0...web-ui-1.16.1) (2024-09-08)
 
   |    |    |
