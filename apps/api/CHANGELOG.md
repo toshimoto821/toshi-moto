@@ -1,4 +1,11 @@
 # API Changelog
+## [1.6.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.5.0...api-1.6.0) (2024-09-08)
+
+
+### Features
+
+* initial vol chart ([3135092](https://github.com/toshimoto821/toshi-moto/commit/3135092d6841dec230f556518a925ec2412d94e4))
+
 ## [1.5.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.4.7...api-1.5.0) (2024-09-06)
 
 
