@@ -12,6 +12,7 @@ export const VolumeChart = (props: IVolumeChart) => {
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const data = prices || [];
+  const lastPrice = data[data.length - 1] || [];
   const xScale = scaleBand()
     // prices = [date, price, volume]
     .domain(data.map((_, i) => i.toString()))
@@ -77,7 +78,7 @@ export const VolumeChart = (props: IVolumeChart) => {
 
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, range, group, height, width]);
+  }, [loading, range, group, height, width, lastPrice[0]]);
 
   return (
     <div>

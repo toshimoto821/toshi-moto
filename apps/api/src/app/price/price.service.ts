@@ -54,7 +54,7 @@ type IGroupByDate = {
       $last: "$price";
     };
     volume: {
-      $last: "$volume";
+      $sum: "$volume";
     };
   };
 };
@@ -243,7 +243,7 @@ export class PriceService {
           $last: "$price",
         },
         volume: {
-          $last: "$volume",
+          $sum: "$volume",
         },
       },
     };
@@ -274,7 +274,7 @@ export class PriceService {
             $last: "$price",
           },
           volume: {
-            $last: "$volume",
+            $sum: "$volume",
           },
         },
       };
@@ -306,7 +306,7 @@ export class PriceService {
             $last: "$price",
           },
           volume: {
-            $last: "$volume",
+            $sum: "$volume",
           },
         },
       };
@@ -327,7 +327,7 @@ export class PriceService {
             $last: "$price",
           },
           volume: {
-            $last: "$volume",
+            $sum: "$volume",
           },
         },
       };

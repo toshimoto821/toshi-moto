@@ -320,7 +320,10 @@ export const openPriceSocket = createAsyncThunk<
           dispatch(setPrice(newPrice));
           // cant use the volume from binance because its in usdt
           // whereas the volume in db is from coingeck and is usd.
+          // @todo need to change the stream type when the chart type changes
+          // so that i can listen to the kline stream and get the volume accurately
           // const volume = parseFloat(data.q);
+          // console.log("volume", volume);
           dispatch(updatePricing({ price: newPrice, eventTime: data.E }));
         }
       }
