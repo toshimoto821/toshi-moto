@@ -18,7 +18,7 @@ type IRangeResponse = {
     to: number;
     range: string;
   };
-  prices: [number, number][];
+  prices: [number, number, number][];
 };
 
 export type IRangeDiffResponse = {
@@ -86,7 +86,7 @@ export class PriceController {
         to: query.to,
         range: query.range,
       },
-      prices: range.map((r) => [r.timestamp.getTime(), r.price]),
+      prices: range.map((r) => [r.timestamp.getTime(), r.price, r.volume]),
     };
   }
 

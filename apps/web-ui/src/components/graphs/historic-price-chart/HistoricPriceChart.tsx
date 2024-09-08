@@ -7,7 +7,7 @@ import { ChartLegend } from "./ChartLegend";
 import type { IPlotData } from "@root/types";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectForecast } from "@lib/slices/price.slice";
+// import { selectForecast } from "@lib/slices/price.slice";
 import {
   selectUI,
   setGraphByRange,
@@ -19,6 +19,7 @@ import { cn } from "@root/lib/utils";
 import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
 import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { TimeRangeButtons } from "./TimeRangeButtons";
+import { VolumeChart } from "./VolumeChart";
 import { setRange } from "@lib/slices/navbar.slice";
 type IHistoricPriceChart = {
   height: number;
@@ -44,7 +45,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     previousGraphTimeFrameRange,
   } = useAppSelector(selectUI);
 
-  const { forecastModel } = useAppSelector(selectForecast);
+  // const { forecastModel } = useAppSelector(selectForecast);
 
   const result = useChartData({
     btcPrice,
@@ -54,19 +55,19 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const chartTimeframeRange = graphTimeFrameRange;
 
   // add the current price
-  let timeDiff = 1000 * 60 * 60 * 24;
-  const now = new Date().getTime();
-  if (prices?.length > 2 && btcPrice && !forecastModel) {
-    const lastPrice = prices[prices.length - 1][0];
-    const secondToLastPrice = prices[prices.length - 2][0];
+  // let timeDiff = 1000 * 60 * 60 * 24;
+  // const now = new Date().getTime();
+  // if (prices?.length > 2 && btcPrice && !forecastModel) {
+  //   const lastPrice = prices[prices.length - 1][0];
+  //   const secondToLastPrice = prices[prices.length - 2][0];
 
-    timeDiff = lastPrice - secondToLastPrice;
+  //   timeDiff = lastPrice - secondToLastPrice;
 
-    if (now - lastPrice < timeDiff) {
-      const newLastPrice = lastPrice + timeDiff;
-      prices.push([newLastPrice, btcPrice]);
-    }
-  }
+  //   if (now - lastPrice < timeDiff) {
+  //     const newLastPrice = lastPrice + timeDiff;
+  //     prices.push([newLastPrice, btcPrice]);
+  //   }
+  // }
 
   const handleUpdateTimeframe = (timeframe: GraphTimeFrameRange) => {
     return () => {
@@ -166,6 +167,13 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           btcPrice={btcPrice ?? 0}
           showBtcAllocation={showBtcAllocation}
         />
+      </div>
+      <div
+        className={cn("mb-2", {
+          "opacity-50": btcPrices.loading,
+        })}
+      >
+        <VolumeChart height={80} width={width} />
       </div>
       <div>
         <ChartLegend

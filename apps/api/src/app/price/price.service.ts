@@ -53,6 +53,9 @@ type IGroupByDate = {
     price: {
       $last: "$price";
     };
+    volume: {
+      $last: "$volume";
+    };
   };
 };
 
@@ -130,7 +133,7 @@ export class PriceService {
 
   async findRange(
     opts: IFindRange
-  ): Promise<{ price: number; timestamp: Date }[]> {
+  ): Promise<{ price: number; volume: number; timestamp: Date }[]> {
     if (isNaN(opts.from) || isNaN(opts.to)) {
       return [];
     }
@@ -155,6 +158,9 @@ export class PriceService {
         },
         price: {
           $last: "$price",
+        },
+        volume: {
+          $last: "$volume",
         },
       },
     };
@@ -183,6 +189,9 @@ export class PriceService {
           },
           price: {
             $last: "$price",
+          },
+          volume: {
+            $last: "$volume",
           },
         },
       };
@@ -213,6 +222,9 @@ export class PriceService {
           price: {
             $last: "$price",
           },
+          volume: {
+            $last: "$volume",
+          },
         },
       };
       $dateFromParts.hour = "$_id.hour";
@@ -230,6 +242,9 @@ export class PriceService {
           },
           price: {
             $last: "$price",
+          },
+          volume: {
+            $last: "$volume",
           },
         },
       };
@@ -256,6 +271,7 @@ export class PriceService {
         $project: {
           timestamp,
           price: 1,
+          volume: 1,
         },
       },
       {

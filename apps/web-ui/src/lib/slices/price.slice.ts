@@ -33,7 +33,7 @@ interface PriceState {
   priceDiffs: Record<GraphTimeFrameRange, number>;
 }
 
-export type IPrices = [number, number][];
+export type IPrices = [number, number, number][];
 export type IForcastModelType = "BEAR" | "BULL" | "CRAB" | "SAYLOR";
 
 const initialState: PriceState = {
@@ -197,7 +197,7 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 
 export const updatePricing = createAsyncThunk<
   void,
-  { price: number; eventTime: number },
+  { price: number; volume?: number; eventTime: number },
   { dispatch: AppDispatch }
 >("price/updatePricing", async ({ price }, { dispatch, getState }) => {
   const state = getState() as RootState;
@@ -249,16 +249,18 @@ export const updatePricing = createAsyncThunk<
           // const FIVE_MINUTES = 1000 * 60 * 5;
 
           const shouldAppend = shouldAppendPrice(range, diff);
+          const lastVolume = lastPrice[2] || 0;
+
           if (shouldAppend) {
             // console.log("ts: appending", new Date(eventTime), price);
             // const rounded = timeMinute(add(now, { seconds: 0 })).getTime();
 
             // current.push([now, price]);
-            current.push([now, price]);
+            current.push([now, price, lastVolume]);
             current.shift();
           } else {
             // console.log("ts: replacing", now, price);
-            current[current.length - 1] = [now, price];
+            current[current.length - 1] = [now, price, lastVolume];
           }
 
           draft.prices = current;
@@ -316,6 +318,9 @@ export const openPriceSocket = createAsyncThunk<
         const state = getState() as RootState;
         if (newPrice !== state.price.btcPrice) {
           dispatch(setPrice(newPrice));
+          // cant use the volume from binance because its in usdt
+          // whereas the volume in db is from coingeck and is usd.
+          // const volume = parseFloat(data.q);
           dispatch(updatePricing({ price: newPrice, eventTime: data.E }));
         }
       }
