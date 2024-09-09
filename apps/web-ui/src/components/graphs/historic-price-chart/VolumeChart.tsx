@@ -55,7 +55,7 @@ export const VolumeChart = (props: IVolumeChart) => {
         .attr("class", "bar")
         .attr("x", (_, i) => xScale(i.toString())!)
         .attr("y", (d, i) => {
-          const priceChange = i === 0 ? 0 : d[1] - data[0][1];
+          const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           return priceChange >= 0 ? yScale(d[2]) : yScale(0);
         })
         .attr("width", xScale.bandwidth())
