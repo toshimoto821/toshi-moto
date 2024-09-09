@@ -357,7 +357,7 @@ export const openPriceSocket = createAsyncThunk<
           // whereas the volume in db is from coingeck and is usd.
           // @todo need to change the stream type when the chart type changes
           // so that i can listen to the kline stream and get the volume accurately
-          const volume = parseFloat(data.k.v);
+          const volume = parseFloat(data.k.q);
           // console.log("volume", volume);
           // console.log("range", data.k.i);
           // console.log("volume", volume);
