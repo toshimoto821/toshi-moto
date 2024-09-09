@@ -173,7 +173,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           "opacity-50": btcPrices.loading,
         })}
       >
-        <VolumeChart height={80} width={width} />
+        <VolumeChart height={120} width={width} />
       </div>
       <div>
         <ChartLegend

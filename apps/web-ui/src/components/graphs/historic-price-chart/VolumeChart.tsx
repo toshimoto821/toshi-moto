@@ -29,8 +29,10 @@ export const VolumeChart = (props: IVolumeChart) => {
   const yExtent = [min(data.map((d) => d[2])), max(data.map((d) => d[2]))];
 
   const yScale = scaleLinear()
-    .domain([-yExtent[1]!, yExtent[1]!])
+    .domain([yExtent[0]!, yExtent[1]!])
     .range([height, 0]);
+  // .domain([-yExtent[1]!, yExtent[1]!])
+  // .range([height, 0]);
 
   // const yScale = scaleLinear()
   //   .domain([yExtent[0] || 0, yExtent[1] || 0])
@@ -54,16 +56,25 @@ export const VolumeChart = (props: IVolumeChart) => {
         .append("rect")
         .attr("class", "bar")
         .attr("x", (_, i) => xScale(i.toString())!)
-        .attr("y", (d, i) => {
-          const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
-          return priceChange >= 0 ? yScale(d[2]) : yScale(0);
+        .attr("y", (d) => {
+          // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
+          // return priceChange >= 0 ? yScale(d[2]) : yScale(0);
+
+          return yScale(d[2]);
         })
         .attr("width", xScale.bandwidth())
         .attr("height", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           return Math.abs(yScale(d[2]) - yScale(0));
         })
-        .attr("fill", "rgba(209, 213, 219, 0.9)");
+        .attr("fill", (d, i) => {
+          const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
+          return priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
+        })
+        .attr("stroke", (d, i) => {
+          const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
+          return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
+        });
 
       // svg
       //   .append("text")
