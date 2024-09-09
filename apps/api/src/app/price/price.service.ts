@@ -231,6 +231,7 @@ export class PriceService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         lowPrice,
         closePrice,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         vol,
         closeTime,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -246,7 +247,7 @@ export class PriceService {
       ] = d;
       return {
         price: parseFloat(closePrice),
-        volume: parseFloat(vol),
+        volume: parseFloat(quoteAssetVolume),
         timestamp: new Date(closeTime + 1),
         openTime: new Date(openTime),
         closeTime: new Date(closeTime),
