@@ -1,4 +1,11 @@
 # API Changelog
+## [1.6.5](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.4...api-1.6.5) (2024-09-10)
+
+
+### Bug Fixes
+
+* chart vol fixes ([30261c0](https://github.com/toshimoto821/toshi-moto/commit/30261c031b1bea71d98ff9b41b0422eac4ae8476))
+
 ## [1.6.4](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.3...api-1.6.4) (2024-09-09)
 
 
