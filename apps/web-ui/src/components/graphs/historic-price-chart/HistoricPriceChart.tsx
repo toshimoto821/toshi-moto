@@ -114,7 +114,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleReset = () => {
-    console.log("reset");
     // this causes build issues when i dont assign a var first, dont know why
     // perhaps bundle issue?
     // const action = setRange({
