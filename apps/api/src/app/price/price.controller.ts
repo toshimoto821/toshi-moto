@@ -30,10 +30,11 @@ export type IRangeDiffResponse = {
 
 type ISimplePriceResponse<T extends string> = {
   bitcoin: {
-    // last_updated_at: number;
     [key in T]: number;
   } & {
     [key in `${T}_24_hour_vol`]: number;
+  } & {
+    last_updated_at: number;
   };
 };
 
@@ -62,7 +63,7 @@ export class PriceController {
   }
 
   @Get("range")
-  @Header("Cache-Control", "public, max-age=5")
+  @Header("Cache-Control", "public, max-age=300")
   async findRange(@Query() query: RangeQueryDto): Promise<IRangeResponse> {
     const from = query.from * 1000;
     const to = query.to * 1000;
@@ -155,7 +156,7 @@ export class PriceController {
     monthAgo.setMinutes(0);
 
     await this.priceService.importFromBinance();
-    await this.priceService.importFromBinance(monthAgo.getTime(), "5m");
+    await this.priceService.importFromBinance(monthAgo.getTime(), "30m");
 
     return { ok: true };
   }
@@ -163,13 +164,15 @@ export class PriceController {
   @Get("simple")
   @Header("Cache-Control", "public, max-age=300")
   // @todo make usd dynamic
-  async simple(
-    @Query() query: SimplePriceDto
-  ): Promise<ISimplePriceResponse<"usd">> {
-    const currency = query.vs_currencies;
-    const response: ISimplePriceResponse<"usd"> =
-      await this.priceService.simplePrice(currency);
-    return response;
+  async simple(): Promise<ISimplePriceResponse<"usd">> {
+    const response = await this.priceService.simplePrice();
+    return {
+      bitcoin: {
+        last_updated_at: Date.now(),
+        usd: parseFloat(response.lastPrice),
+        usd_24_hour_vol: parseFloat(response.quoteVolume),
+      },
+    };
   }
 
   @Get("one-day-ago")
