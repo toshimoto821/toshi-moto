@@ -42,7 +42,6 @@ export const Root = () => {
 
   useEffect(() => {
     if (!VITE_PRICING_STREAM_DISABLED) {
-      console.log("sf");
       visibilitychange();
       document.addEventListener("visibilitychange", visibilitychange);
     }
