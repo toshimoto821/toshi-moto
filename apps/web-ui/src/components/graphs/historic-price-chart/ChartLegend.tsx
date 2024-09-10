@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useEffect, useMemo, useState } from "react";
 import * as d3 from "d3";
-import { type BrushSelection } from "d3";
+import { type BrushSelection, scaleBand } from "d3";
 import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { cn } from "@root/lib/utils";
@@ -29,9 +29,9 @@ export const ChartLegend = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
     top: 70,
-    right: 0,
+    right: -1,
     bottom: 10,
-    left: 0,
+    left: -1,
   };
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
@@ -152,8 +152,14 @@ export const ChartLegend = ({
       }
     });
 
+  const xScale = scaleBand()
+    // prices = [date, price, volume]
+    .domain((cachedPrices || []).map((_, i) => i.toString()))
+    .range([margin.left, width - margin.right])
+    .padding(0.1);
+
   const xAxis = (g: any) => {
-    const ticks = x.ticks(80);
+    // const ticks = (cachedPrices || []).map((d) => d[0]);
     const tickFormat =
       chartTimeFrameRange === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
@@ -162,14 +168,17 @@ export const ChartLegend = ({
         : d3.timeFormat("%b %d, %Y");
 
     const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
+
+    // el.selectAll("*").remove();
+    el.attr("data-range-type", chartTimeFrameRange);
     el.call(
       //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
       d3
-        .axisBottom(x)
-        .tickValues(ticks)
+        .axisBottom(xScale)
+        // .tickValues(ticks)
         // @ts-expect-error d3 issues
-        .tickFormat(tickFormat) // Format the tick labels as needed
-      // .tickSizeOuter(0)
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i][0]))) // Format the tick labels as needed
+        .tickSizeOuter(0)
     )
       .call((g: any) => {
         g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
@@ -185,40 +194,62 @@ export const ChartLegend = ({
       }) // Select the parent of each text element, which is the g element of the tick
       .select("line") // Select the line of each tick
       .attr("opacity", 0.5)
-      .attr("stroke-width", 1);
+      .attr("stroke-width", 1)
+      .style("font-size", "12px") // Ensure consistent font size
+      .style("font-family", "Arial, sans-serif") // Ensure consistent font family
+      .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`); // Shift ticks to the left by half the bar width
 
     g.selectAll("text")
+      .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`) // Shift ticks to the left by half the bar width
       .attr("display", "")
       .filter((_: any, i: number) => {
-        if (chartTimeFrameRange === "1D") {
+        if (range === "1D") {
           return i % 8 !== 0;
         }
 
-        if (chartTimeFrameRange === "2Y") {
+        if (range === "1W") {
           return i % 8 !== 0;
         }
 
-        return i % 6 !== 0;
+        if (range === "1M") {
+          return i % 8 !== 0;
+        }
+
+        if (range === "1Y") {
+          return i % 8 !== 0;
+        }
+
+        if (range === "2Y") {
+          return i % 8 !== 0;
+        }
+
+        if (range === "5Y") {
+          return i % 12 !== 0;
+        }
+
+        return i % 4 !== 0;
       }) // Filter out every other text node
       .attr("display", "none");
 
     g.selectAll(".tick line")
       .filter((_: any, i: number) => i % 4 === 0)
       .attr("y2", 10);
+
+    g.selectAll(".tick line")
+      .filter((_: any, i: number) => i % 4 != 0)
+      .attr("opacity", 0.25);
   };
 
   const xAxisMobile = (g: any) => {
     const ticks = x.ticks(40);
     const tickFormat =
-      chartTimeFrameRange === "1D"
+      range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
-        : chartTimeFrameRange === "1W"
+        : range === "1W"
         ? d3.timeFormat("%b %d, %I:%M %p")
-        : chartTimeFrameRange === "1M"
+        : range === "1M"
         ? d3.timeFormat("%b %d, %Y")
-        : chartTimeFrameRange == "3M" ||
-          chartTimeFrameRange == "1Y" ||
-          chartTimeFrameRange == "5Y"
+        : range == "3M" || range == "1Y" || range == "5Y"
         ? d3.timeFormat("%b %d, %Y")
         : d3.timeFormat("%b %d, %y");
 
@@ -252,7 +283,7 @@ export const ChartLegend = ({
     nodes
       .attr("display", "")
       .filter((_: any, i: number) => {
-        if (chartTimeFrameRange === "1M" || chartTimeFrameRange === "2Y") {
+        if (range === "1M" || range === "2Y") {
           return i % 6 !== 0;
         }
 
@@ -359,7 +390,7 @@ export const ChartLegend = ({
 
   return (
     <div
-      className={cn("mx-4", {
+      className={cn("", {
         "opacity-60": !!forecastModel,
       })}
     >
@@ -367,9 +398,11 @@ export const ChartLegend = ({
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "100%",
+          maxWidth: "calc(100% - 40px)",
           height: "auto",
           fontSize: 10,
+          marginLeft: "20px",
+          marginRight: "20px",
         }}
         width={width}
         className="bg-white border rounded drop-shadow-lg"

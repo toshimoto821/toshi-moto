@@ -37,4 +37,15 @@ export type GraphTimeFrameRange =
   | "2Y"
   | "5Y";
 
-export type GroupBy = "5M" | "1H" | "1D" | "1W";
+export type GroupBy =
+  | "5m"
+  | "15m"
+  | "1h"
+  | "2h"
+  | "4h"
+  | "6h"
+  | "12h"
+  | "1d"
+  | "3d"
+  | "1w"
+  | "1M";

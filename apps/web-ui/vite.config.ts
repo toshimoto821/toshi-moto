@@ -34,6 +34,7 @@ export default defineConfig({
     alias: {
       "bitcoinjs-lib": "@toshimoto821/bitcoinjs",
       "@root": "/src",
+      "@constants": "/src/constants",
       "@components": "/src/components",
       "@lib": "/src/lib",
       "@machines": "/src/machines",

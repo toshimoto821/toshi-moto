@@ -12,7 +12,7 @@ export class RangeQueryDto {
   readonly vs_currency: string;
   readonly from: number;
   readonly to: number;
-  readonly group_by: "5M" | "1H" | "1D" | "1W";
+  readonly group_by: "15M" | "1H" | "2H" | "4H" | "1D" | "1W";
   readonly range: string;
 }
 

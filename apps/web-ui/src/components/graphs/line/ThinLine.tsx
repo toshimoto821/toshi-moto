@@ -2,10 +2,10 @@ import { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
-import type { IPlotData, IChartTimeframeGroups } from "@root/types";
+import type { IPlotData } from "@root/types";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
-
+import type { GroupBy } from "@root/lib/slices/ui.slice.types";
 // https://observablehq.com/@d3/bar-line-chart
 export type Plot = {
   x: number;
@@ -23,7 +23,7 @@ export type ILine = {
   // to show the net value of wallets set to true (y1)
   // otherwise the btcPrice (y2) is graphed
   graphAssetValue: boolean;
-  chartTimeframeGroup: IChartTimeframeGroups;
+  chartTimeframeGroup: GroupBy;
   showBtcAllocation: boolean;
   btcPrice: number;
 };
@@ -105,9 +105,9 @@ export const ThinLine = (props: ILine) => {
   const xAxis = (g: any) => {
     const ticks = x.ticks(5);
     const tickFormat =
-      chartTimeframeGroup === "5M"
+      chartTimeframeGroup === "15m"
         ? d3.timeFormat("%I:%M %p")
-        : chartTimeframeGroup === "1H"
+        : chartTimeframeGroup === "4h"
         ? d3.timeFormat("%b %d")
         : d3.timeFormat("%b %y");
 

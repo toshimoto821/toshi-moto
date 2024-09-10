@@ -9,7 +9,15 @@ import { timeDay, timeHour, timeMinute } from "d3";
 import type { UIState, GroupBy, GraphTimeFrameRange } from "./ui.slice.types";
 import { type RootState } from "../store";
 import { API_REQUEST_REJECTED } from "./api.slice";
-
+import {
+  FIVE_YEAR_GROUP_BY,
+  ONE_MONTH_GROUP_BY,
+  ONE_WEEK_GROUP_BY,
+  ONE_YEAR_GROUP_BY,
+  THREE_MONTH_GROUP_BY,
+  ONE_DAY_GROUP_BY,
+  TWO_YEAR_GROUP_BY,
+} from "@constants/chart.constants";
 export const defaultGraphStartDate = timeDay(
   sub(new Date(), { years: 5 })
 ).getTime();
@@ -23,7 +31,7 @@ const initialState: UIState = {
   debugMode: false,
   filterUtxoOnly: [],
   graphTimeFrameRange: "5Y",
-  graphTimeFrameGroup: "1W",
+  graphTimeFrameGroup: "1w",
   previousGraphTimeFrameRange: null,
   graphStartDate: defaultGraphStartDate,
   graphStartDateNext: null,
@@ -159,33 +167,37 @@ export const setGraphByRange = (
   // default to 5 years;
   let startDate = timeDay(sub(now, { years: 5 })).getTime();
   const endDate = timeHour(oneHourFromNow).getTime();
-  let graphTimeFrameGroup: GroupBy = "1W";
+  let graphTimeFrameGroup: GroupBy = FIVE_YEAR_GROUP_BY;
   let graphTimeFrameRange: GraphTimeFrameRange = "5Y";
 
   if (range === "1D") {
     startDate = timeMinute(sub(now, { days: 1 })).getTime();
-    graphTimeFrameGroup = "5M";
+    graphTimeFrameGroup = ONE_DAY_GROUP_BY;
     graphTimeFrameRange = "1D";
   } else if (range === "1W") {
     startDate = timeHour(sub(now, { days: 7 })).getTime();
-    graphTimeFrameGroup = "1H";
+    graphTimeFrameGroup = ONE_WEEK_GROUP_BY;
     graphTimeFrameRange = "1W";
   } else if (range === "1M") {
     startDate = timeHour(sub(now, { months: 1 })).getTime();
-    graphTimeFrameGroup = "1H";
+    graphTimeFrameGroup = ONE_MONTH_GROUP_BY;
     graphTimeFrameRange = "1M";
   } else if (range === "3M") {
     startDate = timeHour(sub(now, { months: 3 })).getTime();
-    graphTimeFrameGroup = "1D";
+    graphTimeFrameGroup = THREE_MONTH_GROUP_BY;
     graphTimeFrameRange = "3M";
   } else if (range === "1Y") {
     startDate = timeDay(sub(now, { years: 1 })).getTime();
-    graphTimeFrameGroup = "1D";
+    graphTimeFrameGroup = ONE_YEAR_GROUP_BY;
     graphTimeFrameRange = "1Y";
   } else if (range === "2Y") {
     startDate = timeDay(sub(now, { years: 2 })).getTime();
-    graphTimeFrameGroup = "1W";
+    graphTimeFrameGroup = ONE_YEAR_GROUP_BY;
     graphTimeFrameRange = "2Y";
+  } else if (range === "5Y") {
+    startDate = timeDay(sub(now, { years: 5 })).getTime();
+    graphTimeFrameGroup = FIVE_YEAR_GROUP_BY;
+    graphTimeFrameRange = "5Y";
   }
   return {
     type: setUI.type,
@@ -205,15 +217,19 @@ export const chartByDateRangeAction = (
   const diff = end - start;
   const diffInDays = diff / (1000 * 60 * 60 * 24);
 
-  let graphTimeFrameGroup: GroupBy = "1D";
+  let graphTimeFrameGroup: GroupBy = ONE_DAY_GROUP_BY;
   if (diffInDays < 2) {
-    graphTimeFrameGroup = "5M";
+    graphTimeFrameGroup = ONE_DAY_GROUP_BY;
   } else if (diffInDays < 8) {
-    graphTimeFrameGroup = "1H";
+    graphTimeFrameGroup = ONE_WEEK_GROUP_BY;
   } else if (diffInDays < 31) {
-    graphTimeFrameGroup = "1H";
+    graphTimeFrameGroup = ONE_MONTH_GROUP_BY;
   } else if (diffInDays < 365) {
-    graphTimeFrameGroup = "1D";
+    graphTimeFrameGroup = ONE_YEAR_GROUP_BY;
+  } else if (diffInDays < 730) {
+    graphTimeFrameGroup = TWO_YEAR_GROUP_BY;
+  } else {
+    graphTimeFrameGroup = FIVE_YEAR_GROUP_BY;
   }
 
   return {
@@ -238,18 +254,22 @@ export const selectGroupByHistoric = createSelector(
   (state: RootState) => state.ui.graphTimeFrameRange,
   (state: RootState) => state.ui.previousGraphTimeFrameRange,
   (currentRange, previousRange) => {
-    const range = previousRange || currentRange;
+    const range = currentRange || previousRange;
     let groupBy: GroupBy | null = null;
     if (range === "1D") {
-      groupBy = "5M";
-    } else if (range === "1W" || range === "1M") {
-      groupBy = "1H";
-    } else if (range === "3M" || range === "1Y") {
-      groupBy = "1D";
+      groupBy = ONE_DAY_GROUP_BY;
+    } else if (range === "1W") {
+      groupBy = ONE_WEEK_GROUP_BY;
+    } else if (range === "1M") {
+      groupBy = ONE_MONTH_GROUP_BY;
+    } else if (range === "3M") {
+      groupBy = THREE_MONTH_GROUP_BY;
+    } else if (range === "1Y") {
+      groupBy = ONE_YEAR_GROUP_BY;
     } else if (range === "2Y" || range === "5Y") {
-      groupBy = "1W";
+      groupBy = FIVE_YEAR_GROUP_BY;
     } else {
-      groupBy = "1W";
+      groupBy = "1w";
       console.error("unknown range", range);
     }
 
