@@ -27,6 +27,7 @@ export function selectOrAppend<
   options?: SelectOrAppendOptions
 ): Selection<GElement, PDatum, any, any> {
   let selection = parent.select<GElement>(selector);
+
   if (selection.empty()) {
     if (options?.prepend) {
       selection = parent.insert<GElement>(tag, ":first-child");

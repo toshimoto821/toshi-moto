@@ -87,11 +87,17 @@ export const getGroupKey = (groupBy: GroupBy) => {
       key += `-${d.getHours()}`;
     }
 
-    if (groupBy === "15m" || groupBy === "5m") {
-      // round to every 5 minutes
+    if (groupBy === "5m") {
+      // round down to the nearest 5 minutes
       const minutes = d.getMinutes();
-      const roundedMinutes =
-        minutes % 30 === 0 ? minutes : minutes + (30 - (minutes % 30));
+      const roundedMinutes = Math.floor(minutes / 5) * 5;
+      key += `-${roundedMinutes}`;
+    }
+
+    if (groupBy === "15m") {
+      // round down to the nearest 15 minutes
+      const minutes = d.getMinutes();
+      const roundedMinutes = Math.floor(minutes / 15) * 15;
       key += `-${roundedMinutes}`;
     }
 
