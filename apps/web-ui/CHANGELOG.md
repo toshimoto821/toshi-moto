@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.16.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.5...web-ui-1.16.6) (2024-09-09)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/c34ef19315c7c0c258d0c9a767f3be47b91ebe95/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/c34ef19315c7c0c258d0c9a767f3be47b91ebe95/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* volume chart city look ([b83ba20](https://github.com/toshimoto821/toshi-moto/commit/b83ba204d2419a317a1ad1981f15f55cad189c11))
+
 ## [1.16.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.4...web-ui-1.16.5) (2024-09-09)
 
   |    |    |
