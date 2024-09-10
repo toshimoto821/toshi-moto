@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "API Backend for Toshi Moto",
   "scripts": {
     "tsc": "tsc",
