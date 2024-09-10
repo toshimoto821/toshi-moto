@@ -25,6 +25,7 @@
       "bitcoinjs-lib": ["@toshimoto821/bitcoinjs"],
       "@root/*": ["src/*"],
       "@components/*": ["src/components/*"],
+      "@constants/*": ["src/constants/*"],
       "@lib/*": ["src/lib/*"],
       "@models/*": ["src/models/*"],
       "@machines/*": ["src/machines/*"],

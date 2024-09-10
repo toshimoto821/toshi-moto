@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import type { StackedBar } from "./line/Line";
-import type { IChartTimeframeGroups, IChartTimeFrameRange } from "@root/types";
+import type { IChartTimeFrameRange } from "@root/types";
 import { GraphTimeFrameRange, GroupBy } from "@lib/slices/ui.slice.types";
 let count = 0;
 
@@ -21,33 +21,48 @@ export function uid(name: string) {
   return new Id("O-" + (name == null ? "" : name + "-") + ++count);
 }
 
-export const addTime = (
-  groupBy: IChartTimeframeGroups | GroupBy,
-  date: Date
-) => {
+export const addTime = (groupBy: GroupBy, date: Date) => {
   const d = new Date(date.getTime());
 
   switch (groupBy) {
-    case "5M": {
+    case "5m": {
       const minutes = d.getMinutes();
       const remainder = minutes % 5;
       const increment = remainder === 0 ? 0 : 5 - remainder;
       d.setMinutes(minutes + increment);
       return d;
     }
-    case "1H": {
+    case "15m": {
+      const minutes = d.getMinutes();
+      const remainder = minutes % 15;
+      const increment = remainder === 0 ? 0 : 15 - remainder;
+      d.setMinutes(minutes + increment);
+      return d;
+    }
+    case "2h": {
       const minutes = d.getMinutes();
       if (minutes !== 0) {
-        d.setHours(d.getHours() + 1);
+        d.setHours(d.getHours() + 2);
         d.setMinutes(0);
       }
       return d;
     }
-    case "1D":
+    case "4h": {
+      const minutes = d.getMinutes();
+      if (minutes !== 0) {
+        d.setHours(d.getHours() + 4);
+        d.setMinutes(0);
+      }
+      return d;
+    }
+    case "1d":
       d.setDate(d.getDate() + 1);
       return d;
-    case "1W":
+    case "1w":
       d.setDate(d.getDate() + 7);
+      return d;
+    case "1M":
+      d.setDate(d.getDate() + 30);
       return d;
     default:
       return date;
@@ -55,21 +70,28 @@ export const addTime = (
   }
 };
 
-export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
-  const toString = (d: Date, groupBy: IChartTimeframeGroups) => {
+export const getGroupKey = (groupBy: GroupBy) => {
+  const toString = (d: Date, groupBy: GroupBy) => {
     const year = d.getFullYear();
     const month = (d.getMonth() + 1).toString().padStart(2, "0");
     const day = d.getDate().toString().padStart(2, "0");
     let key = `${year}-${month}-${day}`;
-    if (groupBy === "1H" || groupBy === "5M") {
+    if (
+      groupBy === "12h" ||
+      groupBy === "2h" ||
+      groupBy === "4h" ||
+      groupBy === "6h" ||
+      groupBy === "15m" ||
+      groupBy === "5m"
+    ) {
       key += `-${d.getHours()}`;
     }
 
-    if (groupBy === "5M") {
+    if (groupBy === "15m" || groupBy === "5m") {
       // round to every 5 minutes
       const minutes = d.getMinutes();
       const roundedMinutes =
-        minutes % 5 === 0 ? minutes : minutes + (5 - (minutes % 5));
+        minutes % 30 === 0 ? minutes : minutes + (30 - (minutes % 30));
       key += `-${roundedMinutes}`;
     }
 
@@ -77,7 +99,7 @@ export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
   };
 
   switch (groupBy) {
-    case "5M":
+    case "5m":
       return (d: Date) => {
         // //round up the second to minute
         // if (d.getSeconds() >= 30) {
@@ -85,15 +107,37 @@ export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
         // }
         return toString(d3.timeMinute(d), groupBy);
       };
-    case "1H":
+    case "15m":
+      return (d: Date) => {
+        // //round up the second to minute
+        // if (d.getSeconds() >= 30) {
+        //   d.setMinutes(d.getMinutes() + 1);
+        // }
+        return toString(d3.timeMinute(d), groupBy);
+      };
+    case "2h":
       return (d: Date) => {
         return toString(d3.timeHour(d), groupBy);
       };
-    case "1D":
+    case "4h":
+      return (d: Date) => {
+        return toString(d3.timeHour(d), groupBy);
+      };
+
+    case "6h":
+      return (d: Date) => {
+        return toString(d3.timeHour(d), groupBy);
+      };
+
+    case "12h":
+      return (d: Date) => {
+        return toString(d3.timeHour(d), groupBy);
+      };
+    case "1d":
       return (d: Date) => {
         return toString(d3.timeDay(d), groupBy);
       };
-    case "1W":
+    case "1w":
       return (d: Date) => {
         return toString(d3.timeWeek(d), groupBy);
       };
@@ -111,10 +155,7 @@ export const getGroupKey = (groupBy: IChartTimeframeGroups | GroupBy) => {
 const fader = (color: string) => d3.interpolateRgb(color, "#fff")(0.5);
 export const colorScale = d3.scaleOrdinal(d3.schemeCategory10.map(fader));
 
-export function getMaxForStackedBar(
-  data: StackedBar[],
-  groupBy: IChartTimeframeGroups
-) {
+export function getMaxForStackedBar(data: StackedBar[], groupBy: GroupBy) {
   const groups = data
     .filter((d) => d.visible)
     .reduce((acc, item) => {
@@ -181,20 +222,20 @@ export const getRangeFromTime = (time: number): GraphTimeFrameRange => {
 export const getDatesForChartGroup = (
   start: Date,
   end: Date,
-  range: IChartTimeframeGroups | GroupBy,
+  range: GroupBy,
   nextDate: Date
 ) => {
   // @todo need to account for weekly and monthly
   // but graph doesn not group larger than by dat right now
 
-  if (range === "1D") {
+  if (range === "1d") {
     return {
       start: d3.timeDay(start),
       end: d3.timeDay(end),
     };
   }
 
-  if (range === "1H") {
+  if (range === "4h") {
     if (nextDate) {
       // last element wont be there
       const diff = nextDate.getTime() - end.getTime();
@@ -222,7 +263,7 @@ type IGenerateRandomPriceSeries = {
   initialPrice: number;
   bullishFactor?: number;
   bearishFactor?: number;
-  gap: "5M" | "1H" | "1D" | "1W";
+  gap: "15M" | "1H" | "2H" | "4H" | "6H" | "12H" | "1D" | "1W";
   startDate: number;
   endDate: number;
 };
@@ -236,10 +277,14 @@ export function generateRandomPriceSeries({
   endDate,
 }: IGenerateRandomPriceSeries): [number, number, number][] {
   let timeDifference;
-  if (gap === "5M") {
-    timeDifference = 5 * 60 * 1000;
-  } else if (gap === "1H") {
-    timeDifference = 60 * 60 * 1000;
+  if (gap === "15M") {
+    timeDifference = 15 * 60 * 1000;
+  } else if (gap === "2H") {
+    timeDifference = 2 * 60 * 60 * 1000;
+  } else if (gap === "4H") {
+    timeDifference = 4 * 60 * 60 * 1000;
+  } else if (gap === "6H") {
+    timeDifference = 4 * 60 * 60 * 1000;
   } else if (gap === "1D") {
     timeDifference = 24 * 60 * 60 * 1000;
   } else {

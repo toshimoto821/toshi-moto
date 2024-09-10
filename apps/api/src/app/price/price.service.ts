@@ -22,7 +22,25 @@ type IFindRange = {
   currency: string;
   from: number;
   to: number;
-  groupBy: "5M" | "1H" | "1D" | "1W";
+  groupBy: "15M" | "1H" | "2H" | "4H" | "12H" | "1D" | "1W";
+};
+
+type BinanceTradingDayResponse = {
+  symbol: string;
+  priceChange: string;
+  priceChangePercent: string;
+  weightedAvgPrice: string;
+  openPrice: string;
+  highPrice: string;
+  lowPrice: string;
+  lastPrice: string;
+  volume: string;
+  quoteVolume: string;
+  openTime: number;
+  closeTime: number;
+  firstId: number;
+  lastId: number;
+  count: number;
 };
 
 type IGroupByDate = {
@@ -46,7 +64,7 @@ type IGroupByDate = {
       minute?: {
         $subtract: [
           { $minute: "$timestamp" },
-          { $mod: [{ $minute: "$timestamp" }, 5] }
+          { $mod: [{ $minute: "$timestamp" }, 30] }
         ];
       };
     };
@@ -216,7 +234,7 @@ export class PriceService {
 
   async findRangeFromBinance(opts: IFindRange) {
     const { from, to, groupBy } = opts;
-    const url = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${groupBy.toLowerCase()}&limit=1000&startTime=${from}&endTime=${to}`;
+    const url = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${groupBy}&limit=1000&startTime=${from}&endTime=${to}`;
     console.log(url);
     const response = await axios.get(url);
     const data = response.data;
@@ -295,7 +313,7 @@ export class PriceService {
       day: "$_id.day",
     };
     timestamp.$dateFromParts = $dateFromParts;
-    if (opts.groupBy === "1H") {
+    if (opts.groupBy === "4H") {
       groupBy = {
         $group: {
           _id: {
@@ -321,7 +339,7 @@ export class PriceService {
         },
       };
       $dateFromParts.hour = "$_id.hour";
-    } else if (opts.groupBy === "5M") {
+    } else if (opts.groupBy === "15M") {
       groupBy = {
         $group: {
           _id: {
@@ -340,7 +358,7 @@ export class PriceService {
             minute: {
               $subtract: [
                 { $minute: "$timestamp" },
-                { $mod: [{ $minute: "$timestamp" }, 5] },
+                { $mod: [{ $minute: "$timestamp" }, 30] },
               ],
             },
           },
@@ -390,7 +408,7 @@ export class PriceService {
             $lte: new Date(opts.to),
           },
           interval:
-            opts.groupBy === "5M" || opts.groupBy === "1H" ? "5m" : "1d",
+            opts.groupBy === "15M" || opts.groupBy === "1H" ? "15m" : "1d",
         },
       },
       groupBy,
@@ -734,8 +752,9 @@ export class PriceService {
     return deletedPrice;
   }
 
-  async simplePrice(currency: string) {
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true&precision=2`;
+  async simplePrice(): Promise<BinanceTradingDayResponse> {
+    const url = `https://data-api.binance.vision/api/v3/ticker/tradingDay?symbol=BTCUSDT`;
+    //const url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currency}&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true&precision=2`;
     const response = await axios.get(url);
     // const {data} = response;
     // const { bitcoin } = data;
@@ -856,7 +875,7 @@ export class PriceService {
     return lastPrice;
   }
 
-  async fetchPriceFromBinance(endTime, interval = "5m") {
+  async fetchPriceFromBinance(endTime, interval = "15m") {
     try {
       // i have to limit 2 because if 1, it goes out into the future
       const url = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=2&endTime=${endTime}`;

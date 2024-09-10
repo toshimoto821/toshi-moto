@@ -18,6 +18,16 @@ import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
 import type { PriceHistoricArgs } from "./api.slice.types";
+import {
+  FIVE_YEAR_GROUP_BY,
+  ONE_MONTH_GROUP_BY,
+  ONE_WEEK_GROUP_BY,
+  ONE_YEAR_GROUP_BY,
+  THREE_MONTH_GROUP_BY,
+  TWO_YEAR_GROUP_BY,
+} from "@constants/chart.constants";
+const VITE_PRICING_STREAM_DISABLED = import.meta.env
+  .VITE_PRICING_STREAM_DISABLED;
 
 interface PriceState {
   btcPrice: number;
@@ -281,6 +291,10 @@ export const openPriceSocket = createAsyncThunk<
   OpenSocketProps,
   { dispatch: AppDispatch }
 >("price/openSocket", async (props, { dispatch, getState }) => {
+  if (VITE_PRICING_STREAM_DISABLED) {
+    return;
+  }
+
   const { retry = true, forceRange } = props;
   if (ws) {
     if (ws.readyState === WebSocket.CONNECTING) {
@@ -296,27 +310,31 @@ export const openPriceSocket = createAsyncThunk<
     state.ui.graphTimeFrameRange ||
     state.ui.previousGraphTimeFrameRange;
 
-  let interval = "5m";
+  let interval = "15m";
   switch (range) {
     case "1D":
-      interval = "5m";
+      interval = "15m";
       break;
     case "1W":
-      interval = "1h";
+      interval = ONE_WEEK_GROUP_BY;
       break;
     case "1M":
-      interval = "1h";
+      interval = ONE_MONTH_GROUP_BY;
       break;
     case "3M":
+      interval = THREE_MONTH_GROUP_BY;
+      break;
     case "1Y":
-      interval = "1d";
+      interval = ONE_YEAR_GROUP_BY;
       break;
     case "2Y":
+      interval = TWO_YEAR_GROUP_BY;
+      break;
     case "5Y":
-      interval = "1w";
+      interval = FIVE_YEAR_GROUP_BY;
       break;
     default:
-      interval = "5m";
+      interval = "15m";
   }
   ws = new WebSocket(
     `wss://data-stream.binance.vision:9443/ws/btcusdt@kline_${interval}`
@@ -384,11 +402,11 @@ export const shouldBeLive = (range: GraphTimeFrameRange, diff: number) => {
     case "1W":
       return diff <= HOURLY * 2;
     case "1M":
-      return diff <= HOURLY * 2;
+      return diff <= HOURLY * 24;
     case "3M":
       return diff <= DAILY;
     case "1Y":
-      return diff <= DAILY;
+      return diff <= DAILY * 3;
     case "2Y":
       return diff <= WEEKLY;
     case "5Y":
@@ -401,6 +419,7 @@ export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
   const HOURLY = 1000 * 60 * 60;
   const DAILY = 1000 * 60 * 60 * 24;
   const WEEKLY = DAILY * 7;
+  const MONTHLY = DAILY * 30;
 
   switch (range) {
     case "1D":
@@ -408,15 +427,15 @@ export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
     case "1W":
       return diff >= HOURLY;
     case "1M":
-      return diff >= HOURLY;
+      return diff >= HOURLY * 12;
     case "3M":
       return diff >= DAILY;
     case "1Y":
-      return diff >= DAILY;
+      return diff >= DAILY * 3;
     case "2Y":
       return diff >= WEEKLY;
     case "5Y":
-      return diff >= WEEKLY;
+      return diff >= MONTHLY;
   }
 };
 

@@ -33,6 +33,7 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
       buzzBuzz();
       dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
       dispatch(setGraphByRange(timeframe));
+
       dispatch(openPriceSocket({ retry: false, forceRange: timeframe }));
     };
   };
