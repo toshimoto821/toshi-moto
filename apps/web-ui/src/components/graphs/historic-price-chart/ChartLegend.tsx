@@ -241,7 +241,7 @@ export const ChartLegend = ({
   };
 
   const xAxisMobile = (g: any) => {
-    const ticks = x.ticks(40);
+    // const ticks = x.ticks(40);
     const tickFormat =
       range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
@@ -257,10 +257,13 @@ export const ChartLegend = ({
     el.call(
       //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
       d3
-        .axisBottom(x)
-        .tickValues(ticks)
+        .axisBottom(xScale)
+
+        // .tickValues(ticks)
         // @ts-expect-error d3 issues
-        .tickFormat(tickFormat) // Format the tick labels as needed
+
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i][0]))) // Format the tick labels as needed
+        .tickSizeOuter(0)
       // .tickSizeOuter(0)
     )
       .call((g: any) => {
@@ -283,11 +286,35 @@ export const ChartLegend = ({
     nodes
       .attr("display", "")
       .filter((_: any, i: number) => {
-        if (range === "1M" || range === "2Y") {
-          return i % 6 !== 0;
+        if (range === "1D") {
+          return i % 24 !== 0;
         }
 
-        return i % 12 !== 0;
+        if (range === "1W") {
+          return i % 24 !== 0;
+        }
+
+        if (range === "1M") {
+          return i % 24 !== 0;
+        }
+
+        if (range === "3M") {
+          return i % 24 !== 0;
+        }
+
+        if (range === "1Y") {
+          return i % 24 !== 0;
+        }
+
+        if (range === "2Y") {
+          return i % 24 !== 0;
+        }
+
+        if (range === "5Y") {
+          return i % 48 !== 0;
+        }
+
+        return i % 24 !== 0;
       }) // Filter out every other text node
       .attr("display", "none");
 

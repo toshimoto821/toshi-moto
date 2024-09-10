@@ -266,7 +266,9 @@ export const selectGroupByHistoric = createSelector(
       groupBy = THREE_MONTH_GROUP_BY;
     } else if (range === "1Y") {
       groupBy = ONE_YEAR_GROUP_BY;
-    } else if (range === "2Y" || range === "5Y") {
+    } else if (range === "2Y") {
+      groupBy = TWO_YEAR_GROUP_BY;
+    } else if (range === "5Y") {
       groupBy = FIVE_YEAR_GROUP_BY;
     } else {
       groupBy = "1w";
