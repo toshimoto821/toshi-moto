@@ -7,6 +7,8 @@ import { useSearchParams } from "react-router-dom";
 import { getSubscription } from "@components/settings/settings.util";
 import { useTestPushMutation } from "@root/lib/slices/api.slice";
 import { type PushSubscription } from "@root/lib/slices/api.slice.types";
+import { createFakeKline } from "@components/graphs/graph-utils";
+
 export const Debug = () => {
   const [, setTimestamp] = useState(0);
   const dispatch = useAppDispatch();
@@ -22,11 +24,10 @@ export const Debug = () => {
   const { btcPrice } = useBtcPrice();
   const fakeTick = () => {
     const price = btcPrice - 100;
+
     dispatch(
       updatePricing({
-        price,
-        eventTime: Date.now(),
-        volume: 8411324.3785577 * 10,
+        kline: createFakeKline(price, Date.now(), 8411324.3785577 * 10),
       })
     );
   };

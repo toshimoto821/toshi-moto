@@ -85,12 +85,15 @@ export const useChartData = (opts: IUseChartData) => {
 
   const dateToKeyFn = getGroupKey(graphTimeFrameGroup!);
   const last = prices[prices.length - 1];
-  const [lastTs] = last || [];
+  const lastTs = last ? new Date(last.closeTime).getTime() : null;
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
     return prices?.reduce((acc, curr) => {
-      const [date, price] = curr;
-      const ts = new Date(date);
+      const { closeTime, closePrice } = curr;
+      const date = new Date(closeTime).getTime();
+      const price = parseFloat(closePrice);
+      // const [date, price] = curr;
+      const ts = new Date(closeTime);
       // ts.setHours(0, 0, 0, 0);
 
       const key = dateToKeyFn(ts);
@@ -131,7 +134,7 @@ export const useChartData = (opts: IUseChartData) => {
     graphTimeFrameGroup,
     selectedTxs.length,
     // prices?.[0]?.[0], // if first date changes, update
-    prices?.[0]?.[1], // if first date changes, update
+    prices?.[0]?.closePrice, // if first date changes, update
     chartTimeDiffInDays,
     forecastModel,
     lastTs,

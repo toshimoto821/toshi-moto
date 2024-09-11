@@ -37,7 +37,7 @@ export const toTabularData = (request: APIRequestResponse) => {
     const prices = response.prices;
     if (prices.length) {
       for (const priceRow of prices) {
-        rows.push([priceRow[0] + "", priceRow[1] + ""]);
+        rows.push([priceRow.closeTime + "", priceRow.closePrice + ""]);
       }
     }
   }
