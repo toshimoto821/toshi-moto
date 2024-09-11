@@ -26,7 +26,19 @@ export const VolumeChart = (props: IVolumeChart) => {
   //   ])
   //   .range([height, 0]);
 
-  const yExtent = [min(data.map((d) => d[2])), max(data.map((d) => d[2]))];
+  const yExtent = [
+    min(
+      data.map((d) => {
+        const volume = parseFloat(d.quoteAssetVolume);
+        return volume;
+      })
+    ),
+    max(
+      data.map((d) => {
+        return parseFloat(d.quoteAssetVolume);
+      })
+    ),
+  ];
 
   const yScale = scaleLinear()
     .domain([yExtent[0]!, yExtent[1]!])
@@ -59,20 +71,28 @@ export const VolumeChart = (props: IVolumeChart) => {
         .attr("y", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           // return priceChange >= 0 ? yScale(d[2]) : yScale(0);
-
-          return yScale(d[2]);
+          const vol = parseFloat(d.quoteAssetVolume);
+          return yScale(vol);
         })
         .attr("width", xScale.bandwidth())
         .attr("height", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
-          return Math.abs(yScale(d[2]) - yScale(0));
+          const vol = parseFloat(d.quoteAssetVolume);
+          return Math.abs(yScale(vol) - yScale(0));
         })
         .attr("fill", (d, i) => {
-          const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
+          const price1 = parseFloat(d.closePrice);
+          const previous = data[i - 1];
+          const price2 = previous ? parseFloat(previous.closePrice) : 0;
+          const priceChange = i === 0 ? 0 : price1 - price2;
           return priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
         })
         .attr("stroke", (d, i) => {
-          const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
+          const price1 = parseFloat(d.closePrice);
+          const previous = data[i - 1];
+          const price2 = previous ? parseFloat(previous.closePrice) : 0;
+
+          const priceChange = i === 0 ? 0 : price1 - price2;
           return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
         });
 
@@ -89,7 +109,7 @@ export const VolumeChart = (props: IVolumeChart) => {
 
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, range, group, height, width, lastPrice[0]]);
+  }, [loading, range, group, height, width, lastPrice.closeTime]);
 
   return (
     <div>
