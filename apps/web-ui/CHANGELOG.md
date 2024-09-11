@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.16.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.8...web-ui-1.16.9) (2024-09-11)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/d0ea7d3cb1bf4607806ad5350ee0e62f5255bdb2/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/d0ea7d3cb1bf4607806ad5350ee0e62f5255bdb2/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* last price on chart ([64eec0e](https://github.com/toshimoto821/toshi-moto/commit/64eec0eb158a4bb45ec91ea54211d4facbd44404))
+
 ## [1.16.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.7...web-ui-1.16.8) (2024-09-10)
 
   |    |    |
