@@ -93,7 +93,19 @@ export const apiSlice = createApi({
     getHistoricPrice: builder.query<PriceHistoryResponse, PriceHistoricArgs>({
       query: (args) => {
         const { from, to, groupBy, currency = "usd", range = "" } = args;
-        return `/api/prices/range?vs_currency=${currency}&from=${from}&to=${to}&group_by=${groupBy}&range=${range}`;
+        return `/api/prices/kline?vs_currency=${currency}&from=${from}&to=${to}&group_by=${groupBy}&range=${range}`;
+      },
+      transformResponse: (response: PriceHistoryResponse) => {
+        return {
+          ...response,
+          prices: response.prices.map((price) => {
+            return {
+              ...price,
+              closeTime: price.closeTime,
+              openTime: price.openTime,
+            };
+          }),
+        };
       },
     }),
     getHistoricPriceDiff: builder.query<PriceHistoryDiffResponse, void>({

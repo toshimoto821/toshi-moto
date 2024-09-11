@@ -61,8 +61,12 @@ export const ChartLegend = ({
 
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
-    xDomain.push(new Date(cachedPrices[0][0]));
-    xDomain.push(new Date(cachedPrices[cachedPrices.length - 1][0]));
+    const firstPrice = cachedPrices[0];
+    const closeTime = firstPrice.closeTime;
+    xDomain.push(new Date(closeTime));
+    const lastPrice = cachedPrices[cachedPrices.length - 1];
+    const lastCloseTime = lastPrice.closeTime;
+    xDomain.push(new Date(lastCloseTime));
   }
 
   const xRange = [margin.left, width - margin.right];
@@ -177,7 +181,7 @@ export const ChartLegend = ({
         .axisBottom(xScale)
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
-        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i][0]))) // Format the tick labels as needed
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].closeTime))) // Format the tick labels as needed
         .tickSizeOuter(0)
     )
       .call((g: any) => {
@@ -262,7 +266,7 @@ export const ChartLegend = ({
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
 
-        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i][0]))) // Format the tick labels as needed
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].closeTime))) // Format the tick labels as needed
         .tickSizeOuter(0)
       // .tickSizeOuter(0)
     )

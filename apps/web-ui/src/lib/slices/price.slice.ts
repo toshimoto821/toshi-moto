@@ -17,7 +17,7 @@ import { uiSlice, roundUpToNearHour } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
-import type { PriceHistoricArgs } from "./api.slice.types";
+import type { BinanceKlineMetric, PriceHistoricArgs } from "./api.slice.types";
 import {
   FIVE_YEAR_GROUP_BY,
   ONE_MONTH_GROUP_BY,
@@ -36,7 +36,7 @@ interface PriceState {
   usd_24h_change: number;
   usd_24h_vol: number;
   circulatingSupply: number;
-  forecastPrices: IPrices;
+  forecastPrices: BinanceKlineMetric[];
   forecastModel: IForcastModelType | null;
   streamStatus: "CONNECTED" | "DISCONNECTED";
   streamPaused: boolean;
@@ -82,7 +82,7 @@ export const priceSlice = createSlice({
       state,
       action: PayloadAction<{
         forecastModel: IForcastModelType | null;
-        forecastPrices?: IPrices;
+        forecastPrices?: BinanceKlineMetric[];
       }>
     ) {
       state.forecastModel = action.payload.forecastModel;
@@ -128,7 +128,8 @@ export const priceSlice = createSlice({
 
         // const last = prices[prices.length - 1];
         if (first) {
-          const diff = state.btcPrice - first[1];
+          const curPrice = parseFloat(first.closePrice);
+          const diff = state.btcPrice - curPrice;
           state.priceDiffs = state.priceDiffs || {};
           state.priceDiffs[range] = diff;
         }
@@ -172,7 +173,7 @@ export const selectForecastPrice = createSelector(
   (state: RootState) => state.price.forecastPrices,
   (model, prices) => {
     if (model && prices.length) {
-      return prices[prices.length - 1][1];
+      return parseFloat(prices[prices.length - 1].closePrice);
     }
     return null;
   }
@@ -207,9 +208,9 @@ export const addPriceListener = (startAppListening: AppStartListening) => {
 
 export const updatePricing = createAsyncThunk<
   void,
-  { price: number; volume: number; eventTime: number },
+  { kline: BinanceKlineMetric },
   { dispatch: AppDispatch }
->("price/updatePricing", async ({ price, volume }, { dispatch, getState }) => {
+>("price/updatePricing", async ({ kline }, { dispatch, getState }) => {
   const state = getState() as RootState;
   const {
     graphStartDate,
@@ -249,7 +250,11 @@ export const updatePricing = createAsyncThunk<
           const current = [...draft.prices];
           const lastPrice = current[current.length - 1];
           const secondToLastPrice = current[current.length - 2];
-          const diff = lastPrice[0] - secondToLastPrice[0];
+          const lastPriceTs = new Date(lastPrice.closeTime).getTime();
+          const secondToLastPriceTs = new Date(
+            secondToLastPrice.closeTime
+          ).getTime();
+          const diff = lastPriceTs - secondToLastPriceTs;
           // console.log("lastPrice", new Date(lastPrice[0]), lastPrice[1]);
           // console.log(
           //   "secondToLastPrice",
@@ -265,11 +270,11 @@ export const updatePricing = createAsyncThunk<
             // const rounded = timeMinute(add(now, { seconds: 0 })).getTime();
 
             // current.push([now, price]);
-            current.push([now, price, volume]);
+            current.push(kline);
             current.shift();
           } else {
             // console.log("ts: replacing", now, price);
-            current[current.length - 1] = [now, price, volume];
+            current[current.length - 1] = kline;
           }
 
           draft.prices = current;
@@ -375,13 +380,24 @@ export const openPriceSocket = createAsyncThunk<
           // whereas the volume in db is from coingeck and is usd.
           // @todo need to change the stream type when the chart type changes
           // so that i can listen to the kline stream and get the volume accurately
-          const volume = parseFloat(data.k.q);
           // console.log("volume", volume);
           // console.log("range", data.k.i);
           // console.log("volume", volume);
-          dispatch(
-            updatePricing({ price: newPrice, eventTime: data.E, volume })
-          );
+          const kline: BinanceKlineMetric = {
+            closePrice: data.k.c,
+            closeTime: data.k.t,
+            highPrice: data.k.h,
+            lowPrice: data.k.l,
+            openPrice: data.k.o,
+            volume: data.k.v,
+            quoteAssetVolume: data.k.q,
+            numberOfTrades: data.k.n,
+            openTime: data.k.T,
+            takerBuyBaseAssetVolume: data.k.V,
+            takerBuyQuoteAssetVolume: data.k.Q,
+          };
+
+          dispatch(updatePricing({ kline }));
         }
       }
     };

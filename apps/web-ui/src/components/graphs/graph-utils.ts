@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import type { StackedBar } from "./line/Line";
 import type { IChartTimeFrameRange } from "@root/types";
 import { GraphTimeFrameRange, GroupBy } from "@lib/slices/ui.slice.types";
+import { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 let count = 0;
 
 class Id {
@@ -281,7 +282,7 @@ export function generateRandomPriceSeries({
   gap,
   startDate,
   endDate,
-}: IGenerateRandomPriceSeries): [number, number, number][] {
+}: IGenerateRandomPriceSeries): BinanceKlineMetric[] {
   let timeDifference;
   if (gap === "15M") {
     timeDifference = 15 * 60 * 1000;
@@ -299,15 +300,40 @@ export function generateRandomPriceSeries({
 
   const count = Math.floor((endDate - startDate) / timeDifference);
 
-  const prices = [[startDate, initialPrice, 0]] as [number, number, number][];
+  const prices = [
+    createFakeKline(initialPrice, startDate),
+  ] as BinanceKlineMetric[];
   let date = startDate;
   for (let i = 1; i < count; i++) {
     date += timeDifference;
     const movement = Math.random() * 2 - 1;
     const priceChange =
       movement > 0 ? bullishFactor * movement : bearishFactor * movement;
-    const vol = 0;
-    prices.push([date, prices[i - 1][1] * (1 + priceChange), vol]);
+
+    const previous = prices[i - 1];
+    const previousPrice = parseFloat(previous.closePrice);
+    prices.push(createFakeKline(previousPrice * (1 + priceChange), date));
+    // prices.push([date, prices[i - 1][1] * (1 + priceChange), vol]);
   }
   return prices;
+}
+
+export function createFakeKline(
+  price: number,
+  date: number,
+  volume: number = 0
+) {
+  return {
+    openTime: new Date(date),
+    openPrice: price + "",
+    highPrice: price + "",
+    lowPrice: price + "",
+    closePrice: price + "",
+    volume: volume + "",
+    closeTime: new Date(date),
+    quoteAssetVolume: "0.0",
+    numberOfTrades: 0,
+    takerBuyBaseAssetVolume: "0.0",
+    takerBuyQuoteAssetVolume: "0.0",
+  };
 }
