@@ -10,6 +10,20 @@ export interface PriceResponse {
   };
 }
 
+export interface BinanceKlineMetric {
+  openTime: number;
+  openPrice: string;
+  highPrice: string;
+  lowPrice: string;
+  closePrice: string;
+  volume: string;
+  closeTime: number;
+  quoteAssetVolume: string;
+  numberOfTrades: number;
+  takerBuyBaseAssetVolume: string;
+  takerBuyQuoteAssetVolume: string;
+}
+
 export interface PriceHistoryResponse {
   meta: {
     from: number;
@@ -17,7 +31,7 @@ export interface PriceHistoryResponse {
     groupBy: GroupBy;
     range: GraphTimeFrameRange | null;
   };
-  prices: [number, number, number][];
+  prices: BinanceKlineMetric[];
 }
 
 export interface PriceHistoryDiffResponse {

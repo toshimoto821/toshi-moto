@@ -30,8 +30,10 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
     // for now just leaving the forcast to be based
     // off the current time range.
     // handleUpdateTimeframe("5Y")();
-    const firstDate = prices[0][0];
-    const lastDate = prices[prices.length - 1][0];
+    const firstDate = new Date(prices[0].closeTime).getTime();
+
+    const lastDate = new Date(prices[prices.length - 1].closeTime).getTime();
+
     const startDate = lastDate;
     const endDate = lastDate + (lastDate - firstDate);
 
