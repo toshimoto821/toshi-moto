@@ -324,13 +324,13 @@ export function createFakeKline(
   volume: number = 0
 ) {
   return {
-    openTime: new Date(date),
+    openTime: date,
     openPrice: price + "",
     highPrice: price + "",
     lowPrice: price + "",
     closePrice: price + "",
     volume: volume + "",
-    closeTime: new Date(date),
+    closeTime: date,
     quoteAssetVolume: "0.0",
     numberOfTrades: 0,
     takerBuyBaseAssetVolume: "0.0",
