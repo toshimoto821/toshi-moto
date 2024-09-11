@@ -1,4 +1,11 @@
 # API Changelog
+## [1.7.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.5...api-1.7.0) (2024-09-11)
+
+
+### Features
+
+* adds kline service ([b718e5c](https://github.com/toshimoto821/toshi-moto/commit/b718e5cae832b4d3516c41d6105c73b44b719b70))
+
 ## [1.6.5](https://github.com/toshimoto821/toshi-moto/compare/api-1.6.4...api-1.6.5) (2024-09-10)
 
 
