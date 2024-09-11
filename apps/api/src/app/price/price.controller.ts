@@ -8,10 +8,20 @@ import {
   Header,
 } from "@nestjs/common";
 import { PriceService } from "./price.service";
-import { RangeQueryDto, SimplePriceDto } from "./dto/create-price.dto";
+import { RangeQueryDto } from "./dto/create-price.dto";
 import { Price } from "./schemas/price.schema";
-
+import type { BinanceKlineMetric } from "./price.service";
 type IRangeResponse = {
+  meta: {
+    groupBy: string;
+    from: number;
+    to: number;
+    range: string;
+  };
+  prices: BinanceKlineMetric[];
+};
+
+type IRangeResponseDep = {
   meta: {
     groupBy: string;
     from: number;
@@ -62,7 +72,7 @@ export class PriceController {
     return this.priceService.findAll();
   }
 
-  @Get("range")
+  @Get("kline")
   @Header("Cache-Control", "public, max-age=300")
   async findRange(@Query() query: RangeQueryDto): Promise<IRangeResponse> {
     const from = query.from * 1000;
@@ -82,13 +92,14 @@ export class PriceController {
         to: query.to,
         range: query.range,
       },
-      prices: range.map((r) => [r.timestamp.getTime(), r.price, r.volume]),
+      prices: range,
     };
   }
-
-  @Get("range-dep")
+  @Get("range")
   @Header("Cache-Control", "public, max-age=300")
-  async findRangeDep(@Query() query: RangeQueryDto): Promise<IRangeResponse> {
+  async findRangeDep(
+    @Query() query: RangeQueryDto
+  ): Promise<IRangeResponseDep> {
     const from = query.from * 1000;
     const to = query.to * 1000;
 
