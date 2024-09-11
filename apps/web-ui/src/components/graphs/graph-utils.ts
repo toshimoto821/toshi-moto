@@ -90,14 +90,14 @@ export const getGroupKey = (groupBy: GroupBy) => {
     if (groupBy === "5m") {
       // round down to the nearest 5 minutes
       const minutes = d.getMinutes();
-      const roundedMinutes = Math.floor(minutes / 5) * 5;
+      const roundedMinutes = Math.ceil(minutes / 5) * 5;
       key += `-${roundedMinutes}`;
     }
 
     if (groupBy === "15m") {
       // round down to the nearest 15 minutes
       const minutes = d.getMinutes();
-      const roundedMinutes = Math.floor(minutes / 15) * 15;
+      const roundedMinutes = Math.ceil(minutes / 15) * 15;
       key += `-${roundedMinutes}`;
     }
 
