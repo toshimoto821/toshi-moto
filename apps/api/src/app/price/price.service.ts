@@ -43,6 +43,20 @@ type BinanceTradingDayResponse = {
   count: number;
 };
 
+export type BinanceKlineMetric = {
+  openTime: number;
+  openPrice: string;
+  highPrice: string;
+  lowPrice: string;
+  closePrice: string;
+  volume: string;
+  closeTime: number;
+  quoteAssetVolume: string;
+  numberOfTrades: number;
+  takerBuyBaseAssetVolume: string;
+  takerBuyQuoteAssetVolume: string;
+};
+
 type IGroupByDate = {
   $group: {
     _id: {
@@ -232,10 +246,9 @@ export class PriceService {
     return this.priceModel.countDocuments().exec();
   }
 
-  async findRangeFromBinance(opts: IFindRange) {
+  async findRangeFromBinance(opts: IFindRange): Promise<BinanceKlineMetric[]> {
     const { from, to, groupBy } = opts;
     const url = `https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=${groupBy}&limit=1000&startTime=${from}&endTime=${to}`;
-    console.log(url);
     const response = await axios.get(url);
     const data = response.data;
     return data.map((d) => {
@@ -264,11 +277,18 @@ export class PriceService {
         ignore,
       ] = d;
       return {
-        price: parseFloat(closePrice),
-        volume: parseFloat(quoteAssetVolume),
+        openPrice,
+        highPrice,
+        lowPrice,
+        closePrice,
+        volume: vol,
+        quoteAssetVolume,
         timestamp: new Date(closeTime + 1),
         openTime: new Date(openTime),
         closeTime: new Date(closeTime),
+        numberOfTrades,
+        takerBuyBaseAssetVolume,
+        takerBuyQuoteAssetVolume,
         interval: groupBy,
       };
     });
