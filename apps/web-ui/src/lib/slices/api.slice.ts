@@ -101,8 +101,8 @@ export const apiSlice = createApi({
           prices: response.prices.map((price) => {
             return {
               ...price,
-              closeTime: price.closeTime,
-              openTime: price.openTime,
+              closeTime: new Date(price.closeTime).getTime(),
+              openTime: new Date(price.openTime).getTime(),
             };
           }),
         };

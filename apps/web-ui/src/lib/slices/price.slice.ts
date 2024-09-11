@@ -270,11 +270,16 @@ export const updatePricing = createAsyncThunk<
             // const rounded = timeMinute(add(now, { seconds: 0 })).getTime();
 
             // current.push([now, price]);
+            // console.log("new volume", parseFloat(kline.quoteAssetVolume));
             current.push(kline);
             current.shift();
           } else {
-            // console.log("ts: replacing", now, price);
-            current[current.length - 1] = kline;
+            // console.log("ts: replacing", now, kline);
+
+            current[current.length - 1] = {
+              ...kline,
+              closeTime: Date.now(),
+            };
           }
 
           draft.prices = current;
