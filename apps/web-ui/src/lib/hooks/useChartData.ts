@@ -6,7 +6,6 @@ import type { StackedBarData } from "@root/components/graphs/line/Line";
 import type { IRawNode, IPlotType, IPlotData } from "@root/types";
 import {
   getGroupKey,
-  addTime,
   getDatesForChartGroup,
 } from "@components/graphs/graph-utils";
 import { useAppSelector } from "./store.hooks";
@@ -90,22 +89,14 @@ export const useChartData = (opts: IUseChartData) => {
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
     return prices?.reduce((acc, curr) => {
-      const { closeTime, closePrice, quoteAssetVolume } = curr;
-      const date = new Date(closeTime).getTime();
+      const { closeTime, closePrice, quoteAssetVolume, openTime } = curr;
       const price = parseFloat(closePrice);
-      // const [date, price] = curr;
       const ts = new Date(closeTime);
-      // ts.setHours(0, 0, 0, 0);
-
       const key = dateToKeyFn(ts);
 
       if (acc[key]) {
         acc[key] = {
-          date: acc[key].date,
-          // think this is the key to the chart being off by one day
-          startDate: new Date(Math.min(acc[key].startDate.getTime(), date)),
-          // this is one date off, but it's fine for now
-          endDate: new Date(Math.max(acc[key].endDate.getTime(), date)),
+          ...acc[key],
           sum: acc[key].sum + price,
           avg: (acc[key].sum + price) / (acc[key].data.length + 1),
           last: price,
@@ -116,11 +107,10 @@ export const useChartData = (opts: IUseChartData) => {
           key,
         };
       } else {
-        const d = new Date(date);
         acc[key] = {
-          date: d,
-          startDate: d,
-          endDate: addTime(graphTimeFrameGroup!, d),
+          date: new Date(closeTime + 1),
+          startDate: new Date(openTime),
+          endDate: new Date(closeTime),
           sum: price,
           last: price,
           avg: price,
