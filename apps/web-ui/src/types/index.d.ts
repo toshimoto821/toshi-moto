@@ -99,6 +99,7 @@ export type IRawNode = {
   y1: number; // not used
   y1Sum: number;
   y1SumInDollars: number;
+  quoteAssetVolume: number;
   // y1, // shows the net value at the current price, not price of date range
   y2: number;
 };
