@@ -618,7 +618,7 @@ export const Line = (props: ILine) => {
                 )}</div>
             </div>
               <div class="tooltip_bubble_date">
-                <div>Vol: ${d.quoteAssetVolume.toLocaleString()}</div>
+                <div>Vol: ${d3.format(".2s")(d.quoteAssetVolume)}</div>
                 <div style="font-size:10px;text-align:center;">${format(
                   date,
                   "MMM do, p"
