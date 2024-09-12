@@ -1,4 +1,22 @@
 # UI Changelog
+## [1.17.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.9...web-ui-1.17.0) (2024-09-11)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/b9c23a3b0299aade29383ef5105c87c82d8a21d0/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/b9c23a3b0299aade29383ef5105c87c82d8a21d0/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### ✨ Features
+
+* ui kline ([d6c3ef4](https://github.com/toshimoto821/toshi-moto/commit/d6c3ef4200a9a0053ec22182ffd20a1024200f39))
+
+
+### 🐞 Bug Fixes
+
+* vol ([7563179](https://github.com/toshimoto821/toshi-moto/commit/7563179e729766193696dd871a203c0f8040044a))
+
 ## [1.16.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.16.8...web-ui-1.16.9) (2024-09-11)
 
   |    |    |
