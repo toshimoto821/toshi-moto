@@ -25,6 +25,7 @@ export type Plot = {
   y1Sum: number;
   y1SumInDollars: number;
   y2: number;
+  quoteAssetVolume: number;
 };
 
 export type ILine = {
@@ -577,7 +578,8 @@ export const Line = (props: ILine) => {
               ? d1
               : d0;
         }
-        const date = new Date(d.x);
+        // closeTime is 1ms before the next candle
+        const date = new Date(d.x + 1);
         const value = d3.format(",.2f")(d[yValueToUse]);
         const left = Math.min(xVal + 10, width - TOOLTIP_WIDTH / 2);
         const tooltipLeft = Math.min(
@@ -586,7 +588,6 @@ export const Line = (props: ILine) => {
         );
 
         const top = 200;
-
         tooltip
           .style("opacity", 0.7)
           .style("left", tooltipLeft + "px")
@@ -599,12 +600,12 @@ export const Line = (props: ILine) => {
 
           .html(
             `<div id="tooltip_bubble">
-            <div class="tooltip_bubble_price">
-              <div>$${value}</div>
-              <div class="tooltip_bubble_btc">&#8383;${padBtcZeros(
-                btcAllocation
-              )}</div>
-            </div>
+              <div class="tooltip_bubble_price">
+                <div>$${value}</div>
+                <div class="tooltip_bubble_btc">&#8383;${padBtcZeros(
+                  btcAllocation
+                )}</div>
+              </div>
             <div class="tooltip_bubble_price">
                 <div>
                   <span style="color:${
@@ -616,14 +617,15 @@ export const Line = (props: ILine) => {
                   d.y1SumInDollars
                 )}</div>
             </div>
-              
-            <div >
-              
-            </div>
-            <div style="font-size:10px;text-align:center;">${format(
-              date,
-              "MMM do, p"
-            )}</div></div>`
+              <div class="tooltip_bubble_date">
+                <div>Vol: ${d.quoteAssetVolume.toLocaleString()}</div>
+                <div style="font-size:10px;text-align:center;">${format(
+                  date,
+                  "MMM do, p"
+                )}
+                </div>
+              </div>
+            </div>`
           );
 
         const leftX = Math.min(xVal + 10, xVal);
