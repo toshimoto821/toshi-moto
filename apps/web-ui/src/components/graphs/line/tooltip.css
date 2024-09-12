@@ -12,6 +12,11 @@
   color: orange;
 }
 
+.tooltip_bubble_date {
+  display: flex;
+  justify-content: space-between;
+}
+
 .linetooltip__header {
   display: flex;
   background: white;

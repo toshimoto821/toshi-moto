@@ -25,6 +25,7 @@ type Data = {
   sum: number;
   avg: number;
   last: number;
+  quoteAssetVolume: number;
   data: number[];
   i: number;
   key: string;
@@ -89,7 +90,7 @@ export const useChartData = (opts: IUseChartData) => {
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
     return prices?.reduce((acc, curr) => {
-      const { closeTime, closePrice } = curr;
+      const { closeTime, closePrice, quoteAssetVolume } = curr;
       const date = new Date(closeTime).getTime();
       const price = parseFloat(closePrice);
       // const [date, price] = curr;
@@ -108,6 +109,8 @@ export const useChartData = (opts: IUseChartData) => {
           sum: acc[key].sum + price,
           avg: (acc[key].sum + price) / (acc[key].data.length + 1),
           last: price,
+          quoteAssetVolume:
+            acc[key].quoteAssetVolume + parseFloat(quoteAssetVolume),
           data: [...acc[key].data, price],
           i: acc[key].i + 1,
           key,
@@ -122,6 +125,7 @@ export const useChartData = (opts: IUseChartData) => {
           last: price,
           avg: price,
           data: [price],
+          quoteAssetVolume: parseFloat(quoteAssetVolume),
           i: 1,
           key,
         };
@@ -154,6 +158,7 @@ export const useChartData = (opts: IUseChartData) => {
       y1: 0, // not used
       y1Sum: 0,
       y1SumInDollars: 0,
+      quoteAssetVolume: d.quoteAssetVolume,
       // y1, // shows the net value at the current price, not price of date range
       y2: round(d.last, 2),
     } as IRawNode;
