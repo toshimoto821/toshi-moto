@@ -26,7 +26,7 @@ describe("web-ui-e2e", () => {
     cy.intercept("GET", "**/api/prices/range/diff*", rangeDiff).as(
       "getRangeDiff"
     );
-    cy.intercept("GET", "**/api/prices/range*", range).as("getRange1");
+    cy.intercept("GET", "**/api/prices/kline*", range).as("getRange1");
 
     cy.visit("/#/onboarding");
     // cy.wait(1000);
@@ -45,6 +45,9 @@ describe("web-ui-e2e", () => {
     // cy.debug();
     // p.should("be.visible");
     p.contains("$90,482.36");
+
+    cy.get("#loader-area", { timeout: 10000 }).should("not.exist");
+
     cy.screenshot({ capture: "viewport" });
   });
 
@@ -61,7 +64,7 @@ describe("web-ui-e2e", () => {
       },
     }).as("getPrice");
 
-    cy.intercept("GET", "**/api/prices/range*", range).as("getRange");
+    cy.intercept("GET", "**/api/prices/kline*", range).as("getRange");
 
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
 
