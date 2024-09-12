@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.17.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.17.1...web-ui-1.17.2) (2024-09-12)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/e3b8f2c5b6d81de233bd8f8fa8a04408cec71dfd/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/e3b8f2c5b6d81de233bd8f8fa8a04408cec71dfd/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* btc aggregation ([3ec1f05](https://github.com/toshimoto821/toshi-moto/commit/3ec1f0581e182b8c705ea2c5858acd83119a4ede))
+
 ## [1.17.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.17.0...web-ui-1.17.1) (2024-09-12)
 
   |    |    |
