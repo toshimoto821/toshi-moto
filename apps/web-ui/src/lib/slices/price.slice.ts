@@ -278,7 +278,6 @@ export const updatePricing = createAsyncThunk<
 
             current[current.length - 1] = {
               ...kline,
-              closeTime: Date.now(),
             };
           }
 
@@ -390,14 +389,14 @@ export const openPriceSocket = createAsyncThunk<
           // console.log("volume", volume);
           const kline: BinanceKlineMetric = {
             closePrice: data.k.c,
-            closeTime: data.k.t,
+            closeTime: data.k.T,
             highPrice: data.k.h,
             lowPrice: data.k.l,
             openPrice: data.k.o,
             volume: data.k.v,
             quoteAssetVolume: data.k.q,
             numberOfTrades: data.k.n,
-            openTime: data.k.T,
+            openTime: data.k.t,
             takerBuyBaseAssetVolume: data.k.V,
             takerBuyQuoteAssetVolume: data.k.Q,
           };
@@ -412,14 +411,15 @@ export const openPriceSocket = createAsyncThunk<
 });
 
 export const shouldBeLive = (range: GraphTimeFrameRange, diff: number) => {
-  const FIVE_MINUTES = 1000 * 60 * 5;
+  // const FIVE_MINUTES = 1000 * 60 * 5;
+  const FIFTEEN_MINUTES = 1000 * 60 * 15;
   const HOURLY = 1000 * 60 * 60;
   const DAILY = 1000 * 60 * 60 * 24;
   const WEEKLY = DAILY * 7;
 
   switch (range) {
     case "1D":
-      return diff <= FIVE_MINUTES * 2;
+      return diff <= FIFTEEN_MINUTES * 2;
     case "1W":
       return diff <= HOURLY * 2;
     case "1M":
@@ -436,7 +436,7 @@ export const shouldBeLive = (range: GraphTimeFrameRange, diff: number) => {
 };
 
 export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
-  const FIVE_MINUTES = 1000 * 60 * 5;
+  const FIFTEEN_MINUTES = 1000 * 60 * 15;
   const HOURLY = 1000 * 60 * 60;
   const DAILY = 1000 * 60 * 60 * 24;
   const WEEKLY = DAILY * 7;
@@ -444,11 +444,11 @@ export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
 
   switch (range) {
     case "1D":
-      return diff >= FIVE_MINUTES;
+      return diff > FIFTEEN_MINUTES;
     case "1W":
-      return diff >= HOURLY;
+      return diff > HOURLY;
     case "1M":
-      return diff >= HOURLY * 12;
+      return diff > HOURLY;
     case "3M":
       return diff >= DAILY;
     case "1Y":
