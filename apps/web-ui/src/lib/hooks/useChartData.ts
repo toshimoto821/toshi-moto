@@ -91,12 +91,8 @@ export const useChartData = (opts: IUseChartData) => {
   const grouped = useMemo(() => {
     return prices?.reduce((acc, curr) => {
       const { closeTime, closePrice, quoteAssetVolume, openTime } = curr;
-      const date = new Date(closeTime).getTime();
       const price = parseFloat(closePrice);
-      // const [date, price] = curr;
       const ts = new Date(closeTime);
-      // ts.setHours(0, 0, 0, 0);
-
       const key = dateToKeyFn(ts);
 
       if (acc[key]) {
