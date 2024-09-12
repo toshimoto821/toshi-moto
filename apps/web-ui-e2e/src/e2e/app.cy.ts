@@ -11,7 +11,7 @@ describe("web-ui-e2e", () => {
     console.log("cleaned db");
   });
 
-  it("Hero", () => {
+  it.only("Hero", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -45,6 +45,8 @@ describe("web-ui-e2e", () => {
     // cy.debug();
     // p.should("be.visible");
     p.contains("$90,482.36");
+
+    cy.get("#loader-area", { timeout: 10000 }).should("not.exist");
 
     cy.screenshot({ capture: "viewport" });
   });
