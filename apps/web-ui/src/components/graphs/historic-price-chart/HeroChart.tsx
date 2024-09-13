@@ -195,7 +195,7 @@ export const HeroChart = (props: IHeroChart) => {
           return "transparent";
         })
         .attr("opacity", 0.18)
-        .on("mouseover", function () {
+        .on("mouseover touchmove", function () {
           const datum = select(this).datum() as BinanceKlineMetric;
           const index = data.findIndex((d) => d.openTime === datum.openTime);
 
@@ -210,7 +210,7 @@ export const HeroChart = (props: IHeroChart) => {
             onMouseOver({ datum, index });
           }
         })
-        .on("mouseout", function () {
+        .on("mouseout touchend", function () {
           select(this).attr("fill", "transparent"); // Revert to original color
           if (onMouseOut) {
             const datum = select(this).datum() as BinanceKlineMetric;

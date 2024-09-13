@@ -111,7 +111,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           const priceChange = i === 0 ? 0 : price1 - price2;
           return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
         })
-        .on("mouseover", function () {
+        .on("mouseover touchmove", function () {
           const datum = select(this).datum() as BinanceKlineMetric;
           const i = data.findIndex((d) => d.openTime === datum.openTime);
           // const price1 = parseFloat(datum.closePrice);
@@ -124,7 +124,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             onMouseOver({ datum, index: i });
           }
         })
-        .on("mouseout", function () {
+        .on("mouseout touchend", function () {
           const datum = select(this).datum() as BinanceKlineMetric;
           const i = data.findIndex((d) => d.openTime === datum.openTime);
           // const price1 = parseFloat(datum.closePrice);
