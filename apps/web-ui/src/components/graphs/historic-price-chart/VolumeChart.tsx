@@ -1,13 +1,29 @@
 import { useRef, useEffect } from "react";
 import { scaleBand, scaleLinear, select, min, max } from "d3";
-import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 
+import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
+import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 interface IVolumeChart {
   height: number;
   width: number;
+  selectedIndex: number | null;
+  onMouseOver?: ({
+    datum,
+    index,
+  }: {
+    datum: BinanceKlineMetric;
+    index: number;
+  }) => void;
+  onMouseOut?: ({
+    datum,
+    index,
+  }: {
+    datum: BinanceKlineMetric;
+    index: number;
+  }) => void;
 }
 export const VolumeChart = (props: IVolumeChart) => {
-  const { height, width } = props;
+  const { height, width, onMouseOver, onMouseOut, selectedIndex } = props;
   const svgRef = useRef<SVGSVGElement>(null);
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const margin = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -43,22 +59,19 @@ export const VolumeChart = (props: IVolumeChart) => {
   const yScale = scaleLinear()
     .domain([yExtent[0]!, yExtent[1]!])
     .range([height, 0]);
-  // .domain([-yExtent[1]!, yExtent[1]!])
-  // .range([height, 0]);
-
-  // const yScale = scaleLinear()
-  //   .domain([yExtent[0] || 0, yExtent[1] || 0])
-  //   .range([height, 0]);
-
-  // const priceExtent = [
-  //   Math.min(...data.map((d) => d[1])),
-  //   Math.max(...data.map((d) => d[1])),
-  // ];
 
   useEffect(() => {
     const render = () => {
       const svg = select(svgRef.current);
       svg.selectAll("*").remove();
+
+      // ---------------------------------------------------------------------//
+      // Vars:
+      // const firstMetric = data[0];
+      // const lastMetric = data[data.length - 1];
+      // const direction = lastMetric.closePrice > firstMetric.closePrice ? 1 : -1;
+
+      // ---------------------------------------------------------------------//
 
       // create a bar chart that
       svg
@@ -80,11 +93,14 @@ export const VolumeChart = (props: IVolumeChart) => {
           const vol = parseFloat(d.quoteAssetVolume);
           return Math.abs(yScale(vol) - yScale(0));
         })
+        .attr("opacity", 1)
         .attr("fill", (d, i) => {
           const price1 = parseFloat(d.closePrice);
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
+          if (i === selectedIndex) return "rgba(0, 0, 0, 0.18)";
+
           return priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
         })
         .attr("stroke", (d, i) => {
@@ -94,6 +110,35 @@ export const VolumeChart = (props: IVolumeChart) => {
 
           const priceChange = i === 0 ? 0 : price1 - price2;
           return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
+        })
+        .on("mouseover", function () {
+          const datum = select(this).datum() as BinanceKlineMetric;
+          const i = data.findIndex((d) => d.openTime === datum.openTime);
+          // const price1 = parseFloat(datum.closePrice);
+          // const previous = data[i - 1];
+          // const price2 = previous ? parseFloat(previous.closePrice) : 0;
+          // const priceChange = i === 0 ? 0 : price1 - price2;
+          // const color = priceChange >= 0 ? jade.jade11 : ruby.ruby11;
+          select(this).attr("fill", "rgba(0, 0, 0, 1)").attr("opacity", 0.18); // Change to desired hover color
+          if (onMouseOver) {
+            onMouseOver({ datum, index: i });
+          }
+        })
+        .on("mouseout", function () {
+          const datum = select(this).datum() as BinanceKlineMetric;
+          const i = data.findIndex((d) => d.openTime === datum.openTime);
+          // const price1 = parseFloat(datum.closePrice);
+          // const previous = data[i - 1];
+          // const price2 = previous ? parseFloat(previous.closePrice) : 0;
+          // const priceChange = i === 0 ? 0 : price1 - price2;
+          // const color =
+          //   priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
+          select(this)
+            .attr("fill", "rgba(209, 213, 219, 0.9)")
+            .attr("opacity", 1); // Revert to original color
+          if (onMouseOut) {
+            onMouseOut({ datum, index: i });
+          }
         });
 
       // svg
@@ -109,7 +154,15 @@ export const VolumeChart = (props: IVolumeChart) => {
 
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, range, group, height, width, lastPrice.closeTime]);
+  }, [
+    loading,
+    range,
+    group,
+    height,
+    width,
+    lastPrice.closeTime,
+    selectedIndex,
+  ]);
 
   return (
     <div>
