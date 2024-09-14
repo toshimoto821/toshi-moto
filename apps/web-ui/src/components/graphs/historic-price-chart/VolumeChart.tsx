@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { scaleBand, scaleLinear, select, min, max } from "d3";
+import { scaleBand, scaleLinear, select, min, max, pointers } from "d3";
 
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
@@ -60,6 +60,16 @@ export const VolumeChart = (props: IVolumeChart) => {
     .domain([yExtent[0]!, yExtent[1]!])
     .range([height, 0]);
 
+  const isPositiveChange = (i: number) => {
+    const d = data[i];
+    const price1 = parseFloat(d.closePrice);
+    const previous = data[i - 1];
+    const price2 = previous ? parseFloat(previous.closePrice) : 0;
+    const priceChange = i === 0 ? 0 : price1 > price2;
+
+    return priceChange;
+  };
+
   useEffect(() => {
     const render = () => {
       const svg = select(svgRef.current);
@@ -99,7 +109,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
-          if (i === selectedIndex) return "rgba(0, 0, 0, 0.18)";
+          if (i === selectedIndex) return "rgba(0, 0, 0, 0.60)";
 
           return priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
         })
@@ -110,36 +120,44 @@ export const VolumeChart = (props: IVolumeChart) => {
 
           const priceChange = i === 0 ? 0 : price1 - price2;
           return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
-        })
-        .on("mouseover touchmove", function () {
-          const datum = select(this).datum() as BinanceKlineMetric;
+        });
+
+      // ---------------------------------------------------------------------//
+      // Binding movement
+      svg
+
+        .on("mousemove touchmove", function (event) {
+          const [xy] = pointers(event);
+          const [x] = xy;
+          const index = Math.floor((x - margin.left) / xScale.step());
+          const datum = data[index];
           const i = data.findIndex((d) => d.openTime === datum.openTime);
-          // const price1 = parseFloat(datum.closePrice);
-          // const previous = data[i - 1];
-          // const price2 = previous ? parseFloat(previous.closePrice) : 0;
-          // const priceChange = i === 0 ? 0 : price1 - price2;
-          // const color = priceChange >= 0 ? jade.jade11 : ruby.ruby11;
-          select(this).attr("fill", "rgba(0, 0, 0, 1)").attr("opacity", 0.18); // Change to desired hover color
+
+          svg
+            .selectAll(".bar")
+            // .attr("opacity", 0)
+            .attr("fill", (_, i) =>
+              isPositiveChange(i) ? "rgba(209, 213, 219, 0.9)" : "transparent"
+            )
+            .filter((_, i) => i === index)
+            // .attr("opacity", 0.18) // Reset all bars to original color
+            .attr("fill", "rgba(0, 0, 0, 0.60)");
+
           if (onMouseOver) {
             onMouseOver({ datum, index: i });
           }
         })
         .on("mouseout touchend", function () {
-          const datum = select(this).datum() as BinanceKlineMetric;
-          const i = data.findIndex((d) => d.openTime === datum.openTime);
-          // const price1 = parseFloat(datum.closePrice);
-          // const previous = data[i - 1];
-          // const price2 = previous ? parseFloat(previous.closePrice) : 0;
-          // const priceChange = i === 0 ? 0 : price1 - price2;
-          // const color =
-          //   priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
-          select(this)
-            .attr("fill", "rgba(209, 213, 219, 0.9)")
-            .attr("opacity", 1); // Revert to original color
           if (onMouseOut) {
-            onMouseOut({ datum, index: i });
+            const [xy] = pointers(event);
+            const [x] = xy;
+            const index = Math.floor((x - margin.left) / xScale.step());
+            const datum = data[index];
+            onMouseOut({ datum, index });
           }
         });
+
+      // ---------------------------------------------------------------------//
 
       // svg
       //   .append("text")

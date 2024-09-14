@@ -1,5 +1,14 @@
 import { useRef, useEffect } from "react";
-import { select, max, min, scaleLinear, scaleBand, line, area } from "d3";
+import {
+  select,
+  max,
+  min,
+  scaleLinear,
+  scaleBand,
+  line,
+  area,
+  pointers,
+} from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
@@ -149,7 +158,7 @@ export const HeroChart = (props: IHeroChart) => {
         );
 
       // ---------------------------------------------------------------------//
-      // .attr("fill", "rgba(173, 216, 230, 0.5)"); // Light blue with 50% opacity
+
       // create a bar chart that
       svg
         .selectAll(".bar")
@@ -180,46 +189,20 @@ export const HeroChart = (props: IHeroChart) => {
           }
           return w;
         })
+        .attr(
+          "fill",
+          direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
+        )
         .attr("height", (d) => {
           const price = parseFloat(d.closePrice);
           return height - margin.bottom - yScale(price) + 50;
         })
-
-        .attr("fill", (_, i) => {
-          if (!selectedIndex) return "transparent";
-          if (i === selectedIndex) {
-            return direction > 0
-              ? "url(#gradient-green)"
-              : "url(#gradient-red)";
+        .attr("opacity", (_, i) => {
+          if (selectedIndex === null) {
+            return 0;
           }
-          return "transparent";
-        })
-        .attr("opacity", 0.18)
-        .on("mouseover touchmove", function () {
-          const datum = select(this).datum() as BinanceKlineMetric;
-          const index = data.findIndex((d) => d.openTime === datum.openTime);
-
-          select(this)
-            .attr(
-              "fill",
-              direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
-            )
-            .attr("opacity", 0.18); // Change to desired hover color "rgba(209, 213, 219, 0.5)"
-
-          if (onMouseOver) {
-            onMouseOver({ datum, index });
-          }
-        })
-        .on("mouseout touchend", function () {
-          select(this).attr("fill", "transparent"); // Revert to original color
-          if (onMouseOut) {
-            const datum = select(this).datum() as BinanceKlineMetric;
-            const index = data.findIndex((d) => d.openTime === datum.openTime);
-            onMouseOut({ datum, index });
-          }
+          return selectedIndex === i ? 0.18 : 0;
         });
-
-      // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
       // Line chart
@@ -254,6 +237,41 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("class", "inverse-area")
         .attr("d", inverseAreaGenerator)
         .attr("fill", grayRGB); // Apply a semi-transparent white fill
+
+      // ---------------------------------------------------------------------//
+      // Binding movement
+
+      // for some reason this doesnt bind to anything but the bars
+      // its binding to the svg but when moving above the bars it doesnt
+      // trigger the callback
+      svg
+        .on("mousemove touchmove", function (event) {
+          const [xy] = pointers(event);
+          const [x] = xy;
+          const index = Math.floor((x - margin.left) / xScale.step());
+          const datum = data[index];
+
+          svg
+            .selectAll(".bar")
+            .attr("opacity", 0)
+            .filter((_, i) => i === index)
+            .attr("opacity", 0.18); // Reset all bars to original color
+
+          if (onMouseOver) {
+            onMouseOver({ datum, index });
+          }
+        })
+        .on("mouseout touchend", function () {
+          // select(this).attr("fill", "transparent"); // Revert to original color
+          if (onMouseOut) {
+            const [xy] = pointers(event);
+            const [x] = xy;
+            const index = Math.floor((x - margin.left) / xScale.step());
+            const datum = data[index];
+
+            onMouseOut({ datum, index });
+          }
+        });
     };
 
     render();
