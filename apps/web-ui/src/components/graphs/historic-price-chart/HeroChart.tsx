@@ -95,7 +95,7 @@ export const HeroChart = (props: IHeroChart) => {
     number,
     number
   ];
-  console.log("btcText", btcExt);
+
   const diff = Math.abs(btcExt[0] - btcExt[1]);
   const b = diff === 0 ? 0 : btcExt[0];
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
@@ -422,7 +422,6 @@ export const HeroChart = (props: IHeroChart) => {
           .call(
             axisRight(btcScale)
               .tickFormat((d: any) => {
-                console.log(d);
                 return `₿${privateNumber(formatBtc(d / btcPrice))}`;
               })
               .ticks(5)
