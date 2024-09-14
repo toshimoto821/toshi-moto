@@ -9,12 +9,18 @@ import {
   area,
   pointers,
   axisLeft,
+  axisRight,
   format,
+  extent,
 } from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
-import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
+import { useNumberObfuscation } from "@lib/hooks/useNumberObfuscation";
+import { useBtcPrice } from "@lib/hooks/useBtcPrice";
+import { useChartData } from "@lib/hooks/useChartData";
+import { useWallets } from "@lib/hooks/useWallets";
+import { IRawNode } from "@root/types";
 
 interface IHeroChart {
   height: number;
@@ -41,9 +47,13 @@ const grayRGB = "rgb(243 244 246)";
 export const HeroChart = (props: IHeroChart) => {
   const { height, width, onMouseOut, onMouseOver, selectedIndex } = props;
   const svgRef = useRef<SVGSVGElement>(null);
-
+  const { btcPrice } = useBtcPrice();
+  const { wallets } = useWallets();
   const privateNumber = useNumberObfuscation();
   const { prices, loading, range, group } = useBtcHistoricPrices();
+
+  const { lineData } = useChartData({ btcPrice, wallets });
+
   const margin = { top: 10, right: 0, bottom: 0, left: 0 };
 
   const data = [...(prices || [])];
@@ -74,11 +84,34 @@ export const HeroChart = (props: IHeroChart) => {
     .range([height - margin.top, margin.top]);
 
   const formatDefault = format("~s");
+  const formatBtc = format(".4f");
 
   // const yValueToUse: "y1SumInDollars" | "y2" = graphAssetValue
   //   ? "y1SumInDollars"
   //   : "y2";
   const yValueToUse = "y2" as "y1SumInDollars" | "y2";
+
+  const btcExt = extent(lineData, (d) => d.y1Sum * btcPrice) as [
+    number,
+    number
+  ];
+  const diff = Math.abs(btcExt[0] - btcExt[1]);
+  const b = diff === 0 ? 0 : btcExt[0];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+  const top = yScale(lineData[lineData.length - 1]?.[yValueToUse]!);
+
+  const btcScale = scaleLinear()
+    .domain([b, btcExt[1]])
+    .range([height - margin.bottom, top]);
+
+  const btcLine = line<IRawNode>()
+    .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
+    .y((d) => {
+      const t = d.y1Sum * btcPrice;
+      const val = btcScale(t);
+      return val;
+    });
+
   useEffect(() => {
     const render = () => {
       const svg = select(svgRef.current);
@@ -286,7 +319,7 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // Axis
-
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y2Axis = (g: any) => {
         const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
         const textMargin = { top: 0, right: 5, bottom: 0, left: 0 };
@@ -302,6 +335,7 @@ export const HeroChart = (props: IHeroChart) => {
               })
               .ticks(5)
           )
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .call((g: any) => g.select(".domain").remove())
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .call((g: any) =>
@@ -363,6 +397,98 @@ export const HeroChart = (props: IHeroChart) => {
       };
 
       svg.append("g").attr("id", "y2").call(y2Axis);
+
+      // ---------------------------------------------------------------------//
+      // BTC Allocation
+      svg
+        .append("path")
+        .attr("id", "btc-past-line")
+        .attr("fill", "none")
+        .attr("stroke", "orange")
+        .attr("stroke-miterlimit", 1)
+        .attr("stroke-opacity", "0.8")
+        .attr("stroke-width", 1)
+        .attr("d", btcLine(lineData));
+
+      // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
+      // y1 (btc) axis
+      const y1Axis = (g: any) => {
+        // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
+        const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
+        g.attr("transform", `translate(0,0)`)
+          .call(
+            axisRight(yScale)
+              .tickFormat(
+                (d: any) => `₿${privateNumber(formatBtc(d / btcPrice))}`
+              )
+              .ticks(5)
+          )
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .call((g: any) => g.select(".domain").remove())
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .call((g: any) =>
+            g
+              .selectAll(".tick line")
+              .attr("stroke", "orange")
+              .attr("opacity", 1)
+          )
+          .selectAll("text")
+          .attr("fill", "orange")
+          .attr("opacity", 1)
+          .attr(
+            "transform",
+            `translate(${textMargin.left}, ${textMargin.top})`
+          );
+
+        const padding = { top: 1, right: 1, bottom: 1, left: 5 }; // Adjust as needed
+
+        g.selectAll(".tick").each(function (this: SVGTextElement) {
+          const tick = select(this);
+          if (!tick) return;
+          const text = tick.select("text");
+          if (!text) return;
+          const bbox = (text.node() as SVGTextElement).getBBox();
+          const rect = tick.selectAll("rect").data([bbox]);
+          // Update existing rect elements
+          // rect
+          //   .attr("x", (d) => d.x - padding.left)
+          //   .attr("y", (d) => d.y - padding.top)
+          //   .attr("width", (d) => d.width + padding.left + padding.right)
+          //   .attr("height", (d) => d.height + padding.top + padding.bottom)
+          //   .attr("rx", 2) // radius of the corners in the x direction
+          //   .attr("ry", 2) // radius of the corners in the y direction
+          //   .attr("opacity", 0.7)
+          //   .style("fill", "white");
+
+          // Enter new rect elements if needed
+          rect
+            .enter()
+            .insert("rect", "text")
+            .attr("x", (d) => d.x - padding.left)
+            .attr("y", (d) => d.y - padding.top)
+            .attr("width", (d) => d.width + padding.left + padding.right)
+            .attr("height", (d) => d.height + padding.top + padding.bottom)
+            .attr("rx", 2) // radius of the corners in the x direction
+            .attr("ry", 2) // radius of the corners in the y direction
+            .attr("opacity", 0.4)
+            .style("fill", "white")
+            .attr(
+              "transform",
+              `translate(${textMargin.left}, ${textMargin.top})`
+            );
+
+          // Remove any exiting rect elements
+          rect.exit().remove();
+
+          // Update text attributes
+          text.attr("fill", "orange").attr("opacity", 1);
+        });
+      };
+      svg.append("g").attr("id", "y1").call(y1Axis);
+
+      // ---------------------------------------------------------------------//
     };
 
     render();
