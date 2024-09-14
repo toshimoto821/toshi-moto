@@ -86,9 +86,6 @@ export const HeroChart = (props: IHeroChart) => {
   const formatDefault = format("~s");
   const formatBtc = format(".4f");
 
-  // const yValueToUse: "y1SumInDollars" | "y2" = graphAssetValue
-  //   ? "y1SumInDollars"
-  //   : "y2";
   const yValueToUse = "y2" as "y1SumInDollars" | "y2";
 
   const btcExt = extent(lineData, (d) => d.y1Sum * btcPrice) as [
