@@ -22,6 +22,10 @@ interface IVolumeChart {
     index: number;
   }) => void;
 }
+
+const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
+const COLOR_NEGATIVE_CHANGE = "transparent";
+const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
 export const VolumeChart = (props: IVolumeChart) => {
   const { height, width, onMouseOver, onMouseOut, selectedIndex } = props;
   const svgRef = useRef<SVGSVGElement>(null);
@@ -109,9 +113,11 @@ export const VolumeChart = (props: IVolumeChart) => {
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
-          if (i === selectedIndex) return "rgba(0, 0, 0, 0.60)";
+          if (i === selectedIndex) return COLOR_SELECTED;
 
-          return priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
+          return priceChange >= 0
+            ? COLOR_POSITIVE_CHANGE
+            : COLOR_NEGATIVE_CHANGE;
         })
         .attr("stroke", (d, i) => {
           const price1 = parseFloat(d.closePrice);
@@ -119,7 +125,9 @@ export const VolumeChart = (props: IVolumeChart) => {
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
 
           const priceChange = i === 0 ? 0 : price1 - price2;
-          return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
+          return priceChange >= 0
+            ? COLOR_NEGATIVE_CHANGE
+            : COLOR_POSITIVE_CHANGE;
         });
 
       // ---------------------------------------------------------------------//
@@ -137,11 +145,13 @@ export const VolumeChart = (props: IVolumeChart) => {
             .selectAll(".bar")
             // .attr("opacity", 0)
             .attr("fill", (_, i) =>
-              isPositiveChange(i) ? "rgba(209, 213, 219, 0.9)" : "transparent"
+              isPositiveChange(i)
+                ? COLOR_POSITIVE_CHANGE
+                : COLOR_NEGATIVE_CHANGE
             )
             .filter((_, i) => i === index)
             // .attr("opacity", 0.18) // Reset all bars to original color
-            .attr("fill", "rgba(0, 0, 0, 0.60)");
+            .attr("fill", COLOR_SELECTED);
 
           if (onMouseOver) {
             onMouseOver({ datum, index: i });
@@ -153,6 +163,14 @@ export const VolumeChart = (props: IVolumeChart) => {
             const [x] = xy;
             const index = Math.floor((x - margin.left) / xScale.step());
             const datum = data[index];
+            svg
+              .selectAll(".bar")
+              // .attr("opacity", 0)
+              .attr("fill", (_, i) =>
+                isPositiveChange(i)
+                  ? COLOR_POSITIVE_CHANGE
+                  : COLOR_NEGATIVE_CHANGE
+              );
             onMouseOut({ datum, index });
           }
         });

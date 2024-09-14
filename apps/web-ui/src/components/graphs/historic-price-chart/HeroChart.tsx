@@ -8,10 +8,13 @@ import {
   line,
   area,
   pointers,
+  axisLeft,
+  format,
 } from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
+import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 
 interface IHeroChart {
   height: number;
@@ -39,8 +42,9 @@ export const HeroChart = (props: IHeroChart) => {
   const { height, width, onMouseOut, onMouseOver, selectedIndex } = props;
   const svgRef = useRef<SVGSVGElement>(null);
 
+  const privateNumber = useNumberObfuscation();
   const { prices, loading, range, group } = useBtcHistoricPrices();
-  const margin = { top: 120, right: 0, bottom: 0, left: 0 };
+  const margin = { top: 10, right: 0, bottom: 0, left: 0 };
 
   const data = [...(prices || [])];
 
@@ -69,6 +73,12 @@ export const HeroChart = (props: IHeroChart) => {
     .domain([yExtent[0]!, yExtent[1]!])
     .range([height - margin.top, margin.top]);
 
+  const formatDefault = format("~s");
+
+  // const yValueToUse: "y1SumInDollars" | "y2" = graphAssetValue
+  //   ? "y1SumInDollars"
+  //   : "y2";
+  const yValueToUse = "y2" as "y1SumInDollars" | "y2";
   useEffect(() => {
     const render = () => {
       const svg = select(svgRef.current);
@@ -159,7 +169,8 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
 
-      // create a bar chart that
+      // ---------------------------------------------------------------------//
+      // Bar Chart
       svg
         .selectAll(".bar")
         .data(data)
@@ -219,11 +230,10 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
         .attr("stroke-opacity", "0.5")
         .attr("stroke-width", 2);
-
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
-      // Inverse
+      // Inverse Area chart
       const inverseAreaGenerator = area<BinanceKlineMetric>()
         .x((_, i) => {
           return adjustedX(i);
@@ -272,6 +282,87 @@ export const HeroChart = (props: IHeroChart) => {
             onMouseOut({ datum, index });
           }
         });
+      // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
+      // Axis
+
+      const y2Axis = (g: any) => {
+        const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
+        const textMargin = { top: 0, right: 5, bottom: 0, left: 0 };
+        g.attr("transform", `translate(${width - margin.right},0)`)
+          .call(
+            axisLeft(yScale)
+              .tickFormat((d) => {
+                return `$${
+                  yValueToUse === "y1SumInDollars"
+                    ? privateNumber(formatDefault(d))
+                    : formatDefault(d)
+                }`;
+              })
+              .ticks(5)
+          )
+          .call((g: any) => g.select(".domain").remove())
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .call((g: any) =>
+            g
+              .selectAll(".tick line")
+              .attr("stroke", "gray")
+              .attr("opacity", 0.6)
+          )
+          .selectAll("text")
+          .attr(
+            "transform",
+            `translate(${textMargin.right * -1}, ${textMargin.top})`
+          )
+          .attr("fill", "gray");
+
+        g.selectAll(".tick").each(function (this: SVGTextElement) {
+          const tick = select(this);
+          if (!tick) return;
+          const text = tick.select("text");
+          if (!text) return;
+          const bbox = (text.node() as SVGTextElement).getBBox();
+
+          // Select existing rect elements or create new ones if they don't exist
+          const rect = tick.selectAll("rect").data([bbox]);
+
+          // Update existing rect elements
+          // rect
+          //   .attr("x", (d) => d.x - padding.left)
+          //   .attr("y", (d) => d.y - padding.top)
+          //   .attr("width", (d) => d.width + padding.left + padding.right)
+          //   .attr("height", (d) => d.height + padding.top + padding.bottom)
+          //   .attr("rx", 2) // radius of the corners in the x direction
+          //   .attr("ry", 2) // radius of the corners in the y direction
+          //   .attr("opacity", 0.7)
+          //   .style("fill", "white");
+
+          // Enter new rect elements if needed
+          rect
+            .enter()
+            .insert("rect", "text")
+            .attr("x", (d) => d.x - padding.left)
+            .attr("y", (d) => d.y - padding.top)
+            .attr("width", (d) => d.width + padding.left + padding.right)
+            .attr("height", (d) => d.height + padding.top + padding.bottom)
+            .attr("rx", 2) // radius of the corners in the x direction
+            .attr("ry", 2) // radius of the corners in the y direction
+            .attr("opacity", 0.4)
+            .attr(
+              "transform",
+              `translate(${textMargin.right * -1}, ${textMargin.top})`
+            )
+            .style("fill", "white");
+
+          // Remove any exiting rect elements
+          rect.exit().remove();
+
+          // text.attr("fill", "orange").attr("opacity", 1);
+        });
+      };
+
+      svg.append("g").attr("id", "y2").call(y2Axis);
     };
 
     render();
