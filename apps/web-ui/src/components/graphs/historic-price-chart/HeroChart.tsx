@@ -43,6 +43,7 @@ interface IHeroChart {
 }
 
 const grayRGB = "rgb(243 244 246)";
+const SELECTED_OPACITIY = 0.28;
 
 export const HeroChart = (props: IHeroChart) => {
   const { height, width, onMouseOut, onMouseOver, selectedIndex } = props;
@@ -97,10 +98,14 @@ export const HeroChart = (props: IHeroChart) => {
   const b = diff === 0 ? 0 : btcExt[0];
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const top = yScale(lineData[lineData.length - 1]?.[yValueToUse]!);
-
+  console.log("tio", top);
   const btcScale = scaleLinear()
     .domain([b, btcExt[1]])
     .range([height - margin.bottom, top]);
+
+  const btcScaleFull = scaleLinear()
+    .domain([b, btcExt[1]])
+    .range([height - margin.bottom, margin.top]);
 
   const btcLine = line<IRawNode>()
     .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
@@ -243,7 +248,7 @@ export const HeroChart = (props: IHeroChart) => {
           if (selectedIndex === null) {
             return 0;
           }
-          return selectedIndex === i ? 0.18 : 0;
+          return selectedIndex === i ? SELECTED_OPACITIY : 0;
         });
 
       // ---------------------------------------------------------------------//
@@ -296,7 +301,7 @@ export const HeroChart = (props: IHeroChart) => {
             .selectAll(".bar")
             .attr("opacity", 0)
             .filter((_, i) => i === index)
-            .attr("opacity", 0.18); // Reset all bars to original color
+            .attr("opacity", SELECTED_OPACITIY); // Reset all bars to original color
 
           if (onMouseOver) {
             onMouseOver({ datum, index });
@@ -417,7 +422,7 @@ export const HeroChart = (props: IHeroChart) => {
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
         g.attr("transform", `translate(0,0)`)
           .call(
-            axisRight(btcScale)
+            axisRight(btcScaleFull)
               .tickFormat((d: any) => {
                 return `₿${privateNumber(formatBtc(d / btcPrice))}`;
               })
