@@ -1,13 +1,33 @@
 import { useRef, useEffect } from "react";
-import { scaleBand, scaleLinear, select, min, max } from "d3";
-import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
+import { scaleBand, scaleLinear, select, min, max, pointers } from "d3";
 
+import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
+import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 interface IVolumeChart {
   height: number;
   width: number;
+  selectedIndex: number | null;
+  onMouseOver?: ({
+    datum,
+    index,
+  }: {
+    datum: BinanceKlineMetric;
+    index: number;
+  }) => void;
+  onMouseOut?: ({
+    datum,
+    index,
+  }: {
+    datum: BinanceKlineMetric;
+    index: number;
+  }) => void;
 }
+
+const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
+const COLOR_NEGATIVE_CHANGE = "transparent";
+const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
 export const VolumeChart = (props: IVolumeChart) => {
-  const { height, width } = props;
+  const { height, width, onMouseOver, onMouseOut, selectedIndex } = props;
   const svgRef = useRef<SVGSVGElement>(null);
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const margin = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -43,22 +63,29 @@ export const VolumeChart = (props: IVolumeChart) => {
   const yScale = scaleLinear()
     .domain([yExtent[0]!, yExtent[1]!])
     .range([height, 0]);
-  // .domain([-yExtent[1]!, yExtent[1]!])
-  // .range([height, 0]);
 
-  // const yScale = scaleLinear()
-  //   .domain([yExtent[0] || 0, yExtent[1] || 0])
-  //   .range([height, 0]);
+  const isPositiveChange = (i: number) => {
+    const d = data[i];
+    const price1 = parseFloat(d.closePrice);
+    const previous = data[i - 1];
+    const price2 = previous ? parseFloat(previous.closePrice) : 0;
+    const priceChange = i === 0 ? 0 : price1 > price2;
 
-  // const priceExtent = [
-  //   Math.min(...data.map((d) => d[1])),
-  //   Math.max(...data.map((d) => d[1])),
-  // ];
+    return priceChange;
+  };
 
   useEffect(() => {
     const render = () => {
       const svg = select(svgRef.current);
       svg.selectAll("*").remove();
+
+      // ---------------------------------------------------------------------//
+      // Vars:
+      // const firstMetric = data[0];
+      // const lastMetric = data[data.length - 1];
+      // const direction = lastMetric.closePrice > firstMetric.closePrice ? 1 : -1;
+
+      // ---------------------------------------------------------------------//
 
       // create a bar chart that
       svg
@@ -80,12 +107,17 @@ export const VolumeChart = (props: IVolumeChart) => {
           const vol = parseFloat(d.quoteAssetVolume);
           return Math.abs(yScale(vol) - yScale(0));
         })
+        .attr("opacity", 1)
         .attr("fill", (d, i) => {
           const price1 = parseFloat(d.closePrice);
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
-          return priceChange >= 0 ? "rgba(209, 213, 219, 0.9)" : "transparent";
+          if (i === selectedIndex) return COLOR_SELECTED;
+
+          return priceChange >= 0
+            ? COLOR_POSITIVE_CHANGE
+            : COLOR_NEGATIVE_CHANGE;
         })
         .attr("stroke", (d, i) => {
           const price1 = parseFloat(d.closePrice);
@@ -93,8 +125,57 @@ export const VolumeChart = (props: IVolumeChart) => {
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
 
           const priceChange = i === 0 ? 0 : price1 - price2;
-          return priceChange >= 0 ? "" : "rgba(209, 213, 219, 0.9)";
+          return priceChange >= 0
+            ? COLOR_NEGATIVE_CHANGE
+            : COLOR_POSITIVE_CHANGE;
         });
+
+      // ---------------------------------------------------------------------//
+      // Binding movement
+      svg
+
+        .on("mousemove touchmove", function (event) {
+          const [xy] = pointers(event);
+          const [x] = xy;
+          const index = Math.floor((x - margin.left) / xScale.step());
+          const datum = data[index];
+          const i = data.findIndex((d) => d.openTime === datum.openTime);
+
+          svg
+            .selectAll(".bar")
+            // .attr("opacity", 0)
+            .attr("fill", (_, i) =>
+              isPositiveChange(i)
+                ? COLOR_POSITIVE_CHANGE
+                : COLOR_NEGATIVE_CHANGE
+            )
+            .filter((_, i) => i === index)
+            // .attr("opacity", 0.18) // Reset all bars to original color
+            .attr("fill", COLOR_SELECTED);
+
+          if (onMouseOver) {
+            onMouseOver({ datum, index: i });
+          }
+        })
+        .on("mouseout touchend", function () {
+          if (onMouseOut) {
+            const [xy] = pointers(event);
+            const [x] = xy;
+            const index = Math.floor((x - margin.left) / xScale.step());
+            const datum = data[index];
+            svg
+              .selectAll(".bar")
+              // .attr("opacity", 0)
+              .attr("fill", (_, i) =>
+                isPositiveChange(i)
+                  ? COLOR_POSITIVE_CHANGE
+                  : COLOR_NEGATIVE_CHANGE
+              );
+            onMouseOut({ datum, index });
+          }
+        });
+
+      // ---------------------------------------------------------------------//
 
       // svg
       //   .append("text")
@@ -109,7 +190,15 @@ export const VolumeChart = (props: IVolumeChart) => {
 
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, range, group, height, width, lastPrice.closeTime]);
+  }, [
+    loading,
+    range,
+    group,
+    height,
+    width,
+    lastPrice.closeTime,
+    selectedIndex,
+  ]);
 
   return (
     <div>
