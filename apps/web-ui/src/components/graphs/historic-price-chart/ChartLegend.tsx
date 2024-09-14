@@ -29,9 +29,9 @@ export const ChartLegend = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
     top: 70,
-    right: -1,
+    right: 0,
     bottom: 10,
-    left: -1,
+    left: 0,
   };
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
@@ -62,10 +62,10 @@ export const ChartLegend = ({
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
     const firstPrice = cachedPrices[0];
-    const closeTime = firstPrice.closeTime;
-    xDomain.push(new Date(closeTime));
+    const openTime = firstPrice.openTime;
+    xDomain.push(new Date(openTime));
     const lastPrice = cachedPrices[cachedPrices.length - 1];
-    const lastCloseTime = lastPrice.closeTime;
+    const lastCloseTime = lastPrice.closeTime + 1;
     xDomain.push(new Date(lastCloseTime));
   }
 
@@ -181,7 +181,9 @@ export const ChartLegend = ({
         .axisBottom(xScale)
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
-        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].closeTime))) // Format the tick labels as needed
+        .tickFormat((d, i) =>
+          tickFormat(new Date(cachedPrices![i].closeTime + 1))
+        ) // Format the tick labels as needed
         .tickSizeOuter(0)
     )
       .call((g: any) => {
