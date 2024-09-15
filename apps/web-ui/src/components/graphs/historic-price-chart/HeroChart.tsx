@@ -21,11 +21,12 @@ import { useBtcPrice } from "@lib/hooks/useBtcPrice";
 import { useChartData } from "@lib/hooks/useChartData";
 import { useWallets } from "@lib/hooks/useWallets";
 import { IRawNode } from "@root/types";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { setUI } from "@root/lib/slices/ui.slice";
 
 interface IHeroChart {
   height: number;
   width: number;
-  selectedIndex: number | null;
   onMouseOver?: ({
     datum,
     index,
@@ -46,12 +47,15 @@ const grayRGB = "rgb(243 244 246)";
 const SELECTED_OPACITIY = 0.28;
 
 export const HeroChart = (props: IHeroChart) => {
-  const { height, width, onMouseOut, onMouseOver, selectedIndex } = props;
+  const { height, width, onMouseOut, onMouseOver } = props;
   const svgRef = useRef<SVGSVGElement>(null);
+  const dispatch = useAppDispatch();
   const { btcPrice } = useBtcPrice();
   const { wallets } = useWallets();
   const privateNumber = useNumberObfuscation();
   const { prices, loading, range, group } = useBtcHistoricPrices();
+  const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
+  const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
 
   const { lineData } = useChartData({ btcPrice, wallets });
 
@@ -249,6 +253,32 @@ export const HeroChart = (props: IHeroChart) => {
             return 0;
           }
           return selectedIndex === i ? SELECTED_OPACITIY : 0;
+        })
+        .on("click", (_, kline) => {
+          const index = data.findIndex((d) => d.openTime === kline.openTime);
+          const datum = data[index];
+          if (isLocked) {
+            dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
+            // svg.selectAll(".bar").attr("opacity", 0);
+            // .filter((_, i) => i === index)
+            // .attr("opacity", SELECTED_OPACITIY);
+          } else {
+            dispatch(setUI({ graphIsLocked: true, graphSelectedIndex: index }));
+
+            svg
+              .selectAll(".bar")
+              .attr("opacity", 0)
+              .filter((_, i) => i === index)
+              .attr("opacity", SELECTED_OPACITIY);
+            if (onMouseOver) {
+              onMouseOver({ datum, index });
+            }
+            // svg
+            //   .selectAll(".bar")
+            //   .attr("opacity", 0)
+            //   .filter((_, i) => i === index)
+            //   .attr("opacity", SELECTED_OPACITIY);
+          }
         });
 
       // ---------------------------------------------------------------------//
@@ -292,6 +322,7 @@ export const HeroChart = (props: IHeroChart) => {
       // trigger the callback
       svg
         .on("mousemove touchmove", function (event) {
+          if (isLocked) return;
           const [xy] = pointers(event);
           const [x] = xy;
           const index = Math.floor((x - margin.left) / xScale.step());
@@ -301,13 +332,15 @@ export const HeroChart = (props: IHeroChart) => {
             .selectAll(".bar")
             .attr("opacity", 0)
             .filter((_, i) => i === index)
-            .attr("opacity", SELECTED_OPACITIY); // Reset all bars to original color
+            .attr("opacity", SELECTED_OPACITIY);
 
+          dispatch(setUI({ graphSelectedIndex: index }));
           if (onMouseOver) {
             onMouseOver({ datum, index });
           }
         })
         .on("mouseout touchend", function (event) {
+          if (isLocked) return;
           // select(this).attr("fill", "transparent"); // Revert to original color
           if (onMouseOut) {
             const [xy] = pointers(event);
@@ -508,6 +541,7 @@ export const HeroChart = (props: IHeroChart) => {
     width,
     lastPrice.closeTime,
     selectedIndex,
+    isLocked,
   ]);
 
   return (

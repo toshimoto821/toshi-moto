@@ -1,12 +1,13 @@
 import { useRef, useEffect } from "react";
 import { scaleBand, scaleLinear, select, min, max, pointers } from "d3";
-
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
+import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
+import { setUI } from "@root/lib/slices/ui.slice";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
+
 interface IVolumeChart {
   height: number;
   width: number;
-  selectedIndex: number | null;
   onMouseOver?: ({
     datum,
     index,
@@ -27,9 +28,14 @@ const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
 const COLOR_NEGATIVE_CHANGE = "transparent";
 const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
 export const VolumeChart = (props: IVolumeChart) => {
-  const { height, width, onMouseOver, onMouseOut, selectedIndex } = props;
+  const { height, width, onMouseOver, onMouseOut } = props;
   const svgRef = useRef<SVGSVGElement>(null);
   const { prices, loading, range, group } = useBtcHistoricPrices();
+  const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
+  const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
+
+  const dispatch = useAppDispatch();
+
   const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const data = prices || [];
   const lastPrice = data[data.length - 1] || [];
@@ -128,6 +134,15 @@ export const VolumeChart = (props: IVolumeChart) => {
           return priceChange >= 0
             ? COLOR_NEGATIVE_CHANGE
             : COLOR_POSITIVE_CHANGE;
+        })
+        .on("click", (_, kline) => {
+          const index = data.findIndex((d) => d.openTime === kline.openTime);
+          // const datum = data[index];
+          if (isLocked) {
+            dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
+          } else {
+            dispatch(setUI({ graphIsLocked: true, graphSelectedIndex: index }));
+          }
         });
 
       // ---------------------------------------------------------------------//
@@ -135,6 +150,7 @@ export const VolumeChart = (props: IVolumeChart) => {
       svg
 
         .on("mousemove touchmove", function (event) {
+          if (isLocked) return;
           const [xy] = pointers(event);
           const [x] = xy;
           const index = Math.floor((x - margin.left) / xScale.step());
@@ -152,12 +168,13 @@ export const VolumeChart = (props: IVolumeChart) => {
             .filter((_, i) => i === index)
             // .attr("opacity", 0.18) // Reset all bars to original color
             .attr("fill", COLOR_SELECTED);
-
+          dispatch(setUI({ graphSelectedIndex: i }));
           if (onMouseOver) {
             onMouseOver({ datum, index: i });
           }
         })
         .on("mouseout touchend", function () {
+          if (isLocked) return;
           if (onMouseOut) {
             const [xy] = pointers(event);
             const [x] = xy;
@@ -198,6 +215,7 @@ export const VolumeChart = (props: IVolumeChart) => {
     width,
     lastPrice.closeTime,
     selectedIndex,
+    isLocked,
   ]);
 
   return (

@@ -28,11 +28,8 @@ type IHistoricPriceChart = {
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const { height, width } = props;
   const btcPrices = useBtcHistoricPrices();
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const [tooltipKline, setTooltipKline] = useState<BinanceKlineMetric | null>(
-    null
-  );
-  const [mouseoverHeroIndex, setMouseOverHeroIndex] = useState<number | null>(
     null
   );
 
@@ -115,24 +112,20 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleHoverHeroChart = ({
-    index,
     datum,
   }: {
     datum: BinanceKlineMetric;
     index: number;
   }) => {
-    setMouseOverHeroIndex(index);
     setTooltipKline(datum);
   };
 
   const handleMouseOverVolumeChart = ({
-    index,
     datum,
   }: {
     datum: BinanceKlineMetric;
     index: number;
   }) => {
-    setSelectedIndex(index);
     setTooltipKline(datum);
   };
 
@@ -141,10 +134,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
-      {tooltipKline && !btcPrices.loading && (
-        <ChartTooltip kline={tooltipKline} />
-      )}
+      {tooltipKline && <ChartTooltip kline={tooltipKline} />}
       <div
+        id="hero-chart"
         style={{ height }}
         className={cn({
           "opacity-50": btcPrices.loading,
@@ -155,10 +147,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           width={width}
           onMouseOver={handleHoverHeroChart}
           onMouseOut={() => {
-            setSelectedIndex(null);
+            // setSelectedIndex(null);
             // setTooltipKline(null);
           }}
-          selectedIndex={selectedIndex}
         />
       </div>
       <div
@@ -171,10 +162,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           width={width}
           onMouseOver={handleMouseOverVolumeChart}
           onMouseOut={() => {
-            setSelectedIndex(null);
-            setTooltipKline(null);
+            // setSelectedIndex(null);
+            // setTooltipKline(null);
           }}
-          selectedIndex={mouseoverHeroIndex}
         />
       </div>
       <div>

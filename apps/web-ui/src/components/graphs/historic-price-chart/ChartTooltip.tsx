@@ -1,17 +1,26 @@
 import { Button } from "@radix-ui/themes";
 import { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 import { useState } from "react";
-
+import { selectGraphTimeframeRange } from "@lib/slices/ui.slice";
+import { useAppSelector } from "@lib/hooks/store.hooks";
 interface IChartTooltip {
   kline: BinanceKlineMetric;
 }
 export const ChartTooltip = (props: IChartTooltip) => {
   const { kline } = props;
   const [open, setOpen] = useState(false);
+  const range = useAppSelector(selectGraphTimeframeRange);
+
+  const showTime = (time: number) => {
+    if (range === "1D" || range === "1W") {
+      return new Date(time).toLocaleTimeString();
+    }
+    return new Date(time).toLocaleDateString();
+  };
 
   if (open) {
     return (
-      <div className="z-40 mt-1 absolute top-[50px] border left-2 w-3/5 bg-gray-700 border-white opacity-80 text-white rounded p-2">
+      <div className="z-40 mt-1 absolute top-[50px] border left-2 w-3/5 bg-gray-500 border-white opacity-80 text-white rounded p-2">
         <div className="grid grid-cols-3 gap-1 text-xs">
           <p className="font-semibold">Open:</p>
           <p className="col-span-2 text-right">
@@ -83,23 +92,18 @@ export const ChartTooltip = (props: IChartTooltip) => {
 
   return (
     <button
-      className="w-full bg-gray-700 text-xs text-white py-1 px-4 opacity-70 sticky top-[140px] z-40"
+      className="w-full bg-gray-500 text-xs text-white py-1 px-4 opacity-70 sticky top-[140px] z-40"
       onClick={() => setOpen(true)}
     >
       <div className="">
         <div className="flex space-x-2">
           <p>
-            Open:{" "}
-            <span className="font-mono">
-              {new Date(kline.openTime).toLocaleDateString()}
-            </span>
+            Open: <span className="font-mono">{showTime(kline.openTime)}</span>
           </p>
           <p>|</p>
           <p>
             Close:{" "}
-            <span className="font-mono">
-              {new Date(kline.closeTime).toLocaleDateString()}
-            </span>
+            <span className="font-mono">{showTime(kline.closeTime)}</span>
           </p>
           <p>|</p>
           <p>

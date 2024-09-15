@@ -40,6 +40,8 @@ const initialState: UIState = {
   graphBtcAllocation: true,
   graphPlotDots: false,
   graphSelectedTransactions: [],
+  graphIsLocked: false,
+  graphSelectedIndex: null,
   navbarBalanceVisibility: false,
   netAssetValue: false,
   privatePrice: false,
@@ -289,6 +291,14 @@ export const selectGraphDates = createSelector(
       graphEndDate: graphEndDate || defaultGraphEndDate,
       graphTimeFrameRange,
     };
+  }
+);
+
+export const selectGraphTimeframeRange = createSelector(
+  (state: RootState) => state.ui.graphTimeFrameRange,
+  (state: RootState) => state.ui.previousGraphTimeFrameRange,
+  (graphTimeFrameRange, previousGraphTimeFrameRange) => {
+    return graphTimeFrameRange || previousGraphTimeFrameRange;
   }
 );
 
