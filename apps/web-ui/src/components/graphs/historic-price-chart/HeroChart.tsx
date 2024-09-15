@@ -24,6 +24,12 @@ import { IRawNode } from "@root/types";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
 
+import {
+  COLOR_NEGATIVE_CHANGE,
+  COLOR_POSITIVE_CHANGE,
+  COLOR_SELECTED,
+} from "./VolumeChart";
+
 interface IHeroChart {
   height: number;
   width: number;
@@ -37,7 +43,7 @@ interface IHeroChart {
 }
 
 const grayRGB = "rgb(243 244 246)";
-const SELECTED_OPACITIY = 0.28;
+export const SELECTED_OPACITIY = 0.28;
 
 export const HeroChart = (props: IHeroChart) => {
   const { height, width, onMouseOver } = props;
@@ -111,6 +117,16 @@ export const HeroChart = (props: IHeroChart) => {
       const val = btcScale(t);
       return val;
     });
+
+  const isPositiveChange = (i: number) => {
+    const d = data[i];
+    const price1 = parseFloat(d.closePrice);
+    const previous = data[i - 1];
+    const price2 = previous ? parseFloat(previous.closePrice) : 0;
+    const priceChange = i === 0 ? 0 : price1 > price2;
+
+    return priceChange;
+  };
 
   useEffect(() => {
     const render = () => {
@@ -324,6 +340,19 @@ export const HeroChart = (props: IHeroChart) => {
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
 
+          const volChart = select("#volume-chart");
+          volChart
+            .selectAll(".bar")
+            // .attr("opacity", 0)
+            .attr("fill", (_, i) =>
+              isPositiveChange(i)
+                ? COLOR_POSITIVE_CHANGE
+                : COLOR_NEGATIVE_CHANGE
+            )
+            .filter((_, i) => i === index)
+            // .attr("opacity", 0.18) // Reset all bars to original color
+            .attr("fill", COLOR_SELECTED);
+
           if (onMouseOver) {
             onMouseOver({ datum, index });
           }
@@ -337,6 +366,18 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("opacity", 0)
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
+
+          const volChart = select("#volume-chart");
+          volChart
+            .selectAll(".bar")
+            .attr("fill", (_, i) =>
+              isPositiveChange(i)
+                ? COLOR_POSITIVE_CHANGE
+                : COLOR_NEGATIVE_CHANGE
+            )
+            .filter((_, i) => i === index)
+            // .attr("opacity", 0.18) // Reset all bars to original color
+            .attr("fill", COLOR_SELECTED);
 
           if (onMouseOver) {
             onMouseOver({ datum: data[index], index });
@@ -534,6 +575,7 @@ export const HeroChart = (props: IHeroChart) => {
   return (
     <div>
       <svg
+        id="hero-chart"
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{

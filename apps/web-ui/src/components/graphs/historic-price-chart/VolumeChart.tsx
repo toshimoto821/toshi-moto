@@ -4,6 +4,7 @@ import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
+import { SELECTED_OPACITIY } from "./HeroChart";
 
 interface IVolumeChart {
   height: number;
@@ -17,9 +18,10 @@ interface IVolumeChart {
   }) => void;
 }
 
-const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
-const COLOR_NEGATIVE_CHANGE = "transparent";
-const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
+export const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
+export const COLOR_NEGATIVE_CHANGE = "transparent";
+export const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
+
 export const VolumeChart = (props: IVolumeChart) => {
   const { height, width, onMouseOver } = props;
   const svgRef = useRef<SVGSVGElement>(null);
@@ -162,6 +164,14 @@ export const VolumeChart = (props: IVolumeChart) => {
             // .attr("opacity", 0.18) // Reset all bars to original color
             .attr("fill", COLOR_SELECTED);
 
+          const heroChart = select("#hero-chart");
+
+          heroChart
+            .selectAll(".bar")
+            .attr("opacity", 0)
+            .filter((_, i) => i === index)
+            .attr("opacity", SELECTED_OPACITIY);
+
           if (onMouseOver) {
             onMouseOver({ datum, index: i });
           }
@@ -179,6 +189,14 @@ export const VolumeChart = (props: IVolumeChart) => {
             )
             .filter((_, i) => i === index)
             .attr("fill", COLOR_SELECTED);
+
+          const heroChart = select("#hero-chart");
+          heroChart
+            .selectAll(".bar")
+            .attr("opacity", 0)
+            .filter((_, i) => i === index)
+            .attr("opacity", SELECTED_OPACITIY);
+
           if (onMouseOver) {
             onMouseOver({ datum: data[index], index });
           }
@@ -213,6 +231,7 @@ export const VolumeChart = (props: IVolumeChart) => {
   return (
     <div>
       <svg
+        id="volume-chart"
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
