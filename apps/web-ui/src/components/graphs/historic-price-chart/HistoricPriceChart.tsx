@@ -17,6 +17,7 @@ import { VolumeChart } from "./VolumeChart";
 import { setRange } from "@lib/slices/navbar.slice";
 import { HeroChart } from "./HeroChart";
 import { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
+import { ChartTooltip } from "./ChartTooltip";
 
 type IHistoricPriceChart = {
   height: number;
@@ -28,6 +29,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const { height, width } = props;
   const btcPrices = useBtcHistoricPrices();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [tooltipKline, setTooltipKline] = useState<BinanceKlineMetric | null>(
+    null
+  );
   const [mouseoverHeroIndex, setMouseOverHeroIndex] = useState<number | null>(
     null
   );
@@ -112,20 +116,24 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
 
   const handleHoverHeroChart = ({
     index,
+    datum,
   }: {
     datum: BinanceKlineMetric;
     index: number;
   }) => {
     setMouseOverHeroIndex(index);
+    setTooltipKline(datum);
   };
 
   const handleMouseOverVolumeChart = ({
     index,
+    datum,
   }: {
     datum: BinanceKlineMetric;
     index: number;
   }) => {
     setSelectedIndex(index);
+    setTooltipKline(datum);
   };
 
   return (
@@ -133,6 +141,9 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
+      {tooltipKline && !btcPrices.loading && (
+        <ChartTooltip kline={tooltipKline} />
+      )}
       <div
         style={{ height }}
         className={cn({
@@ -143,7 +154,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           height={height}
           width={width}
           onMouseOver={handleHoverHeroChart}
-          onMouseOut={() => setSelectedIndex(null)}
+          onMouseOut={() => {
+            setSelectedIndex(null);
+            // setTooltipKline(null);
+          }}
           selectedIndex={selectedIndex}
         />
       </div>
@@ -156,7 +170,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           height={120}
           width={width}
           onMouseOver={handleMouseOverVolumeChart}
-          onMouseOut={() => setSelectedIndex(null)}
+          onMouseOut={() => {
+            setSelectedIndex(null);
+            setTooltipKline(null);
+          }}
           selectedIndex={mouseoverHeroIndex}
         />
       </div>

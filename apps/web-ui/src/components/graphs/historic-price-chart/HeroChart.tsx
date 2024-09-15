@@ -37,7 +37,7 @@ interface IHeroChart {
     datum,
     index,
   }: {
-    datum: BinanceKlineMetric;
+    datum: BinanceKlineMetric | null;
     index: number;
   }) => void;
 }
@@ -98,7 +98,7 @@ export const HeroChart = (props: IHeroChart) => {
   const b = diff === 0 ? 0 : btcExt[0];
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const top = yScale(lineData[lineData.length - 1]?.[yValueToUse]!);
-  console.log("tio", top);
+
   const btcScale = scaleLinear()
     .domain([b, btcExt[1]])
     .range([height - margin.bottom, top]);
@@ -307,15 +307,19 @@ export const HeroChart = (props: IHeroChart) => {
             onMouseOver({ datum, index });
           }
         })
-        .on("mouseout touchend", function () {
+        .on("mouseout touchend", function (event) {
           // select(this).attr("fill", "transparent"); // Revert to original color
           if (onMouseOut) {
             const [xy] = pointers(event);
-            const [x] = xy;
-            const index = Math.floor((x - margin.left) / xScale.step());
-            const datum = data[index];
+            if (xy) {
+              const [x] = xy;
+              const index = Math.floor((x - margin.left) / xScale.step());
+              const datum = data[index];
 
-            onMouseOut({ datum, index });
+              onMouseOut({ datum, index });
+            } else {
+              onMouseOut({ datum: null, index: -1 });
+            }
           }
         });
       // ---------------------------------------------------------------------//
