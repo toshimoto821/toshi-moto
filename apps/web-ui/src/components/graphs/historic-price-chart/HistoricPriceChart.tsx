@@ -83,8 +83,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     dispatch(chartByDateRangeAction(start, end));
   }, 200);
 
-  const handleRangeChange = (range: [Date, Date]) => {
-    const values = range.map((d) => d.getTime());
+  const handleRangeChange = (
+    range: [BinanceKlineMetric, BinanceKlineMetric]
+  ) => {
+    const values = [range[0].openTime, range[1].closeTime];
     scaleValues(values);
   };
 
@@ -102,11 +104,14 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     )();
   };
 
-  const handleBrushMove = ([startTime, endTime]: [Date, Date]) => {
+  const handleBrushMove = ([k1, k2]: [
+    BinanceKlineMetric,
+    BinanceKlineMetric
+  ]) => {
     dispatch(
       setRange({
-        graphStartDate: startTime.getTime(),
-        graphEndDate: endTime.getTime(),
+        graphStartDate: k1.openTime,
+        graphEndDate: k2.closeTime,
       })
     );
   };
@@ -152,6 +157,16 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           onMouseOver={handleHoverHeroChart}
         />
       </div>
+      <div className="mb-2">
+        <ChartLegend
+          height={30}
+          width={width}
+          onChange={handleRangeChange}
+          onReset={handleReset}
+          onBrushMove={handleBrushMove}
+          onBrushEnd={handleBrushEnd}
+        />
+      </div>
       <div
         className={cn("", {
           "opacity-50": btcPrices.loading,
@@ -161,16 +176,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           height={120}
           width={width}
           onMouseOver={handleMouseOverVolumeChart}
-        />
-      </div>
-      <div>
-        <ChartLegend
-          height={30}
-          width={width}
-          onChange={handleRangeChange}
-          onReset={handleReset}
-          onBrushMove={handleBrushMove}
-          onBrushEnd={handleBrushEnd}
         />
       </div>
     </div>

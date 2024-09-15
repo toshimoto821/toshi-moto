@@ -9,14 +9,15 @@ import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
 import { selectOrAppend } from "../line/d3.utils";
+import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 
 type IChartLegendProps = {
   height: number;
   width: number;
-  onChange: (range: [Date, Date]) => void;
+  onChange: (range: [BinanceKlineMetric, BinanceKlineMetric]) => void;
   onReset: () => void;
-  onBrushMove?: (dates: [Date, Date]) => void;
-  onBrushEnd?: (dates: [Date, Date]) => void;
+  onBrushMove?: (klines: [BinanceKlineMetric, BinanceKlineMetric]) => void;
+  onBrushEnd?: (klines: [BinanceKlineMetric, BinanceKlineMetric]) => void;
 };
 export const ChartLegend = ({
   height,
@@ -29,7 +30,7 @@ export const ChartLegend = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
     top: 70,
-    right: 0,
+    right: 80,
     bottom: 10,
     left: 0,
   };
@@ -65,12 +66,18 @@ export const ChartLegend = ({
     const openTime = firstPrice.openTime;
     xDomain.push(new Date(openTime));
     const lastPrice = cachedPrices[cachedPrices.length - 1];
-    const lastCloseTime = lastPrice.closeTime + 1;
+    const lastCloseTime = lastPrice.closeTime;
     xDomain.push(new Date(lastCloseTime));
   }
 
-  const xRange = [margin.left, width - margin.right];
-  const x = d3.scaleUtc().domain(xDomain).range(xRange);
+  // const xRange = [margin.left, width - margin.right];
+  // const x = d3.scaleUtc().domain(xDomain).range(xRange);
+
+  const xScale = scaleBand()
+    // prices = [date, price, volume]
+    .domain((cachedPrices || []).map((_, i) => i.toString()))
+    .range([margin.left, width - margin.right])
+    .padding(0.2);
 
   // this was used for grouping the brushes, but
   // that functionality was a bad user experience.
@@ -121,11 +128,21 @@ export const ChartLegend = ({
       if (!brushEvent.selection) {
         onReset();
       } else {
-        const [x1, x2] = (brushEvent.selection || []).map(x.invert);
-        if (isNaN(x1.getTime()) || isNaN(x2.getTime())) {
-          return;
+        const [x0, x1] = brushEvent.selection;
+
+        const startIndex = Math.floor(x0 / xScale.step());
+        const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+
+        let k1: BinanceKlineMetric | null = null;
+        let k2: BinanceKlineMetric | null = null;
+        if (cachedPrices?.length) {
+          k1 = cachedPrices[startIndex];
+          k2 = cachedPrices[endIndex];
+          if (!k2) {
+            k2 = cachedPrices[cachedPrices.length - 1];
+          }
+          onChange([k1, k2]);
         }
-        onChange([x1, x2]);
       }
   }
 
@@ -140,27 +157,47 @@ export const ChartLegend = ({
     .on("brush", (event: any) => {
       if (onBrushMove && event.selection) {
         // let interval = d3.timeMinute.every(30);
-        const d0 = event.selection.map(x.invert);
+        // const d0 = event.selection.map(xScale.invert);
         // const d1 = d0.map(interval.round);
+        const [x0, x1] = event.selection;
 
-        onBrushMove(d0);
+        const startIndex = Math.floor(x0 / xScale.step());
+        const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+
+        let k1: BinanceKlineMetric | null = null;
+        let k2: BinanceKlineMetric | null = null;
+        if (cachedPrices?.length) {
+          k1 = cachedPrices[startIndex];
+          k2 = cachedPrices[endIndex];
+          if (!k2) {
+            k2 = cachedPrices[cachedPrices.length - 1];
+          }
+          onBrushMove([k1, k2]);
+        }
       }
     })
     // .on("brush", brushed)
     .on("end", (event: any) => {
       currentSelecion.current = event;
       updateChart(event);
-      if (onBrushEnd) {
-        const [x1, x2] = (event.selection || []).map(x.invert);
-        onBrushEnd([x1, x2]);
+      if (onBrushEnd && event.selection) {
+        // const [x1, x2] = (event.selection || []).map(x.invert);
+        const [x0, x1] = event.selection;
+
+        const startIndex = Math.floor(x0 / xScale.step());
+        const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+        let k1: BinanceKlineMetric | null = null;
+        let k2: BinanceKlineMetric | null = null;
+        if (cachedPrices?.length) {
+          k1 = cachedPrices[startIndex];
+          k2 = cachedPrices[endIndex];
+          if (!k2) {
+            k2 = cachedPrices[cachedPrices.length - 1];
+          }
+          onBrushEnd([k1, k2]);
+        }
       }
     });
-
-  const xScale = scaleBand()
-    // prices = [date, price, volume]
-    .domain((cachedPrices || []).map((_, i) => i.toString()))
-    .range([margin.left, width - margin.right])
-    .padding(0.1);
 
   const xAxis = (g: any) => {
     // const ticks = (cachedPrices || []).map((d) => d[0]);
@@ -181,13 +218,11 @@ export const ChartLegend = ({
         .axisBottom(xScale)
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
-        .tickFormat((d, i) =>
-          tickFormat(new Date(cachedPrices![i].closeTime + 1))
-        ) // Format the tick labels as needed
-        .tickSizeOuter(0)
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices![i].openTime))) // Format the tick labels as needed
+        .tickSizeOuter(1)
     )
       .call((g: any) => {
-        g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
+        g.select(".domain").remove(); //attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
 
@@ -268,12 +303,12 @@ export const ChartLegend = ({
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
 
-        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].closeTime))) // Format the tick labels as needed
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].openTime))) // Format the tick labels as needed
         .tickSizeOuter(0)
       // .tickSizeOuter(0)
     )
       .call((g: any) => {
-        g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
+        g.select(".domain").remove(); //.attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
       .selectAll("text")
@@ -431,14 +466,14 @@ export const ChartLegend = ({
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 120px)",
+          maxWidth: "calc(100% - 40px)",
           height: "auto",
           fontSize: 10,
           marginLeft: "20px",
           marginRight: "20px",
         }}
         width={width}
-        className="bg-white border rounded drop-shadow-lg"
+        className="bg-white border border-t-2 border-gray-300"
         ref={svgRef}
       />
     </div>
