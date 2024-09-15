@@ -352,7 +352,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
 
     return { lineData: node, lineMap };
-  }, [node, graphStartDate, groupedKeys[0]]);
+  }, [node, graphStartDate, groupedKeys[0], prices.length]);
 
   const plotData = useMemo(() => {
     const plotData = [] as IPlotData[];

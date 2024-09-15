@@ -141,7 +141,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
         <ChartTooltip kline={(tooltipKline || lastPrice)!} />
       )}
       <div
-        id="hero-chart"
         style={{ height }}
         className={cn({
           "opacity-50": btcPrices.loading,

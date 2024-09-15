@@ -31,13 +31,13 @@ export const VolumeChart = (props: IVolumeChart) => {
 
   const dispatch = useAppDispatch();
 
-  const margin = { top: 0, right: 60, bottom: 0, left: 0 };
+  const margin = { top: 0, right: 80, bottom: 0, left: 0 };
   const data = prices || [];
   const lastPrice = data[data.length - 1] || [];
   const xScale = scaleBand()
     // prices = [date, price, volume]
     .domain(data.map((_, i) => i.toString()))
-    .range([margin.left, width - margin.right])
+    .range([margin.left, width - margin.right + 3]) // 3? @fix me. some spacing is off
     .padding(0.1);
 
   // const yScale = scaleLinear()
@@ -257,7 +257,7 @@ export const VolumeChart = (props: IVolumeChart) => {
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 40px)",
+          maxWidth: "calc(100% - 44px)",
           height: "auto",
           fontSize: 10,
           marginLeft: "20px",

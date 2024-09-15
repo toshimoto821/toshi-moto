@@ -15,7 +15,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
   const { prices } = useBtcHistoricPrices();
   if (prices?.length) {
     const lastPrice = prices[prices.length - 1];
-    if (lastPrice.closeTime === kline.closeTime) {
+    if (lastPrice.openTime === kline.openTime) {
       kline = lastPrice;
     }
   }

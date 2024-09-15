@@ -58,7 +58,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   const { lineData } = useChartData({ btcPrice, wallets });
 
-  const margin = { top: 10, right: 60, bottom: 0, left: 0 };
+  const margin = { top: 10, right: 80, bottom: 10, left: 0 };
 
   const data = [...(prices || [])];
 
@@ -221,6 +221,7 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
+
       // Bar Chart
       svg
         .selectAll(".bar")
@@ -389,12 +390,34 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
+      // Current Price (bar - right)
+      if (prices?.length) {
+        const kline = prices[prices.length - 1];
+        const h = yScale(parseFloat(kline.closePrice));
+
+        // orange line
+        svg
+          .append("line")
+          .attr("x1", width - margin.right)
+          .attr("y1", h)
+          .attr("x2", width)
+          .attr("y2", h)
+          // .attr("transform", `translate(${xScale.bandwidth() / -2}, 0)`)
+          .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
+          .attr("stroke-width", 1)
+          .attr("stroke-dasharray", "4 4")
+          .attr("stroke-opacity", 0.8)
+          .attr("opacity", 0.8);
+      }
+      // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
       // Y2 Axis (right)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y2Axis = (g: any) => {
-        const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
+        const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
         const textMargin = { top: 0, right: 5, bottom: 0, left: 0 };
-        g.attr("transform", `translate(${width},0)`)
+        g.attr("transform", `translate(${width - 20},0)`)
           .call(
             axisLeft(yScale)
               .tickFormat((d) => {
@@ -420,7 +443,8 @@ export const HeroChart = (props: IHeroChart) => {
             "transform",
             `translate(${textMargin.right * -1}, ${textMargin.top})`
           )
-          .attr("fill", "gray");
+          .attr("fill", "gray")
+          .attr("font-size", "14px");
 
         g.selectAll(".tick").each(function (this: SVGTextElement) {
           const tick = select(this);
@@ -453,7 +477,9 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.4)
+            .attr("opacity", 0.8)
+            .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
+            .attr("stroke-opacity", 0.4)
             .attr(
               "transform",
               `translate(${textMargin.right * -1}, ${textMargin.top})`
@@ -510,12 +536,10 @@ export const HeroChart = (props: IHeroChart) => {
           .selectAll("text")
           .attr("fill", "orange")
           .attr("opacity", 1)
-          .attr(
-            "transform",
-            `translate(${textMargin.left}, ${textMargin.top})`
-          );
+          .attr("transform", `translate(${textMargin.left}, ${textMargin.top})`)
+          .attr("font-size", "14px");
 
-        const padding = { top: 1, right: 1, bottom: 1, left: 5 }; // Adjust as needed
+        const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
 
         g.selectAll(".tick").each(function (this: SVGTextElement) {
           const tick = select(this);
@@ -545,7 +569,9 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.4)
+            .attr("opacity", 0.8)
+            .attr("stroke", "orange")
+            .attr("stroke-opacity", 0.4)
             .style("fill", "white")
             .attr(
               "transform",
@@ -566,39 +592,22 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
       // Current Price (bar - right)
       if (prices?.length) {
-        const kline = prices[prices.length - 1];
-        const h = yScale(parseFloat(kline.closePrice));
-
         const t = yScale(yExtent[1]!);
 
         svg
           .append("rect")
           .attr("id", "live-price")
-          .attr("x", width - margin.right)
+          .attr("x", width - 10)
           .attr("y", t)
-          .attr("width", margin.right)
+          .attr("width", 10)
           .attr("height", height)
           .attr("opacity", 0.28)
           .attr("transform", `translate(0, 0)`)
           .attr(
             "fill",
             direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
-          );
-        // .attr("stroke", "black");
-
-        // orange line
-        svg
-          .append("line")
-          .attr("x1", width - margin.right)
-          .attr("y1", h)
-          .attr("x2", width)
-          .attr("y2", h)
-          // .attr("transform", `translate(${xScale.bandwidth() / -2}, 0)`)
-          .attr("stroke", "orange")
-          .attr("stroke-width", 1)
-          .attr("stroke-dasharray", "4 4")
-
-          .attr("opacity", 0.8);
+          )
+          .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11);
       }
     };
 
