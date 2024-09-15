@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { ChartLegend } from "./ChartLegend";
@@ -8,6 +8,7 @@ import {
   selectUI,
   setGraphByRange,
   chartByDateRangeAction,
+  // setUI,
 } from "@root/lib/slices/ui.slice";
 import { cn } from "@root/lib/utils";
 import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
@@ -28,6 +29,12 @@ type IHistoricPriceChart = {
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const { height, width } = props;
   const btcPrices = useBtcHistoricPrices();
+
+  const { prices } = btcPrices;
+  let lastPrice: BinanceKlineMetric | null = null;
+  if (prices?.length) {
+    lastPrice = prices[prices.length - 1];
+  }
 
   const [tooltipKline, setTooltipKline] = useState<BinanceKlineMetric | null>(
     null
@@ -111,30 +118,28 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     dispatch(action);
   };
 
-  const handleHoverHeroChart = ({
-    datum,
-  }: {
-    datum: BinanceKlineMetric;
-    index: number;
-  }) => {
-    setTooltipKline(datum);
-  };
+  const handleHoverHeroChart = useCallback(
+    ({ datum }: { datum: BinanceKlineMetric; index: number }) => {
+      setTooltipKline(datum);
+    },
+    []
+  );
 
-  const handleMouseOverVolumeChart = ({
-    datum,
-  }: {
-    datum: BinanceKlineMetric;
-    index: number;
-  }) => {
-    setTooltipKline(datum);
-  };
+  const handleMouseOverVolumeChart = useCallback(
+    ({ datum }: { datum: BinanceKlineMetric; index: number }) => {
+      setTooltipKline(datum);
+    },
+    []
+  );
 
   return (
     <div className="w-full h-full relative">
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
-      {tooltipKline && <ChartTooltip kline={tooltipKline} />}
+      {(tooltipKline || lastPrice) && (
+        <ChartTooltip kline={(tooltipKline || lastPrice)!} />
+      )}
       <div
         id="hero-chart"
         style={{ height }}
@@ -146,10 +151,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           height={height}
           width={width}
           onMouseOver={handleHoverHeroChart}
-          onMouseOut={() => {
-            // setSelectedIndex(null);
-            // setTooltipKline(null);
-          }}
         />
       </div>
       <div
@@ -161,10 +162,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           height={120}
           width={width}
           onMouseOver={handleMouseOverVolumeChart}
-          onMouseOut={() => {
-            // setSelectedIndex(null);
-            // setTooltipKline(null);
-          }}
         />
       </div>
       <div>

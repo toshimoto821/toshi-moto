@@ -34,20 +34,13 @@ interface IHeroChart {
     datum: BinanceKlineMetric;
     index: number;
   }) => void;
-  onMouseOut?: ({
-    datum,
-    index,
-  }: {
-    datum: BinanceKlineMetric | null;
-    index: number;
-  }) => void;
 }
 
 const grayRGB = "rgb(243 244 246)";
 const SELECTED_OPACITIY = 0.28;
 
 export const HeroChart = (props: IHeroChart) => {
-  const { height, width, onMouseOut, onMouseOver } = props;
+  const { height, width, onMouseOver } = props;
   const svgRef = useRef<SVGSVGElement>(null);
   const dispatch = useAppDispatch();
   const { btcPrice } = useBtcPrice();
@@ -259,9 +252,6 @@ export const HeroChart = (props: IHeroChart) => {
           const datum = data[index];
           if (isLocked) {
             dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
-            // svg.selectAll(".bar").attr("opacity", 0);
-            // .filter((_, i) => i === index)
-            // .attr("opacity", SELECTED_OPACITIY);
           } else {
             dispatch(setUI({ graphIsLocked: true, graphSelectedIndex: index }));
 
@@ -273,11 +263,6 @@ export const HeroChart = (props: IHeroChart) => {
             if (onMouseOver) {
               onMouseOver({ datum, index });
             }
-            // svg
-            //   .selectAll(".bar")
-            //   .attr("opacity", 0)
-            //   .filter((_, i) => i === index)
-            //   .attr("opacity", SELECTED_OPACITIY);
           }
         });
 
@@ -325,8 +310,13 @@ export const HeroChart = (props: IHeroChart) => {
           if (isLocked) return;
           const [xy] = pointers(event);
           const [x] = xy;
-          const index = Math.floor((x - margin.left) / xScale.step());
-          const datum = data[index];
+          let index = Math.floor((x - margin.left) / xScale.step());
+
+          let datum = data[index];
+          if (!datum) {
+            index = data.length - 1;
+            datum = data[index];
+          }
 
           svg
             .selectAll(".bar")
@@ -334,25 +324,22 @@ export const HeroChart = (props: IHeroChart) => {
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
 
-          dispatch(setUI({ graphSelectedIndex: index }));
           if (onMouseOver) {
             onMouseOver({ datum, index });
           }
         })
-        .on("mouseout touchend", function (event) {
+        .on("mouseleave touchend", function () {
           if (isLocked) return;
           // select(this).attr("fill", "transparent"); // Revert to original color
-          if (onMouseOut) {
-            const [xy] = pointers(event);
-            if (xy) {
-              const [x] = xy;
-              const index = Math.floor((x - margin.left) / xScale.step());
-              const datum = data[index];
+          const index = data.length - 1;
+          svg
+            .selectAll(".bar")
+            .attr("opacity", 0)
+            .filter((_, i) => i === index)
+            .attr("opacity", SELECTED_OPACITIY);
 
-              onMouseOut({ datum, index });
-            } else {
-              onMouseOut({ datum: null, index: -1 });
-            }
+          if (onMouseOver) {
+            onMouseOver({ datum: data[index], index });
           }
         });
       // ---------------------------------------------------------------------//
@@ -363,7 +350,7 @@ export const HeroChart = (props: IHeroChart) => {
       const y2Axis = (g: any) => {
         const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
         const textMargin = { top: 0, right: 5, bottom: 0, left: 0 };
-        g.attr("transform", `translate(${width - margin.right},0)`)
+        g.attr("transform", `translate(${width},0)`)
           .call(
             axisLeft(yScale)
               .tickFormat((d) => {
@@ -541,7 +528,7 @@ export const HeroChart = (props: IHeroChart) => {
     width,
     lastPrice.closeTime,
     selectedIndex,
-    isLocked,
+    // isLocked,
   ]);
 
   return (

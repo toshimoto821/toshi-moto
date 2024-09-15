@@ -3,13 +3,22 @@ import { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 import { useState } from "react";
 import { selectGraphTimeframeRange } from "@lib/slices/ui.slice";
 import { useAppSelector } from "@lib/hooks/store.hooks";
+import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 interface IChartTooltip {
   kline: BinanceKlineMetric;
 }
 export const ChartTooltip = (props: IChartTooltip) => {
-  const { kline } = props;
+  let { kline } = props;
   const [open, setOpen] = useState(false);
   const range = useAppSelector(selectGraphTimeframeRange);
+
+  const { prices } = useBtcHistoricPrices();
+  if (prices?.length) {
+    const lastPrice = prices[prices.length - 1];
+    if (lastPrice.closeTime === kline.closeTime) {
+      kline = lastPrice;
+    }
+  }
 
   const showTime = (time: number) => {
     if (range === "1D" || range === "1W") {

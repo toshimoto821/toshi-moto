@@ -15,20 +15,13 @@ interface IVolumeChart {
     datum: BinanceKlineMetric;
     index: number;
   }) => void;
-  onMouseOut?: ({
-    datum,
-    index,
-  }: {
-    datum: BinanceKlineMetric;
-    index: number;
-  }) => void;
 }
 
 const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
 const COLOR_NEGATIVE_CHANGE = "transparent";
 const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
 export const VolumeChart = (props: IVolumeChart) => {
-  const { height, width, onMouseOver, onMouseOut } = props;
+  const { height, width, onMouseOver } = props;
   const svgRef = useRef<SVGSVGElement>(null);
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
@@ -168,27 +161,26 @@ export const VolumeChart = (props: IVolumeChart) => {
             .filter((_, i) => i === index)
             // .attr("opacity", 0.18) // Reset all bars to original color
             .attr("fill", COLOR_SELECTED);
-          dispatch(setUI({ graphSelectedIndex: i }));
+
           if (onMouseOver) {
             onMouseOver({ datum, index: i });
           }
         })
-        .on("mouseout touchend", function () {
+        .on("mouseleave touchend", function () {
           if (isLocked) return;
-          if (onMouseOut) {
-            const [xy] = pointers(event);
-            const [x] = xy;
-            const index = Math.floor((x - margin.left) / xScale.step());
-            const datum = data[index];
-            svg
-              .selectAll(".bar")
-              // .attr("opacity", 0)
-              .attr("fill", (_, i) =>
-                isPositiveChange(i)
-                  ? COLOR_POSITIVE_CHANGE
-                  : COLOR_NEGATIVE_CHANGE
-              );
-            onMouseOut({ datum, index });
+          const index = data.length - 1;
+          svg
+            .selectAll(".bar")
+            // .attr("opacity", 0)
+            .attr("fill", (_, i) =>
+              isPositiveChange(i)
+                ? COLOR_POSITIVE_CHANGE
+                : COLOR_NEGATIVE_CHANGE
+            )
+            .filter((_, i) => i === index)
+            .attr("fill", COLOR_SELECTED);
+          if (onMouseOver) {
+            onMouseOver({ datum: data[index], index });
           }
         });
 
