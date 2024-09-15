@@ -1,26 +1,25 @@
-import { useRef } from "react";
+import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
-import { Line } from "../line/Line";
 import { ChartLegend } from "./ChartLegend";
-
-import type { IPlotData } from "@root/types";
-import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 // import { selectForecast } from "@lib/slices/price.slice";
 import {
   selectUI,
   setGraphByRange,
   chartByDateRangeAction,
+  // setUI,
 } from "@root/lib/slices/ui.slice";
-import { useBtcPrice } from "@lib/hooks/useBtcPrice";
-import { useWallets } from "@root/lib/hooks/useWallets";
 import { cn } from "@root/lib/utils";
 import { useGetHistoricPriceDiffQuery } from "@lib/slices/api.slice";
 import { GraphTimeFrameRange } from "@root/lib/slices/ui.slice.types";
 import { TimeRangeButtons } from "./TimeRangeButtons";
 import { VolumeChart } from "./VolumeChart";
 import { setRange } from "@lib/slices/navbar.slice";
+import { HeroChart } from "./HeroChart";
+import { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
+import { ChartTooltip } from "./ChartTooltip";
+
 type IHistoricPriceChart = {
   height: number;
   width: number;
@@ -29,28 +28,27 @@ type IHistoricPriceChart = {
 
 export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   const { height, width } = props;
-  const clearSelectionRef = useRef<() => void>();
   const btcPrices = useBtcHistoricPrices();
-  const { wallets } = useWallets();
-  const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
-  const { graphTimeFrameRange, netAssetValue } = useAppSelector(selectUI);
-  const { btcPrice } = useBtcPrice();
+
+  const { prices } = btcPrices;
+  let lastPrice: BinanceKlineMetric | null = null;
+  if (prices?.length) {
+    lastPrice = prices[prices.length - 1];
+  }
+
+  const [tooltipKline, setTooltipKline] = useState<BinanceKlineMetric | null>(
+    null
+  );
+
+  const { graphTimeFrameRange } = useAppSelector(selectUI);
+
   const dispatch = useAppDispatch();
 
   useGetHistoricPriceDiffQuery();
   // console.log(response);
-  const {
-    graphPlotDots: showPlotDots,
-    graphBtcAllocation: showBtcAllocation,
-    previousGraphTimeFrameRange,
-  } = useAppSelector(selectUI);
+  const { previousGraphTimeFrameRange } = useAppSelector(selectUI);
 
   // const { forecastModel } = useAppSelector(selectForecast);
-
-  const result = useChartData({
-    btcPrice,
-    wallets,
-  });
 
   const chartTimeframeRange = graphTimeFrameRange;
 
@@ -73,29 +71,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     return () => {
       dispatch(setGraphByRange(timeframe));
     };
-  };
-
-  const { lineData, plotData } = result;
-
-  const onSelectPlot = (plot: IPlotData, clearSelection: () => void) => {
-    // setSelectedPlot(plot);
-    clearSelectionRef.current = clearSelection;
-    console.log("@todo implement", plot);
-    // walletActorRef.send({
-    //   type: "SET_SELECTED_LOT_DATA_INDEX",
-    //   data: { date: plot.x, clearSelection },
-    // });
-  };
-
-  const handleClearPlotSelection = () => {
-    if (clearSelectionRef.current) {
-      clearSelectionRef.current();
-      console.log("@todo implement");
-      // walletActorRef.send({
-      //   type: "SET_SELECTED_LOT_DATA_INDEX",
-      //   data: { date: -1 },
-      // });
-    }
   };
 
   const scaleValues = debounce((values: number[]) => {
@@ -143,29 +118,38 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     dispatch(action);
   };
 
+  const handleHoverHeroChart = useCallback(
+    ({ datum }: { datum: BinanceKlineMetric; index: number }) => {
+      setTooltipKline(datum);
+    },
+    []
+  );
+
+  const handleMouseOverVolumeChart = useCallback(
+    ({ datum }: { datum: BinanceKlineMetric; index: number }) => {
+      setTooltipKline(datum);
+    },
+    []
+  );
+
   return (
     <div className="w-full h-full relative">
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
+      {(tooltipKline || lastPrice) && (
+        <ChartTooltip kline={(tooltipKline || lastPrice)!} />
+      )}
       <div
         style={{ height }}
         className={cn({
           "opacity-50": btcPrices.loading,
         })}
       >
-        <Line
-          graphAssetValue={netAssetValue}
-          lineData={lineData}
-          plotData={plotData}
-          width={width}
+        <HeroChart
           height={height}
-          ready={!!prices.length && !!btcPrice}
-          onSelectPlot={onSelectPlot}
-          onClearSelection={handleClearPlotSelection}
-          dots={showPlotDots}
-          btcPrice={btcPrice ?? 0}
-          showBtcAllocation={showBtcAllocation}
+          width={width}
+          onMouseOver={handleHoverHeroChart}
         />
       </div>
       <div
@@ -173,7 +157,11 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           "opacity-50": btcPrices.loading,
         })}
       >
-        <VolumeChart height={120} width={width} />
+        <VolumeChart
+          height={120}
+          width={width}
+          onMouseOver={handleMouseOverVolumeChart}
+        />
       </div>
       <div>
         <ChartLegend
