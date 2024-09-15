@@ -23,9 +23,9 @@ export const ChartTooltip = (props: IChartTooltip) => {
   const showTime = (time: number) => {
     if (range === "1D" || range === "1W") {
       return new Date(time).toLocaleTimeString(undefined, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
+        year: undefined,
+        month: undefined,
+        day: undefined,
         hour: "2-digit",
         minute: "2-digit",
         second: undefined, // This will exclude seconds
