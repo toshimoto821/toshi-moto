@@ -221,6 +221,7 @@ export const useChartData = (opts: IUseChartData) => {
     selectedWalletId,
     chartTimeDiffInDays,
     totalTransactions,
+    lastTs,
   ]);
 
   const allNodes = [
@@ -316,6 +317,7 @@ export const useChartData = (opts: IUseChartData) => {
     groupedKeys[0],
     chartTimeDiffInDays,
     totalTransactions,
+    lastTs,
   ]);
 
   const { lineData, lineMap } = useMemo(() => {
@@ -352,7 +354,7 @@ export const useChartData = (opts: IUseChartData) => {
     }
 
     return { lineData: node, lineMap };
-  }, [node, graphStartDate, groupedKeys[0], prices.length]);
+  }, [node, graphStartDate, groupedKeys[0], prices.length, lastTs]);
 
   const plotData = useMemo(() => {
     const plotData = [] as IPlotData[];
