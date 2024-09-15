@@ -31,7 +31,7 @@ export const VolumeChart = (props: IVolumeChart) => {
 
   const dispatch = useAppDispatch();
 
-  const margin = { top: 0, right: 0, bottom: 0, left: 0 };
+  const margin = { top: 0, right: 60, bottom: 0, left: 0 };
   const data = prices || [];
   const lastPrice = data[data.length - 1] || [];
   const xScale = scaleBand()
@@ -66,6 +66,8 @@ export const VolumeChart = (props: IVolumeChart) => {
     .range([height, 0]);
 
   const isPositiveChange = (i: number) => {
+    // @todo fix me
+    if (i === 0) return true;
     const d = data[i];
     const price1 = parseFloat(d.closePrice);
     const previous = data[i - 1];
@@ -95,14 +97,24 @@ export const VolumeChart = (props: IVolumeChart) => {
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", (_, i) => xScale(i.toString())!)
+        .attr("x", (_, i) => {
+          if (i === 0) {
+            return xScale(i.toString())! + xScale.bandwidth() / 2;
+          }
+          return xScale(i.toString())!;
+        })
         .attr("y", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           // return priceChange >= 0 ? yScale(d[2]) : yScale(0);
           const vol = parseFloat(d.quoteAssetVolume);
           return yScale(vol);
         })
-        .attr("width", xScale.bandwidth())
+        .attr("width", (_, i) => {
+          if (i === data.length - 1 || i === 0) {
+            return xScale.bandwidth() / 2;
+          }
+          return xScale.bandwidth();
+        })
         .attr("height", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           const vol = parseFloat(d.quoteAssetVolume);
@@ -114,6 +126,9 @@ export const VolumeChart = (props: IVolumeChart) => {
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
+          // @todo fix me
+          // this is wrong because i dont have the first price
+          if (i === 0) return COLOR_SELECTED;
           if (i === selectedIndex) return COLOR_SELECTED;
 
           return priceChange >= 0
@@ -121,6 +136,9 @@ export const VolumeChart = (props: IVolumeChart) => {
             : COLOR_NEGATIVE_CHANGE;
         })
         .attr("stroke", (d, i) => {
+          // @todo fix me
+          // this is wrong because i dont have the first price
+          if (i === 0) return COLOR_POSITIVE_CHANGE;
           const price1 = parseFloat(d.closePrice);
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
@@ -148,8 +166,12 @@ export const VolumeChart = (props: IVolumeChart) => {
           if (isLocked) return;
           const [xy] = pointers(event);
           const [x] = xy;
-          const index = Math.floor((x - margin.left) / xScale.step());
-          const datum = data[index];
+          let index = Math.floor((x - margin.left) / xScale.step());
+          let datum = data[index];
+          if (!datum) {
+            index = data.length - 1;
+            datum = data[index];
+          }
           const i = data.findIndex((d) => d.openTime === datum.openTime);
 
           svg

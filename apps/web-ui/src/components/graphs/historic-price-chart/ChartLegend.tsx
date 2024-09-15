@@ -431,7 +431,7 @@ export const ChartLegend = ({
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 40px)",
+          maxWidth: "calc(100% - 100px)",
           height: "auto",
           fontSize: 10,
           marginLeft: "20px",

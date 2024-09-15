@@ -58,7 +58,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   const { lineData } = useChartData({ btcPrice, wallets });
 
-  const margin = { top: 10, right: 0, bottom: 0, left: 0 };
+  const margin = { top: 10, right: 60, bottom: 0, left: 0 };
 
   const data = [...(prices || [])];
 
@@ -98,16 +98,18 @@ export const HeroChart = (props: IHeroChart) => {
   ];
 
   const diff = Math.abs(btcExt[0] - btcExt[1]);
-  const b = diff === 0 ? 0 : btcExt[0];
+  const d1 = diff === 0 ? 0 : btcExt[0];
+  const d2 = btcExt[1];
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const top = yScale(lineData[lineData.length - 1]?.[yValueToUse]!);
 
   const btcScale = scaleLinear()
-    .domain([b, btcExt[1]])
+    .domain([d1, d2])
     .range([height - margin.bottom, top]);
 
   const btcScaleFull = scaleLinear()
-    .domain([b, btcExt[1]])
+    .domain([d1, d2])
     .range([height - margin.bottom, margin.top]);
 
   const btcLine = line<IRawNode>()
@@ -213,7 +215,7 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("d", areaGenerator)
         .attr(
           "fill",
-          direction > 0 ? "url(#gradient-green" : "url(#gradient-red"
+          direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
         );
 
       // ---------------------------------------------------------------------//
@@ -283,6 +285,8 @@ export const HeroChart = (props: IHeroChart) => {
         });
 
       // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
       // Line chart
       const lineGenerator = line<BinanceKlineMetric>()
         .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
@@ -316,11 +320,10 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("fill", grayRGB); // Apply a semi-transparent white fill
 
       // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
       // Binding movement
 
-      // for some reason this doesnt bind to anything but the bars
-      // its binding to the svg but when moving above the bars it doesnt
-      // trigger the callback
       svg
         .on("mousemove touchmove", function (event) {
           if (isLocked) return;
@@ -386,7 +389,7 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
-      // Axis
+      // Y2 Axis (right)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y2Axis = (g: any) => {
         const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
@@ -467,7 +470,7 @@ export const HeroChart = (props: IHeroChart) => {
       svg.append("g").attr("id", "y2").call(y2Axis);
 
       // ---------------------------------------------------------------------//
-      // BTC Allocation
+      // BTC Allocation (line)
       svg
         .append("path")
         .attr("id", "btc-past-line")
@@ -481,13 +484,15 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
-      // y1 (btc) axis
+      // y1 (btc) axis (left)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y1Axis = (g: any) => {
         // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
         g.attr("transform", `translate(0,0)`)
           .call(
             axisRight(btcScaleFull)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               .tickFormat((d: any) => {
                 return `₿${privateNumber(formatBtc(d / btcPrice))}`;
               })
@@ -557,6 +562,44 @@ export const HeroChart = (props: IHeroChart) => {
       svg.append("g").attr("id", "y1").call(y1Axis);
 
       // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
+      // Current Price (bar - right)
+      if (prices?.length) {
+        const kline = prices[prices.length - 1];
+        const h = yScale(parseFloat(kline.closePrice));
+
+        const t = yScale(yExtent[1]!);
+
+        svg
+          .append("rect")
+          .attr("id", "live-price")
+          .attr("x", width - margin.right)
+          .attr("y", t)
+          .attr("width", margin.right)
+          .attr("height", height)
+          .attr("opacity", 0.28)
+          .attr("transform", `translate(0, 0)`)
+          .attr(
+            "fill",
+            direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
+          );
+        // .attr("stroke", "black");
+
+        // orange line
+        svg
+          .append("line")
+          .attr("x1", width - margin.right)
+          .attr("y1", h)
+          .attr("x2", width)
+          .attr("y2", h)
+          // .attr("transform", `translate(${xScale.bandwidth() / -2}, 0)`)
+          .attr("stroke", "orange")
+          .attr("stroke-width", 1)
+          .attr("stroke-dasharray", "4 4")
+
+          .attr("opacity", 0.8);
+      }
     };
 
     render();
@@ -569,7 +612,7 @@ export const HeroChart = (props: IHeroChart) => {
     width,
     lastPrice.closeTime,
     selectedIndex,
-    // isLocked,
+    lastPrice.closePrice,
   ]);
 
   return (
