@@ -172,7 +172,7 @@ export const Line = (props: ILine) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const top = y2(lineData[lineData.length - 1]?.[yValueToUse]!);
 
-  // if there is no difference between the min and maxå
+  // if there is no difference between the min and max
   // it screws up the scale
   // so we set the bottom to 0
   const diff = Math.abs(ext3[0] - ext3[1]);
