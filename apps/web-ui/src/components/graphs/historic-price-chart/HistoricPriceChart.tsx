@@ -40,6 +40,10 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
     null
   );
 
+  const [tooltipSelectedIndex, setSelectedIndex] = useState<number | null>(
+    null
+  );
+
   const { graphTimeFrameRange } = useAppSelector(selectUI);
 
   const dispatch = useAppDispatch();
@@ -124,15 +128,17 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
   };
 
   const handleHoverHeroChart = useCallback(
-    ({ datum }: { datum: BinanceKlineMetric; index: number }) => {
+    ({ datum, index }: { datum: BinanceKlineMetric; index: number }) => {
       setTooltipKline(datum);
+      setSelectedIndex(index);
     },
     []
   );
 
   const handleMouseOverVolumeChart = useCallback(
-    ({ datum }: { datum: BinanceKlineMetric; index: number }) => {
+    ({ datum, index }: { datum: BinanceKlineMetric; index: number }) => {
       setTooltipKline(datum);
+      setSelectedIndex(index);
     },
     []
   );
@@ -142,9 +148,17 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
-      {(tooltipKline || lastPrice) && (
-        <ChartTooltip kline={(tooltipKline || lastPrice)!} />
-      )}
+      <div className="mb-2 sticky top-[140px]">
+        <ChartLegend
+          height={45}
+          width={width}
+          onChange={handleRangeChange}
+          onReset={handleReset}
+          onBrushMove={handleBrushMove}
+          onBrushEnd={handleBrushEnd}
+        />
+      </div>
+
       <div
         style={{ height }}
         className={cn({
@@ -157,16 +171,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           onMouseOver={handleHoverHeroChart}
         />
       </div>
-      <div className="mb-2">
-        <ChartLegend
-          height={30}
-          width={width}
-          onChange={handleRangeChange}
-          onReset={handleReset}
-          onBrushMove={handleBrushMove}
-          onBrushEnd={handleBrushEnd}
-        />
-      </div>
+
       <div
         className={cn("", {
           "opacity-50": btcPrices.loading,
@@ -178,6 +183,12 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           onMouseOver={handleMouseOverVolumeChart}
         />
       </div>
+      {(tooltipKline || lastPrice) && (
+        <ChartTooltip
+          kline={(tooltipKline || lastPrice)!}
+          selectedIndex={tooltipSelectedIndex}
+        />
+      )}
     </div>
   );
 };

@@ -20,7 +20,7 @@ interface IVolumeChart {
 
 export const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
 export const COLOR_NEGATIVE_CHANGE = "transparent";
-export const COLOR_SELECTED = "rgba(0, 0, 0, 0.60)";
+export const COLOR_SELECTED = "#F7931A";
 
 export const VolumeChart = (props: IVolumeChart) => {
   const { height, width, onMouseOver } = props;
@@ -31,8 +31,23 @@ export const VolumeChart = (props: IVolumeChart) => {
 
   const dispatch = useAppDispatch();
 
-  const margin = { top: 0, right: 80, bottom: 0, left: 0 };
-  const data = prices || [];
+  const margin = { top: 0, right: 0, bottom: 0, left: 0 };
+  const data = [...(prices || [])];
+
+  if (data.length) {
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+  }
+
   const lastPrice = data[data.length - 1] || [];
   const xScale = scaleBand()
     // prices = [date, price, volume]
@@ -98,10 +113,11 @@ export const VolumeChart = (props: IVolumeChart) => {
         .append("rect")
         .attr("class", "bar")
         .attr("x", (_, i) => {
-          if (i === 0) {
-            return xScale(i.toString())! + xScale.bandwidth() / 2;
-          }
-          return xScale(i.toString())!;
+          // if (i === 0) {
+
+          // }
+          return xScale(i.toString())! + xScale.bandwidth() / 2;
+          // return xScale(i.toString())!;
         })
         .attr("y", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
@@ -109,12 +125,13 @@ export const VolumeChart = (props: IVolumeChart) => {
           const vol = parseFloat(d.quoteAssetVolume);
           return yScale(vol);
         })
-        .attr("width", (_, i) => {
-          if (i === data.length - 1 || i === 0) {
-            return xScale.bandwidth() / 2;
-          }
-          return xScale.bandwidth();
-        })
+        .attr("width", xScale.bandwidth())
+        // .attr("width", (_, i) => {
+        //   if (i === data.length - 1 || i === 0) {
+        //     return xScale.bandwidth() / 2;
+        //   }
+        //   return xScale.bandwidth();
+        // })
         .attr("height", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           const vol = parseFloat(d.quoteAssetVolume);
@@ -126,9 +143,20 @@ export const VolumeChart = (props: IVolumeChart) => {
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
+          if (selectedIndex === null && i === data.length - 6) {
+            return COLOR_SELECTED;
+          }
           // @todo fix me
           // this is wrong because i dont have the first price
-          if (i === 0) return COLOR_SELECTED;
+          if (i < 5 || i > data.length - 6) {
+            return "transparent";
+          }
+          if (i === 5) {
+            return isPositiveChange(1)
+              ? COLOR_POSITIVE_CHANGE
+              : COLOR_NEGATIVE_CHANGE;
+          }
+
           if (i === selectedIndex) return COLOR_SELECTED;
 
           return priceChange >= 0
@@ -137,8 +165,18 @@ export const VolumeChart = (props: IVolumeChart) => {
         })
         .attr("stroke", (d, i) => {
           // @todo fix me
-          // this is wrong because i dont have the first price
-          if (i === 0) return COLOR_POSITIVE_CHANGE;
+
+          if (i < 5 || i > data.length - 6) {
+            // exit before selecting the color
+            return "transparent";
+          }
+
+          if (i === 5) {
+            return isPositiveChange(6)
+              ? COLOR_NEGATIVE_CHANGE
+              : COLOR_POSITIVE_CHANGE;
+          }
+
           const price1 = parseFloat(d.closePrice);
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
@@ -161,29 +199,43 @@ export const VolumeChart = (props: IVolumeChart) => {
       // ---------------------------------------------------------------------//
       // Binding movement
       svg
-
         .on("mousemove touchmove", function (event) {
           if (isLocked) return;
           const [xy] = pointers(event);
           const [x] = xy;
           let index = Math.floor((x - margin.left) / xScale.step());
+
+          if (index < 5 || index > data.length - 6) {
+            index = data.length - 6;
+          }
+
           let datum = data[index];
           if (!datum) {
             index = data.length - 1;
             datum = data[index];
           }
-          const i = data.findIndex((d) => d.openTime === datum.openTime);
+          // const i = data.findIndex((d) => d.openTime === datum.openTime);
 
           svg
             .selectAll(".bar")
             // .attr("opacity", 0)
-            .attr("fill", (_, i) =>
-              isPositiveChange(i)
+            .attr("fill", (_, ind) => {
+              if (ind < 5 || ind > data.length - 6) {
+                return "transparent";
+              }
+
+              return isPositiveChange(ind)
                 ? COLOR_POSITIVE_CHANGE
-                : COLOR_NEGATIVE_CHANGE
-            )
-            .filter((_, i) => i === index)
-            // .attr("opacity", 0.18) // Reset all bars to original color
+                : COLOR_NEGATIVE_CHANGE;
+            })
+            .filter((_, ind) => {
+              if (ind < 5 || ind > data.length - 6) {
+                return false;
+              }
+
+              return ind === index;
+            })
+            // Reset all bars to original color
             .attr("fill", COLOR_SELECTED);
 
           const heroChart = select("#hero-chart");
@@ -195,21 +247,32 @@ export const VolumeChart = (props: IVolumeChart) => {
             .attr("opacity", SELECTED_OPACITIY);
 
           if (onMouseOver) {
-            onMouseOver({ datum, index: i });
+            onMouseOver({ datum, index: index - 5 });
           }
         })
         .on("mouseleave touchend", function () {
           if (isLocked) return;
-          const index = data.length - 1;
+          const index = data.length - 6;
           svg
             .selectAll(".bar")
             // .attr("opacity", 0)
-            .attr("fill", (_, i) =>
-              isPositiveChange(i)
+            .attr("fill", (_, ind) => {
+              if (ind < 5 || ind > data.length - 6) {
+                return "transparent";
+              }
+
+              return isPositiveChange(ind)
                 ? COLOR_POSITIVE_CHANGE
-                : COLOR_NEGATIVE_CHANGE
-            )
-            .filter((_, i) => i === index)
+                : COLOR_NEGATIVE_CHANGE;
+            })
+
+            .filter((_, ind) => {
+              if (ind < 5 || ind > data.length - 6) {
+                return false;
+              }
+
+              return ind === index;
+            })
             .attr("fill", COLOR_SELECTED);
 
           const heroChart = select("#hero-chart");
@@ -218,9 +281,8 @@ export const VolumeChart = (props: IVolumeChart) => {
             .attr("opacity", 0)
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
-
           if (onMouseOver) {
-            onMouseOver({ datum: data[index], index });
+            onMouseOver({ datum: data[index], index: index - 5 });
           }
         });
 
@@ -257,11 +319,8 @@ export const VolumeChart = (props: IVolumeChart) => {
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 44px)",
           height: "auto",
           fontSize: 10,
-          marginLeft: "20px",
-          marginRight: "20px",
         }}
         width={width}
         className=""

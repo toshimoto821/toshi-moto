@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useEffect, useMemo, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection, scaleBand } from "d3";
 import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
-import { cn } from "@root/lib/utils";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
@@ -25,21 +24,20 @@ export const ChartLegend = ({
   onChange,
   onReset,
   onBrushMove,
-  onBrushEnd,
 }: IChartLegendProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
-    top: 70,
-    right: 80,
-    bottom: 10,
+    top: 0,
+    right: 0,
+    bottom: 0,
     left: 0,
   };
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices, loading, range, group } = useBtcHistoricPrices();
+  const { prices, loading, range } = useBtcHistoricPrices();
 
-  const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
+  const { forecastModel } = useAppSelector(selectForecast);
 
   const graphTimeFrameRange = useAppSelector(
     (state) => state.ui.graphTimeFrameRange
@@ -52,14 +50,28 @@ export const ChartLegend = ({
   const chartTimeFrameRange =
     graphTimeFrameRange || previousGraphTimeFrameRange;
 
-  const len = prices?.length || 0;
-  const cachedPrices = useMemo(() => {
-    if (forecastModel && forecastPrices) {
-      return prices?.concat(forecastPrices);
-    }
-    return prices;
-  }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
+  // const cachedPrices = useMemo(() => {
+  //   if (forecastModel && forecastPrices) {
+  //     return prices?.concat(forecastPrices);
+  //   }
+  //   return prices;
+  // }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
 
+  const cachedPrices = [...(prices || [])];
+  // @todo refactor this into a function!
+  if (cachedPrices.length) {
+    cachedPrices.unshift(cachedPrices[0]);
+    cachedPrices.unshift(cachedPrices[0]);
+    cachedPrices.unshift(cachedPrices[0]);
+    cachedPrices.unshift(cachedPrices[0]);
+    cachedPrices.unshift(cachedPrices[0]);
+
+    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
+    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
+    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
+    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
+    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
+  }
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
     const firstPrice = cachedPrices[0];
@@ -77,7 +89,7 @@ export const ChartLegend = ({
     // prices = [date, price, volume]
     .domain((cachedPrices || []).map((_, i) => i.toString()))
     .range([margin.left, width - margin.right])
-    .padding(0.2);
+    .padding(0);
 
   // this was used for grouping the brushes, but
   // that functionality was a bad user experience.
@@ -126,7 +138,9 @@ export const ChartLegend = ({
     }
     if (brushEvent)
       if (!brushEvent.selection) {
-        onReset();
+        if (!brushEvent.sourceEvent.reset) {
+          onReset();
+        }
       } else {
         const [x0, x1] = brushEvent.selection;
 
@@ -152,7 +166,7 @@ export const ChartLegend = ({
     .brushX()
     .extent([
       [margin.left, 1],
-      [width - margin.right, height - 1],
+      [width - margin.right, height],
     ])
     .on("brush", (event: any) => {
       if (onBrushMove && event.selection) {
@@ -177,26 +191,39 @@ export const ChartLegend = ({
       }
     })
     // .on("brush", brushed)
-    .on("end", (event: any) => {
+    .on("end", function (event: any) {
       currentSelecion.current = event;
-      updateChart(event);
-      if (onBrushEnd && event.selection) {
-        // const [x1, x2] = (event.selection || []).map(x.invert);
-        const [x0, x1] = event.selection;
 
-        const startIndex = Math.floor(x0 / xScale.step());
-        const endIndex = Math.ceil(x1 / xScale.step()) - 1;
-        let k1: BinanceKlineMetric | null = null;
-        let k2: BinanceKlineMetric | null = null;
-        if (cachedPrices?.length) {
-          k1 = cachedPrices[startIndex];
-          k2 = cachedPrices[endIndex];
-          if (!k2) {
-            k2 = cachedPrices[cachedPrices.length - 1];
-          }
-          onBrushEnd([k1, k2]);
-        }
+      updateChart(event);
+      // @todo bind to response in some way?
+      // setTimeout(() => {
+      if (!event.sourceEvent?.reset) {
+        // @ts-expect-error d3 issues
+        d3.select(this).call(brush.move, null, { reset: true });
       }
+      // }, 2000);
+      // if (onBrushEnd && event.selection) {
+      //   // const [x1, x2] = (event.selection || []).map(x.invert);
+      //   const [x0, x1] = event.selection;
+
+      //   const startIndex = Math.floor(x0 / xScale.step());
+      //   const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+      //   let k1: BinanceKlineMetric | null = null;
+      //   let k2: BinanceKlineMetric | null = null;
+      //   if (cachedPrices?.length) {
+      //     k1 = cachedPrices[startIndex];
+      //     k2 = cachedPrices[endIndex];
+      //     if (!k2) {
+      //       k2 = cachedPrices[cachedPrices.length - 1];
+      //     }
+      //     onBrushEnd([k1, k2]);
+      //   }
+      //   // @todo pickup here
+      //   // setTimeout(() => {
+      //   //   d3.select(this).call(brush.move, null);
+      //   // }, 5000);
+      // }
+      //
     });
 
   const xAxis = (g: any) => {
@@ -219,12 +246,19 @@ export const ChartLegend = ({
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
         .tickFormat((d, i) => tickFormat(new Date(cachedPrices![i].openTime))) // Format the tick labels as needed
-        .tickSizeOuter(1)
+        .ticks(xScale.domain().length)
+      // .tickSizeOuter(1)
     )
       .call((g: any) => {
+        g.selectAll(".tick").attr("opacity", (_: any, i: number) => {
+          if (i < 5) return 0;
+          if (i > cachedPrices.length - 6) return 0;
+          return 1;
+        });
         g.select(".domain").remove(); //attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
+      // .attr("transform", `translate(0, ${height - margin.bottom})`) // Move the axis to the bottom
 
       .selectAll("text")
       .attr("dy", "1.5em")
@@ -237,11 +271,11 @@ export const ChartLegend = ({
       .attr("opacity", 0.5)
       .attr("stroke-width", 1)
       .style("font-size", "12px") // Ensure consistent font size
-      .style("font-family", "Arial, sans-serif") // Ensure consistent font family
-      .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`); // Shift ticks to the left by half the bar width
+      .style("font-family", "Arial, sans-serif"); // Ensure consistent font family
+    // .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`); // Shift ticks to the left by half the bar width
 
     g.selectAll("text")
-      .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`) // Shift ticks to the left by half the bar width
+      // .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`) // Shift ticks to the left by half the bar width
       .attr("display", "")
       .filter((_: any, i: number) => {
         if (range === "1D") {
@@ -273,7 +307,9 @@ export const ChartLegend = ({
       .attr("display", "none");
 
     g.selectAll(".tick line")
+      .attr("transform", `translate(0, ${height - 6})`)
       .filter((_: any, i: number) => i % 4 === 0)
+      .attr("transform", `translate(0, ${height - 10})`)
       .attr("y2", 10);
 
     g.selectAll(".tick line")
@@ -304,10 +340,15 @@ export const ChartLegend = ({
         // @ts-expect-error d3 issues
 
         .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].openTime))) // Format the tick labels as needed
-        .tickSizeOuter(0)
+        .ticks(xScale.domain().length)
       // .tickSizeOuter(0)
     )
       .call((g: any) => {
+        g.selectAll(".tick").attr("opacity", (_: any, i: number) => {
+          if (i < 5) return 0;
+          if (i > cachedPrices.length - 6) return 0;
+          return 1;
+        });
         g.select(".domain").remove(); //.attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
@@ -360,23 +401,25 @@ export const ChartLegend = ({
       .attr("display", "none");
 
     g.selectAll(".tick line")
-      .filter((_: any, i: number) => i % 6 === 0)
+      .attr("transform", `translate(0, ${height - 6})`)
+      .filter((_: any, i: number) => i % 12 === 0)
+      .attr("transform", `translate(0, ${height - 10})`)
       .attr("y2", 10);
   };
 
   const render = () => {
-    if (!prices?.length) return;
+    if (!cachedPrices?.length) return;
     const svg = d3.select(svgRef.current);
 
     // only repain the chart if the graphTimeFrameRange is not null.
     // it gets set to null when user drags on brush
-    if (graphTimeFrameRange) {
-      if (breakpoint > 3) {
-        selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
-      } else {
-        selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
-      }
+    // if (graphTimeFrameRange) {
+    if (breakpoint > 3) {
+      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
+    } else {
+      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
     }
+    // }
 
     if (!forecastModel) {
       // const brushSelection = svg.append("g");
@@ -394,24 +437,20 @@ export const ChartLegend = ({
 
   const hasPrices = (cachedPrices?.length || 0) > 0;
 
-  useEffect(() => {
-    if (graphTimeFrameRange) {
-      const svg = d3.select(svgRef.current);
-      const brushSelection: d3.Selection<
-        SVGGElement,
-        unknown,
-        null,
-        undefined
-      > = svg.select("#brush-g");
-      brushSelection.call(brush.move, null);
-    }
-  }, [graphTimeFrameRange, chartTimeFrameRange]);
+  // useEffect(() => {
+  //   if (graphTimeFrameRange) {
+  //     const svg = d3.select(svgRef.current);
+  //     const brushSelection: d3.Selection<
+  //       SVGGElement,
+  //       unknown,
+  //       null,
+  //       undefined
+  //     > = svg.select("#brush-g");
+  //     brushSelection.call(brush.move, null);
+  //   }
+  // }, [graphTimeFrameRange, chartTimeFrameRange]);
 
   useEffect(() => {
-    // @ts-expect-error fix me, api returns string "null"
-    if (!range || range === "null" || loading) {
-      return;
-    }
     render();
     // const svg = d3.select(svgRef.current);
     return () => {
@@ -457,23 +496,16 @@ export const ChartLegend = ({
   }, []);
 
   return (
-    <div
-      className={cn("", {
-        "opacity-60": !!forecastModel,
-      })}
-    >
+    <div className="opacity-80">
       <svg
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 40px)",
           height: "auto",
           fontSize: 10,
-          marginLeft: "20px",
-          marginRight: "20px",
         }}
         width={width}
-        className="bg-white border border-t-2 border-gray-300"
+        className="bg-white border-b  border-gray-300"
         ref={svgRef}
       />
     </div>

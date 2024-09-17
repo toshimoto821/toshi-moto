@@ -56,32 +56,84 @@ export const HeroChart = (props: IHeroChart) => {
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
 
+  const netAssetValue = useAppSelector((state) => state.ui.netAssetValue);
+
   const { lineData } = useChartData({ btcPrice, wallets });
 
-  const margin = { top: 10, right: 80, bottom: 10, left: 0 };
+  const margin = { top: 10, right: 0, bottom: 10, left: 0 };
 
   const data = [...(prices || [])];
 
+  if (data.length) {
+    lineData.unshift(lineData[0]);
+    lineData.unshift(lineData[0]);
+    lineData.unshift(lineData[0]);
+    lineData.unshift(lineData[0]);
+    lineData.unshift(lineData[0]);
+
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+    data.unshift(data[0]);
+
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+    data.push(data[data.length - 1]);
+
+    lineData.push(lineData[lineData.length - 1]);
+    lineData.push(lineData[lineData.length - 1]);
+    lineData.push(lineData[lineData.length - 1]);
+    lineData.push(lineData[lineData.length - 1]);
+    lineData.push(lineData[lineData.length - 1]);
+  }
+
   const lastPrice = data[data.length - 1] || [];
+  const range1 = [margin.left, width - margin.right];
+  const domain1 = data.map((_, i) => i.toString());
+  // console.log(range1, domain1);
+
   const xScale = scaleBand()
     // prices = [date, price, volume]
-    .domain(data.map((_, i) => i.toString()))
-    .range([margin.left, width - margin.right])
-    .padding(0);
+    .domain(domain1)
+    .range(range1)
+    .padding(0.1);
 
-  const yExtent = [
-    min(
-      data.map((d) => {
-        const volume = parseFloat(d.closePrice);
-        return volume;
-      })
-    ),
-    max(
-      data.map((d) => {
-        return parseFloat(d.closePrice);
-      })
-    ),
-  ];
+  let yExtent;
+
+  if (netAssetValue) {
+    yExtent = [
+      min(
+        lineData.map((d) => {
+          return d.y1SumInDollars;
+        })
+      ),
+      max(
+        lineData.map((d) => {
+          return d.y1SumInDollars;
+        })
+      ),
+    ];
+  } else {
+    yExtent = [
+      min(
+        data.map((d) => {
+          const volume = Math.min(
+            parseFloat(d.closePrice),
+            parseFloat(d.openPrice)
+          );
+          return volume;
+        })
+      ),
+      max(
+        data.map((d) => {
+          return Math.max(parseFloat(d.closePrice), parseFloat(d.openPrice));
+        })
+      ),
+    ];
+  }
 
   const yScale = scaleLinear()
     .domain([yExtent[0]!, yExtent[1]!])
@@ -90,7 +142,7 @@ export const HeroChart = (props: IHeroChart) => {
   const formatDefault = format("~s");
   const formatBtc = format(".4f");
 
-  const yValueToUse = "y2" as "y1SumInDollars" | "y2";
+  const yValueToUse = netAssetValue ? "y1SumInDollars" : "y2";
 
   const btcExt = extent(lineData, (d) => d.y1Sum * btcPrice) as [
     number,
@@ -113,7 +165,7 @@ export const HeroChart = (props: IHeroChart) => {
     .range([height - margin.bottom, margin.top]);
 
   const btcLine = line<IRawNode>()
-    .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
+    .x((_, i) => xScale(i.toString())!)
     .y((d) => {
       const t = d.y1Sum * btcPrice;
       const val = btcScale(t);
@@ -199,17 +251,27 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
       // Area chart
       // Adjust x-coordinates for line and area charts
-      const adjustedX = (i: number) =>
-        xScale(i.toString())! + xScale.bandwidth() / 2;
+      const adjustedX = (i: number) => xScale(i.toString())!;
 
-      const areaGenerator = area<BinanceKlineMetric>()
+      const areaGenerator = area<BinanceKlineMetric | IRawNode>()
         .x((_, i) => adjustedX(i))
         .y0(height)
-        .y1((d) => yScale(parseFloat(d.closePrice)));
+        .y1((d, i) => {
+          if (netAssetValue) {
+            // cast d as IRawNode
+            return yScale((d as IRawNode)[yValueToUse]);
+          }
+
+          if (i > data.length - 6) {
+            return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
+          }
+          return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
+        });
 
       svg
         .append("path")
-        .datum(data)
+        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+        .datum(netAssetValue ? lineData : data)
         .attr("class", "area")
         .attr("opacity", 0.2)
         .attr("d", areaGenerator)
@@ -225,49 +287,65 @@ export const HeroChart = (props: IHeroChart) => {
       // Bar Chart
       svg
         .selectAll(".bar")
-        .data(data)
+        .data<BinanceKlineMetric | IRawNode>(netAssetValue ? lineData : data)
         .enter()
         .append("rect")
         .attr("class", "bar")
         .attr("x", (_, i) => {
-          const x = xScale(i.toString())!;
-          const w = xScale.bandwidth();
-          if (i === 0) {
-            return x + w / 2 + 1;
-          }
+          const x = xScale(i.toString())! + xScale.bandwidth() / 2;
 
           return x;
         })
         .attr("y", (d) => {
           // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
           // return priceChange >= 0 ? yScale(d[2]) : yScale(0);
-          const price = parseFloat(d.closePrice);
 
-          return yScale(price) - 50;
-        })
-        .attr("width", (_, i) => {
-          const w = xScale.bandwidth();
-          if (i === 0 || i === data.length - 1) {
-            return w / 2 - 1;
+          if (netAssetValue) {
+            return yScale((d as IRawNode)[yValueToUse]);
           }
-          return w;
+
+          const price = Math.max(
+            parseFloat((d as BinanceKlineMetric).openPrice),
+            parseFloat((d as BinanceKlineMetric).closePrice)
+          );
+          const y = yScale(price);
+          return y;
         })
+        .attr("width", xScale.bandwidth())
+
         .attr(
           "fill",
           direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
         )
         .attr("height", (d) => {
-          const price = parseFloat(d.closePrice);
+          if (netAssetValue) {
+            return (
+              height - margin.bottom - yScale((d as IRawNode)[yValueToUse])
+            );
+          }
+
+          const price = parseFloat((d as BinanceKlineMetric).closePrice);
           return height - margin.bottom - yScale(price) + 50;
         })
         .attr("opacity", (_, i) => {
           if (selectedIndex === null) {
+            if (i === data.length - 6) {
+              return SELECTED_OPACITIY;
+            }
             return 0;
           }
           return selectedIndex === i ? SELECTED_OPACITIY : 0;
         })
         .on("click", (_, kline) => {
-          const index = data.findIndex((d) => d.openTime === kline.openTime);
+          let index;
+          if (netAssetValue) {
+            index = lineData.findIndex((d) => d.x === (kline as IRawNode).x);
+          } else {
+            index = data.findIndex(
+              (d) => d.openTime === (kline as BinanceKlineMetric).openTime
+            );
+          }
+
           const datum = data[index];
           if (isLocked) {
             dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
@@ -289,13 +367,23 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // Line chart
-      const lineGenerator = line<BinanceKlineMetric>()
-        .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
-        .y((d) => yScale(parseFloat(d.closePrice)));
+      const lineGenerator = line<BinanceKlineMetric | IRawNode>()
+        .x((_, i) => xScale(i.toString())!)
+        .y((d, i) => {
+          if (netAssetValue) {
+            return yScale((d as IRawNode)[yValueToUse]);
+          } else {
+            if (i > data.length - 6) {
+              return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
+            }
+            return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
+          }
+        });
 
       svg
         .append("path")
-        .datum(data)
+        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+        .datum(netAssetValue ? lineData : data)
         .attr("class", "line")
         .attr("d", lineGenerator)
         .attr("fill", "none")
@@ -306,16 +394,26 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // Inverse Area chart
-      const inverseAreaGenerator = area<BinanceKlineMetric>()
+      const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
         .x((_, i) => {
           return adjustedX(i);
         })
         .y0(0)
-        .y1((d) => yScale(parseFloat(d.closePrice)));
+        .y1((d, i) => {
+          if (netAssetValue) {
+            return yScale((d as IRawNode)[yValueToUse]);
+          } else {
+            if (i > data.length - 6) {
+              return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
+            }
+            return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
+          }
+        });
 
       svg
         .append("path")
-        .datum(data)
+        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+        .datum(netAssetValue ? lineData : data)
         .attr("class", "inverse-area")
         .attr("d", inverseAreaGenerator)
         .attr("fill", grayRGB); // Apply a semi-transparent white fill
@@ -331,7 +429,9 @@ export const HeroChart = (props: IHeroChart) => {
           const [xy] = pointers(event);
           const [x] = xy;
           let index = Math.floor((x - margin.left) / xScale.step());
-
+          if (index < 5 || index > data.length - 6) {
+            index = data.length - 6;
+          }
           let datum = data[index];
           if (!datum) {
             index = data.length - 1;
@@ -358,17 +458,22 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("fill", COLOR_SELECTED);
 
           if (onMouseOver) {
-            onMouseOver({ datum, index });
+            onMouseOver({ datum, index: index - 5 });
           }
         })
         .on("mouseleave touchend", function () {
           if (isLocked) return;
           // select(this).attr("fill", "transparent"); // Revert to original color
-          const index = data.length - 1;
+          const index = data.length - 6;
           svg
             .selectAll(".bar")
             .attr("opacity", 0)
-            .filter((_, i) => i === index)
+            .filter((_, ind) => {
+              if (ind < 5 || ind > data.length - 6) {
+                return false;
+              }
+              return ind === index;
+            })
             .attr("opacity", SELECTED_OPACITIY);
 
           const volChart = select("#volume-chart");
@@ -384,7 +489,7 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("fill", COLOR_SELECTED);
 
           if (onMouseOver) {
-            onMouseOver({ datum: data[index], index });
+            onMouseOver({ datum: data[index], index: index - 5 });
           }
         });
       // ---------------------------------------------------------------------//
@@ -398,6 +503,7 @@ export const HeroChart = (props: IHeroChart) => {
         // orange line
         svg
           .append("line")
+          .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
           .attr("x1", width - margin.right)
           .attr("y1", h)
           .attr("x2", width)
@@ -416,8 +522,8 @@ export const HeroChart = (props: IHeroChart) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y2Axis = (g: any) => {
         const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
-        const textMargin = { top: 0, right: 5, bottom: 0, left: 0 };
-        g.attr("transform", `translate(${width - 20},0)`)
+        const textMargin = { top: 0, right: 10, bottom: 0, left: 0 };
+        g.attr("transform", `translate(${width - 12},0)`)
           .call(
             axisLeft(yScale)
               .tickFormat((d) => {
@@ -477,7 +583,7 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.8)
+            .attr("opacity", 0.4)
             .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
             .attr("stroke-opacity", 0.4)
             .attr(
@@ -499,6 +605,7 @@ export const HeroChart = (props: IHeroChart) => {
       // BTC Allocation (line)
       svg
         .append("path")
+        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
         .attr("id", "btc-past-line")
         .attr("fill", "none")
         .attr("stroke", "orange")
@@ -514,8 +621,8 @@ export const HeroChart = (props: IHeroChart) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y1Axis = (g: any) => {
         // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
-        const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
-        g.attr("transform", `translate(0,0)`)
+        const textMargin = { top: 0, right: 0, bottom: 0, left: 10 };
+        g.attr("transform", `translate(12,0)`)
           .call(
             axisRight(btcScaleFull)
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -569,7 +676,7 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.8)
+            .attr("opacity", 0.4)
             .attr("stroke", "orange")
             .attr("stroke-opacity", 0.4)
             .style("fill", "white")
@@ -591,24 +698,24 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // Current Price (bar - right)
-      if (prices?.length) {
-        const t = yScale(yExtent[1]!);
+      // if (prices?.length) {
+      //   const t = yScale(yExtent[1]!);
 
-        svg
-          .append("rect")
-          .attr("id", "live-price")
-          .attr("x", width - 10)
-          .attr("y", t)
-          .attr("width", 10)
-          .attr("height", height)
-          .attr("opacity", 0.28)
-          .attr("transform", `translate(0, 0)`)
-          .attr(
-            "fill",
-            direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
-          )
-          .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11);
-      }
+      //   svg
+      //     .append("rect")
+      //     .attr("id", "live-price")
+      //     .attr("x", width - 10)
+      //     .attr("y", t)
+      //     .attr("width", 10)
+      //     .attr("height", height)
+      //     .attr("opacity", 0.28)
+      //     .attr("transform", `translate(0, 0)`)
+      //     .attr(
+      //       "fill",
+      //       direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
+      //     )
+      //     .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11);
+      // }
     };
 
     render();
@@ -622,6 +729,7 @@ export const HeroChart = (props: IHeroChart) => {
     lastPrice.closeTime,
     selectedIndex,
     lastPrice.closePrice,
+    yValueToUse,
   ]);
 
   return (
@@ -631,11 +739,8 @@ export const HeroChart = (props: IHeroChart) => {
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 40px)",
           height: "auto",
           fontSize: 10,
-          marginLeft: "20px",
-          marginRight: "20px",
         }}
         width={width}
         className=""
