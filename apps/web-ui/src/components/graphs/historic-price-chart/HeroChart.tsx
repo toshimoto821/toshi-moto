@@ -337,7 +337,7 @@ export const HeroChart = (props: IHeroChart) => {
           return selectedIndex === i ? SELECTED_OPACITIY : 0;
         })
         .on("click", (_, kline) => {
-          let index;
+          let index: number;
           if (netAssetValue) {
             index = lineData.findIndex((d) => d.x === (kline as IRawNode).x);
           } else {
