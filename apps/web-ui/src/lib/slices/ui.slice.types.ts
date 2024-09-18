@@ -19,6 +19,8 @@ export interface UIState {
   graphBtcAllocation: boolean;
   graphPlotDots: boolean;
   graphSelectedTransactions: string[];
+  graphIsLocked: boolean;
+  graphSelectedIndex: number | null;
   navbarBalanceVisibility: boolean;
   netAssetValue: boolean;
   privatePrice: boolean;
