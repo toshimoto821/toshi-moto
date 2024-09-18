@@ -148,7 +148,7 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
     );
   };
   return (
-    <div className="flex space-x-2 items-center justify-end w-full pt-2 py-1 px-4">
+    <div className="flex space-x-2 items-center justify-end w-full pt-2 py-1 px-4 shadow-inner-top-bottom">
       <NavButton range="1D" />
 
       <NavButton range="1W" />
