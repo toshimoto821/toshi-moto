@@ -550,7 +550,7 @@ export const HeroChart = (props: IHeroChart) => {
             `translate(${textMargin.right * -1}, ${textMargin.top})`
           )
           .attr("fill", "gray")
-          .attr("font-size", "14px");
+          .attr("font-size", "12px");
 
         g.selectAll(".tick").each(function (this: SVGTextElement) {
           const tick = select(this);
@@ -583,9 +583,9 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.4)
+            .attr("opacity", 0.2)
             .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
-            .attr("stroke-opacity", 0.4)
+            .attr("stroke-opacity", 0.2)
             .attr(
               "transform",
               `translate(${textMargin.right * -1}, ${textMargin.top})`
@@ -644,7 +644,7 @@ export const HeroChart = (props: IHeroChart) => {
           .attr("fill", "orange")
           .attr("opacity", 1)
           .attr("transform", `translate(${textMargin.left}, ${textMargin.top})`)
-          .attr("font-size", "14px");
+          .attr("font-size", "12px");
 
         const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
 
@@ -676,9 +676,9 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.4)
+            .attr("opacity", 0.2)
             .attr("stroke", "orange")
-            .attr("stroke-opacity", 0.4)
+            .attr("stroke-opacity", 0.2)
             .style("fill", "white")
             .attr(
               "transform",
