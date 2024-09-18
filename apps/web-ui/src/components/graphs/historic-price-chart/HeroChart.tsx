@@ -196,7 +196,10 @@ export const HeroChart = (props: IHeroChart) => {
       // Vars:
       const firstMetric = data[0];
       const lastMetric = data[data.length - 1];
-      const direction = lastMetric.closePrice > firstMetric.closePrice ? 1 : -1;
+      const direction =
+        parseFloat(lastMetric.closePrice) > parseFloat(firstMetric.closePrice)
+          ? 1
+          : -1;
 
       // ---------------------------------------------------------------------//
 
