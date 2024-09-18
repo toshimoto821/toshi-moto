@@ -436,7 +436,7 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("id", "vertical-tooltip-line")
         .attr("stroke", "black")
         .attr("stroke-dasharray", "3,3")
-        .attr("opacity", 0)
+        .attr("opacity", 0.5)
         .attr("stroke-width", 0.5)
         .attr("y1", margin.top)
         .attr("y2", height - margin.bottom)
