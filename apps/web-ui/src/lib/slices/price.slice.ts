@@ -240,7 +240,7 @@ export const updatePricing = createAsyncThunk<
   // console.log(diff, "diff");
   const timeSineLastTick = now - last_updated_stream_at;
   // only keep active if its greater than the
-  if (range && (!last_updated_stream_at || timeSineLastTick > 1000 * 5)) {
+  if (range && (!last_updated_stream_at || timeSineLastTick > 1000 * 1)) {
     const isLive = shouldBeLive(range, gapBetweenNowAndChartEndTime);
     // console.log("isLive", isLive);
     if (isLive) {
@@ -446,9 +446,9 @@ export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
     case "1D":
       return diff > FIFTEEN_MINUTES;
     case "1W":
-      return diff > HOURLY;
+      return diff > HOURLY * 2;
     case "1M":
-      return diff > HOURLY;
+      return diff > HOURLY * 2;
     case "3M":
       return diff >= DAILY;
     case "1Y":
