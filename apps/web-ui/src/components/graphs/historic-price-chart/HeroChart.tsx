@@ -43,7 +43,7 @@ interface IHeroChart {
 }
 
 const grayRGB = "rgb(243 244 246)";
-export const SELECTED_OPACITIY = 0.28;
+export const SELECTED_OPACITIY = 0.18;
 
 export const HeroChart = (props: IHeroChart) => {
   const { height, width, onMouseOver } = props;
@@ -90,7 +90,10 @@ export const HeroChart = (props: IHeroChart) => {
     lineData.push(lineData[lineData.length - 1]);
   }
 
-  const lastPrice = data[data.length - 1] || [];
+  const lastPrice = data[data.length - 1] || {};
+
+  const lastRawNode = lineData[lineData.length - 1] || {};
+
   const range1 = [margin.left, width - margin.right];
   const domain1 = data.map((_, i) => i.toString());
   // console.log(range1, domain1);
@@ -424,17 +427,91 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
+      // cross hair lines
+      const len = data.length ? data.length - 5 : 0;
+      const x = xScale(len.toString())! + xScale.bandwidth() / 2;
+
+      svg
+        .append("line")
+        .attr("id", "vertical-tooltip-line")
+        .attr("stroke", "black")
+        .attr("stroke-dasharray", "3,3")
+        .attr("opacity", 0)
+        .attr("stroke-width", 0.5)
+        .attr("y1", margin.top)
+        .attr("y2", height - margin.bottom)
+        .attr("x1", x)
+        .attr("x2", x);
+
+      let y1: number;
+      if (netAssetValue) {
+        y1 = yScale(lastRawNode.y1SumInDollars || 0);
+      } else {
+        y1 = yScale(parseFloat(lastPrice.closePrice || "0"));
+      }
+
+      svg
+        .append("line")
+        .attr("id", "current-price-line")
+        .attr("stroke", "black")
+        .attr("stroke-dasharray", "3,3")
+        .attr("opacity", 0.5)
+        .attr("stroke-width", 0.5)
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y1)
+        .attr("y2", y1);
+
+      const cx = x;
+      const cy = btcScale(lastRawNode.y1Sum * btcPrice);
+      svg
+        .append("circle")
+        .attr("id", "orange-dot")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 3)
+        .attr("opacity", 0.5)
+        .attr("fill", "orange");
+
+      // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
       // Binding movement
 
       svg
         .on("mousemove touchmove", function (event) {
-          if (isLocked) return;
           const [xy] = pointers(event);
           const [x] = xy;
+
           let index = Math.floor((x - margin.left) / xScale.step());
           if (index < 5 || index > data.length - 6) {
             index = data.length - 6;
           }
+
+          const veritcalLine = select("#vertical-tooltip-line");
+
+          const mid = xScale.bandwidth() / 2;
+          veritcalLine
+            .attr("opacity", 0.5)
+            .attr("x1", x + mid)
+            .attr("x2", x + mid);
+
+          const currentPriceLine = select("#current-price-line");
+          let y1: number;
+
+          if (netAssetValue) {
+            y1 = yScale(lineData[index].y1SumInDollars);
+          } else {
+            y1 = yScale(parseFloat(data[index].closePrice));
+          }
+          currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
+
+          const orangeDot = select("#orange-dot");
+          const cy = btcScale(lineData[index].y1Sum * btcPrice);
+          orangeDot.attr("cx", x + mid).attr("cy", cy);
+
+          if (isLocked) return;
+
           let datum = data[index];
           if (!datum) {
             index = data.length - 1;
@@ -465,9 +542,28 @@ export const HeroChart = (props: IHeroChart) => {
           }
         })
         .on("mouseleave touchend", function () {
+          const index = data.length - 6;
+
+          const veritcalLine = select("#vertical-tooltip-line");
+          const x = xScale(index.toString())! + xScale.bandwidth() * 1.5;
+          veritcalLine.attr("opacity", 0.5).attr("x1", x).attr("x2", x);
+
+          const currentPriceLine = select("#current-price-line");
+          let y1: number;
+          if (netAssetValue) {
+            y1 = yScale(lineData[index].y1SumInDollars);
+          } else {
+            y1 = yScale(parseFloat(data[index].closePrice));
+          }
+          currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
+
+          const orangeDot = select("#orange-dot");
+          const cy = btcScale(lineData[index].y1Sum * btcPrice);
+          orangeDot.attr("cx", x).attr("cy", cy);
+
           if (isLocked) return;
           // select(this).attr("fill", "transparent"); // Revert to original color
-          const index = data.length - 6;
+
           svg
             .selectAll(".bar")
             .attr("opacity", 0)
