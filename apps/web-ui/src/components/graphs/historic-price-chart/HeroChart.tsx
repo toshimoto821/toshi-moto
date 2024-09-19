@@ -627,11 +627,12 @@ export const HeroChart = (props: IHeroChart) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y2Axis = (g: any) => {
         const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
-        const textMargin = { top: 0, right: 10, bottom: 0, left: 0 };
-        g.attr("transform", `translate(${width - 12},0)`)
+        const textMargin = { top: 0, right: 5, bottom: 0, left: 0 };
+        g.attr("transform", `translate(${width - 60},0)`)
           .call(
-            axisLeft(yScale)
+            axisRight(yScale)
               .tickFormat((d) => {
+                console.log("formatDefault(d)", formatDefault(d));
                 return `$${
                   yValueToUse === "y1SumInDollars"
                     ? privateNumber(formatDefault(d))
@@ -652,7 +653,7 @@ export const HeroChart = (props: IHeroChart) => {
           .selectAll("text")
           .attr(
             "transform",
-            `translate(${textMargin.right * -1}, ${textMargin.top})`
+            `translate(${textMargin.right}, ${textMargin.top})`
           )
           .attr("fill", "gray")
           .attr("font-size", "12px");
@@ -688,12 +689,12 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.2)
+            .attr("opacity", 0.6)
             .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11)
             .attr("stroke-opacity", 0.2)
             .attr(
               "transform",
-              `translate(${textMargin.right * -1}, ${textMargin.top})`
+              `translate(${textMargin.right}, ${textMargin.top})`
             )
             .style("fill", "white");
 
@@ -726,10 +727,10 @@ export const HeroChart = (props: IHeroChart) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y1Axis = (g: any) => {
         // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
-        const textMargin = { top: 0, right: 0, bottom: 0, left: 10 };
-        g.attr("transform", `translate(12,0)`)
+        const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
+        g.attr("transform", `translate(65,0)`)
           .call(
-            axisRight(btcScaleFull)
+            axisLeft(btcScaleFull)
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               .tickFormat((d: any) => {
                 return `₿${privateNumber(formatBtc(d / btcPrice))}`;
@@ -748,7 +749,10 @@ export const HeroChart = (props: IHeroChart) => {
           .selectAll("text")
           .attr("fill", "orange")
           .attr("opacity", 1)
-          .attr("transform", `translate(${textMargin.left}, ${textMargin.top})`)
+          .attr(
+            "transform",
+            `translate(${textMargin.left * -1}, ${textMargin.top})`
+          )
           .attr("font-size", "12px");
 
         const padding = { top: 1, right: 5, bottom: 1, left: 5 }; // Adjust as needed
@@ -781,13 +785,13 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("height", (d) => d.height + padding.top + padding.bottom)
             .attr("rx", 2) // radius of the corners in the x direction
             .attr("ry", 2) // radius of the corners in the y direction
-            .attr("opacity", 0.2)
+            .attr("opacity", 0.6)
             .attr("stroke", "orange")
             .attr("stroke-opacity", 0.2)
             .style("fill", "white")
             .attr(
               "transform",
-              `translate(${textMargin.left}, ${textMargin.top})`
+              `translate(${textMargin.left * -1}, ${textMargin.top})`
             );
 
           // Remove any exiting rect elements
