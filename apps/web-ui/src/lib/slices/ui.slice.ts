@@ -13,9 +13,11 @@ import {
   FIVE_YEAR_GROUP_BY,
   ONE_MONTH_GROUP_BY,
   ONE_WEEK_GROUP_BY,
+  ONE_WEEK_GROUP_BY_MOBILE,
   ONE_YEAR_GROUP_BY,
   THREE_MONTH_GROUP_BY,
   ONE_DAY_GROUP_BY,
+  ONE_DATE_GROUP_BY_MOBILE,
   TWO_YEAR_GROUP_BY,
 } from "@constants/chart.constants";
 export const defaultGraphStartDate = timeDay(
@@ -27,6 +29,7 @@ export const defaultGraphEndDate = timeDay(
 ).getTime();
 
 const initialState: UIState = {
+  breakpoint: 0,
   currency: "usd",
   debugMode: false,
   filterUtxoOnly: [],
@@ -40,6 +43,8 @@ const initialState: UIState = {
   graphBtcAllocation: true,
   graphPlotDots: false,
   graphSelectedTransactions: [],
+  graphIsLocked: false,
+  graphSelectedIndex: null,
   navbarBalanceVisibility: false,
   netAssetValue: false,
   privatePrice: false,
@@ -253,13 +258,22 @@ export const selectUI = (state: RootState) => state.ui;
 export const selectGroupByHistoric = createSelector(
   (state: RootState) => state.ui.graphTimeFrameRange,
   (state: RootState) => state.ui.previousGraphTimeFrameRange,
-  (currentRange, previousRange) => {
+  (state: RootState) => state.ui.breakpoint,
+  (currentRange, previousRange, breakpoint) => {
     const range = currentRange || previousRange;
     let groupBy: GroupBy | null = null;
     if (range === "1D") {
-      groupBy = ONE_DAY_GROUP_BY;
+      if (breakpoint > 2) {
+        groupBy = ONE_DAY_GROUP_BY;
+      } else {
+        groupBy = ONE_DATE_GROUP_BY_MOBILE;
+      }
     } else if (range === "1W") {
-      groupBy = ONE_WEEK_GROUP_BY;
+      if (breakpoint > 2) {
+        groupBy = ONE_WEEK_GROUP_BY;
+      } else {
+        groupBy = ONE_WEEK_GROUP_BY_MOBILE;
+      }
     } else if (range === "1M") {
       groupBy = ONE_MONTH_GROUP_BY;
     } else if (range === "3M") {
@@ -289,6 +303,14 @@ export const selectGraphDates = createSelector(
       graphEndDate: graphEndDate || defaultGraphEndDate,
       graphTimeFrameRange,
     };
+  }
+);
+
+export const selectGraphTimeframeRange = createSelector(
+  (state: RootState) => state.ui.graphTimeFrameRange,
+  (state: RootState) => state.ui.previousGraphTimeFrameRange,
+  (graphTimeFrameRange, previousGraphTimeFrameRange) => {
+    return graphTimeFrameRange || previousGraphTimeFrameRange;
   }
 );
 
