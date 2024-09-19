@@ -200,7 +200,7 @@ export const HeroChart = (props: IHeroChart) => {
       const firstMetric = data[0];
       const lastMetric = data[data.length - 1];
       const direction =
-        parseFloat(lastMetric.closePrice) > parseFloat(firstMetric.closePrice)
+        parseFloat(lastMetric.closePrice) > parseFloat(firstMetric.openPrice)
           ? 1
           : -1;
 
@@ -350,6 +350,9 @@ export const HeroChart = (props: IHeroChart) => {
             index = data.findIndex(
               (d) => d.openTime === (kline as BinanceKlineMetric).openTime
             );
+          }
+          if (index < 5) {
+            index = 5;
           }
 
           const datum = data[index];
@@ -514,7 +517,7 @@ export const HeroChart = (props: IHeroChart) => {
 
           let datum = data[index];
           if (!datum) {
-            index = data.length - 1;
+            index = data.length - 6;
             datum = data[index];
           }
 
@@ -588,7 +591,7 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("fill", COLOR_SELECTED);
 
           if (onMouseOver) {
-            onMouseOver({ datum: data[index], index: index - 5 });
+            onMouseOver({ datum: data[index], index });
           }
         });
       // ---------------------------------------------------------------------//

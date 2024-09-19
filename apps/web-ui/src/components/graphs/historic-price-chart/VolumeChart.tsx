@@ -187,7 +187,10 @@ export const VolumeChart = (props: IVolumeChart) => {
             : COLOR_POSITIVE_CHANGE;
         })
         .on("click", (_, kline) => {
-          const index = data.findIndex((d) => d.openTime === kline.openTime);
+          let index = data.findIndex((d) => d.openTime === kline.openTime);
+          if (index < 5) {
+            index = 5;
+          }
           // const datum = data[index];
           if (isLocked) {
             dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
@@ -211,7 +214,7 @@ export const VolumeChart = (props: IVolumeChart) => {
 
           let datum = data[index];
           if (!datum) {
-            index = data.length - 1;
+            index = data.length - 6;
             datum = data[index];
           }
           // const i = data.findIndex((d) => d.openTime === datum.openTime);
@@ -247,7 +250,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             .attr("opacity", SELECTED_OPACITIY);
 
           if (onMouseOver) {
-            onMouseOver({ datum, index: index - 5 });
+            onMouseOver({ datum, index: index });
           }
         })
         .on("mouseleave touchend", function () {
@@ -282,7 +285,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
           if (onMouseOver) {
-            onMouseOver({ datum: data[index], index: index - 5 });
+            onMouseOver({ datum: data[index], index: index });
           }
         });
 
