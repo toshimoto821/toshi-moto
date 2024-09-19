@@ -17,6 +17,7 @@ import { uiSlice, roundUpToNearHour } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
+import { groupByHistoricCallback } from "./ui.slice";
 import type { BinanceKlineMetric, PriceHistoricArgs } from "./api.slice.types";
 import {
   FIVE_YEAR_GROUP_BY,
@@ -215,7 +216,6 @@ export const updatePricing = createAsyncThunk<
   const {
     graphStartDate,
     graphEndDate,
-    graphTimeFrameGroup,
     graphTimeFrameRange,
     previousGraphTimeFrameRange,
   } = state.ui;
@@ -227,11 +227,17 @@ export const updatePricing = createAsyncThunk<
   const from = Math.floor(graphStartDate! / 1000);
   const to = Math.floor(end.getTime() / 1000);
   const range = graphTimeFrameRange || previousGraphTimeFrameRange;
+
+  const groupBy = groupByHistoricCallback(
+    state.ui.graphTimeFrameRange!,
+    state.ui.previousGraphTimeFrameRange,
+    state.ui.breakpoint
+  );
   const args: PriceHistoricArgs = {
     currency: "usd" as ICurrency,
     from,
     to,
-    groupBy: graphTimeFrameGroup!,
+    groupBy,
     range: graphTimeFrameRange!,
   };
 

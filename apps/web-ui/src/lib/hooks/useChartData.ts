@@ -132,6 +132,7 @@ export const useChartData = (opts: IUseChartData) => {
     chartTimeDiffInDays,
     forecastModel,
     lastTs,
+    last?.closePrice,
   ]);
 
   const filteredWallets = selectedWalletId

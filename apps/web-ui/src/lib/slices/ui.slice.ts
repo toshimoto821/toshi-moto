@@ -255,42 +255,48 @@ export const selectDebugMode = (state: RootState) => state.ui.debugMode;
 export const selectPrivatePrice = (state: RootState) => state.ui.privatePrice;
 export const selectUI = (state: RootState) => state.ui;
 
+export const groupByHistoricCallback = (
+  currentRange: GraphTimeFrameRange | null,
+  previousRange: GraphTimeFrameRange | null,
+  breakpoint: number
+) => {
+  const range = currentRange || previousRange;
+  let groupBy: GroupBy | null = null;
+  if (range === "1D") {
+    if (breakpoint > 2) {
+      groupBy = ONE_DAY_GROUP_BY;
+    } else {
+      groupBy = ONE_DATE_GROUP_BY_MOBILE;
+    }
+  } else if (range === "1W") {
+    if (breakpoint > 2) {
+      groupBy = ONE_WEEK_GROUP_BY;
+    } else {
+      groupBy = ONE_WEEK_GROUP_BY_MOBILE;
+    }
+  } else if (range === "1M") {
+    groupBy = ONE_MONTH_GROUP_BY;
+  } else if (range === "3M") {
+    groupBy = THREE_MONTH_GROUP_BY;
+  } else if (range === "1Y") {
+    groupBy = ONE_YEAR_GROUP_BY;
+  } else if (range === "2Y") {
+    groupBy = TWO_YEAR_GROUP_BY;
+  } else if (range === "5Y") {
+    groupBy = FIVE_YEAR_GROUP_BY;
+  } else {
+    groupBy = "1w";
+    console.error("unknown range", range);
+  }
+
+  return groupBy;
+};
+
 export const selectGroupByHistoric = createSelector(
   (state: RootState) => state.ui.graphTimeFrameRange,
   (state: RootState) => state.ui.previousGraphTimeFrameRange,
   (state: RootState) => state.ui.breakpoint,
-  (currentRange, previousRange, breakpoint) => {
-    const range = currentRange || previousRange;
-    let groupBy: GroupBy | null = null;
-    if (range === "1D") {
-      if (breakpoint > 2) {
-        groupBy = ONE_DAY_GROUP_BY;
-      } else {
-        groupBy = ONE_DATE_GROUP_BY_MOBILE;
-      }
-    } else if (range === "1W") {
-      if (breakpoint > 2) {
-        groupBy = ONE_WEEK_GROUP_BY;
-      } else {
-        groupBy = ONE_WEEK_GROUP_BY_MOBILE;
-      }
-    } else if (range === "1M") {
-      groupBy = ONE_MONTH_GROUP_BY;
-    } else if (range === "3M") {
-      groupBy = THREE_MONTH_GROUP_BY;
-    } else if (range === "1Y") {
-      groupBy = ONE_YEAR_GROUP_BY;
-    } else if (range === "2Y") {
-      groupBy = TWO_YEAR_GROUP_BY;
-    } else if (range === "5Y") {
-      groupBy = FIVE_YEAR_GROUP_BY;
-    } else {
-      groupBy = "1w";
-      console.error("unknown range", range);
-    }
-
-    return groupBy;
-  }
+  groupByHistoricCallback
 );
 
 export const selectGraphDates = createSelector(
