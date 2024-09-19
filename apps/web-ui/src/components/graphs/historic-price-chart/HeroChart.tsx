@@ -490,6 +490,9 @@ export const HeroChart = (props: IHeroChart) => {
           if (index < 5 || index > data.length - 6) {
             index = data.length - 6;
           }
+          if (!lineData[index]) {
+            index = data.length - 6;
+          }
 
           const veritcalLine = select("#vertical-tooltip-line");
 

@@ -186,6 +186,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             ? COLOR_NEGATIVE_CHANGE
             : COLOR_POSITIVE_CHANGE;
         })
+        .attr("data-index", (_, i) => i)
         .on("click", (_, kline) => {
           let index = data.findIndex((d) => d.openTime === kline.openTime);
           if (index < 5) {

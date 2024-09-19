@@ -6,6 +6,7 @@ interface ToastMessage {
 }
 
 export interface UIState {
+  breakpoint: number;
   currency: ICurrency;
   debugMode: boolean;
   filterUtxoOnly: string[];

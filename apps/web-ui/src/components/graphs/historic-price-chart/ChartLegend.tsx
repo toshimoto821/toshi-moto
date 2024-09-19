@@ -323,7 +323,7 @@ export const ChartLegend = ({
       range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
         : range === "1W"
-        ? d3.timeFormat("%b %d, %I:%M %p")
+        ? d3.timeFormat("%m/%d, %I %p")
         : range === "1M"
         ? d3.timeFormat("%b %d, %Y")
         : range == "3M" || range == "1Y" || range == "5Y"
@@ -369,11 +369,11 @@ export const ChartLegend = ({
       .attr("display", "")
       .filter((_: any, i: number) => {
         if (range === "1D") {
-          return i % 24 !== 0;
+          return i % 8 !== 0;
         }
 
         if (range === "1W") {
-          return i % 24 !== 0;
+          return i % 6 !== 0;
         }
 
         if (range === "1M") {
@@ -402,7 +402,16 @@ export const ChartLegend = ({
 
     g.selectAll(".tick line")
       .attr("transform", `translate(0, ${height - 6})`)
-      .filter((_: any, i: number) => i % 12 === 0)
+      .filter((_: any, i: number) => {
+        if (range === "1D") {
+          return i % 8 === 0;
+        }
+        if (range === "1W") {
+          return i % 6 === 0;
+        }
+
+        return i % 8 === 0;
+      })
       .attr("transform", `translate(0, ${height - 10})`)
       .attr("y2", 10);
   };
