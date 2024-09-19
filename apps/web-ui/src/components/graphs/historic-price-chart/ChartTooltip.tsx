@@ -28,7 +28,10 @@ export const ChartTooltip = (props: IChartTooltip) => {
 
   const { prices } = useBtcHistoricPrices();
 
-  const rawNode = selectedIndex !== null ? lineData[selectedIndex] : null;
+  const rawNode =
+    selectedIndex !== null
+      ? lineData[selectedIndex]
+      : lineData[lineData.length - 1];
 
   if (prices?.length) {
     const lastPrice = prices[prices.length - 1];
