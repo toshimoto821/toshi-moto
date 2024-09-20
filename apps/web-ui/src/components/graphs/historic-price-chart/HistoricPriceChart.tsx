@@ -178,7 +178,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
         })}
       >
         <VolumeChart
-          height={120}
+          height={60}
           width={width}
           onMouseOver={handleMouseOverVolumeChart}
         />
