@@ -151,13 +151,14 @@ export const VolumeChart = (props: IVolumeChart) => {
           if (i < 5 || i > data.length - 6) {
             return "transparent";
           }
+
+          if (i === selectedIndex) return COLOR_SELECTED;
+
           if (i === 5) {
             return isPositiveChange(1)
               ? COLOR_POSITIVE_CHANGE
               : COLOR_NEGATIVE_CHANGE;
           }
-
-          if (i === selectedIndex) return COLOR_SELECTED;
 
           return priceChange >= 0
             ? COLOR_POSITIVE_CHANGE
