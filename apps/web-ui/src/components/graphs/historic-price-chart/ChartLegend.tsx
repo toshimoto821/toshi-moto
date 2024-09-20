@@ -290,6 +290,10 @@ export const ChartLegend = ({
           return i % 8 !== 0;
         }
 
+        if (range === "3M") {
+          return i % 8 !== 0;
+        }
+
         if (range === "1Y") {
           return i % 8 !== 0;
         }
@@ -308,12 +312,23 @@ export const ChartLegend = ({
 
     g.selectAll(".tick line")
       .attr("transform", `translate(0, ${height - 6})`)
-      .filter((_: any, i: number) => i % 4 === 0)
+      .filter((_: any, i: number) => {
+        if (range === "3M") {
+          return i % 8 === 0;
+        }
+        return i % 4 === 0;
+      })
       .attr("transform", `translate(0, ${height - 10})`)
       .attr("y2", 10);
 
     g.selectAll(".tick line")
-      .filter((_: any, i: number) => i % 4 != 0)
+      .filter((_: any, i: number) => {
+        if (range === "3M") {
+          return i % 4 === 0;
+        }
+
+        return i % 4 != 0;
+      })
       .attr("opacity", 0.25);
   };
 
@@ -377,23 +392,23 @@ export const ChartLegend = ({
         }
 
         if (range === "1M") {
-          return i % 24 !== 0;
+          return i % 7 !== 0;
         }
 
         if (range === "3M") {
-          return i % 24 !== 0;
+          return i % 10 !== 0;
         }
 
         if (range === "1Y") {
-          return i % 24 !== 0;
+          return i % 13 !== 0;
         }
 
         if (range === "2Y") {
-          return i % 24 !== 0;
+          return i % 12 !== 0;
         }
 
         if (range === "5Y") {
-          return i % 48 !== 0;
+          return i % 12 !== 0;
         }
 
         return i % 24 !== 0;
@@ -408,6 +423,26 @@ export const ChartLegend = ({
         }
         if (range === "1W") {
           return i % 6 === 0;
+        }
+
+        if (range === "1M") {
+          return i % 7 === 0;
+        }
+
+        if (range === "3M") {
+          return i % 10 === 0;
+        }
+
+        if (range === "1Y") {
+          return i % 13 === 0;
+        }
+
+        if (range === "2Y") {
+          return i % 12 === 0;
+        }
+
+        if (range === "5Y") {
+          return i % 12 === 0;
         }
 
         return i % 8 === 0;

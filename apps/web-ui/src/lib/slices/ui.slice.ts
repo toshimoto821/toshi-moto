@@ -10,15 +10,19 @@ import type { UIState, GroupBy, GraphTimeFrameRange } from "./ui.slice.types";
 import { type RootState } from "../store";
 import { API_REQUEST_REJECTED } from "./api.slice";
 import {
-  FIVE_YEAR_GROUP_BY,
-  ONE_MONTH_GROUP_BY,
-  ONE_WEEK_GROUP_BY,
-  ONE_WEEK_GROUP_BY_MOBILE,
-  ONE_YEAR_GROUP_BY,
-  THREE_MONTH_GROUP_BY,
   ONE_DAY_GROUP_BY,
   ONE_DATE_GROUP_BY_MOBILE,
+  ONE_WEEK_GROUP_BY,
+  ONE_WEEK_GROUP_BY_MOBILE,
+  ONE_MONTH_GROUP_BY,
+  ONE_MONTH_GROUP_BY_MOBILE,
+  THREE_MONTH_GROUP_BY,
+  THREE_MONTH_GROUP_BY_MOBILE,
+  ONE_YEAR_GROUP_BY,
+  ONE_YEAR_GROUP_BY_MOBILE,
   TWO_YEAR_GROUP_BY,
+  TWO_YEAR_GROUP_BY_MOBILE,
+  FIVE_YEAR_GROUP_BY,
 } from "@constants/chart.constants";
 export const defaultGraphStartDate = timeDay(
   sub(new Date(), { years: 5 })
@@ -275,13 +279,29 @@ export const groupByHistoricCallback = (
       groupBy = ONE_WEEK_GROUP_BY_MOBILE;
     }
   } else if (range === "1M") {
-    groupBy = ONE_MONTH_GROUP_BY;
+    if (breakpoint > 2) {
+      groupBy = ONE_MONTH_GROUP_BY;
+    } else {
+      groupBy = ONE_MONTH_GROUP_BY_MOBILE;
+    }
   } else if (range === "3M") {
-    groupBy = THREE_MONTH_GROUP_BY;
+    if (breakpoint > 2) {
+      groupBy = THREE_MONTH_GROUP_BY;
+    } else {
+      groupBy = THREE_MONTH_GROUP_BY_MOBILE;
+    }
   } else if (range === "1Y") {
-    groupBy = ONE_YEAR_GROUP_BY;
+    if (breakpoint > 2) {
+      groupBy = ONE_YEAR_GROUP_BY;
+    } else {
+      groupBy = ONE_YEAR_GROUP_BY_MOBILE;
+    }
   } else if (range === "2Y") {
-    groupBy = TWO_YEAR_GROUP_BY;
+    if (breakpoint > 2) {
+      groupBy = TWO_YEAR_GROUP_BY;
+    } else {
+      groupBy = TWO_YEAR_GROUP_BY_MOBILE;
+    }
   } else if (range === "5Y") {
     groupBy = FIVE_YEAR_GROUP_BY;
   } else {
