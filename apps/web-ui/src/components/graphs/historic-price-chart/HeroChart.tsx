@@ -147,10 +147,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   const yValueToUse = netAssetValue ? "y1SumInDollars" : "y2";
 
-  const btcExt = extent(lineData, (d) => d.y1Sum * btcPrice) as [
-    number,
-    number
-  ];
+  const btcExt = extent(lineData, (d) => d.y1Sum) as [number, number];
 
   const diff = Math.abs(btcExt[0] - btcExt[1]);
   const d1 = diff === 0 ? 0 : btcExt[0];
@@ -163,14 +160,18 @@ export const HeroChart = (props: IHeroChart) => {
     .domain([d1, d2])
     .range([height - margin.bottom, top]);
 
-  const btcScaleFull = scaleLinear()
-    .domain([d1, d2])
-    .range([height - margin.bottom, margin.top]);
+  // this messes up the scale
+  // was intending to use this to show the full scale
+  // but it misalinged the btc line
+  // key is to have the top of the btc line match the current price
+  // const btcScaleFull = scaleLinear()
+  //   .domain([d1, d2])
+  //   .range([height - margin.bottom, margin.top]);
 
   const btcLine = line<IRawNode>()
     .x((_, i) => xScale(i.toString())!)
     .y((d) => {
-      const t = d.y1Sum * btcPrice;
+      const t = d.y1Sum;
       const val = btcScale(t);
       return val;
     });
@@ -730,10 +731,10 @@ export const HeroChart = (props: IHeroChart) => {
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
         g.attr("transform", `translate(65,0)`)
           .call(
-            axisLeft(btcScaleFull)
+            axisLeft(btcScale)
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               .tickFormat((d: any) => {
-                return `₿${privateNumber(formatBtc(d / btcPrice))}`;
+                return `₿${privateNumber(formatBtc(d))}`;
               })
               .ticks(5)
           )
