@@ -17,15 +17,9 @@ import { uiSlice, roundUpToNearHour } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
+import { groupByHistoricCallback } from "./ui.slice";
 import type { BinanceKlineMetric, PriceHistoricArgs } from "./api.slice.types";
-import {
-  FIVE_YEAR_GROUP_BY,
-  ONE_MONTH_GROUP_BY,
-  ONE_WEEK_GROUP_BY,
-  ONE_YEAR_GROUP_BY,
-  THREE_MONTH_GROUP_BY,
-  TWO_YEAR_GROUP_BY,
-} from "@constants/chart.constants";
+
 const VITE_PRICING_STREAM_DISABLED = import.meta.env
   .VITE_PRICING_STREAM_DISABLED;
 
@@ -128,7 +122,7 @@ export const priceSlice = createSlice({
 
         // const last = prices[prices.length - 1];
         if (first) {
-          const curPrice = parseFloat(first.closePrice);
+          const curPrice = parseFloat(first.openPrice);
           const diff = state.btcPrice - curPrice;
           state.priceDiffs = state.priceDiffs || {};
           state.priceDiffs[range] = diff;
@@ -215,7 +209,6 @@ export const updatePricing = createAsyncThunk<
   const {
     graphStartDate,
     graphEndDate,
-    graphTimeFrameGroup,
     graphTimeFrameRange,
     previousGraphTimeFrameRange,
   } = state.ui;
@@ -227,11 +220,17 @@ export const updatePricing = createAsyncThunk<
   const from = Math.floor(graphStartDate! / 1000);
   const to = Math.floor(end.getTime() / 1000);
   const range = graphTimeFrameRange || previousGraphTimeFrameRange;
+
+  const groupBy = groupByHistoricCallback(
+    state.ui.graphTimeFrameRange!,
+    state.ui.previousGraphTimeFrameRange,
+    state.ui.breakpoint
+  );
   const args: PriceHistoricArgs = {
     currency: "usd" as ICurrency,
     from,
     to,
-    groupBy: graphTimeFrameGroup!,
+    groupBy,
     range: graphTimeFrameRange!,
   };
 
@@ -240,7 +239,7 @@ export const updatePricing = createAsyncThunk<
   // console.log(diff, "diff");
   const timeSineLastTick = now - last_updated_stream_at;
   // only keep active if its greater than the
-  if (range && (!last_updated_stream_at || timeSineLastTick > 1000 * 5)) {
+  if (range && (!last_updated_stream_at || timeSineLastTick > 1000 * 1)) {
     const isLive = shouldBeLive(range, gapBetweenNowAndChartEndTime);
     // console.log("isLive", isLive);
     if (isLive) {
@@ -263,7 +262,11 @@ export const updatePricing = createAsyncThunk<
           // );
           // const FIVE_MINUTES = 1000 * 60 * 5;
 
-          const shouldAppend = shouldAppendPrice(range, diff);
+          const shouldAppend = shouldAppendPrice(
+            range,
+            diff,
+            state.ui.breakpoint
+          );
 
           if (shouldAppend) {
             // console.log("ts: appending", new Date(eventTime), price);
@@ -314,39 +317,15 @@ export const openPriceSocket = createAsyncThunk<
   }
 
   const state = getState() as RootState;
-  const range =
-    forceRange ||
-    state.ui.graphTimeFrameRange ||
-    state.ui.previousGraphTimeFrameRange;
 
-  let interval = "15m";
-  switch (range) {
-    case "1D":
-      interval = "15m";
-      break;
-    case "1W":
-      interval = ONE_WEEK_GROUP_BY;
-      break;
-    case "1M":
-      interval = ONE_MONTH_GROUP_BY;
-      break;
-    case "3M":
-      interval = THREE_MONTH_GROUP_BY;
-      break;
-    case "1Y":
-      interval = ONE_YEAR_GROUP_BY;
-      break;
-    case "2Y":
-      interval = TWO_YEAR_GROUP_BY;
-      break;
-    case "5Y":
-      interval = FIVE_YEAR_GROUP_BY;
-      break;
-    default:
-      interval = "15m";
-  }
+  const groupBy = groupByHistoricCallback(
+    state.ui.graphTimeFrameRange!,
+    state.ui.previousGraphTimeFrameRange,
+    state.ui.breakpoint
+  );
+
   ws = new WebSocket(
-    `wss://data-stream.binance.vision:9443/ws/btcusdt@kline_${interval}`
+    `wss://data-stream.binance.vision:9443/ws/btcusdt@kline_${groupBy}`
   );
   dispatch(setStreamStatus("CONNECTED"));
   ws.onerror = (error) => {
@@ -435,28 +414,53 @@ export const shouldBeLive = (range: GraphTimeFrameRange, diff: number) => {
   }
 };
 
-export const shouldAppendPrice = (range: GraphTimeFrameRange, diff: number) => {
+export const shouldAppendPrice = (
+  range: GraphTimeFrameRange,
+  diff: number,
+  breakpoint = 0
+) => {
   const FIFTEEN_MINUTES = 1000 * 60 * 15;
   const HOURLY = 1000 * 60 * 60;
   const DAILY = 1000 * 60 * 60 * 24;
   const WEEKLY = DAILY * 7;
   const MONTHLY = DAILY * 30;
 
+  // Desktop has different rules for chart blocks
+  if (breakpoint > 2) {
+    switch (range) {
+      case "1D":
+        return diff > FIFTEEN_MINUTES;
+      case "1W":
+        return diff > HOURLY * 2;
+      case "1M":
+        return diff > HOURLY * 6;
+      case "3M":
+        return diff > DAILY;
+      case "1Y":
+        return diff > DAILY * 3;
+      case "2Y":
+        return diff > WEEKLY;
+      case "5Y":
+        return diff > MONTHLY;
+    }
+  }
+
+  // mobile
   switch (range) {
     case "1D":
-      return diff > FIFTEEN_MINUTES;
+      return diff > HOURLY;
     case "1W":
-      return diff > HOURLY;
+      return diff > HOURLY * 6;
     case "1M":
-      return diff > HOURLY;
+      return diff > DAILY;
     case "3M":
-      return diff >= DAILY;
+      return diff > DAILY * 3;
     case "1Y":
-      return diff >= DAILY * 3;
+      return diff > WEEKLY;
     case "2Y":
-      return diff >= WEEKLY;
+      return diff > MONTHLY;
     case "5Y":
-      return diff >= MONTHLY;
+      return diff > MONTHLY;
   }
 };
 
