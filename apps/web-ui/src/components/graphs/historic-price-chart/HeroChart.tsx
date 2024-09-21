@@ -56,6 +56,10 @@ export const HeroChart = (props: IHeroChart) => {
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
 
+  const graphBtcAllocation = useAppSelector(
+    (state) => state.ui.graphBtcAllocation
+  );
+
   const netAssetValue = useAppSelector((state) => state.ui.netAssetValue);
 
   const { lineData } = useChartData({ btcPrice, wallets });
@@ -468,14 +472,16 @@ export const HeroChart = (props: IHeroChart) => {
 
       const cx = x;
       const cy = btcScale(lastRawNode.y1Sum * btcPrice);
-      svg
-        .append("circle")
-        .attr("id", "orange-dot")
-        .attr("cx", cx)
-        .attr("cy", cy)
-        .attr("r", 3)
-        .attr("opacity", 0.5)
-        .attr("fill", "orange");
+      if (graphBtcAllocation) {
+        svg
+          .append("circle")
+          .attr("id", "orange-dot")
+          .attr("cx", cx)
+          .attr("cy", cy)
+          .attr("r", 3)
+          .attr("opacity", 0.5)
+          .attr("fill", "orange");
+      }
 
       // ---------------------------------------------------------------------//
 
@@ -709,17 +715,19 @@ export const HeroChart = (props: IHeroChart) => {
       svg.append("g").attr("id", "y2").call(y2Axis);
 
       // ---------------------------------------------------------------------//
-      // BTC Allocation (line)
-      svg
-        .append("path")
-        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-        .attr("id", "btc-past-line")
-        .attr("fill", "none")
-        .attr("stroke", "orange")
-        .attr("stroke-miterlimit", 1)
-        .attr("stroke-opacity", "0.8")
-        .attr("stroke-width", 1)
-        .attr("d", btcLine(lineData));
+      if (graphBtcAllocation) {
+        // BTC Allocation (line)
+        svg
+          .append("path")
+          .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+          .attr("id", "btc-past-line")
+          .attr("fill", "none")
+          .attr("stroke", "orange")
+          .attr("stroke-miterlimit", 1)
+          .attr("stroke-opacity", "0.8")
+          .attr("stroke-width", 1)
+          .attr("d", btcLine(lineData));
+      }
 
       // ---------------------------------------------------------------------//
 
@@ -729,7 +737,7 @@ export const HeroChart = (props: IHeroChart) => {
       const y1Axis = (g: any) => {
         // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
-        g.attr("transform", `translate(65,0)`)
+        g.attr("transform", `translate(80,0)`)
           .call(
             axisLeft(btcScale)
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -788,7 +796,7 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("ry", 2) // radius of the corners in the y direction
             .attr("opacity", 0.6)
             .attr("stroke", "orange")
-            .attr("stroke-opacity", 0.2)
+            .attr("stroke-opacity", 1)
             .style("fill", "white")
             .attr(
               "transform",
@@ -802,7 +810,9 @@ export const HeroChart = (props: IHeroChart) => {
           text.attr("fill", "orange").attr("opacity", 1);
         });
       };
-      svg.append("g").attr("id", "y1").call(y1Axis);
+      if (graphBtcAllocation) {
+        svg.append("g").attr("id", "y1").call(y1Axis);
+      }
 
       // ---------------------------------------------------------------------//
 
@@ -840,6 +850,7 @@ export const HeroChart = (props: IHeroChart) => {
     selectedIndex,
     lastPrice.closePrice,
     yValueToUse,
+    graphBtcAllocation,
   ]);
 
   return (

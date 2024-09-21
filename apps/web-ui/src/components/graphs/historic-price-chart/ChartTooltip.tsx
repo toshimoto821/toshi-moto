@@ -61,7 +61,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
 
   if (open) {
     return (
-      <div className="z-40 mt-1 fixed bottom-[40px] border left-2 right-2 bg-gray-900 border-white opacity-90 text-white rounded p-2">
+      <div className="z-40 mt-1 fixed bottom-[40px] border left-2 right-2 bg-gray-100 border-gray-300 rounded p-2">
         <div className="grid grid-cols-3 gap-1 text-xs">
           <p className="font-semibold">Open:</p>
           <p className="col-span-2 text-right">
@@ -141,7 +141,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
 
   return (
     <button
-      className="w-full bg-gray-900 text-xs text-white py-1 px-4 opacity-90 fixed bottom-[36px] z-40 border-white border-t"
+      className="w-full bg-gray-100 text-xs  py-2 px-4 fixed bottom-[36px] z-40 border-gray-300 border-t"
       onClick={() => setOpen(true)}
     >
       <div className="">

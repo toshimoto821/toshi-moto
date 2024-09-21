@@ -35,20 +35,15 @@ export const ChartLegend = ({
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices, loading, range } = useBtcHistoricPrices();
+  const { prices, loading, range: _rangeFromApi } = useBtcHistoricPrices();
 
   const { forecastModel } = useAppSelector(selectForecast);
-
-  const graphTimeFrameRange = useAppSelector(
-    (state) => state.ui.graphTimeFrameRange
-  );
 
   const previousGraphTimeFrameRange = useAppSelector(
     (state) => state.ui.previousGraphTimeFrameRange
   );
 
-  const chartTimeFrameRange =
-    graphTimeFrameRange || previousGraphTimeFrameRange;
+  const range = _rangeFromApi || previousGraphTimeFrameRange;
 
   // const cachedPrices = useMemo(() => {
   //   if (forecastModel && forecastPrices) {
@@ -198,8 +193,10 @@ export const ChartLegend = ({
       // @todo bind to response in some way?
       // setTimeout(() => {
       if (!event.sourceEvent?.reset) {
-        // @ts-expect-error d3 issues
-        d3.select(this).call(brush.move, null, { reset: true });
+        setTimeout(() => {
+          // @ts-expect-error d3 issues
+          d3.select(this).call(brush.move, null, { reset: true });
+        }, 2000);
       }
       // }, 2000);
       // if (onBrushEnd && event.selection) {
@@ -229,16 +226,16 @@ export const ChartLegend = ({
   const xAxis = (g: any) => {
     // const ticks = (cachedPrices || []).map((d) => d[0]);
     const tickFormat =
-      chartTimeFrameRange === "1D"
+      range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
-        : chartTimeFrameRange === "1W"
+        : range === "1W"
         ? d3.timeFormat("%b %d, %I:%M %p")
         : d3.timeFormat("%b %d, %Y");
 
     const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
 
     // el.selectAll("*").remove();
-    el.attr("data-range-type", chartTimeFrameRange);
+    el.attr("data-range-type", range);
     el.call(
       //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
       d3
@@ -514,14 +511,7 @@ export const ChartLegend = ({
       // svg.selectAll("circle").remove();
       // svg.selectAll("line").remove();
     };
-  }, [
-    loading,
-    hasPrices,
-    chartTimeFrameRange,
-    screensize,
-    forecastModel,
-    range,
-  ]);
+  }, [loading, hasPrices, screensize, forecastModel, range, prices?.length]);
 
   useEffect(() => {
     // Function to execute when the window is resized

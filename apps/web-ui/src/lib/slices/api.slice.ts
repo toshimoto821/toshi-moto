@@ -92,7 +92,11 @@ export const apiSlice = createApi({
     }),
     getHistoricPrice: builder.query<PriceHistoryResponse, PriceHistoricArgs>({
       query: (args) => {
-        const { from, to, groupBy, currency = "usd", range = "" } = args;
+        const { from, to, groupBy, currency = "usd" } = args;
+        let range = "";
+        if (args.range) {
+          range = args.range;
+        }
         return `/api/prices/kline?vs_currency=${currency}&from=${from}&to=${to}&group_by=${groupBy}&range=${range}`;
       },
       transformResponse: (response: PriceHistoryResponse) => {
