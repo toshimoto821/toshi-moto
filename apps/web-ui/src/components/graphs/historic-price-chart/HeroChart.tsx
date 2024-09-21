@@ -33,6 +33,10 @@ import {
 interface IHeroChart {
   height: number;
   width: number;
+  suppressLegengs?: boolean;
+  suppressEvents?: boolean;
+  bgColor?: string;
+  id?: string;
   onMouseOver?: ({
     datum,
     index,
@@ -46,7 +50,16 @@ const grayRGB = "rgb(243 244 246)";
 export const SELECTED_OPACITIY = 0.18;
 
 export const HeroChart = (props: IHeroChart) => {
-  const { height, width, onMouseOver } = props;
+  const {
+    height,
+    width,
+    suppressEvents,
+    suppressLegengs,
+    onMouseOver,
+    bgColor = grayRGB,
+    id = "hero-chart",
+  } = props;
+
   const svgRef = useRef<SVGSVGElement>(null);
   const dispatch = useAppDispatch();
   const { btcPrice } = useBtcPrice();
@@ -351,6 +364,8 @@ export const HeroChart = (props: IHeroChart) => {
         })
         .on("click", (_, kline) => {
           isMouseInteracting.current = false;
+          if (suppressEvents) return;
+
           let index: number;
           if (netAssetValue) {
             index = lineData.findIndex((d) => d.x === (kline as IRawNode).x);
@@ -433,7 +448,7 @@ export const HeroChart = (props: IHeroChart) => {
         .datum(netAssetValue ? lineData : data)
         .attr("class", "inverse-area")
         .attr("d", inverseAreaGenerator)
-        .attr("fill", grayRGB); // Apply a semi-transparent white fill
+        .attr("fill", bgColor); // Apply a semi-transparent white fill
 
       // ---------------------------------------------------------------------//
 
@@ -496,6 +511,10 @@ export const HeroChart = (props: IHeroChart) => {
           isMouseInteracting.current = true;
         })
         .on("mousemove touchmove", function (event) {
+          if (suppressEvents) return;
+
+          const svg = select(svgRef.current);
+
           const [xy] = pointers(event);
           const [x] = xy;
 
@@ -507,7 +526,7 @@ export const HeroChart = (props: IHeroChart) => {
             index = data.length - 6;
           }
 
-          const veritcalLine = select("#vertical-tooltip-line");
+          const veritcalLine = svg.select("#vertical-tooltip-line");
 
           const mid = xScale.bandwidth() / 2;
           veritcalLine
@@ -515,7 +534,7 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("x1", x + mid)
             .attr("x2", x + mid);
 
-          const currentPriceLine = select("#current-price-line");
+          const currentPriceLine = svg.select("#current-price-line");
           let y1: number;
 
           if (netAssetValue) {
@@ -562,13 +581,15 @@ export const HeroChart = (props: IHeroChart) => {
         })
         .on("mouseleave touchend", function () {
           isMouseInteracting.current = false;
+          if (suppressEvents) return;
+          const svg = select(svgRef.current);
           const index = data.length - 6;
 
-          const veritcalLine = select("#vertical-tooltip-line");
+          const veritcalLine = svg.select("#vertical-tooltip-line");
           const x = xScale(index.toString())! + xScale.bandwidth() * 1.5;
           veritcalLine.attr("opacity", 0.5).attr("x1", x).attr("x2", x);
 
-          const currentPriceLine = select("#current-price-line");
+          const currentPriceLine = svg.select("#current-price-line");
           let y1: number;
           if (netAssetValue) {
             y1 = yScale(lineData[index].y1SumInDollars);
@@ -577,7 +598,7 @@ export const HeroChart = (props: IHeroChart) => {
           }
           currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
 
-          const orangeDot = select("#orange-dot");
+          const orangeDot = svg.select("#orange-dot");
           const cy = btcScale(lineData[index].y1Sum * btcPrice);
           orangeDot.attr("cx", x).attr("cy", cy);
 
@@ -717,8 +738,9 @@ export const HeroChart = (props: IHeroChart) => {
           // text.attr("fill", "orange").attr("opacity", 1);
         });
       };
-
-      svg.append("g").attr("id", "y2").call(y2Axis);
+      if (!suppressLegengs) {
+        svg.append("g").attr("id", "y2").call(y2Axis);
+      }
 
       // ---------------------------------------------------------------------//
       if (graphBtcAllocation) {
@@ -816,7 +838,7 @@ export const HeroChart = (props: IHeroChart) => {
           text.attr("fill", "orange").attr("opacity", 1);
         });
       };
-      if (graphBtcAllocation) {
+      if (graphBtcAllocation && !suppressLegengs) {
         svg.append("g").attr("id", "y1").call(y1Axis);
       }
 
@@ -843,7 +865,7 @@ export const HeroChart = (props: IHeroChart) => {
       //     .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11);
       // }
     };
-    console.log(isMouseInteracting.current, "render();");
+
     if (!isMouseInteracting.current) {
       render();
     }
@@ -865,7 +887,7 @@ export const HeroChart = (props: IHeroChart) => {
   return (
     <div>
       <svg
-        id="hero-chart"
+        id={id}
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
