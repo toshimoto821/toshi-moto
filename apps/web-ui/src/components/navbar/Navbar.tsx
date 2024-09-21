@@ -5,7 +5,6 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import * as d3 from "d3";
 import { DateRangeDialog } from "../dialogs/DateRangeDialog";
 import { useWallets } from "@root/lib/hooks/useWallets";
-import { ThinLine } from "@root/components/graphs/line/ThinLine";
 import { useBtcPrice } from "@root/lib/hooks/useBtcPrice";
 import { SelectionDropdown } from "./SelectionDropdown";
 import { useElementDimensions } from "@root/lib/hooks/useElementDimensions";
@@ -16,6 +15,7 @@ import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
 import { selectGraphRange } from "@root/lib/slices/navbar.slice";
+import { HeroChart } from "../graphs/historic-price-chart/HeroChart";
 
 const colorScale = d3
   .scaleLinear<string>()
@@ -62,7 +62,7 @@ export const Navbar = () => {
     "start"
   );
 
-  const { lineData, plotData } = useChartData({
+  const { lineData } = useChartData({
     wallets,
     btcPrice,
   });
@@ -194,17 +194,16 @@ export const Navbar = () => {
         {lineData && (
           <div
             ref={lineWrapperRef}
-            className={`absolute px-4 opacity-0 z-30 w-[${dimensions.width}]px`}
+            className={`absolute opacity-0 z-30 w-[${dimensions.width}]px`}
           >
-            <ThinLine
-              lineData={lineData}
-              plotData={plotData}
-              width={dimensions.width}
+            {/* <HeroChartHeader height={chartHeight} width={dimensions.width} /> */}
+            <HeroChart
               height={chartHeight}
-              graphAssetValue={netAssetValue}
-              chartTimeframeGroup={uiState.graphTimeFrameGroup}
-              showBtcAllocation={uiState.graphBtcAllocation}
-              btcPrice={btcPrice ?? 0}
+              width={dimensions.width}
+              bgColor="white"
+              id="hero-chart-header"
+              suppressEvents
+              suppressLegengs
             />
           </div>
         )}
