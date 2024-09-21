@@ -56,6 +56,8 @@ export const HeroChart = (props: IHeroChart) => {
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
 
+  const isMouseInteracting = useRef(false);
+
   const graphBtcAllocation = useAppSelector(
     (state) => state.ui.graphBtcAllocation
   );
@@ -348,6 +350,7 @@ export const HeroChart = (props: IHeroChart) => {
           return selectedIndex === i ? SELECTED_OPACITIY : 0;
         })
         .on("click", (_, kline) => {
+          isMouseInteracting.current = false;
           let index: number;
           if (netAssetValue) {
             index = lineData.findIndex((d) => d.x === (kline as IRawNode).x);
@@ -489,6 +492,9 @@ export const HeroChart = (props: IHeroChart) => {
       // Binding movement
 
       svg
+        .on("mouseenter touchstart", function () {
+          isMouseInteracting.current = true;
+        })
         .on("mousemove touchmove", function (event) {
           const [xy] = pointers(event);
           const [x] = xy;
@@ -555,6 +561,7 @@ export const HeroChart = (props: IHeroChart) => {
           }
         })
         .on("mouseleave touchend", function () {
+          isMouseInteracting.current = false;
           const index = data.length - 6;
 
           const veritcalLine = select("#vertical-tooltip-line");
@@ -639,7 +646,6 @@ export const HeroChart = (props: IHeroChart) => {
           .call(
             axisRight(yScale)
               .tickFormat((d) => {
-                console.log("formatDefault(d)", formatDefault(d));
                 return `$${
                   yValueToUse === "y1SumInDollars"
                     ? privateNumber(formatDefault(d))
@@ -837,8 +843,11 @@ export const HeroChart = (props: IHeroChart) => {
       //     .attr("stroke", direction > 0 ? jade.jade11 : ruby.ruby11);
       // }
     };
+    console.log(isMouseInteracting.current, "render();");
+    if (!isMouseInteracting.current) {
+      render();
+    }
 
-    render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     loading,
