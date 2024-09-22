@@ -12,6 +12,7 @@ import {
   axisRight,
   format,
   extent,
+  curveBasis,
 } from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
@@ -196,9 +197,16 @@ export const HeroChart = (props: IHeroChart) => {
     });
 
   const isPositiveChange = (i: number) => {
-    const d = data[i];
+    let index = i;
+    if (!data[i]) {
+      index = data.length - 6;
+    }
+
+    const previousIndex = index - 1;
+    const d = data[index];
+
     const price1 = parseFloat(d.closePrice);
-    const previous = data[i - 1];
+    const previous = data[previousIndex];
     const price2 = previous ? parseFloat(previous.closePrice) : 0;
     const priceChange = i === 0 ? 0 : price1 > price2;
 
@@ -253,13 +261,14 @@ export const HeroChart = (props: IHeroChart) => {
 
       const gradientRed = defs
         .append("linearGradient")
-        .attr("id", "gradient-red")
+        .attr("id", `gradient-red__${id}`)
         .attr("x1", "0%")
         .attr("y1", "0%")
         .attr("x2", "0%")
         .attr("y2", "100%");
 
       gradientRed
+        .append("stop")
         .attr("id", "ruby-stop")
         .attr("offset", "0%")
         .attr("stop-color", ruby.ruby11)
@@ -292,7 +301,8 @@ export const HeroChart = (props: IHeroChart) => {
             return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
           }
           return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
-        });
+        })
+        .curve(curveBasis);
 
       svg
         .append("path")
@@ -303,7 +313,7 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("d", areaGenerator)
         .attr(
           "fill",
-          direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
+          direction > 0 ? "url(#gradient-green)" : `url(#gradient-red__${id})`
         );
 
       // ---------------------------------------------------------------------//
@@ -341,7 +351,7 @@ export const HeroChart = (props: IHeroChart) => {
 
         .attr(
           "fill",
-          direction > 0 ? "url(#gradient-green)" : "url(#gradient-red)"
+          direction > 0 ? "url(#gradient-green)" : `url(#gradient-red__${id})`
         )
         .attr("height", (d) => {
           if (netAssetValue) {
@@ -410,7 +420,8 @@ export const HeroChart = (props: IHeroChart) => {
             }
             return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
           }
-        });
+        })
+        .curve(curveBasis);
 
       svg
         .append("path")
@@ -440,7 +451,8 @@ export const HeroChart = (props: IHeroChart) => {
             }
             return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
           }
-        });
+        })
+        .curve(curveBasis);
 
       svg
         .append("path")
