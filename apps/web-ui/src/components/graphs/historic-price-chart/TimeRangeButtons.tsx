@@ -7,6 +7,7 @@ import {
   setGraphByRange,
   resetGraphIfEmptyRange,
   selectUI,
+  setUI,
 } from "@lib/slices/ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { openPriceSocket } from "@lib/slices/price.slice";
@@ -33,8 +34,14 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
       buzzBuzz();
       dispatch(setRange({ graphStartDate: null, graphEndDate: null }));
       dispatch(setGraphByRange(timeframe));
-
+      dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
       dispatch(openPriceSocket({ retry: false, forceRange: timeframe }));
+      setTimeout(() => {
+        window.scrollTo({
+          top: 50,
+          behavior: "smooth",
+        });
+      }, 1500);
     };
   };
 
@@ -141,7 +148,7 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
     );
   };
   return (
-    <div className="flex space-x-2 items-center justify-end w-full pt-2 py-1 px-4">
+    <div className="flex space-x-2 items-center justify-end w-full pt-2 py-1 px-4 shadow-inner-top-bottom">
       <NavButton range="1D" />
 
       <NavButton range="1W" />
