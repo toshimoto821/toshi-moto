@@ -24,6 +24,8 @@ import { useWallets } from "@lib/hooks/useWallets";
 import { IRawNode } from "@root/types";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
+import { addBufferItems, getNumBuffer } from "./hero-chart.utils";
+import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 
 import {
   COLOR_NEGATIVE_CHANGE,
@@ -66,6 +68,7 @@ export const HeroChart = (props: IHeroChart) => {
   const { btcPrice } = useBtcPrice();
   const { wallets } = useWallets();
   const privateNumber = useNumberObfuscation();
+  const breakpoint = useBreakpoints();
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
@@ -83,31 +86,12 @@ export const HeroChart = (props: IHeroChart) => {
   const margin = { top: 10, right: 0, bottom: 10, left: 0 };
 
   const data = [...(prices || [])];
-
+  const numBuffer = getNumBuffer(data.length, breakpoint);
   if (data.length) {
-    lineData.unshift(lineData[0]);
-    lineData.unshift(lineData[0]);
-    lineData.unshift(lineData[0]);
-    lineData.unshift(lineData[0]);
-    lineData.unshift(lineData[0]);
+    // const len = data.length / 10;
+    addBufferItems(lineData, numBuffer);
 
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-
-    lineData.push(lineData[lineData.length - 1]);
-    lineData.push(lineData[lineData.length - 1]);
-    lineData.push(lineData[lineData.length - 1]);
-    lineData.push(lineData[lineData.length - 1]);
-    lineData.push(lineData[lineData.length - 1]);
+    addBufferItems(data, numBuffer);
   }
 
   const lastPrice = data[data.length - 1] || {};
@@ -199,7 +183,7 @@ export const HeroChart = (props: IHeroChart) => {
   const isPositiveChange = (i: number) => {
     let index = i;
     if (!data[i]) {
-      index = data.length - 6;
+      index = data.length - numBuffer - 1;
     }
 
     const previousIndex = index - 1;
@@ -297,7 +281,7 @@ export const HeroChart = (props: IHeroChart) => {
             return yScale((d as IRawNode)[yValueToUse]);
           }
 
-          if (i > data.length - 6) {
+          if (i > data.length - numBuffer - 1) {
             return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
           }
           return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
@@ -365,7 +349,7 @@ export const HeroChart = (props: IHeroChart) => {
         })
         .attr("opacity", (_, i) => {
           if (selectedIndex === null) {
-            if (i === data.length - 6) {
+            if (i === data.length - numBuffer - 1) {
               return SELECTED_OPACITIY;
             }
             return 0;
@@ -415,7 +399,7 @@ export const HeroChart = (props: IHeroChart) => {
           if (netAssetValue) {
             return yScale((d as IRawNode)[yValueToUse]);
           } else {
-            if (i > data.length - 6) {
+            if (i > data.length - numBuffer - 1) {
               return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
             }
             return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
@@ -446,7 +430,7 @@ export const HeroChart = (props: IHeroChart) => {
           if (netAssetValue) {
             return yScale((d as IRawNode)[yValueToUse]);
           } else {
-            if (i > data.length - 6) {
+            if (i > data.length - numBuffer - 1) {
               return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
             }
             return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
@@ -531,11 +515,11 @@ export const HeroChart = (props: IHeroChart) => {
           const [x] = xy;
 
           let index = Math.floor((x - margin.left) / xScale.step());
-          if (index < 5 || index > data.length - 6) {
-            index = data.length - 6;
+          if (index < 5 || index > data.length - numBuffer - 1) {
+            index = data.length - numBuffer - 1;
           }
           if (!lineData[index]) {
-            index = data.length - 6;
+            index = data.length - numBuffer - 1;
           }
 
           const veritcalLine = svg.select("#vertical-tooltip-line");
@@ -564,7 +548,7 @@ export const HeroChart = (props: IHeroChart) => {
 
           let datum = data[index];
           if (!datum) {
-            index = data.length - 6;
+            index = data.length - numBuffer - 1;
             datum = data[index];
           }
 
@@ -588,14 +572,14 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("fill", COLOR_SELECTED);
 
           if (onMouseOver) {
-            onMouseOver({ datum, index: index - 5 });
+            onMouseOver({ datum, index: index - numBuffer });
           }
         })
         .on("mouseleave touchend", function () {
           isMouseInteracting.current = false;
           if (suppressEvents) return;
           const svg = select(svgRef.current);
-          const index = data.length - 6;
+          const index = data.length - numBuffer - 1;
 
           const veritcalLine = svg.select("#vertical-tooltip-line");
           const x = xScale(index.toString())! + xScale.bandwidth() * 1.5;
@@ -621,7 +605,7 @@ export const HeroChart = (props: IHeroChart) => {
             .selectAll(".bar")
             .attr("opacity", 0)
             .filter((_, ind) => {
-              if (ind < 5 || ind > data.length - 6) {
+              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
                 return false;
               }
               return ind === index;

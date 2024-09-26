@@ -9,6 +9,7 @@ import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
 import { selectOrAppend } from "../line/d3.utils";
 import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
+import { getNumBuffer, addBufferItems } from "./hero-chart.utils";
 
 type IChartLegendProps = {
   height: number;
@@ -53,19 +54,9 @@ export const ChartLegend = ({
   // }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
 
   const cachedPrices = [...(prices || [])];
-  // @todo refactor this into a function!
+  const numBuffer = getNumBuffer(cachedPrices.length, breakpoint);
   if (cachedPrices.length) {
-    cachedPrices.unshift(cachedPrices[0]);
-    cachedPrices.unshift(cachedPrices[0]);
-    cachedPrices.unshift(cachedPrices[0]);
-    cachedPrices.unshift(cachedPrices[0]);
-    cachedPrices.unshift(cachedPrices[0]);
-
-    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
-    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
-    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
-    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
-    cachedPrices.push(cachedPrices[cachedPrices.length - 1]);
+    addBufferItems(cachedPrices, numBuffer);
   }
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
@@ -249,7 +240,7 @@ export const ChartLegend = ({
       .call((g: any) => {
         g.selectAll(".tick").attr("opacity", (_: any, i: number) => {
           if (i < 5) return 0;
-          if (i > cachedPrices.length - 6) return 0;
+          if (i > cachedPrices.length - numBuffer) return 0;
           return 1;
         });
         g.select(".domain").remove(); //attr("stroke", "gray").attr("stroke-width", 0.5);
@@ -357,8 +348,8 @@ export const ChartLegend = ({
     )
       .call((g: any) => {
         g.selectAll(".tick").attr("opacity", (_: any, i: number) => {
-          if (i < 5) return 0;
-          if (i > cachedPrices.length - 6) return 0;
+          if (i < numBuffer) return 0;
+          if (i > cachedPrices.length - numBuffer - 1) return 0;
           return 1;
         });
         g.select(".domain").remove(); //.attr("stroke", "gray").attr("stroke-width", 0.5);

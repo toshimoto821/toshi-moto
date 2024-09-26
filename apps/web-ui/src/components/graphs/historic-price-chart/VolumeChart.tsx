@@ -5,7 +5,8 @@ import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 import { SELECTED_OPACITIY } from "./HeroChart";
-
+import { addBufferItems, getNumBuffer } from "./hero-chart.utils";
+import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 interface IVolumeChart {
   height: number;
   width: number;
@@ -28,24 +29,14 @@ export const VolumeChart = (props: IVolumeChart) => {
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
-
+  const breakpoint = useBreakpoints();
   const dispatch = useAppDispatch();
 
   const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const data = [...(prices || [])];
-
+  const numBuffer = getNumBuffer(data.length, breakpoint);
   if (data.length) {
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-    data.unshift(data[0]);
-
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
-    data.push(data[data.length - 1]);
+    addBufferItems(data, numBuffer);
   }
 
   const lastPrice = data[data.length - 1] || [];
@@ -143,12 +134,12 @@ export const VolumeChart = (props: IVolumeChart) => {
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
-          if (selectedIndex === null && i === data.length - 6) {
+          if (selectedIndex === null && i === data.length - numBuffer - 1) {
             return COLOR_SELECTED;
           }
           // @todo fix me
           // this is wrong because i dont have the first price
-          if (i < 5 || i > data.length - 6) {
+          if (i < numBuffer || i > data.length - numBuffer - 1) {
             return "transparent";
           }
 
@@ -167,7 +158,7 @@ export const VolumeChart = (props: IVolumeChart) => {
         .attr("stroke", (d, i) => {
           // @todo fix me
 
-          if (i < 5 || i > data.length - 6) {
+          if (i < numBuffer || i > data.length - numBuffer - 1) {
             // exit before selecting the color
             return "transparent";
           }
@@ -210,13 +201,13 @@ export const VolumeChart = (props: IVolumeChart) => {
           const [x] = xy;
           let index = Math.floor((x - margin.left) / xScale.step());
 
-          if (index < 5 || index > data.length - 6) {
-            index = data.length - 6;
+          if (index < 5 || index > data.length - numBuffer - 1) {
+            index = data.length - numBuffer - 1;
           }
 
           let datum = data[index];
           if (!datum) {
-            index = data.length - 6;
+            index = data.length - numBuffer - 1;
             datum = data[index];
           }
           // const i = data.findIndex((d) => d.openTime === datum.openTime);
@@ -225,7 +216,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             .selectAll(".bar")
             // .attr("opacity", 0)
             .attr("fill", (_, ind) => {
-              if (ind < 5 || ind > data.length - 6) {
+              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
                 return "transparent";
               }
 
@@ -234,7 +225,7 @@ export const VolumeChart = (props: IVolumeChart) => {
                 : COLOR_NEGATIVE_CHANGE;
             })
             .filter((_, ind) => {
-              if (ind < 5 || ind > data.length - 6) {
+              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
                 return false;
               }
 
@@ -257,12 +248,12 @@ export const VolumeChart = (props: IVolumeChart) => {
         })
         .on("mouseleave touchend", function () {
           if (isLocked) return;
-          const index = data.length - 6;
+          const index = data.length - numBuffer - 1;
           svg
             .selectAll(".bar")
             // .attr("opacity", 0)
             .attr("fill", (_, ind) => {
-              if (ind < 5 || ind > data.length - 6) {
+              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
                 return "transparent";
               }
 
@@ -272,7 +263,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             })
 
             .filter((_, ind) => {
-              if (ind < 5 || ind > data.length - 6) {
+              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
                 return false;
               }
 
