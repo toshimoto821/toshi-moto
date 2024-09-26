@@ -12,7 +12,8 @@ import {
   axisRight,
   format,
   extent,
-  curveBasis,
+  // curveBasis,
+  curveBumpX,
 } from "d3";
 import { jade, ruby } from "@radix-ui/colors";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
@@ -286,7 +287,7 @@ export const HeroChart = (props: IHeroChart) => {
           }
           return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
         })
-        .curve(curveBasis);
+        .curve(curveBumpX);
 
       svg
         .append("path")
@@ -306,9 +307,12 @@ export const HeroChart = (props: IHeroChart) => {
 
       // Bar Chart
       svg
+        .append("g")
+        .attr("class", "bar-group")
         .selectAll(".bar")
         .data<BinanceKlineMetric | IRawNode>(netAssetValue ? lineData : data)
         .enter()
+
         .append("rect")
         .attr("class", "bar")
         .attr("x", (_, i) => {
@@ -405,7 +409,7 @@ export const HeroChart = (props: IHeroChart) => {
             return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
           }
         })
-        .curve(curveBasis);
+        .curve(curveBumpX);
 
       svg
         .append("path")
@@ -436,7 +440,7 @@ export const HeroChart = (props: IHeroChart) => {
             return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
           }
         })
-        .curve(curveBasis);
+        .curve(curveBumpX);
 
       svg
         .append("path")
@@ -460,7 +464,7 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("stroke-dasharray", "3,3")
         .attr("opacity", 0.5)
         .attr("stroke-width", 0.5)
-        .attr("y1", margin.top)
+        .attr("y1", 0)
         .attr("y2", height - margin.bottom)
         .attr("x1", x)
         .attr("x2", x);

@@ -148,7 +148,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
-      <div className="mb-2 sticky top-[140px]">
+      <div className="sticky top-[140px]">
         <ChartLegend
           height={45}
           width={width}
