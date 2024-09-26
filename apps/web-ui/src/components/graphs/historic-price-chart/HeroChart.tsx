@@ -450,7 +450,7 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // cross hair lines
-      const len = data.length ? data.length - 5 : 0;
+      const len = data.length ? data.length - numBuffer : 0;
       const x = xScale(len.toString())! + xScale.bandwidth() / 2;
 
       svg
