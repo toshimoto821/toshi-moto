@@ -1,22 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useEffect, useMemo, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection, scaleBand } from "d3";
 import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
-import { cn } from "@root/lib/utils";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
 import { selectOrAppend } from "../line/d3.utils";
+import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
+import { getNumBuffer, addBufferItems } from "./hero-chart.utils";
 
 type IChartLegendProps = {
   height: number;
   width: number;
-  onChange: (range: [Date, Date]) => void;
+  onChange: (range: [BinanceKlineMetric, BinanceKlineMetric]) => void;
   onReset: () => void;
-  onBrushMove?: (dates: [Date, Date]) => void;
-  onBrushEnd?: (dates: [Date, Date]) => void;
+  onBrushMove?: (klines: [BinanceKlineMetric, BinanceKlineMetric]) => void;
+  onBrushEnd?: (klines: [BinanceKlineMetric, BinanceKlineMetric]) => void;
 };
 export const ChartLegend = ({
   height,
@@ -24,53 +25,57 @@ export const ChartLegend = ({
   onChange,
   onReset,
   onBrushMove,
-  onBrushEnd,
 }: IChartLegendProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const margin = {
-    top: 70,
-    right: -1,
-    bottom: 10,
-    left: -1,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
   };
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices, loading, range, group } = useBtcHistoricPrices();
+  const { prices, loading, range: _rangeFromApi } = useBtcHistoricPrices();
 
-  const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
-
-  const graphTimeFrameRange = useAppSelector(
-    (state) => state.ui.graphTimeFrameRange
-  );
+  const { forecastModel } = useAppSelector(selectForecast);
 
   const previousGraphTimeFrameRange = useAppSelector(
     (state) => state.ui.previousGraphTimeFrameRange
   );
 
-  const chartTimeFrameRange =
-    graphTimeFrameRange || previousGraphTimeFrameRange;
+  const range = _rangeFromApi || previousGraphTimeFrameRange;
 
-  const len = prices?.length || 0;
-  const cachedPrices = useMemo(() => {
-    if (forecastModel && forecastPrices) {
-      return prices?.concat(forecastPrices);
-    }
-    return prices;
-  }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
+  // const cachedPrices = useMemo(() => {
+  //   if (forecastModel && forecastPrices) {
+  //     return prices?.concat(forecastPrices);
+  //   }
+  //   return prices;
+  // }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
 
+  const cachedPrices = [...(prices || [])];
+  const numBuffer = getNumBuffer(cachedPrices.length, breakpoint);
+  if (cachedPrices.length) {
+    addBufferItems(cachedPrices, numBuffer);
+  }
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
     const firstPrice = cachedPrices[0];
-    const closeTime = firstPrice.closeTime;
-    xDomain.push(new Date(closeTime));
+    const openTime = firstPrice.openTime;
+    xDomain.push(new Date(openTime));
     const lastPrice = cachedPrices[cachedPrices.length - 1];
     const lastCloseTime = lastPrice.closeTime;
     xDomain.push(new Date(lastCloseTime));
   }
 
-  const xRange = [margin.left, width - margin.right];
-  const x = d3.scaleUtc().domain(xDomain).range(xRange);
+  // const xRange = [margin.left, width - margin.right];
+  // const x = d3.scaleUtc().domain(xDomain).range(xRange);
+
+  const xScale = scaleBand()
+    // prices = [date, price, volume]
+    .domain((cachedPrices || []).map((_, i) => i.toString()))
+    .range([margin.left, width - margin.right])
+    .padding(0);
 
   // this was used for grouping the brushes, but
   // that functionality was a bad user experience.
@@ -119,13 +124,25 @@ export const ChartLegend = ({
     }
     if (brushEvent)
       if (!brushEvent.selection) {
-        onReset();
-      } else {
-        const [x1, x2] = (brushEvent.selection || []).map(x.invert);
-        if (isNaN(x1.getTime()) || isNaN(x2.getTime())) {
-          return;
+        if (!brushEvent.sourceEvent.reset) {
+          onReset();
         }
-        onChange([x1, x2]);
+      } else {
+        const [x0, x1] = brushEvent.selection;
+
+        const startIndex = Math.floor(x0 / xScale.step());
+        const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+
+        let k1: BinanceKlineMetric | null = null;
+        let k2: BinanceKlineMetric | null = null;
+        if (cachedPrices?.length) {
+          k1 = cachedPrices[startIndex];
+          k2 = cachedPrices[endIndex];
+          if (!k2) {
+            k2 = cachedPrices[cachedPrices.length - 1];
+          }
+          onChange([k1, k2]);
+        }
       }
   }
 
@@ -135,59 +152,102 @@ export const ChartLegend = ({
     .brushX()
     .extent([
       [margin.left, 1],
-      [width - margin.right, height - 1],
+      [width - margin.right, height],
     ])
     .on("brush", (event: any) => {
       if (onBrushMove && event.selection) {
         // let interval = d3.timeMinute.every(30);
-        const d0 = event.selection.map(x.invert);
+        // const d0 = event.selection.map(xScale.invert);
         // const d1 = d0.map(interval.round);
+        const [x0, x1] = event.selection;
 
-        onBrushMove(d0);
+        const startIndex = Math.floor(x0 / xScale.step());
+        const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+
+        let k1: BinanceKlineMetric | null = null;
+        let k2: BinanceKlineMetric | null = null;
+        if (cachedPrices?.length) {
+          k1 = cachedPrices[startIndex];
+          k2 = cachedPrices[endIndex];
+          if (!k2) {
+            k2 = cachedPrices[cachedPrices.length - 1];
+          }
+          onBrushMove([k1, k2]);
+        }
       }
     })
     // .on("brush", brushed)
-    .on("end", (event: any) => {
+    .on("end", function (event: any) {
       currentSelecion.current = event;
-      updateChart(event);
-      if (onBrushEnd) {
-        const [x1, x2] = (event.selection || []).map(x.invert);
-        onBrushEnd([x1, x2]);
-      }
-    });
 
-  const xScale = scaleBand()
-    // prices = [date, price, volume]
-    .domain((cachedPrices || []).map((_, i) => i.toString()))
-    .range([margin.left, width - margin.right])
-    .padding(0.1);
+      updateChart(event);
+      // @todo bind to response in some way?
+      // setTimeout(() => {
+      if (!event.sourceEvent?.reset) {
+        setTimeout(() => {
+          // @ts-expect-error d3 issues
+          d3.select(this).call(brush.move, null, { reset: true });
+        }, 2000);
+      }
+      // }, 2000);
+      // if (onBrushEnd && event.selection) {
+      //   // const [x1, x2] = (event.selection || []).map(x.invert);
+      //   const [x0, x1] = event.selection;
+
+      //   const startIndex = Math.floor(x0 / xScale.step());
+      //   const endIndex = Math.ceil(x1 / xScale.step()) - 1;
+      //   let k1: BinanceKlineMetric | null = null;
+      //   let k2: BinanceKlineMetric | null = null;
+      //   if (cachedPrices?.length) {
+      //     k1 = cachedPrices[startIndex];
+      //     k2 = cachedPrices[endIndex];
+      //     if (!k2) {
+      //       k2 = cachedPrices[cachedPrices.length - 1];
+      //     }
+      //     onBrushEnd([k1, k2]);
+      //   }
+      //   // @todo pickup here
+      //   // setTimeout(() => {
+      //   //   d3.select(this).call(brush.move, null);
+      //   // }, 5000);
+      // }
+      //
+    });
 
   const xAxis = (g: any) => {
     // const ticks = (cachedPrices || []).map((d) => d[0]);
+
     const tickFormat =
-      chartTimeFrameRange === "1D"
+      range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
-        : chartTimeFrameRange === "1W"
+        : range === "1W"
         ? d3.timeFormat("%b %d, %I:%M %p")
         : d3.timeFormat("%b %d, %Y");
 
     const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
 
     // el.selectAll("*").remove();
-    el.attr("data-range-type", chartTimeFrameRange);
+    el.attr("data-range-type", range);
     el.call(
       //.attr("transform", `translate(0,${height - margin.bottom + 10})`)
       d3
         .axisBottom(xScale)
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
-        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].closeTime))) // Format the tick labels as needed
-        .tickSizeOuter(0)
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices![i].openTime))) // Format the tick labels as needed
+        .ticks(xScale.domain().length)
+      // .tickSizeOuter(1)
     )
       .call((g: any) => {
-        g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
+        g.selectAll(".tick").attr("opacity", (_: any, i: number) => {
+          if (i < 5) return 0;
+          if (i > cachedPrices.length - numBuffer) return 0;
+          return 1;
+        });
+        g.select(".domain").remove(); //attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
+      // .attr("transform", `translate(0, ${height - margin.bottom})`) // Move the axis to the bottom
 
       .selectAll("text")
       .attr("dy", "1.5em")
@@ -200,11 +260,11 @@ export const ChartLegend = ({
       .attr("opacity", 0.5)
       .attr("stroke-width", 1)
       .style("font-size", "12px") // Ensure consistent font size
-      .style("font-family", "Arial, sans-serif") // Ensure consistent font family
-      .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`); // Shift ticks to the left by half the bar width
+      .style("font-family", "Arial, sans-serif"); // Ensure consistent font family
+    // .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`); // Shift ticks to the left by half the bar width
 
     g.selectAll("text")
-      .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`) // Shift ticks to the left by half the bar width
+      // .attr("transform", `translate(${-xScale.bandwidth() / 2 - 0}, 0)`) // Shift ticks to the left by half the bar width
       .attr("display", "")
       .filter((_: any, i: number) => {
         if (range === "1D") {
@@ -216,6 +276,10 @@ export const ChartLegend = ({
         }
 
         if (range === "1M") {
+          return i % 8 !== 0;
+        }
+
+        if (range === "3M") {
           return i % 8 !== 0;
         }
 
@@ -236,11 +300,24 @@ export const ChartLegend = ({
       .attr("display", "none");
 
     g.selectAll(".tick line")
-      .filter((_: any, i: number) => i % 4 === 0)
+      .attr("transform", `translate(0, ${height - 6})`)
+      .filter((_: any, i: number) => {
+        if (range === "3M") {
+          return i % 8 === 0;
+        }
+        return i % 4 === 0;
+      })
+      .attr("transform", `translate(0, ${height - 10})`)
       .attr("y2", 10);
 
     g.selectAll(".tick line")
-      .filter((_: any, i: number) => i % 4 != 0)
+      .filter((_: any, i: number) => {
+        if (range === "3M") {
+          return i % 4 === 0;
+        }
+
+        return i % 4 != 0;
+      })
       .attr("opacity", 0.25);
   };
 
@@ -250,7 +327,7 @@ export const ChartLegend = ({
       range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
         : range === "1W"
-        ? d3.timeFormat("%b %d, %I:%M %p")
+        ? d3.timeFormat("%m/%d, %I %p")
         : range === "1M"
         ? d3.timeFormat("%b %d, %Y")
         : range == "3M" || range == "1Y" || range == "5Y"
@@ -266,12 +343,17 @@ export const ChartLegend = ({
         // .tickValues(ticks)
         // @ts-expect-error d3 issues
 
-        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].closeTime))) // Format the tick labels as needed
-        .tickSizeOuter(0)
+        .tickFormat((d, i) => tickFormat(new Date(cachedPrices[i].openTime))) // Format the tick labels as needed
+        .ticks(xScale.domain().length)
       // .tickSizeOuter(0)
     )
       .call((g: any) => {
-        g.select(".domain").attr("stroke", "gray").attr("stroke-width", 0.5);
+        g.selectAll(".tick").attr("opacity", (_: any, i: number) => {
+          if (i < numBuffer) return 0;
+          if (i > cachedPrices.length - numBuffer - 1) return 0;
+          return 1;
+        });
+        g.select(".domain").remove(); //.attr("stroke", "gray").attr("stroke-width", 0.5);
         g.selectAll(".tick line").attr("stroke", "gray");
       })
       .selectAll("text")
@@ -291,31 +373,31 @@ export const ChartLegend = ({
       .attr("display", "")
       .filter((_: any, i: number) => {
         if (range === "1D") {
-          return i % 24 !== 0;
+          return i % 8 !== 0;
         }
 
         if (range === "1W") {
-          return i % 24 !== 0;
+          return i % 6 !== 0;
         }
 
         if (range === "1M") {
-          return i % 24 !== 0;
+          return i % 7 !== 0;
         }
 
         if (range === "3M") {
-          return i % 24 !== 0;
+          return i % 10 !== 0;
         }
 
         if (range === "1Y") {
-          return i % 24 !== 0;
+          return i % 13 !== 0;
         }
 
         if (range === "2Y") {
-          return i % 24 !== 0;
+          return i % 12 !== 0;
         }
 
         if (range === "5Y") {
-          return i % 48 !== 0;
+          return i % 12 !== 0;
         }
 
         return i % 24 !== 0;
@@ -323,23 +405,73 @@ export const ChartLegend = ({
       .attr("display", "none");
 
     g.selectAll(".tick line")
-      .filter((_: any, i: number) => i % 6 === 0)
+      .attr("transform", `translate(0, ${height - 6})`)
+      .filter((_: any, i: number) => {
+        if (range === "1D") {
+          return i % 8 === 0;
+        }
+        if (range === "1W") {
+          return i % 6 === 0;
+        }
+
+        if (range === "1M") {
+          return i % 7 === 0;
+        }
+
+        if (range === "3M") {
+          return i % 10 === 0;
+        }
+
+        if (range === "1Y") {
+          return i % 13 === 0;
+        }
+
+        if (range === "2Y") {
+          return i % 12 === 0;
+        }
+
+        if (range === "5Y") {
+          return i % 12 === 0;
+        }
+
+        return i % 8 === 0;
+      })
+      .attr("transform", `translate(0, ${height - 10})`)
       .attr("y2", 10);
   };
 
   const render = () => {
-    if (!prices?.length) return;
+    if (!cachedPrices?.length) return;
     const svg = d3.select(svgRef.current);
+    svg.selectAll(".highlight-bar").remove();
+    selectOrAppend(svg, "#chart-legend-highlight-bars", "g", {
+      id: "chart-legend-highlight-bars",
+    })
+      // .attr("pointer-events", "none")
+      .selectAll(".chart-legend-bar")
+      .data(cachedPrices)
+      .enter()
+      .append("rect")
+      .attr("class", "highlight-bar")
+      .attr("data-index", (_, i) => i)
+      .attr("x", (_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
+      .attr("y", 0)
+      .attr("width", xScale.bandwidth())
+      .attr("height", height)
+      .attr("fill", "orange")
+      .attr("opacity", 0); // Initially set opacity to 0
 
     // only repain the chart if the graphTimeFrameRange is not null.
     // it gets set to null when user drags on brush
-    if (graphTimeFrameRange) {
-      if (breakpoint > 3) {
-        selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
-      } else {
-        selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
-      }
+    // if (graphTimeFrameRange) {
+
+    if (breakpoint > 2) {
+      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
+    } else {
+      selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
     }
+
+    // }
 
     if (!forecastModel) {
       // const brushSelection = svg.append("g");
@@ -357,24 +489,20 @@ export const ChartLegend = ({
 
   const hasPrices = (cachedPrices?.length || 0) > 0;
 
-  useEffect(() => {
-    if (graphTimeFrameRange) {
-      const svg = d3.select(svgRef.current);
-      const brushSelection: d3.Selection<
-        SVGGElement,
-        unknown,
-        null,
-        undefined
-      > = svg.select("#brush-g");
-      brushSelection.call(brush.move, null);
-    }
-  }, [graphTimeFrameRange, chartTimeFrameRange]);
+  // useEffect(() => {
+  //   if (graphTimeFrameRange) {
+  //     const svg = d3.select(svgRef.current);
+  //     const brushSelection: d3.Selection<
+  //       SVGGElement,
+  //       unknown,
+  //       null,
+  //       undefined
+  //     > = svg.select("#brush-g");
+  //     brushSelection.call(brush.move, null);
+  //   }
+  // }, [graphTimeFrameRange, chartTimeFrameRange]);
 
   useEffect(() => {
-    // @ts-expect-error fix me, api returns string "null"
-    if (!range || range === "null" || loading) {
-      return;
-    }
     render();
     // const svg = d3.select(svgRef.current);
     return () => {
@@ -397,10 +525,12 @@ export const ChartLegend = ({
   }, [
     loading,
     hasPrices,
-    chartTimeFrameRange,
     screensize,
     forecastModel,
     range,
+    prices?.length,
+    cachedPrices.length,
+    numBuffer,
   ]);
 
   useEffect(() => {
@@ -420,23 +550,17 @@ export const ChartLegend = ({
   }, []);
 
   return (
-    <div
-      className={cn("", {
-        "opacity-60": !!forecastModel,
-      })}
-    >
+    <div className="opacity-80">
       <svg
+        id="chart-legend"
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{
-          maxWidth: "calc(100% - 40px)",
           height: "auto",
           fontSize: 10,
-          marginLeft: "20px",
-          marginRight: "20px",
         }}
         width={width}
-        className="bg-white border rounded drop-shadow-lg"
+        className="bg-white border-b  border-gray-300"
         ref={svgRef}
       />
     </div>

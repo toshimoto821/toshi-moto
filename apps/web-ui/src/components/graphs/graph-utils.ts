@@ -80,6 +80,7 @@ export const getGroupKey = (groupBy: GroupBy) => {
     if (
       groupBy === "12h" ||
       groupBy === "2h" ||
+      groupBy === "1h" ||
       groupBy === "4h" ||
       groupBy === "6h" ||
       groupBy === "15m" ||
@@ -122,10 +123,12 @@ export const getGroupKey = (groupBy: GroupBy) => {
         // }
         return toString(d3.timeMinute(d), groupBy);
       };
+    case "1h":
     case "2h":
       return (d: Date) => {
         return toString(d3.timeHour(d), groupBy);
       };
+
     case "4h":
       return (d: Date) => {
         return toString(d3.timeHour(d), groupBy);

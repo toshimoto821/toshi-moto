@@ -16,6 +16,10 @@ export default {
       },
     },
     extend: {
+      boxShadow: {
+        "inner-top-bottom":
+          "inset 0 4px 6px -1px rgba(0, 0, 0, 0.05), inset 0 -4px 6px -1px rgba(0, 0, 0, 0.05)",
+      },
       colors: {
         ...mauve,
         ...violet,
