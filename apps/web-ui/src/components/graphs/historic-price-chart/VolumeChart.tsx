@@ -242,6 +242,13 @@ export const VolumeChart = (props: IVolumeChart) => {
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
 
+          const chartLegend = select("#chart-legend");
+          chartLegend
+            .selectAll(".highlight-bar")
+            .attr("opacity", 0)
+            .filter((_, i) => i === index)
+            .attr("opacity", 0.5);
+
           if (onMouseOver) {
             onMouseOver({ datum, index: index });
           }
@@ -277,6 +284,13 @@ export const VolumeChart = (props: IVolumeChart) => {
             .attr("opacity", 0)
             .filter((_, i) => i === index)
             .attr("opacity", SELECTED_OPACITIY);
+
+          const chartLegend = select("#chart-legend");
+          chartLegend
+            .selectAll(".highlight-bar")
+            .attr("opacity", 0)
+            .filter((_, i) => i === index)
+            .attr("opacity", 0.5);
           if (onMouseOver) {
             onMouseOver({ datum: data[index], index: index });
           }

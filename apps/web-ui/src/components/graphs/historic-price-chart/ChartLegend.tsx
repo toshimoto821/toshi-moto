@@ -216,6 +216,7 @@ export const ChartLegend = ({
 
   const xAxis = (g: any) => {
     // const ticks = (cachedPrices || []).map((d) => d[0]);
+
     const tickFormat =
       range === "1D"
         ? d3.timeFormat("%b %d, %I:%M %p")
@@ -442,15 +443,34 @@ export const ChartLegend = ({
   const render = () => {
     if (!cachedPrices?.length) return;
     const svg = d3.select(svgRef.current);
+    svg.selectAll(".highlight-bar").remove();
+    selectOrAppend(svg, "#chart-legend-highlight-bars", "g", {
+      id: "chart-legend-highlight-bars",
+    })
+      // .attr("pointer-events", "none")
+      .selectAll(".chart-legend-bar")
+      .data(cachedPrices)
+      .enter()
+      .append("rect")
+      .attr("class", "highlight-bar")
+      .attr("data-index", (_, i) => i)
+      .attr("x", (_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
+      .attr("y", 0)
+      .attr("width", xScale.bandwidth())
+      .attr("height", height)
+      .attr("fill", "orange")
+      .attr("opacity", 0); // Initially set opacity to 0
 
     // only repain the chart if the graphTimeFrameRange is not null.
     // it gets set to null when user drags on brush
     // if (graphTimeFrameRange) {
-    if (breakpoint > 3) {
+
+    if (breakpoint > 2) {
       selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxis);
     } else {
       selectOrAppend(svg, "#x-g", "g", { id: "x-g" }).call(xAxisMobile);
     }
+
     // }
 
     if (!forecastModel) {
@@ -502,7 +522,16 @@ export const ChartLegend = ({
       // svg.selectAll("circle").remove();
       // svg.selectAll("line").remove();
     };
-  }, [loading, hasPrices, screensize, forecastModel, range, prices?.length]);
+  }, [
+    loading,
+    hasPrices,
+    screensize,
+    forecastModel,
+    range,
+    prices?.length,
+    cachedPrices.length,
+    numBuffer,
+  ]);
 
   useEffect(() => {
     // Function to execute when the window is resized
@@ -523,6 +552,7 @@ export const ChartLegend = ({
   return (
     <div className="opacity-80">
       <svg
+        id="chart-legend"
         height={height}
         viewBox={[0, 0, width, height].join(",")}
         style={{

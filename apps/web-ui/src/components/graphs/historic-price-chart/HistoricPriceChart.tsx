@@ -129,6 +129,7 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
 
   const handleHoverHeroChart = useCallback(
     ({ datum, index }: { datum: BinanceKlineMetric; index: number }) => {
+      console.log("selectedIndex", index);
       setTooltipKline(datum);
       setSelectedIndex(index);
     },
