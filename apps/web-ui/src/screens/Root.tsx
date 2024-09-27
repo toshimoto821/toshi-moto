@@ -11,6 +11,8 @@ import {
   openPriceSocket,
   closePriceSocket,
 } from "@root/lib/slices/price.slice";
+import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
+import { setUI } from "@root/lib/slices/ui.slice";
 
 const VITE_PRICING_STREAM_DISABLED = import.meta.env
   .VITE_PRICING_STREAM_DISABLED;
@@ -21,6 +23,7 @@ export const Root = () => {
   const dispatch = useAppDispatch();
 
   const btcWallets = useAppSelector(selectAllWallets);
+  const breakpoint = useBreakpoints();
 
   useEffect(() => {
     if (pathname !== "/onboarding" && btcWallets.length === 0) {
@@ -77,6 +80,10 @@ export const Root = () => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    dispatch(setUI({ breakpoint }));
+  }, [breakpoint, dispatch]);
 
   return (
     <div className="">
