@@ -12,7 +12,6 @@ import {
   axisRight,
   format,
   extent,
-  // curveBasis,
   curveBumpX,
 } from "d3";
 import { jade, ruby } from "@radix-ui/colors";
@@ -45,6 +44,15 @@ interface IHeroChart {
   }) => void;
 }
 
+export type Plot = {
+  x: number;
+  y1: number;
+  y1Sum: number;
+  y1SumInDollars: number;
+  y2: number;
+  quoteAssetVolume: number;
+};
+
 const grayRGB = "rgb(243 244 246)";
 export const SELECTED_OPACITIY = 0.18;
 
@@ -68,6 +76,9 @@ export const HeroChart = (props: IHeroChart) => {
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
+  const graphSelectedTransactions = useAppSelector(
+    (state) => state.ui.graphSelectedTransactions
+  );
 
   const isMouseInteracting = useRef(false);
 
@@ -77,7 +88,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   const netAssetValue = useAppSelector((state) => state.ui.netAssetValue);
 
-  const { lineData } = useChartData({ btcPrice, wallets });
+  const { lineData, plotData } = useChartData({ btcPrice, wallets });
 
   const margin = { top: 25, right: 0, bottom: 10, left: 0 };
 
@@ -499,6 +510,46 @@ export const HeroChart = (props: IHeroChart) => {
       // ---------------------------------------------------------------------//
 
       // ---------------------------------------------------------------------//
+      // Plot Data
+      if (plotData.length) {
+        // const bisect = bisector((d: Plot) => new Date(d.x)).left;
+        const lines = svg.selectAll(".plot-line").data(plotData).enter();
+        lines
+          .append("line")
+          .attr("x1", margin.left)
+          .attr("y1", (d) => {
+            const val = yScale(d.node[yValueToUse]);
+            return val;
+          })
+          .attr("x2", width - margin.right)
+          .attr("y2", (d) => {
+            const val = yScale(d.node[yValueToUse]);
+            return val;
+          })
+          .attr("stroke", (d) => {
+            const color = d.data.color;
+            return color;
+          })
+          .attr("class", "plot-line")
+          .attr("stroke-dasharray", (d) => {
+            if (d.type === "VOUT") return "";
+            return "3,3";
+          })
+          // @todo opacity should be determined by the size of the btc
+          // however need a scale for that
+          .attr("opacity", (d) => {
+            if (d.data.visible) {
+              // const opacity = y3(d.value);
+              return 1;
+            }
+            return 0;
+          })
+          .attr("stroke-width", 0.5);
+      }
+
+      // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
       // Binding movement
 
       svg
@@ -892,6 +943,7 @@ export const HeroChart = (props: IHeroChart) => {
     lastPrice.closePrice,
     yValueToUse,
     graphBtcAllocation,
+    graphSelectedTransactions,
   ]);
 
   return (

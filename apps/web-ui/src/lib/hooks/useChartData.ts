@@ -365,7 +365,9 @@ export const useChartData = (opts: IUseChartData) => {
 
       // something is wrong with the date
       if (grp && n.visible) {
-        const yValue = lineMap[key];
+        const values = Object.values(lineMap).reverse();
+        const yValue = values.find((v) => n.date.getTime() > v.x);
+        // const yValue = lineMap[key];
         if (yValue) {
           const plot = {
             x: grp.date.getTime(),
