@@ -1,4 +1,39 @@
 # UI Changelog
+## [1.18.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.17.2...web-ui-1.18.0) (2024-10-01)
+
+  |    |    |
+  |  --- | ---  |
+  |![web-ui-e2e -- Hero.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/87548e06de3e4fc6a371dd9a3f28232c46c76b0e/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png)|![web-ui-e2e -- should import the wallet.png](https://raw.githubusercontent.com/toshimoto821/toshi-moto/87548e06de3e4fc6a371dd9a3f28232c46c76b0e/apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png)|
+
+  
+
+
+### ✨ Features
+
+* adds y2 axis ([31ab05f](https://github.com/toshimoto821/toshi-moto/commit/31ab05fd14c0cdc52954ada9ba188baf1d840b51))
+* chart refactor ([290eab3](https://github.com/toshimoto821/toshi-moto/commit/290eab3204ef1a19915e5cadebdab57e5a7e177f))
+* tooltip start ([1ebf712](https://github.com/toshimoto821/toshi-moto/commit/1ebf7124f242e044188477240766f807a3382c3f))
+* ui updates ([1a49b76](https://github.com/toshimoto821/toshi-moto/commit/1a49b7671bbb0e7a413a7c03e7fe87738a17f659))
+
+
+### 🐞 Bug Fixes
+
+* btc axis ([430de90](https://github.com/toshimoto821/toshi-moto/commit/430de90c6417e7212f94b4161ed535593a3f29af))
+* chart ([f264aca](https://github.com/toshimoto821/toshi-moto/commit/f264acab516c7eafc756800b98e0121168cdba9e))
+* chart bugs ([e544f73](https://github.com/toshimoto821/toshi-moto/commit/e544f73ec4892688abd4a687c86541d5bc48ad35))
+* chart legengs ([5c6adee](https://github.com/toshimoto821/toshi-moto/commit/5c6adeea63794e34559b74e8e86042d054700cfe))
+* chart perf ([4ba21f4](https://github.com/toshimoto821/toshi-moto/commit/4ba21f456f784a6043853131458c2d2f802bba19))
+* first vol ([09e0d17](https://github.com/toshimoto821/toshi-moto/commit/09e0d17c9d141ca427c9306932c2cc23c0764124))
+* fixes chart legend offset ([e013ed8](https://github.com/toshimoto821/toshi-moto/commit/e013ed8def39e4bc1589dd295de8e9224a61ec27))
+* fixes mouse interaction ([8225f71](https://github.com/toshimoto821/toshi-moto/commit/8225f71995479ef0170dde3b02a0c0a7861a5cb7))
+* handles lock state ([c6df244](https://github.com/toshimoto821/toshi-moto/commit/c6df24415bb8c31b5a43796cb8de79c4ca21d743))
+* header chart ([a581d42](https://github.com/toshimoto821/toshi-moto/commit/a581d42934c57b6c37023b140a45ada257f8fd4d))
+* legend ([575cffd](https://github.com/toshimoto821/toshi-moto/commit/575cffd466feee1ab09e8d1e058caed401023851))
+* touch support ([ce90a10](https://github.com/toshimoto821/toshi-moto/commit/ce90a104e906dac823bb3f389d31156a2132c97b))
+* touch support ([e02471f](https://github.com/toshimoto821/toshi-moto/commit/e02471f41d3dcc82d39c9017d0ba9e54d4ba2c45))
+* useChartData cache bust ([78b4c14](https://github.com/toshimoto821/toshi-moto/commit/78b4c141290299381a35f74860c0300502a0a377))
+* y1 scale ([d08e607](https://github.com/toshimoto821/toshi-moto/commit/d08e607e4b4ae82f17a42d6ba4f0065b9a4a661d))
+
 ## [1.17.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.17.1...web-ui-1.17.2) (2024-09-12)
 
   |    |    |
