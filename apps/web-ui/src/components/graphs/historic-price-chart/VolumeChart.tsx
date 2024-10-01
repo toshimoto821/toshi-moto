@@ -3,6 +3,7 @@ import { scaleBand, scaleLinear, select, min, max, pointers } from "d3";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
+import { jade, ruby } from "@radix-ui/colors";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 import { SELECTED_OPACITIY } from "./HeroChart";
 import { addBufferItems, getNumBuffer } from "./hero-chart.utils";
@@ -21,7 +22,7 @@ interface IVolumeChart {
 
 export const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
 export const COLOR_NEGATIVE_CHANGE = "transparent";
-export const COLOR_SELECTED = "#F7931A";
+// export const COLOR_SELECTED = "#F7931A";
 
 export const VolumeChart = (props: IVolumeChart) => {
   const { height, width, onMouseOver } = props;
@@ -45,6 +46,15 @@ export const VolumeChart = (props: IVolumeChart) => {
     .domain(data.map((_, i) => i.toString()))
     .range([margin.left, width - margin.right + 3]) // 3? @fix me. some spacing is off
     .padding(0.1);
+
+  const firstMetric = data[0];
+  const lastMetric = data[data.length - 1];
+  const direction =
+    parseFloat(lastMetric?.closePrice) > parseFloat(firstMetric?.openPrice)
+      ? 1
+      : -1;
+
+  const COLOR_SELECTED = direction > 0 ? jade.jade11 : ruby.ruby11;
 
   // const yScale = scaleLinear()
   //   .domain([
@@ -247,7 +257,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             .selectAll(".highlight-bar")
             .attr("opacity", 0)
             .filter((_, i) => i === index)
-            .attr("opacity", 0.5);
+            .attr("opacity", 0.75);
 
           if (onMouseOver) {
             onMouseOver({ datum, index: index });

@@ -2,6 +2,7 @@
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection, scaleBand } from "d3";
+import { jade, ruby } from "@radix-ui/colors";
 import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
@@ -55,6 +56,16 @@ export const ChartLegend = ({
 
   const cachedPrices = [...(prices || [])];
   const numBuffer = getNumBuffer(cachedPrices.length, breakpoint);
+
+  const firstMetric = cachedPrices[0];
+  const lastMetric = cachedPrices[cachedPrices.length - 1];
+  const direction =
+    parseFloat(lastMetric?.closePrice) > parseFloat(firstMetric?.openPrice)
+      ? 1
+      : -1;
+
+  const COLOR_SELECTED = direction > 0 ? jade.jade11 : ruby.ruby11;
+
   if (cachedPrices.length) {
     addBufferItems(cachedPrices, numBuffer);
   }
@@ -458,7 +469,7 @@ export const ChartLegend = ({
       .attr("y", 0)
       .attr("width", xScale.bandwidth())
       .attr("height", height)
-      .attr("fill", "orange")
+      .attr("fill", COLOR_SELECTED)
       .attr("opacity", 0); // Initially set opacity to 0
 
     // only repain the chart if the graphTimeFrameRange is not null.

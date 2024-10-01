@@ -27,12 +27,7 @@ import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
 import { addBufferItems, getNumBuffer } from "./hero-chart.utils";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
-
-import {
-  COLOR_NEGATIVE_CHANGE,
-  COLOR_POSITIVE_CHANGE,
-  COLOR_SELECTED,
-} from "./VolumeChart";
+import { COLOR_NEGATIVE_CHANGE, COLOR_POSITIVE_CHANGE } from "./VolumeChart";
 
 interface IHeroChart {
   height: number;
@@ -84,7 +79,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   const { lineData } = useChartData({ btcPrice, wallets });
 
-  const margin = { top: 10, right: 0, bottom: 10, left: 0 };
+  const margin = { top: 25, right: 0, bottom: 10, left: 0 };
 
   const data = [...(prices || [])];
   const numBuffer = getNumBuffer(data.length, breakpoint);
@@ -517,8 +512,9 @@ export const HeroChart = (props: IHeroChart) => {
 
           const [xy] = pointers(event);
           const [x] = xy;
+          const step = xScale.step();
 
-          let index = Math.floor((x - margin.left) / xScale.step());
+          let index = Math.round((x - margin.left) / step) - 1;
           if (index < 5 || index > data.length - numBuffer - 1) {
             index = data.length - numBuffer - 1;
           }
@@ -528,7 +524,7 @@ export const HeroChart = (props: IHeroChart) => {
 
           const veritcalLine = svg.select("#vertical-tooltip-line");
 
-          const mid = xScale.bandwidth() / 2;
+          const mid = 0; // xScale.bandwidth() / 2;
           veritcalLine
             .attr("opacity", 0.5)
             .attr("x1", x + mid)
@@ -573,14 +569,14 @@ export const HeroChart = (props: IHeroChart) => {
             )
             .filter((_, i) => i === index)
             // .attr("opacity", 0.18) // Reset all bars to original color
-            .attr("fill", COLOR_SELECTED);
+            .attr("fill", direction > 0 ? jade.jade11 : ruby.ruby11);
 
           const chartLegend = select("#chart-legend");
           chartLegend
             .selectAll(".highlight-bar")
             .attr("opacity", 0)
             .filter((_, i) => i === index)
-            .attr("opacity", 0.5);
+            .attr("opacity", 0.75);
 
           if (onMouseOver) {
             onMouseOver({ datum, index: index - numBuffer });
@@ -633,7 +629,7 @@ export const HeroChart = (props: IHeroChart) => {
             )
             .filter((_, i) => i === index)
             // .attr("opacity", 0.18) // Reset all bars to original color
-            .attr("fill", COLOR_SELECTED);
+            .attr("fill", direction > 0 ? jade.jade11 : ruby.ruby11);
 
           const chartLegend = select("#chart-legend");
           chartLegend
