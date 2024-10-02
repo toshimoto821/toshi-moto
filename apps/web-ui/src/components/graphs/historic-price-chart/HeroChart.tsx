@@ -826,7 +826,7 @@ export const HeroChart = (props: IHeroChart) => {
       const y1Axis = (g: any) => {
         // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
-        g.attr("transform", `translate(80,0)`)
+        g.attr("transform", `translate(70,0)`)
           .call(
             axisLeft(btcScale)
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
