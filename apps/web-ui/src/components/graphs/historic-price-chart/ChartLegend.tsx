@@ -2,7 +2,6 @@
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { type BrushSelection, scaleBand } from "d3";
-import { jade, ruby } from "@radix-ui/colors";
 import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
@@ -56,15 +55,6 @@ export const ChartLegend = ({
 
   const cachedPrices = [...(prices || [])];
   const numBuffer = getNumBuffer(cachedPrices.length, breakpoint);
-
-  const firstMetric = cachedPrices[0];
-  const lastMetric = cachedPrices[cachedPrices.length - 1];
-  const direction =
-    parseFloat(lastMetric?.closePrice) > parseFloat(firstMetric?.openPrice)
-      ? 1
-      : -1;
-
-  const COLOR_SELECTED = direction > 0 ? jade.jade11 : ruby.ruby11;
 
   if (cachedPrices.length) {
     addBufferItems(cachedPrices, numBuffer);
@@ -311,15 +301,15 @@ export const ChartLegend = ({
       .attr("display", "none");
 
     g.selectAll(".tick line")
-      .attr("transform", `translate(0, ${height - 6})`)
+      .attr("y1", 0)
+      .attr("y2", 4)
       .filter((_: any, i: number) => {
         if (range === "3M") {
           return i % 8 === 0;
         }
         return i % 4 === 0;
       })
-      .attr("transform", `translate(0, ${height - 10})`)
-      .attr("y2", 10);
+      .attr("y2", 6);
 
     g.selectAll(".tick line")
       .filter((_: any, i: number) => {
@@ -341,9 +331,11 @@ export const ChartLegend = ({
         ? d3.timeFormat("%m/%d, %I %p")
         : range === "1M"
         ? d3.timeFormat("%b %d, %Y")
-        : range == "3M" || range == "1Y" || range == "5Y"
+        : range == "3M" || range == "1Y"
         ? d3.timeFormat("%b %d, %Y")
-        : d3.timeFormat("%b %d, %y");
+        : range == "5Y" || range == "2Y"
+        ? d3.timeFormat("%b  %y")
+        : d3.timeFormat("%b %y");
 
     const el: any = selectOrAppend(g, "#g-x-tick", "g", { id: "g-x-tick" });
     el.call(
@@ -416,7 +408,8 @@ export const ChartLegend = ({
       .attr("display", "none");
 
     g.selectAll(".tick line")
-      .attr("transform", `translate(0, ${height - 6})`)
+      .attr("y1", 0)
+      .attr("y2", 4)
       .filter((_: any, i: number) => {
         if (range === "1D") {
           return i % 8 === 0;
@@ -447,30 +440,12 @@ export const ChartLegend = ({
 
         return i % 8 === 0;
       })
-      .attr("transform", `translate(0, ${height - 10})`)
-      .attr("y2", 10);
+      .attr("y2", 6);
   };
 
   const render = () => {
     if (!cachedPrices?.length) return;
     const svg = d3.select(svgRef.current);
-    svg.selectAll(".highlight-bar").remove();
-    selectOrAppend(svg, "#chart-legend-highlight-bars", "g", {
-      id: "chart-legend-highlight-bars",
-    })
-      // .attr("pointer-events", "none")
-      .selectAll(".chart-legend-bar")
-      .data(cachedPrices)
-      .enter()
-      .append("rect")
-      .attr("class", "highlight-bar")
-      .attr("data-index", (_, i) => i)
-      .attr("x", (_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
-      .attr("y", 0)
-      .attr("width", xScale.bandwidth())
-      .attr("height", height)
-      .attr("fill", COLOR_SELECTED)
-      .attr("opacity", 0); // Initially set opacity to 0
 
     // only repain the chart if the graphTimeFrameRange is not null.
     // it gets set to null when user drags on brush
@@ -571,7 +546,7 @@ export const ChartLegend = ({
           fontSize: 10,
         }}
         width={width}
-        className="bg-white border-b  border-gray-300"
+        className=""
         ref={svgRef}
       />
     </div>

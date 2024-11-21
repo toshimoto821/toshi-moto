@@ -112,8 +112,12 @@ export default defineConfig({
     }),
     svgr(),
     nxViteTsPaths(),
+
     // visualizer({ template: "raw-data", filename: "apps/web-ui/stats.json" }),
   ],
+  css: {
+    postcss: './postcss.config.js'
+  },
   // worker: {
   //   plugins: [nxViteTsPaths()],
   // },
