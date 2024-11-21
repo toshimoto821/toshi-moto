@@ -622,13 +622,6 @@ export const HeroChart = (props: IHeroChart) => {
             // .attr("opacity", 0.18) // Reset all bars to original color
             .attr("fill", direction > 0 ? jade.jade11 : ruby.ruby11);
 
-          const chartLegend = select("#chart-legend");
-          chartLegend
-            .selectAll(".highlight-bar")
-            .attr("opacity", 0)
-            .filter((_, i) => i === index)
-            .attr("opacity", 0.75);
-
           if (onMouseOver) {
             onMouseOver({ datum, index: index - numBuffer });
           }
@@ -681,13 +674,6 @@ export const HeroChart = (props: IHeroChart) => {
             .filter((_, i) => i === index)
             // .attr("opacity", 0.18) // Reset all bars to original color
             .attr("fill", direction > 0 ? jade.jade11 : ruby.ruby11);
-
-          const chartLegend = select("#chart-legend");
-          chartLegend
-            .selectAll(".highlight-bar")
-            .attr("opacity", 0)
-            .filter((_, i) => i === index)
-            .attr("opacity", 0.5);
 
           if (onMouseOver) {
             onMouseOver({ datum: data[index], index });
