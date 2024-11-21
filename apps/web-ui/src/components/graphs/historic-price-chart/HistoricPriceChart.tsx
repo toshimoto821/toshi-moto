@@ -148,16 +148,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
-      <div className="sticky top-[140px]">
-        <ChartLegend
-          height={45}
-          width={width}
-          onChange={handleRangeChange}
-          onReset={handleReset}
-          onBrushMove={handleBrushMove}
-          onBrushEnd={handleBrushEnd}
-        />
-      </div>
 
       <div
         style={{ height }}
@@ -181,6 +171,16 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           height={60}
           width={width}
           onMouseOver={handleMouseOverVolumeChart}
+        />
+      </div>
+      <div className="sticky top-[140px]">
+        <ChartLegend
+          height={35}
+          width={width}
+          onChange={handleRangeChange}
+          onReset={handleReset}
+          onBrushMove={handleBrushMove}
+          onBrushEnd={handleBrushEnd}
         />
       </div>
       {(tooltipKline || lastPrice) && (
