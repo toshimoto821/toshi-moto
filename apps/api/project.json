@@ -52,6 +52,12 @@
         "preset": "conventionalcommits",
         "changelogHeader": "# API Changelog"
       }
+    },
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "options": {
+        "statsJson": true
+      }
     }
   }
 }
