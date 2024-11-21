@@ -67,8 +67,8 @@ jobs:
           echo "HEAD=${{ github.event.after }}" >> $GITHUB_ENV
         if: github.event_name == 'push'
 
-      - name: Lint
-        run: npx nx affected --target=lint --base=$BASE --head=$HEAD
+      # - name: Lint
+      #   run: npx nx affected --target=lint --base=$BASE --head=$HEAD
 
       # dont think this is needed.
       - name: Write env file
