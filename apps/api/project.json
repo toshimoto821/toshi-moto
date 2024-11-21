@@ -28,15 +28,7 @@
         ]
       }
     },
-    "build": {
-      "builder": "@nx/js:node",
-      "options": {
-        "outputPath": "dist/apps/api",
-        "main": "apps/api/src/main.ts",
-        "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"]
-      }
-    },
+
     "docker": {
       "executor": "@nx-tools/nx-container:build",
       "options": {
