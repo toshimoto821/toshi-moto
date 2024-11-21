@@ -24,7 +24,7 @@ export const Home = () => {
     <>
       <div style={{ paddingTop }}>
         <div ref={containerRef}>
-          <HistoricPriceChart height={240} width={dimensions.width} />
+          <HistoricPriceChart height={400} width={dimensions.width} />
         </div>
         <div className="mx-4 min-h-[400px]">
           <Outlet />

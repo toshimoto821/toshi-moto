@@ -112,6 +112,7 @@ export default defineConfig({
     }),
     svgr(),
     nxViteTsPaths(),
+
     // visualizer({ template: "raw-data", filename: "apps/web-ui/stats.json" }),
   ],
   // worker: {
