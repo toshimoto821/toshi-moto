@@ -115,9 +115,6 @@ export default defineConfig({
 
     // visualizer({ template: "raw-data", filename: "apps/web-ui/stats.json" }),
   ],
-  css: {
-    postcss: './postcss.config.js'
-  },
   // worker: {
   //   plugins: [nxViteTsPaths()],
   // },
