@@ -12,6 +12,12 @@
       "options": {
         "command": "ls -1 apps/web-ui-e2e/cypress/screenshots/app.cy.ts/ | paste -sd \",\" -"
       }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'no linting'"
+      }
     }
   }
 }
