@@ -9,15 +9,15 @@ export default defineConfig({
       bundler: "vite",
 
       webServerCommands: {
-        default: "nx run web-ui:serve-static:cy", //"echo 'No command specified'",
-        // production: "nx run web-ui:preview",
+        default: "nx run web-ui:dev", //"echo 'No command specified'",
+        production: "nx run web-ui:serve-static:cy",
       },
 
       ciWebServerCommand: "nx run web-ui:serve-static:cy",
     }),
     browser: "chrome",
-    baseUrl: "http://localhost:9330",
-    screenshotsFolder: "cypress/screenshots",
+    baseUrl: "http://localhost:5173",
+    // screenshotsFolder: "cypress/screenshots",
     trashAssetsBeforeRuns: true,
     chromeWebSecurity: false,
   },

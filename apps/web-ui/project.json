@@ -11,7 +11,7 @@
       "options": {
         "buildTarget": "web-ui:build",
         "envFile": "apps/web-ui/.env",
-        "port": 9330
+        "port": 5173
       },
       "configurations": {
         "development": {
@@ -30,7 +30,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "web-ui:build",
-        "port": 9330
+        "port": 5173
       },
       "configurations": {
         "development": {
