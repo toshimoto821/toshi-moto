@@ -53,11 +53,11 @@ describe("web-ui-e2e", () => {
     cy.get("#loader-area", { timeout: 10000 }).should("not.exist");
 
     // cy.wait(1000);
-    cy.screenshot('wallet-import', { 
+    cy.screenshot({ 
       capture: 'viewport',
       overwrite: true,
       scale: false,
-      blackout: ['.sensitive-data']
+
     });
   });
 
@@ -95,11 +95,10 @@ describe("web-ui-e2e", () => {
   
 
     // cy.wait(1000);
-    cy.screenshot('wallet-import', { 
+    cy.screenshot({ 
       capture: 'viewport',
       overwrite: true,
       scale: false,
-      blackout: ['.sensitive-data']
     });
   });
 });
