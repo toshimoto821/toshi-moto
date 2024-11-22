@@ -7,9 +7,9 @@ name: PR Merge
 # but since it runs from the merged branch it
 # doesnt sync with relative ci
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   pull_request:
     types:
       - closed
@@ -85,6 +85,7 @@ jobs:
           echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env.cy
           echo "VITE_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env.cy
           echo "VITE_PRICING_STREAM_DISABLED=1" >> apps/web-ui/.env.cy
+
       - name: Test
         run: npx nx affected --target=test --base=$BASE --head=$HEAD
 
@@ -113,7 +114,7 @@ jobs:
         run: npx nx affected --target=version --exclude='*,!tag:deployable' --base=$BASE --head=$HEAD
         env:
           SHA: ${{ env.HEAD }}
-          FILES: ${{ steps.ls_screenshots.outputs.nx_output }}
+          FILES: https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png
 
       - name: GitHub Push
         if: github.event_name == 'pull_request'
@@ -123,22 +124,22 @@ jobs:
           branch: main
           tags: true
 
-      - name: Check if web-ui is affected
-        id: check_affected
-        run: |
-          echo "Checking if web-ui is affected..."
-          OUTPUT=$(npx nx show projects --affected --exclude web-ui-e2e --base=$BASE --head=$HEAD)
-          echo "Affected apps: $OUTPUT"
-          if [[ "$OUTPUT" == *"web-ui"* ]]; then
-            echo "::set-output name=web_ui_affected::true"
-          else
-            echo "::set-output name=web_ui_affected::false"
-          fi
+      # - name: Check if web-ui is affected
+      #   id: check_affected
+      #   run: |
+      #     echo "Checking if web-ui is affected..."
+      #     OUTPUT=$(npx nx show projects --affected --exclude web-ui-e2e --base=$BASE --head=$HEAD)
+      #     echo "Affected apps: $OUTPUT"
+      #     if [[ "$OUTPUT" == *"web-ui"* ]]; then
+      #       echo "::set-output name=web_ui_affected::true"
+      #     else
+      #       echo "::set-output name=web_ui_affected::false"
+      #     fi
 
-      - name: Send bundle stats to RelativeCI
-        uses: relative-ci/agent-action@v2
-        if: steps.check_affected.outputs.web_ui_affected == 'true'
-        with:
-          webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
-          key: ${{ secrets.RELATIVE_CI_KEY }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Send bundle stats to RelativeCI
+      #   uses: relative-ci/agent-action@v2
+      #   if: steps.check_affected.outputs.web_ui_affected == 'true'
+      #   with:
+      #     webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
+      #     key: ${{ secrets.RELATIVE_CI_KEY }}
+      #     token: ${{ secrets.GITHUB_TOKEN }}
