@@ -52,7 +52,7 @@ describe("web-ui-e2e", () => {
 
     cy.get("#loader-area", { timeout: 10000 }).should("not.exist");
 
-    cy.wait(1000);
+    // cy.wait(1000);
     cy.screenshot('wallet-import', { 
       capture: 'viewport',
       overwrite: true,
@@ -94,7 +94,7 @@ describe("web-ui-e2e", () => {
     }).should("be.visible");
   
 
-    cy.wait(1000);
+    // cy.wait(1000);
     cy.screenshot('wallet-import', { 
       capture: 'viewport',
       overwrite: true,
