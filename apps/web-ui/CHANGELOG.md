@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.21.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.21.0...web-ui-1.21.1) (2024-11-22)
+
+  |      |
+  |  --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png)|
+
+  
+
 ## [1.21.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.20.0...web-ui-1.21.0) (2024-11-22)
 
   |      |
