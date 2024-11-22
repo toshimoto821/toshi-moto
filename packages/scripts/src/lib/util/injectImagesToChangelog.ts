@@ -49,8 +49,8 @@ export const createMarkdownTable = (
     return `${acc}|${updatedRow.join("|")}|\n`;
   }, "");
 
-  const header1 = "|  " + new Array(numCols).fill("  ").join("|") + "  |";
-  const header2 = "| " + new Array(numCols).fill(" --- ").join("|") + " |";
+  const header1 = "| " + new Array(numCols).fill("     ").join("|") + "|";
+  const header2 = "| " + new Array(numCols).fill(" --- ").join("|") + "|";
   return `
   ${header1}
   ${header2}
