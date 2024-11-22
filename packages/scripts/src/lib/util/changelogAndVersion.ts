@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
+
 import { injectImagesToChangelog } from "./injectImagesToChangelog";
 const execAsync = promisify(exec);
 
@@ -23,6 +24,7 @@ export async function changelogAndVersion(opts: IOpts) {
   const dryRun = opts.dryRun ? "--dry-run" : "";
   const { files, sha } = opts;
   const resp: IResponse[] = [];
+
   try {
     // Run @jscutlery/semver:version with --dry-run
     const command = `nx run web-ui:semver ${dryRun} --verbose`;

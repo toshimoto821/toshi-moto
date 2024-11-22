@@ -6,15 +6,15 @@ const [, , sha = process.env["SHA"], files = process.env["FILES"]] =
 // const files = [
 //   "apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e -- Hero.png",
 // ];
+console.log(process.env, "env");
 console.log(process.env["FILES"], "env.FILES");
 console.log(process.env["SHA"], "env.SHA");
 console.log(process.argv, "argv");
 if (!sha || !files) {
   throw new Error("sha and files are required");
 }
-
 changelogAndVersion({
   files: files.split(",").map((f) => f.trim()),
   sha,
-  dryRun: true,
+  dryRun: false,
 });

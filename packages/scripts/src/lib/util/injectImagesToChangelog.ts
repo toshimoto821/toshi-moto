@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
-import { resolve, basename } from "path";
+import { resolve } from "path";
+import * as core from '@actions/core';
 import { cwd } from "process";
 
 import { exec } from "child_process";
@@ -70,6 +71,7 @@ export async function getTag(hash: string) {
 
 export async function getLastTag() {
   const command = `git log`;
+  
   const { stdout } = await execAsync(command);
   const lines = stdout.split("\n");
   if (!lines?.[1]) {
@@ -112,6 +114,9 @@ export async function injectImagesToChangelog(
   filepaths: string[],
   dryRun = false
 ) {
+
+  core.info('injectImagesToChangelog');
+
   console.log("Getting last tag");
   const lastTag = await getLastTag();
 
