@@ -135,7 +135,6 @@ jobs:
           FILES: https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png
 
       - name: GitHub Push
-        if: github.event_name == 'pull_request'
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
