@@ -5,11 +5,13 @@ import { createMarkdownTable } from "./util/injectImagesToChangelog";
 describe("scripts", () => {
   it("markdown table", () => {
     const result = createMarkdownTable(
-      ["one", "two", "three", "four", "five"],
+      ["https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png", 
+      "https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png", 
+      "https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png"],
       "hash",
       3
     );
     console.log(result);
-    expect(result.length).toEqual(665);
+    expect(result.length).toEqual(345);
   });
 });

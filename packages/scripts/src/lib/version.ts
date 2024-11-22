@@ -16,5 +16,5 @@ if (!sha || !files) {
 changelogAndVersion({
   files: files.split(",").map((f) => f.trim()),
   sha,
-  dryRun: false,
+  dryRun: true,
 });
