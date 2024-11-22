@@ -40,12 +40,11 @@ export const createMarkdownTable = (
 ) => {
   const table = transformArrayToNestedArray(paths, numCols);
   console.log("table", table);
-  const url = `https://raw.githubusercontent.com/toshimoto821/toshi-moto/${hash}/apps/web-ui-e2e/cypress/screenshots/app.cy.ts`;
+  
   const tableMarkdown = table.reduce((acc, row) => {
-    const updatedRow = row.map((path) => {
+    const updatedRow = row.map((path, index) => {
       if (!path) return "";
-      const filename = basename(path);
-      return `![${filename}](${url}/${encodeURI(path)})`;
+      return `![Image ${index}](${path})`;
     });
     return `${acc}|${updatedRow.join("|")}|\n`;
   }, "");
