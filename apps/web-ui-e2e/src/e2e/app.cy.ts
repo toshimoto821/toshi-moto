@@ -2,6 +2,8 @@ import { getPrice } from "../support/app.po";
 import range from "../fixtures/range.json";
 import rangeDiff from "../fixtures/range-diff.json";
 
+const viewport = [1920, 1080] as const;
+
 describe("web-ui-e2e", () => {
   beforeEach(async () => {
     const databases = await indexedDB.databases();
@@ -9,9 +11,11 @@ describe("web-ui-e2e", () => {
       indexedDB.deleteDatabase(db.name);
     });
     console.log("cleaned db");
+    
   });
 
   it("Hero", () => {
+    cy.viewport(...viewport);
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -48,16 +52,23 @@ describe("web-ui-e2e", () => {
 
     cy.get("#loader-area", { timeout: 10000 }).should("not.exist");
 
-    cy.screenshot({ capture: "viewport" });
+    cy.wait(1000);
+    cy.screenshot('wallet-import', { 
+      capture: 'viewport',
+      overwrite: true,
+      scale: false,
+      blackout: ['.sensitive-data']
+    });
   });
 
   it("should import the wallet", () => {
+    cy.viewport(...viewport);
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
-        usd: 57482.36,
+        usd: 100000.00,
         usd_24h_vol: 16690539371.276321,
         usd_24h_change: -4.674755682132398,
         last_updated_at: 1720107348,
@@ -65,18 +76,30 @@ describe("web-ui-e2e", () => {
     }).as("getPrice");
 
     cy.intercept("GET", "**/api/prices/kline*", range).as("getRange");
-
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
+    // cy.wait("@getPrice");
 
-    cy.visit("/#/toshi-moto");
-
+    
+  
     cy.scrollTo(0, 120);
     cy.get("[data-testid=btc-wallet-balance]", {
-      timeout: 60000,
+      timeout: 21000,
     }).should("contain", "0.00,100,000");
 
-    cy.visit("/#/toshi-moto");
+    cy.get("[data-testid=btc-wallet-balance]").click();
+    
+    // wait for address row to be visible
+    cy.get("[data-testid=address-row]", {
+      timeout: 60000,
+    }).should("be.visible");
+  
 
-    cy.screenshot({ capture: "viewport" });
+    cy.wait(1000);
+    cy.screenshot('wallet-import', { 
+      capture: 'viewport',
+      overwrite: true,
+      scale: false,
+      blackout: ['.sensitive-data']
+    });
   });
 });

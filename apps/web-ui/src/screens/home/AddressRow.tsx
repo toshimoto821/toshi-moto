@@ -78,7 +78,7 @@ export const AddressRow = (prop: IAddressRow) => {
   };
 
   return (
-    <div id={`address-${address.address}`}>
+    <div id={`address-${address.address}`} data-testid="address-row">
       <div
         className={cn("bg-white ", {
           // "sticky top-[140px] ": isUtxoExpanded,
