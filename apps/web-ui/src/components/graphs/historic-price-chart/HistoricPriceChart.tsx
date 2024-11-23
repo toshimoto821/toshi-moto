@@ -148,7 +148,12 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
       <div className="flex justify-end items-center z-40 bg-gray-50 border-b border-t">
         <TimeRangeButtons loading={btcPrices.loading} />
       </div>
-
+      {(tooltipKline || lastPrice) && (
+        <ChartTooltip
+          kline={(tooltipKline || lastPrice)!}
+          selectedIndex={tooltipSelectedIndex}
+        />
+      )}
       <div
         style={{ height }}
         className={cn({
@@ -183,12 +188,6 @@ export const HistoricPriceChart = (props: IHistoricPriceChart) => {
           onBrushEnd={handleBrushEnd}
         />
       </div>
-      {(tooltipKline || lastPrice) && (
-        <ChartTooltip
-          kline={(tooltipKline || lastPrice)!}
-          selectedIndex={tooltipSelectedIndex}
-        />
-      )}
     </div>
   );
 };

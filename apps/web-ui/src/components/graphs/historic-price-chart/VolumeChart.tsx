@@ -6,8 +6,7 @@ import { setUI } from "@root/lib/slices/ui.slice";
 import { jade, ruby } from "@radix-ui/colors";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 import { SELECTED_OPACITIY } from "./HeroChart";
-import { addBufferItems, getNumBuffer } from "./hero-chart.utils";
-import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
+import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
 interface IVolumeChart {
   height: number;
   width: number;
@@ -30,12 +29,12 @@ export const VolumeChart = (props: IVolumeChart) => {
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
-  const breakpoint = useBreakpoints();
+  // const breakpoint = useBreakpoints();
   const dispatch = useAppDispatch();
 
   const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const data = [...(prices || [])];
-  const numBuffer = getNumBuffer(data.length, breakpoint);
+  const numBuffer = BUFFER_LENGTH; // getNumBuffer(data.length, breakpoint);
   if (data.length) {
     addBufferItems(data, numBuffer);
   }

@@ -36,12 +36,6 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
       dispatch(setGraphByRange(timeframe));
       dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
       dispatch(openPriceSocket({ retry: false, forceRange: timeframe }));
-      setTimeout(() => {
-        window.scrollTo({
-          top: 50,
-          behavior: "smooth",
-        });
-      }, 1500);
     };
   };
 
