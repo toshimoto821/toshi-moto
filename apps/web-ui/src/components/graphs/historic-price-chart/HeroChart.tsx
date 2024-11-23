@@ -24,8 +24,7 @@ import { useWallets } from "@lib/hooks/useWallets";
 import { IRawNode } from "@root/types";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
-import { addBufferItems, getNumBuffer } from "./hero-chart.utils";
-import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
+import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
 import { COLOR_NEGATIVE_CHANGE, COLOR_POSITIVE_CHANGE } from "./VolumeChart";
 
 interface IHeroChart {
@@ -72,7 +71,7 @@ export const HeroChart = (props: IHeroChart) => {
   const { btcPrice } = useBtcPrice();
   const { wallets } = useWallets();
   const privateNumber = useNumberObfuscation();
-  const breakpoint = useBreakpoints();
+
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
@@ -93,7 +92,7 @@ export const HeroChart = (props: IHeroChart) => {
   const margin = { top: 25, right: 0, bottom: 10, left: 0 };
 
   const data = [...(prices || [])];
-  const numBuffer = getNumBuffer(data.length, breakpoint);
+  const numBuffer = BUFFER_LENGTH; //getNumBuffer(data.length, breakpoint);
   if (data.length) {
     // const len = data.length / 10;
     addBufferItems(lineData, numBuffer);

@@ -9,7 +9,7 @@ import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectForecast } from "@root/lib/slices/price.slice";
 import { selectOrAppend } from "../line/d3.utils";
 import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
-import { getNumBuffer, addBufferItems } from "./hero-chart.utils";
+import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
 
 type IChartLegendProps = {
   height: number;
@@ -54,7 +54,7 @@ export const ChartLegend = ({
   // }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
 
   const cachedPrices = [...(prices || [])];
-  const numBuffer = getNumBuffer(cachedPrices.length, breakpoint);
+  const numBuffer = BUFFER_LENGTH; // getNumBuffer(cachedPrices.length, breakpoint);
 
   if (cachedPrices.length) {
     addBufferItems(cachedPrices, numBuffer);

@@ -1,5 +1,5 @@
 export const COLOR_SELECTED = "#F7931A";
-
+export const BUFFER_LENGTH = 2;
 export function addBufferItems<T>(data: T[], len: number) {
   const first = data[0];
   const last = data[data.length - 1];
