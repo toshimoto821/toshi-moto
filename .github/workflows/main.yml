@@ -103,6 +103,12 @@ jobs:
       # so its safer to recreate the images on main
       # and then compare the main to the last main
 
+      # this would be nice to showcase a single image for release
+      # https://api.webshotarchive.com/api/image/path/web-ui-e2e/app.cy.ts?branch=main
+
+      # https://api.webshotarchive.com/api/image/branch/main
+      # this would be nice to showcase a many images for release
+
       - name: Cypress Run
         id: cypress_run
         continue-on-error: false
@@ -132,7 +138,9 @@ jobs:
         env:
           SHA: ${{ env.HEAD }}
           # todo change this image path to use branch
-          FILES: https://api.webshotarchive.com/api/image/id/86d2e951-eaf5-4008-853c-bc9827945273.png
+          FILES: |
+            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e -- Hero.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e -- should import the wallet.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
