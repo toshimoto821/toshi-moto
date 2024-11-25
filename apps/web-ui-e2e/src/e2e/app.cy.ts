@@ -9,7 +9,7 @@ describe("web-ui-e2e", () => {
     cy.viewport(...viewport);
   });
   beforeEach(async () => {
-    // cy.viewport(...viewport);
+    cy.viewport(...viewport);
     const databases = await indexedDB.databases();
     databases.forEach((db) => {
       indexedDB.deleteDatabase(db.name);
