@@ -5,9 +5,7 @@ import rangeDiff from "../fixtures/range-diff.json";
 const viewport = [1280, 1480] as const;
 
 describe("web-ui-e2e", () => {
-  before(() => {
-    cy.viewport(...viewport);
-  });
+
   beforeEach(async () => {
     cy.viewport(...viewport);
     const databases = await indexedDB.databases();
@@ -19,7 +17,7 @@ describe("web-ui-e2e", () => {
   });
 
   it("Hero", () => {
-    cy.viewport(...viewport);
+    
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -59,7 +57,7 @@ describe("web-ui-e2e", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.fixFixed();
-    cy.viewport(...viewport);
+    
     cy.screenshot({ 
       overwrite: true,
     });
