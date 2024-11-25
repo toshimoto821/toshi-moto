@@ -16,6 +16,8 @@ export default defineConfig({
       ciWebServerCommand: "nx run web-ui:serve-static:cy",
     }),
     browser: "chrome",
+    viewportWidth: 1280,
+    viewportHeight: 1480,
     baseUrl: "http://localhost:5173",
     // screenshotsFolder: "cypress/screenshots",
     trashAssetsBeforeRuns: true,
