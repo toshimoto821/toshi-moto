@@ -59,6 +59,7 @@ describe("web-ui-e2e", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.fixFixed();
+    cy.viewport(...viewport);
     cy.screenshot({ 
       overwrite: true,
     });
@@ -103,6 +104,7 @@ describe("web-ui-e2e", () => {
     cy.fixFixed();
     
     // cy.wait(1000);
+    cy.viewport(...viewport);
     cy.screenshot({ 
 
       overwrite: true,
