@@ -13,6 +13,7 @@ describe("web-ui-e2e", () => {
       indexedDB.deleteDatabase(db.name);
     });
     console.log("cleaned db");
+    // api/prices/simple?ids=bitcoin&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true
     cy.intercept("GET", "**/api/prices/simple*", {
       bitcoin: {
         usd: 90482.36,
@@ -60,7 +61,7 @@ describe("web-ui-e2e", () => {
     cy.fixFixed();
     
     cy.screenshot({ 
-      capture: 'fullPage',
+      capture: 'viewport',
       overwrite: true,
     });
   });
@@ -93,11 +94,16 @@ describe("web-ui-e2e", () => {
     }).should("be.visible");
     cy.wait("@getPrice", { timeout: 20000 });
   
+    const p = getPrice();
+    // cy.debug();
+    // p.should("be.visible");
+    p.contains("$90,482.36");
+
     cy.fixFixed();
     
     // cy.wait(1000);
     cy.screenshot({ 
-      capture: 'fullPage',
+      capture: 'viewport',
       overwrite: true,
     });
   });
