@@ -24,7 +24,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "~/Downloads/mongodb-macos-x86_64-4.4.29/bin/mongod --dbpath ~/mongo/data"
+          "mongod --dbpath ~/data"
         ]
       }
     },

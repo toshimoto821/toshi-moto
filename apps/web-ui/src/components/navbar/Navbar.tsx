@@ -188,7 +188,8 @@ export const Navbar = () => {
   return (
     <>
       <div
-        className={`fixed z-50 h-[${chartHeight}px] bg-white drop-shadow-sm overflow-hidden  border-b w-screen backface-visibility-none`}
+        data-testid="navbar"
+        className={`sticky top-0 z-50 h-[${chartHeight}px] bg-white drop-shadow-sm overflow-hidden border-b w-screen backface-visibility-none`}
         ref={containerRef}
       >
         {lineData && (
