@@ -1,4 +1,6 @@
 # API Changelog
+## [1.7.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.2...api-1.7.3) (2024-11-25)
+
 ## [1.7.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.1...api-1.7.2) (2024-11-23)
 
 ## [1.7.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.0...api-1.7.1) (2024-11-22)
