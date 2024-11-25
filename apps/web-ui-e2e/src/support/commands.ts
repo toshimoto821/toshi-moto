@@ -49,7 +49,7 @@ Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
   }).as("getAddress");
   cy.visit("/");
 
-  cy.wait("@getPrice", { timeout: 10000 });
+  // cy.wait("@getPrice", { timeout: 10000 });
   const btn = getToshiBtn();
   btn.click();
 

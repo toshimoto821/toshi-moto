@@ -79,11 +79,11 @@ describe("web-ui-e2e", () => {
         usd_24h_change: -4.674755682132398,
         last_updated_at: 1720107348,
       },
-    }).as("getPrice");
+    }).as("getPrice2");
 
     cy.intercept("GET", "**/api/prices/kline*", range).as("getRange");
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
-    // cy.wait("@getPrice");
+    
 
     
   
@@ -98,6 +98,7 @@ describe("web-ui-e2e", () => {
     cy.get("[data-testid=address-row]", {
       timeout: 60000,
     }).should("be.visible");
+    cy.wait("@getPrice2", { timeout: 20000 });
   
     cy.fixFixed();
     
