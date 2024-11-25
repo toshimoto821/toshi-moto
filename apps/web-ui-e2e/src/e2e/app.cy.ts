@@ -59,13 +59,13 @@ describe("web-ui-e2e", () => {
     cy.fixFixed();
     
     cy.screenshot({ 
+      capture: 'fullPage',
       overwrite: true,
     });
   });
 
   it("should import the wallet", () => {
     
-    cy.viewport(...viewport);
 
 
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
@@ -102,9 +102,8 @@ describe("web-ui-e2e", () => {
     cy.fixFixed();
     
     // cy.wait(1000);
-    cy.viewport(...viewport);
     cy.screenshot({ 
-
+      capture: 'fullPage',
       overwrite: true,
     });
   });
