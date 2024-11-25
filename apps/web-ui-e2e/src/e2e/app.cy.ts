@@ -66,7 +66,7 @@ describe("web-ui-e2e", () => {
 
   it("should import the wallet", () => {
     
-    // cy.viewport(...viewport);
+    cy.viewport(...viewport);
 
 
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
