@@ -13,7 +13,8 @@ describe("web-ui-e2e", () => {
       indexedDB.deleteDatabase(db.name);
     });
     console.log("cleaned db");
-    cy.intercept("GET", "**/api/prices/simple*", {
+    // api/prices/simple?ids=bitcoin&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true
+    cy.intercept("GET", "/api/prices/simple?ids=bitcoin&vs_currencies=usd&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true", {
       bitcoin: {
         usd: 90482.36,
         usd_24h_vol: 16690539371.276321,
