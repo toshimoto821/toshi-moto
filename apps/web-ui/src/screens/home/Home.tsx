@@ -19,10 +19,9 @@ export const Home = () => {
   const setDialogClosed = useCallback(() => {
     setAddWalletOpen(false);
   }, []);
-  const paddingTop = 140;
   return (
     <>
-      <div style={{ paddingTop }}>
+      <div>
         <div ref={containerRef}>
           <HistoricPriceChart height={340} width={dimensions.width} />
         </div>

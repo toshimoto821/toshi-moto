@@ -2,10 +2,14 @@ import { getPrice } from "../support/app.po";
 import range from "../fixtures/range.json";
 import rangeDiff from "../fixtures/range-diff.json";
 
-const viewport = [1920, 1080] as const;
+const viewport = [1280, 1480] as const;
 
 describe("web-ui-e2e", () => {
+  before(() => {
+    cy.viewport(...viewport);
+  });
   beforeEach(async () => {
+    // cy.viewport(...viewport);
     const databases = await indexedDB.databases();
     databases.forEach((db) => {
       indexedDB.deleteDatabase(db.name);
@@ -54,15 +58,17 @@ describe("web-ui-e2e", () => {
 
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
+    cy.fixFixed();
     cy.screenshot({ 
-      capture: 'viewport',
       overwrite: true,
-      scale: true,
     });
   });
 
   it("should import the wallet", () => {
-    cy.viewport(...viewport);
+    
+    // cy.viewport(...viewport);
+
+
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -81,7 +87,7 @@ describe("web-ui-e2e", () => {
 
     
   
-    cy.scrollTo(0, 120);
+    
     cy.get("[data-testid=btc-wallet-balance]", {
       timeout: 21000,
     }).should("contain", "0.00,100,000");
@@ -93,12 +99,12 @@ describe("web-ui-e2e", () => {
       timeout: 60000,
     }).should("be.visible");
   
-
+    cy.fixFixed();
+    
     // cy.wait(1000);
     cy.screenshot({ 
-      capture: 'viewport',
+
       overwrite: true,
-      scale: true,
     });
   });
 });

@@ -11,6 +11,11 @@ import { getTxsResponse } from "../fixtures/txs";
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+
+Cypress.Commands.add("fixFixed", () => {
+  cy.get("[data-testid=network-log]").invoke('css', 'position', 'sticky').invoke('css', 'bottom', '0');
+});
+
 Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
   // mocks
   // https://mempool.space/api/address/bc1qaql0jc6v3qutqkge38wynzr39xfdk7jeet6eeh?ttl=86400000

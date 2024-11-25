@@ -108,6 +108,7 @@ export const NetworkLog = (props: INetworkLog) => {
         ></div>
       )}
       <div
+        data-testid="network-log"
         className={cn("fixed bottom-0 left-0 w-screen bg-white z-50 ", {
           "pb-6": isStandalone,
         })}
