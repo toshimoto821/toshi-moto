@@ -13,6 +13,14 @@ describe("web-ui-e2e", () => {
       indexedDB.deleteDatabase(db.name);
     });
     console.log("cleaned db");
+    cy.intercept("GET", "**/api/prices/simple*", {
+      bitcoin: {
+        usd: 90482.36,
+        usd_24h_vol: 16690539371.276321,
+        usd_24h_change: -4.674755682132398,
+        last_updated_at: 1720107348,
+      },
+    }).as("getPrice");
     
   });
 
@@ -21,14 +29,7 @@ describe("web-ui-e2e", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
-    cy.intercept("GET", "**/api/prices/simple*", {
-      bitcoin: {
-        usd: 90482.36,
-        usd_24h_vol: 16690539371.276321,
-        usd_24h_change: -4.674755682132398,
-        last_updated_at: 1720107348,
-      },
-    }).as("getPrice1");
+
     cy.intercept("GET", "**/api/prices/range/diff*", rangeDiff).as(
       "getRangeDiff"
     );
@@ -42,7 +43,7 @@ describe("web-ui-e2e", () => {
 
     // Custom command example, see `../support/commands.ts` file
     // cy.login("my-email@something.com", "myPassword");
-    cy.wait("@getPrice1", { timeout: 20000 });
+    cy.wait("@getPrice", { timeout: 20000 });
     // .then((interception) => {
     //   console.log(interception.response.body);
     // });
@@ -71,14 +72,7 @@ describe("web-ui-e2e", () => {
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
-    cy.intercept("GET", "**/api/prices/simple*", {
-      bitcoin: {
-        usd: 100000.00,
-        usd_24h_vol: 16690539371.276321,
-        usd_24h_change: -4.674755682132398,
-        last_updated_at: 1720107348,
-      },
-    }).as("getPrice2");
+
 
     cy.intercept("GET", "**/api/prices/kline*", range).as("getRange");
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
@@ -97,7 +91,7 @@ describe("web-ui-e2e", () => {
     cy.get("[data-testid=address-row]", {
       timeout: 60000,
     }).should("be.visible");
-    cy.wait("@getPrice2", { timeout: 20000 });
+    cy.wait("@getPrice", { timeout: 20000 });
   
     cy.fixFixed();
     
