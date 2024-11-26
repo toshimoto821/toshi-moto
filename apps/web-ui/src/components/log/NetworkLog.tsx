@@ -132,7 +132,10 @@ export const NetworkLog = (props: INetworkLog) => {
             </Tabs.Trigger>
             <div className="flex-1 flex flex-col">
               <div className={cn("flex justify-between flex-grow")}>
-                <div className="flex-grow p-2 flex items-center font-mono text-xs">
+                <div
+                  className="flex-grow p-2 flex items-center font-mono text-xs"
+                  data-testid="network-log-version"
+                >
                   <Button
                     variant="ghost"
                     size="2"
