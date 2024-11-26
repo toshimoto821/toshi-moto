@@ -64,7 +64,7 @@ jobs:
         id: determine_affected
         run: |
           AFFECTED_APPS=($(npx nx show projects --affected --base=$BASE --head=$HEAD))
-          if [ ${#AFFECTED_APPS[@]} -eq 0 ]; then
+          if [ "${#AFFECTED_APPS[@]}" -eq 0 ] || [ "${AFFECTED_APPS[0]}" = "" ]; then
             echo "No apps are affected. Exiting workflow."
             exit 0
           fi
