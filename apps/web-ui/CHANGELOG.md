@@ -1,4 +1,19 @@
 # UI Changelog
+## [1.21.10](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.21.9...web-ui-1.21.10) (2024-11-26)
+
+  |      |     |     |
+  |  --- | --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?commitSha=f621693e2af7406fa9bab69657c2a14d549b7fe2&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=f621693e2af7406fa9bab69657c2a14d549b7fe2&projectId=673fc8a05aecc1e3059940e8)||
+
+  
+
+
+### 🐞 Bug Fixes
+
+* changelog ([fe7f54d](https://github.com/toshimoto821/toshi-moto/commit/fe7f54d22c6813010d947dcea9011cd53c022f63))
+* gha ([e80e235](https://github.com/toshimoto821/toshi-moto/commit/e80e2355953f25bf48aea74e46e4220a34c1c5a7))
+* table ([39b4de6](https://github.com/toshimoto821/toshi-moto/commit/39b4de611169748acdcbc1742f837e85d22fb09c))
+* updates env ([5ec9835](https://github.com/toshimoto821/toshi-moto/commit/5ec9835bc6b209aff08c863547ee056192e73a5f))
 
 ## [1.21.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.21.8...web-ui-1.21.9) (2024-11-26)
 
