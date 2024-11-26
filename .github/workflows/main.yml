@@ -29,6 +29,17 @@ jobs:
           fetch-depth: 0
           submodules: "recursive"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Determine the base commit of the PR
         id: determine_base
         run: echo "BASE=${{ github.event.before }}" >> $GITHUB_ENV
