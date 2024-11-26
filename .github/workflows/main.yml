@@ -17,7 +17,43 @@ on:
   #     - main
 
 jobs:
-  increment-version-changelog:
+  check-affected:
+    runs-on: ubuntu-latest
+    outputs:
+      should_continue: ${{ steps.determine_affected.outputs.should_continue }}
+      affected_apps: ${{ steps.determine_affected.outputs.affected_apps }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: "recursive"
+
+      - name: Determine the base commit of the PR
+        id: determine_base
+        run: echo "BASE=${{ github.event.before }}" >> $GITHUB_ENV
+
+      - name: Determine the head commit of the PR
+        id: determine_head
+        run: echo "HEAD=${{ github.event.after }}" >> $GITHUB_ENV
+
+      - name: Determine what apps are affected
+        id: determine_affected
+        run: |
+          AFFECTED_APPS=($(npx nx show projects --affected --base=$BASE --head=$HEAD))
+          if [ "${#AFFECTED_APPS[@]}" -eq 0 ] || [ "${AFFECTED_APPS[0]}" = "" ]; then
+            echo "No apps are affected. Skipping remaining workflow."
+            echo "::notice::No apps affected - skipping remaining steps"
+            echo "should_continue=false" >> $GITHUB_OUTPUT
+          else
+            echo "Affected apps: ${AFFECTED_APPS[@]}"
+            echo "should_continue=true" >> $GITHUB_OUTPUT
+            echo "affected_apps=${AFFECTED_APPS[@]}" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-deploy:
+    needs: check-affected
+    if: needs.check-affected.outputs.should_continue == 'true'
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -37,58 +73,11 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      # - name: Cache pnpm dependencies
-      #   id: pnpm-cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       ~/.pnpm-store
-      #       node_modules
-      #       ~/.cache
-      #     key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-pnpm-
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Determine the base commit of the PR
-        id: determine_base
-        run: echo "BASE=${{ github.event.before }}" >> $GITHUB_ENV
-
-      - name: Determine the head commit of the PR
-        id: determine_head
-        run: echo "HEAD=${{ github.event.after }}" >> $GITHUB_ENV
-
-      - name: Determine what apps are affected
-        id: determine_affected
-        run: |
-          AFFECTED_APPS=($(npx nx show projects --affected --base=$BASE --head=$HEAD))
-          if [ "${#AFFECTED_APPS[@]}" -eq 0 ] || [ "${AFFECTED_APPS[0]}" = "" ]; then
-            echo "No apps are affected. Exiting workflow."
-            exit 0
-          fi
-          echo "Affected apps: ${AFFECTED_APPS[@]}"
-          echo "affected_apps=${AFFECTED_APPS[@]}" >> $GITHUB_ENV
-
       - name: Lint
         run: npx nx affected --target=lint --base=$BASE --head=$HEAD
-
-      # dont think this is needed.
-      - name: Write env file
-        run: |
-          echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env
-          echo "VITE_COINGECKO_PRICE_API_URL=https://api.toshimoto.app/api/prices/simple" >> apps/web-ui/.env
-          echo "VITE_TOSHI_MOTO_XPUB=${{ secrets.VITE_TOSHI_MOTO_XPUB }}" >> apps/web-ui/.env
-          echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
-          echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env
-          echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
-          echo "CI=true" >> apps/web-ui/.env
-          echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env
-          echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env
-          echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env
-          echo "VITE_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env
-          echo "VITE_PRICING_STREAM_DISABLED=1" >> apps/web-ui/.env
 
       - name: Test
         run: npx nx affected --target=test --base=$BASE --head=$HEAD
@@ -100,25 +89,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      # need a plugin that gets me the images from the webshotarchive
-      # however this should run on main if i want to compare to previous
-      # maybe i get images by name and branch and then diff them
-      # https://api.webshotarchive.com/api/image/path/web-ui-e2e/app.cy.ts?branch=main
-      # its not main yet though because this script didnt upload them
-      # it didnt even run them
-      # it should really only run on main
-      # and then we can compare to the last main
-      # and run the screenshots on main
-      # this is because the pr images could be deleted when the branch is deleted
-      # so its safer to recreate the images on main
-      # and then compare the main to the last main
-
-      # this would be nice to showcase a single image for release
-      # https://api.webshotarchive.com/api/image/path/web-ui-e2e/app.cy.ts?branch=main
-
-      # https://api.webshotarchive.com/api/image/branch/main
-      # this would be nice to showcase a many images for release
 
       - name: Cypress Run
         id: cypress_run
@@ -159,23 +129,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           tags: true
-
-      # - name: Check if web-ui is affected
-      #   id: check_affected
-      #   run: |
-      #     echo "Checking if web-ui is affected..."
-      #     OUTPUT=$(npx nx show projects --affected --exclude web-ui-e2e --base=$BASE --head=$HEAD)
-      #     echo "Affected apps: $OUTPUT"
-      #     if [[ "$OUTPUT" == *"web-ui"* ]]; then
-      #       echo "::set-output name=web_ui_affected::true"
-      #     else
-      #       echo "::set-output name=web_ui_affected::false"
-      #     fi
-
-      # - name: Send bundle stats to RelativeCI
-      #   uses: relative-ci/agent-action@v2
-      #   if: steps.check_affected.outputs.web_ui_affected == 'true'
-      #   with:
-      #     webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
-      #     key: ${{ secrets.RELATIVE_CI_KEY }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
