@@ -109,6 +109,12 @@ jobs:
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
 
+      - name: Fail Pipeline if Cypress Failed
+        if: env.cypress_failed == 'true'
+        run: |
+          echo "Cypress tests failed"
+          exit 1
+
       - name: Send bundle stats to RelativeCI
         uses: relative-ci/agent-action@v2
         with:
