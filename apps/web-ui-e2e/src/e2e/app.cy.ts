@@ -52,7 +52,7 @@ describe("web-ui-e2e", () => {
     const p = getPrice();
     // cy.debug();
     // p.should("be.visible");
-    p.contains("$90,482.36");
+    p.contains("$90,482.36", { timeout: 20000 });
 
     cy.get("#loader-area", { timeout: 10000 }).should("not.exist");
 
@@ -61,7 +61,7 @@ describe("web-ui-e2e", () => {
     cy.fixFixed();
     
     cy.screenshot({ 
-      capture: 'viewport',
+      capture: 'fullPage',
       overwrite: true,
     });
   });
@@ -97,13 +97,13 @@ describe("web-ui-e2e", () => {
     const p = getPrice();
     // cy.debug();
     // p.should("be.visible");
-    p.contains("$90,482.36");
+    p.contains("$90,482.36", { timeout: 20000 });
 
     cy.fixFixed();
     
     // cy.wait(1000);
     cy.screenshot({ 
-      capture: 'viewport',
+      capture: 'fullPage',
       overwrite: true,
     });
   });

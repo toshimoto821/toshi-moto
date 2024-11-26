@@ -52,7 +52,7 @@
       },
       "configurations": {
         "cy": {
-          "envFile": "apps/web-ui/.env.cy",
+          "envFile": "apps/web-ui/.env",
           "configFile": "./apps/web-ui/vite.config.ts"
         }
       }
