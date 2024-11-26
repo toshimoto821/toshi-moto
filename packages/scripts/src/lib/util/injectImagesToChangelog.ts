@@ -146,7 +146,7 @@ export async function injectImagesToChangelog(
   }
 
   // if len of array is less than numCols, set the numCols to the len
-  const numCols = Math.min(filepaths.length, 3);
+  const numCols = filepaths.length
 
   const appendText = createMarkdownTable(filepaths, hash, numCols);
 
