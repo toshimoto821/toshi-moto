@@ -17,7 +17,7 @@ export const updateImagesForProject = async (
   const { find, update } = opts;
   
 
-  const response = await axios.post(`https://api.webshotarchive.com/api/images/${projectId}/update-images`, {
+  const response = await axios.post(`https://api.webshotarchive.com/api/image/update/${projectId}/update-images`, {
     find,
     update,
   });
