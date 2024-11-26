@@ -14,8 +14,7 @@ import {
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { setUI } from "@root/lib/slices/ui.slice";
 
-const VITE_PRICING_STREAM_DISABLED = import.meta.env
-  .VITE_PRICING_STREAM_DISABLED;
+const VITE_PRICING_STREAM_DISABLED = 1; //import.meta.env.VITE_PRICING_STREAM_DISABLED;
 
 export const Root = () => {
   const { pathname } = useLocation();
