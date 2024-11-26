@@ -174,6 +174,7 @@ export async function injectImagesToChangelog(
   }
 
   console.log(`Changelog updated for version ${version}.`);
+  return;
 }
 
 // Get version input and text to append from the command line
