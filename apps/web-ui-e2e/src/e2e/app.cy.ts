@@ -61,7 +61,7 @@ describe("web-ui-e2e", () => {
     cy.fixFixed();
     
     cy.screenshot({ 
-      capture: 'viewport',
+      capture: 'fullPage',
       overwrite: true,
     });
   });
@@ -103,7 +103,7 @@ describe("web-ui-e2e", () => {
     
     // cy.wait(1000);
     cy.screenshot({ 
-      capture: 'viewport',
+      capture: 'fullPage',
       overwrite: true,
     });
   });
