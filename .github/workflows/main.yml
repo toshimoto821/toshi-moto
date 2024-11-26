@@ -139,8 +139,8 @@ jobs:
           SHA: ${{ env.HEAD }}
           # todo change this image path to use branch
           FILES: |
-            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e -- Hero.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
-            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e -- should import the wallet.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
