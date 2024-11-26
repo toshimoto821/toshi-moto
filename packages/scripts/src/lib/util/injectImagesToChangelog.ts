@@ -167,6 +167,7 @@ export async function injectImagesToChangelog(
     const newCommit = await getLastTag();
     if (newCommit.commit) {
       await addTag(newCommit.commit, lastTag.tags);
+      return newCommit.commit;
     } else {
       console.error("did not find a commit to tag");
     }

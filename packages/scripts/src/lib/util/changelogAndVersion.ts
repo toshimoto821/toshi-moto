@@ -2,11 +2,14 @@ import { exec } from "child_process";
 import { promisify } from "util";
 
 import { injectImagesToChangelog } from "./injectImagesToChangelog";
+import { updateImagesForProject } from "./updateImagesForProject";
+
 const execAsync = promisify(exec);
 
 type IOpts = {
   sha: string;
   files: string[];
+  projectId: string;
   dryRun?: boolean;
 };
 
@@ -24,6 +27,8 @@ export async function changelogAndVersion(opts: IOpts) {
   const dryRun = opts.dryRun ? "--dry-run" : "";
   const { files, sha } = opts;
   const resp: IResponse[] = [];
+
+
 
   try {
     // Run @jscutlery/semver:version with --dry-run
@@ -52,8 +57,19 @@ export async function changelogAndVersion(opts: IOpts) {
     // )}" ${dryRun}`;
     // const { stdout: logStdOut } = await execAsync(task);
     // console.log(logStdOut);
-    await injectImagesToChangelog(nextVersion, sha, files, opts.dryRun);
-
+    const newSha = await injectImagesToChangelog(nextVersion, sha, files, opts.dryRun);
+    console.log("newSha", newSha);
+    if (newSha) {
+      await updateImagesForProject(opts.projectId, {
+        find: {
+          commitSha: sha,
+        },
+        update: {
+          commitSha: newSha,
+          tags: [nextVersion, "release"],
+        }
+      });
+    }
     console.log(`Changelog updated for version ${nextVersion}`);
   } catch (error) {
     console.error("Error:", error);
