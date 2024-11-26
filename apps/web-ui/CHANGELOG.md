@@ -3,7 +3,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e -- Hero.png?commitSha=d4e869bd8d9d2b4444a86dc17c137780f2639359&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e -- should import the wallet.png?commitSha=d4e869bd8d9d2b4444a86dc17c137780f2639359&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=d4e869bd8d9d2b4444a86dc17c137780f2639359&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=d4e869bd8d9d2b4444a86dc17c137780f2639359&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -11,7 +11,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  | ![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=08bc726be07502c72f18320626d8445f9bbadf25&projectId=673fc8a05aecc1e3059940e8) | ![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=08bc726be07502c72f18320626d8445f9bbadf25&projectId=673fc8a05aecc1e3059940e8) | |
+  | ![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=08bc726be07502c72f18320626d8445f9bbadf25&projectId=673fc8a05aecc1e3059940e8) | ![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=08bc726be07502c72f18320626d8445f9bbadf25&projectId=673fc8a05aecc1e3059940e8) | |
 
   
 
@@ -19,7 +19,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=f1db95ff8605a53fd28ae011f8cbe8ad876dc5e8&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=f1db95ff8605a53fd28ae011f8cbe8ad876dc5e8&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](hhttps://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=f1db95ff8605a53fd28ae011f8cbe8ad876dc5e8&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=f1db95ff8605a53fd28ae011f8cbe8ad876dc5e8&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -27,7 +27,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=1e68a5849a5421f3d4f86e9fc517e2d62072a0cf&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=1e68a5849a5421f3d4f86e9fc517e2d62072a0cf&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=1e68a5849a5421f3d4f86e9fc517e2d62072a0cf&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=1e68a5849a5421f3d4f86e9fc517e2d62072a0cf&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -35,7 +35,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=8dac58feceee500bcf3e42dbf43d144dbdf0cbbd&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=8dac58feceee500bcf3e42dbf43d144dbdf0cbbd&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=8dac58feceee500bcf3e42dbf43d144dbdf0cbbd&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=8dac58feceee500bcf3e42dbf43d144dbdf0cbbd&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -43,7 +43,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=0a1d7f37a140b36c51b3220e91d78acf4426f32d&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=0a1d7f37a140b36c51b3220e91d78acf4426f32d&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=0a1d7f37a140b36c51b3220e91d78acf4426f32d&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=0a1d7f37a140b36c51b3220e91d78acf4426f32d&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -51,7 +51,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=d73511de3ae5b0c87166f095a4e0afdaae7212c3&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=d73511de3ae5b0c87166f095a4e0afdaae7212c3&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=d73511de3ae5b0c87166f095a4e0afdaae7212c3&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=d73511de3ae5b0c87166f095a4e0afdaae7212c3&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -59,7 +59,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- Hero.png?commitSha=168ddafcec1b2907f290111449a47a48f88ce33b&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e -- should import the wallet.png?commitSha=168ddafcec1b2907f290111449a47a48f88ce33b&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/web-ui-e2e%20--%20Hero.png?commitSha=168ddafcec1b2907f290111449a47a48f88ce33b&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=168ddafcec1b2907f290111449a47a48f88ce33b&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
