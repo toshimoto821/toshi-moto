@@ -87,6 +87,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Determine the base commit of the PR
+        id: determine_base
+        run: echo "BASE=${{ github.event.before }}" >> $GITHUB_ENV
+
+      - name: Determine the head commit of the PR
+        id: determine_head
+        run: echo "HEAD=${{ github.event.after }}" >> $GITHUB_ENV
+
       # todo change api url
       - name: Write env file
         run: |
