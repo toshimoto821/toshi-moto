@@ -1,12 +1,12 @@
-// eslint-disable-next-line
-const isCI = process.env.CI === "true";
+import path from "path";
+import { fileURLToPath } from 'url';
+
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
   plugins: {
     tailwindcss: {
-      config: isCI
-        ? "./apps/web-ui/tailwind.config.js"
-        : "./tailwind.config.js",
+      config: path.resolve(currentDir, "./tailwind.config.js"),
     },
     autoprefixer: {},
   },

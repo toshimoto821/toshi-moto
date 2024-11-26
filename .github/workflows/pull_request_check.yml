@@ -65,7 +65,7 @@ jobs:
         id: cypress_run
         continue-on-error: true
         run: |
-          npx nx run web-ui-e2e:e2e-ci
+          npx nx e2e web-ui-e2e --configuration=production
 
       - name: Check Cypress Result
         id: check_cypress
