@@ -157,6 +157,8 @@ jobs:
         env:
           SHA: ${{ env.HEAD }}
           PROJECT_ID: ${{ secrets.TIMECHAIN_PROJECT_ID }}
+          CLIENT_ID: ${{ secrets.TIMECHAIN_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
           # todo change this image path to use branch
           FILES: |
             https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?commitSha=${{ env.HEAD }}&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
