@@ -3,7 +3,7 @@
 
   |      |     |     |
   |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?commitSha=eef2564652d5e3d66d430959a2ea8be9e74a2c8e&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=eef2564652d5e3d66d430959a2ea8be9e74a2c8e&projectId=673fc8a05aecc1e3059940e8)||
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?commitSha=68e16612e08f2bf6fbf99df34b021e9c3bf835db&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=68e16612e08f2bf6fbf99df34b021e9c3bf835db&projectId=673fc8a05aecc1e3059940e8)||
 
   
 
@@ -12,13 +12,6 @@
 
 * removes widths on nav ([a043d45](https://github.com/toshimoto821/toshi-moto/commit/a043d453097bb39e0796a811d0131a8affbb60f8))
 
-## [1.21.14](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.21.13...web-ui-1.21.14) (2024-11-27)
-
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?commitSha=c8988d863ea60a1e2c355c1fed4bf70727b224b7&projectId=673fc8a05aecc1e3059940e8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?commitSha=c8988d863ea60a1e2c355c1fed4bf70727b224b7&projectId=673fc8a05aecc1e3059940e8)||
-
-  
 
 ## [1.21.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.21.12...web-ui-1.21.13) (2024-11-27)
 
