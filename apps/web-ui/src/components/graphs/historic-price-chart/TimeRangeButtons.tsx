@@ -1,6 +1,6 @@
 import { useMemo, useEffect } from "react";
 import { Button } from "@radix-ui/themes";
-import { scaleLinear, extent, interpolateRgb } from "d3";
+import { scaleLinear, interpolateRgb } from "d3";
 import { useAppDispatch, useAppSelector } from "@lib/hooks/store.hooks";
 import { setRange } from "@lib/slices/navbar.slice";
 import {
