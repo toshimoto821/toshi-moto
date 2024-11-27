@@ -147,8 +147,8 @@ export async function injectImagesToChangelog(
 
   // if len of array is less than numCols, set the numCols to the len
   const numCols = filepaths.length
-
-  const appendText = createMarkdownTable(filepaths, hash, numCols);
+  const filepathsWithTags = filepaths.map((path) => path.indexOf('?') > -1 ? `${path}&tag=${version}` : `${path}?tag=${version}`);
+  const appendText = createMarkdownTable(filepathsWithTags, hash, numCols);
 
   console.log("markdown table", appendText);
   // Find the version entry and update it with the append text
