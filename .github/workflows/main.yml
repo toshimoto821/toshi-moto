@@ -147,7 +147,6 @@ jobs:
           mergedBranch: main
           type: "merge"
           comment: false
-          tags: release
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}

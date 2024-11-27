@@ -65,29 +65,6 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
     }
   };
 
-  const widths = useMemo(() => {
-    // const diff = priceDiffs[timeframe];
-    const maxWidth = 100 / Object.keys(priceDiffs || {}).length;
-
-    const values = Object.entries(priceDiffs || {});
-    const absoluteValues = values.map((v) => Math.abs(v[1]));
-    const [min, max] = extent(absoluteValues);
-    const widthScale = scaleLinear()
-      .domain([min!, max!]) // Input range
-      .range([7, maxWidth]) // Output range
-      .clamp(true);
-
-    const ret = new Map<string, number>();
-    for (const [key, value] of values) {
-      const v = Math.abs(value);
-      const scaled = widthScale(v);
-
-      ret.set(key, scaled);
-    }
-
-    return ret;
-  }, [priceDiffs]);
-
   const colors = useMemo(() => {
     const values = Object.entries(priceDiffs || {});
     const percentageValues: [string, number][] = values.map((v) => [
@@ -115,7 +92,6 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
   const NavButton = ({ range }: { range: GraphTimeFrameRange }) => {
     return (
       <div
-        style={{ width: `${widths.get(range)}%` }}
         className={cn("flex items-center justify-center w-full pb-1", {
           "border-b": graphTimeFrameRange === range,
           "border-orange-300": graphTimeFrameRange == range,
