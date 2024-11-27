@@ -91,7 +91,7 @@ jobs:
           echo "COMPARE_SHA=$COMPARE_SHA" >> $GITHUB_ENV
 
       - name: WebshotArchive Action
-        uses: toshimoto821/toshi-action@images
+        uses: toshimoto821/webshotarchive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
