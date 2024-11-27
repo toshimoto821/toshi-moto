@@ -10,6 +10,8 @@ type IOpts = {
   sha: string;
   files: string[];
   projectId: string;
+  clientId?: string;
+  clientSecret?: string;
   dryRun?: boolean;
 };
 
@@ -68,7 +70,12 @@ export async function changelogAndVersion(opts: IOpts) {
           commitSha: newSha,
           tags: [nextVersion, "release"],
         }
-      });
+      },
+        {
+          clientId: opts.clientId as string,
+          clientSecret: opts.clientSecret as string,
+        }
+      );
     }
     console.log(`Changelog updated for version ${nextVersion}`);
   } catch (error) {
