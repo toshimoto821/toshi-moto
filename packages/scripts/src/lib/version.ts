@@ -1,7 +1,12 @@
 import { changelogAndVersion } from "./util/changelogAndVersion";
 
-const [, , sha = process.env["SHA"], files = process.env["FILES"], projectId = process.env["PROJECT_ID"]] =
-  process.argv;
+const [, ,
+  sha = process.env["SHA"],
+  files = process.env["FILES"],
+  projectId = process.env["PROJECT_ID"],
+  clientId = process.env["CLIENT_ID"],
+  clientSecret = process.env["CLIENT_SECRET"],
+] = process.argv;
 // const sha = "a690bbdc65566e3a5e4bba8ae37acfab6608604a";
 // const files = [
 //   "apps/web-ui-e2e/cypress/screenshots/app.cy.ts/web-ui-e2e -- Hero.png",
@@ -20,5 +25,6 @@ changelogAndVersion({
   sha,
   dryRun: false,
   projectId: projectId as string,
+  clientId: clientId as string,
+  clientSecret: clientSecret as string,
 });
-  
