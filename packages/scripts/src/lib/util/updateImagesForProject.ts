@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import * as core from "@actions/core";
 interface IUpdateImagesForProjectOpts {
   find: {
     commitSha: string;
@@ -37,8 +37,8 @@ export const updateImagesForProject = async (
       headers,
     }
   );
-  if (response.status !== 200) {
-    console.log(response.data);
+  if (response.status >= 400) {
+    core.debug(response.data);
     throw new Error(`Failed to update images for project ${projectId}`);
   }
 

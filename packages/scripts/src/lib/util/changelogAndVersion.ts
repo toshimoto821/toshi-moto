@@ -79,7 +79,7 @@ export async function changelogAndVersion(opts: IOpts) {
     }
     console.log(`Changelog updated for version ${nextVersion}`);
   } catch (error) {
-    console.error("Error:", error);
+    console.log(error);
   }
 
   return resp;
