@@ -7,5 +7,6 @@ declare namespace Cypress {
   interface Chainable<Subject = any> {
     actAsToshi(address?: string): Chainable<Subject>;
     fixFixed(): Chainable<Subject>;
+    waitForLogProgress(): Chainable<Subject>;
   }
 }

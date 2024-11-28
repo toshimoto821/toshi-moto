@@ -18,6 +18,11 @@ Cypress.Commands.add("fixFixed", () => {
   cy.get("[data-testid=network-log-version]").invoke('text', '');
 });
 
+
+Cypress.Commands.add("waitForLogProgress", () => {
+  cy.get("[data-testid=log-progress]", { timeout: 10000 }).should("not.exist");
+});
+
 Cypress.Commands.add("actAsToshi", (initAddress?: string) => {
   // mocks
   // https://mempool.space/api/address/bc1qaql0jc6v3qutqkge38wynzr39xfdk7jeet6eeh?ttl=86400000
