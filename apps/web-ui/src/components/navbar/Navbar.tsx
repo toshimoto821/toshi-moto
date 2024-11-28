@@ -309,7 +309,7 @@ export const Navbar = () => {
             ref={headerControlsRef}
           >
             <div className="flex justify-between px-4 text-gray-400 py-2">
-              <div className="flex">
+              <div className="flex" data-testid="date-picker-container">
                 <div className="flex items-center">
                   <Button
                     size="1"

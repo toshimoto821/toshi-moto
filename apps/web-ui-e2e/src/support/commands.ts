@@ -16,6 +16,7 @@ Cypress.Commands.add("fixFixed", () => {
   cy.get("[data-testid=network-log]").invoke('css', 'position', 'sticky').invoke('css', 'bottom', '0');
   // blank out the version
   cy.get("[data-testid=network-log-version]").invoke('text', '');
+  cy.get("[data-testid=date-picker-container]").invoke('css', 'display', 'none');
 });
 
 
