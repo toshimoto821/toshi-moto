@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.22.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.1...web-ui-1.22.2) (2024-11-28)
+
+  |      |     |     |
+  |  --- | --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.2)|![Image 2](?tag=1.22.2)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* network trash icon ([72da643](https://github.com/toshimoto821/toshi-moto/commit/72da6434c7099d430047af094b8fe8679bacedc0))
+
 ## [1.22.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.0...web-ui-1.22.1) (2024-11-28)
 
   |      |     |     |
