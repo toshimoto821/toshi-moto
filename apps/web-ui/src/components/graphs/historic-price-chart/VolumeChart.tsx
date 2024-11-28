@@ -143,21 +143,21 @@ export const VolumeChart = (props: IVolumeChart) => {
           const previous = data[i - 1];
           const price2 = previous ? parseFloat(previous.closePrice) : 0;
           const priceChange = i === 0 ? 0 : price1 - price2;
-          if (selectedIndex === null && i === data.length - numBuffer - 1) {
-            return COLOR_SELECTED;
-          }
-          // @todo fix me
+
           // this is wrong because i dont have the first price
           if (i < numBuffer || i > data.length - numBuffer - 1) {
             return "transparent";
           }
 
+          if (selectedIndex === null && i === data.length - numBuffer - 1) {
+            return COLOR_SELECTED;
+          }
+
           if (i === selectedIndex) return COLOR_SELECTED;
 
-          if (i === 5) {
-            return isPositiveChange(1)
-              ? COLOR_POSITIVE_CHANGE
-              : COLOR_NEGATIVE_CHANGE;
+          if (i === numBuffer) {
+            // fill should always be positive
+            return COLOR_POSITIVE_CHANGE;
           }
 
           return priceChange >= 0
@@ -169,13 +169,14 @@ export const VolumeChart = (props: IVolumeChart) => {
 
           if (i < numBuffer || i > data.length - numBuffer - 1) {
             // exit before selecting the color
+
             return "transparent";
           }
 
-          if (i === 5) {
-            return isPositiveChange(6)
-              ? COLOR_NEGATIVE_CHANGE
-              : COLOR_POSITIVE_CHANGE;
+          if (i === numBuffer) {
+            // @TODO fix me
+            // we dont know if the first bar is positive or negative
+            return COLOR_POSITIVE_CHANGE;
           }
 
           const price1 = parseFloat(d.closePrice);
@@ -190,8 +191,8 @@ export const VolumeChart = (props: IVolumeChart) => {
         .attr("data-index", (_, i) => i)
         .on("click", (_, kline) => {
           let index = data.findIndex((d) => d.openTime === kline.openTime);
-          if (index < 5) {
-            index = 5;
+          if (index < numBuffer) {
+            index = numBuffer;
           }
           // const datum = data[index];
           if (isLocked) {
@@ -210,7 +211,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           const [x] = xy;
           let index = Math.floor((x - margin.left) / xScale.step());
 
-          if (index < 5 || index > data.length - numBuffer - 1) {
+          if (index < numBuffer || index > data.length - numBuffer - 1) {
             index = data.length - numBuffer - 1;
           }
 
@@ -227,6 +228,11 @@ export const VolumeChart = (props: IVolumeChart) => {
             .attr("fill", (_, ind) => {
               if (ind < numBuffer || ind > data.length - numBuffer - 1) {
                 return "transparent";
+              }
+
+              if (ind === numBuffer) {
+                // fill should always be positive
+                return COLOR_POSITIVE_CHANGE;
               }
 
               return isPositiveChange(ind)
@@ -262,7 +268,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             .selectAll(".bar")
             // .attr("opacity", 0)
             .attr("fill", (_, ind) => {
-              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
+              if (ind < numBuffer - 1 || ind > data.length - numBuffer - 1) {
                 return "transparent";
               }
 
@@ -272,7 +278,7 @@ export const VolumeChart = (props: IVolumeChart) => {
             })
 
             .filter((_, ind) => {
-              if (ind < numBuffer || ind > data.length - numBuffer - 1) {
+              if (ind < numBuffer - 1 || ind > data.length - numBuffer - 1) {
                 return false;
               }
 

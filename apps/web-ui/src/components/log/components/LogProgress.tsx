@@ -18,6 +18,7 @@ export const LogProgress = ({ max, value }: { max: number; value: number }) => {
 
   return (
     <Progress.Root
+      data-testid="log-progress"
       className="relative overflow-hidden bg-blue-300 w-screen h-[3px] border border-y-0 border-b-0"
       style={{
         // Fix overflow clipping in Safari
