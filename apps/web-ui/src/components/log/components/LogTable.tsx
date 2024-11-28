@@ -34,11 +34,9 @@ export const LogTable = ({
   return (
     <div>
       <Flex className="p-2">
-        <Box className="px-2 flex items-center">
-          <IconButton variant="ghost" onClick={onClickDeleteAll}>
-            <TrashIcon />
-          </IconButton>
-        </Box>
+        <IconButton variant="ghost" size="1" onClick={onClickDeleteAll}>
+          <TrashIcon />
+        </IconButton>
       </Flex>
       <Flex className="p-2 bg-gray-200 border border-r-0 border-l-0 border-gray-300">
         <Box className="w-6/12 md:w-7/12 px-2 border border-l-0 border-t-0 border-b-0 border-gray-300">
