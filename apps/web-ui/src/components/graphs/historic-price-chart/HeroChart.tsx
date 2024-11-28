@@ -377,8 +377,8 @@ export const HeroChart = (props: IHeroChart) => {
               (d) => d.openTime === (kline as BinanceKlineMetric).openTime
             );
           }
-          if (index < 5) {
-            index = 5;
+          if (index < numBuffer) {
+            index = numBuffer;
           }
 
           const datum = data[index];
@@ -565,7 +565,8 @@ export const HeroChart = (props: IHeroChart) => {
           const step = xScale.step();
 
           let index = Math.round((x - margin.left) / step) - 1;
-          if (index < 5 || index > data.length - numBuffer - 1) {
+
+          if (index < numBuffer || index > data.length - numBuffer - 1) {
             index = data.length - numBuffer - 1;
           }
           if (!lineData[index]) {
