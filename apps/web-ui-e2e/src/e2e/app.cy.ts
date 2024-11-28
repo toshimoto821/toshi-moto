@@ -59,7 +59,7 @@ describe("web-ui-e2e", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.fixFixed();
-    
+    cy.waitForLogProgress();
     cy.screenshot({ 
       capture: 'fullPage',
       overwrite: true,
@@ -102,8 +102,8 @@ describe("web-ui-e2e", () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.fixFixed();
-    
-    
+    cy.waitForLogProgress();
+
     cy.screenshot({ 
       capture: 'fullPage',
       overwrite: true,
