@@ -150,7 +150,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   const yScale = scaleLinear()
     .domain([yExtent[0]!, yExtent[1]!])
-    .range([height - margin.top, margin.top]);
+    .range([height - margin.bottom, margin.top]);
 
   const formatDefault = format("~s");
   const formatBtc = format(".4f");
@@ -794,7 +794,7 @@ export const HeroChart = (props: IHeroChart) => {
         // BTC Allocation (line)
         svg
           .append("path")
-          .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+          // .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
           .attr("id", "btc-past-line")
           .attr("fill", "none")
           .attr("stroke", "orange")
