@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.22.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.2...web-ui-1.22.3) (2024-12-04)
+
+  |      |     |     |
+  |  --- | --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.3)|![Image 2](?tag=1.22.3)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* aligns graphs ([55c4529](https://github.com/toshimoto821/toshi-moto/commit/55c4529b4784756ab721ed70567ccad251b2c6db)), closes [#244](https://github.com/toshimoto821/toshi-moto/issues/244)
+
 ## [1.22.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.1...web-ui-1.22.2) (2024-11-28)
 
   |      |     |     |
