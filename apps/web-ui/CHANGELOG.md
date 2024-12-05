@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.23.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.3...web-ui-1.23.0) (2024-12-05)
+
+  |      |     |     |
+  |  --- | --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.0)|![Image 2](?tag=1.23.0)|
+
+  
+
+
+### ✨ Features
+
+* updates onboarding ([25ea8b7](https://github.com/toshimoto821/toshi-moto/commit/25ea8b7bb4e9d52edf568fd37b7b45d51a3445cf))
+
 ## [1.22.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.2...web-ui-1.22.3) (2024-12-04)
 
   |      |     |     |
