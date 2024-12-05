@@ -40,10 +40,18 @@ export const Onboarding = () => {
                 I created this app to help manage my wallets and keep track of
                 my Bitcoin stack. I have wallets for my kids, wallets for this
                 app, wallets for long term HODL'ing, actually I might have a
-                problem creating too many Bitcoin wallets. Anyways, I found it
-                hard and not fun to keep track of them all. This app was a way
-                for me to tie them all together. If you have any feedback or
-                suggestions, I would love to hear from you. A few promises:
+                problem with creating too many Bitcoin wallets. Anyways, I found
+                it difficult keep track of them all (especially on my phone).
+                This app was a way for me to tie them all together. If you have
+                any feedback or suggestions, let me know.{" "}
+                <a
+                  href="https://github.com/toshimoto821/toshi-moto"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  The repo
+                </a>{" "}
+                is public and you can create an issue with question or feedback.
                 <ul className="list-disc list-inside mt-2 ml-4">
                   <li>
                     <Text>
@@ -146,14 +154,14 @@ export const Onboarding = () => {
                 <Text>
                   <b>
                     <a
-                      href="https://xstate.js.org/"
+                      href="https://redux-toolkit.js.org/"
                       className="text-blue-500 underline"
                       target="_blank"
                     >
-                      X State
+                      Redux Toolkit
                     </a>
                   </b>{" "}
-                  - The state management is done with X State.
+                  - The state management is done with Redux Toolkit.
                 </Text>
               </li>
               <li>
@@ -269,20 +277,6 @@ export const Onboarding = () => {
                   - The app is built with Typescript.
                 </Text>
               </li>
-              <li>
-                <Text>
-                  <b>
-                    <a
-                      href="https://storybook.js.org/"
-                      className="text-blue-500 underline"
-                      target="_blank"
-                    >
-                      Storybook
-                    </a>
-                  </b>{" "}
-                  - The app uses storybook for component development.
-                </Text>
-              </li>
             </ul>
             <Text>The following API's are used for sourcing data:</Text>
             <ul className="list-disc list-inside mt-2 ml-4 mb-4">
@@ -304,11 +298,11 @@ export const Onboarding = () => {
                 <Text>
                   <b>
                     <a
-                      href="https://www.coingecko.com/api/documentation"
+                      href="https://dev.binance.vision/c/api-en/7"
                       className="text-blue-500 underline"
                       target="_blank"
                     >
-                      https://www.coingecko.com
+                      https://dev.binance.vision/c/api-en/7
                     </a>
                   </b>{" "}
                   - Use to get current and historical pricing data.
@@ -331,16 +325,33 @@ export const Onboarding = () => {
             </ul>
             <div className="py-4">
               <Text>
-                I believe bitcoin's creation by Satoshi Nakamoto is the single
-                greatest discovery in human history. It is a technology that
-                will change the world. I hope this app can help people
-                understand it better. Lastly, we need to follow in Satoshi's
-                footsteps and add value to the network by creating. This network
-                is not controlled by a centralized government or corporation, it
-                is built and maintained by the people. It will not be easy or
-                grow without our help. We need to build on top of it and add
-                value to it. If you have any ideas or want to contribute to this
-                app please do so.
+                Lastly, as I do this project at no charge, technical web
+                developers and engineers can support me by trying out a new
+                cloud image hosting service I call{" "}
+                <a
+                  className="text-blue-500 underline"
+                  href="https://www.webshotarchive.com/"
+                  target="_blank"
+                >
+                  Webshot Archive
+                </a>
+                . If you take screenshots from tools such as{" "}
+                <a
+                  className="text-blue-500 underline"
+                  href="https://www.cypress.io/"
+                  target="_blank"
+                >
+                  Cypress.io
+                </a>{" "}
+                or{" "}
+                <a
+                  className="text-blue-500 underline"
+                  href="https://playwright.dev/"
+                  target="_blank"
+                >
+                  Playwrite
+                </a>
+                , its a great way to store them and share them with your team.
               </Text>
             </div>
             <div>
