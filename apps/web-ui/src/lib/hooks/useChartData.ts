@@ -46,7 +46,7 @@ export const useChartData = (opts: IUseChartData) => {
 
   const { group: graphTimeFrameGroup } = btcPrices;
 
-  let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
+  const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
   // const selectedPlot = WalletUIContext.useSelector(
   //   (current) => current.context.plotData[current.context.selectedPlotIndex]
