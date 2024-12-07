@@ -6,7 +6,7 @@ import { useBtcPrice } from "@lib/hooks/useBtcPrice";
 
 export const WalletRows = () => {
   const { wallets: allWallets } = useWallets();
-  const { circulatingSupply, btcPrice, forcastPrice } = useBtcPrice();
+  const { circulatingSupply, btcPrice } = useBtcPrice();
   if (!allWallets.length) return null;
 
   const wallets = allWallets.filter((wallet) => wallet.archived === false);
@@ -22,7 +22,7 @@ export const WalletRows = () => {
               wallet={wallet}
               className="px-2 py-4"
               circulatingSupply={circulatingSupply}
-              btcPrice={forcastPrice ?? btcPrice}
+              btcPrice={btcPrice}
             />
             {index < wallets.length - 1 && (
               <Separator color="gray" size="4" className="opacity-50" />
@@ -52,7 +52,7 @@ export const WalletRows = () => {
                   wallet={wallet}
                   className="px-2 py-4"
                   circulatingSupply={circulatingSupply}
-                  btcPrice={forcastPrice ?? btcPrice}
+                  btcPrice={btcPrice}
                 />
                 {index < wallets.length - 1 && (
                   <Separator color="gray" size="4" className="opacity-50" />

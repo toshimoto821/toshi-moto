@@ -6,7 +6,6 @@ import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectForecast } from "@root/lib/slices/price.slice";
 import { selectOrAppend } from "../line/d3.utils";
 import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
@@ -37,8 +36,6 @@ export const ChartLegend = ({
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
   const { prices, loading, range: _rangeFromApi } = useBtcHistoricPrices();
-
-  const { forecastModel } = useAppSelector(selectForecast);
 
   const previousGraphTimeFrameRange = useAppSelector(
     (state) => state.ui.previousGraphTimeFrameRange
@@ -459,18 +456,12 @@ export const ChartLegend = ({
 
     // }
 
-    if (!forecastModel) {
-      // const brushSelection = svg.append("g");
-      const brushSelection: d3.Selection<
-        SVGGElement,
-        unknown,
-        null,
-        undefined
-      > = selectOrAppend(svg, "#brush-g", "g", {
+    // const brushSelection = svg.append("g");
+    const brushSelection: d3.Selection<SVGGElement, unknown, null, undefined> =
+      selectOrAppend(svg, "#brush-g", "g", {
         id: "brush-g",
       });
-      brushSelection.attr("class", "brush").call(brush);
-    }
+    brushSelection.attr("class", "brush").call(brush);
   };
 
   const hasPrices = (cachedPrices?.length || 0) > 0;
@@ -512,7 +503,6 @@ export const ChartLegend = ({
     loading,
     hasPrices,
     screensize,
-    forecastModel,
     range,
     prices?.length,
     cachedPrices.length,

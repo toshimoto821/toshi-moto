@@ -48,13 +48,9 @@ const bottomScale = d3
   .clamp(true); //
 
 export const Navbar = () => {
-  const {
-    btcPrice: rawPrice,
-    forcastPrice,
-    change: btcChangePrice,
-  } = useBtcPrice();
+  const { btcPrice: rawPrice, change: btcChangePrice } = useBtcPrice();
   // const dispatch = useAppDispatch();
-  const btcPrice = forcastPrice ?? rawPrice;
+  const btcPrice = rawPrice;
   const { actions, data, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
 

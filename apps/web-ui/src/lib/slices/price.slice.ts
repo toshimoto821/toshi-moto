@@ -12,8 +12,7 @@ import {
   apiSlice,
 } from "./api.slice";
 import type { AppDispatch, RootState } from "../store";
-import { type AppStartListening } from "../store/middleware/listener";
-import { uiSlice, roundUpToNearHour } from "./ui.slice";
+import { roundUpToNearHour } from "./ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { wait } from "../utils";
 import { ICurrency } from "@root/types";
@@ -30,15 +29,14 @@ interface PriceState {
   usd_24h_change: number;
   usd_24h_vol: number;
   circulatingSupply: number;
-  forecastPrices: BinanceKlineMetric[];
-  forecastModel: IForcastModelType | null;
+
   streamStatus: "CONNECTED" | "DISCONNECTED";
   streamPaused: boolean;
   priceDiffs: Record<GraphTimeFrameRange, number>;
 }
 
 export type IPrices = [number, number, number][];
-export type IForcastModelType = "BEAR" | "BULL" | "CRAB" | "SAYLOR";
+
 
 const initialState: PriceState = {
   btcPrice: 0,
@@ -47,8 +45,6 @@ const initialState: PriceState = {
   usd_24h_change: 0,
   usd_24h_vol: 0,
   circulatingSupply: 0,
-  forecastPrices: [],
-  forecastModel: null,
   streamStatus: "DISCONNECTED",
   streamPaused: false,
   priceDiffs: {
@@ -72,16 +68,7 @@ export const priceSlice = createSlice({
     setStreamPause(state, action: PayloadAction<boolean>) {
       state.streamPaused = action.payload;
     },
-    setForecast(
-      state,
-      action: PayloadAction<{
-        forecastModel: IForcastModelType | null;
-        forecastPrices?: BinanceKlineMetric[];
-      }>
-    ) {
-      state.forecastModel = action.payload.forecastModel;
-      state.forecastPrices = action.payload.forecastPrices || [];
-    },
+
     setPrice(state, action: PayloadAction<number>) {
       state.btcPrice = action.payload;
       state.last_updated_at = Date.now();
@@ -133,7 +120,6 @@ export const priceSlice = createSlice({
 });
 
 export const {
-  setForecast,
   setPrice,
   setStreamStatus,
   setStreamPause,
@@ -151,50 +137,7 @@ export const selectBtcPrice = createSelector(
   })
 );
 
-export const selectForecast = createSelector(
-  (state: RootState) => state.price.forecastModel,
-  (state: RootState) => state.price.forecastPrices,
-  (forecastModel, forecastPrices) => {
-    return {
-      forecastModel,
-      forecastPrices,
-    };
-  }
-);
 
-export const selectForecastPrice = createSelector(
-  (state: RootState) => state.price.forecastModel,
-  (state: RootState) => state.price.forecastPrices,
-  (model, prices) => {
-    if (model && prices.length) {
-      return parseFloat(prices[prices.length - 1].closePrice);
-    }
-    return null;
-  }
-);
-
-////////////////////////////////////////
-// Middleware
-////////////////////////////////////////
-export const addPriceListener = (startAppListening: AppStartListening) => {
-  // @todo on changing time range, the forecast should be updated, not reset
-  startAppListening({
-    predicate: (action) => {
-      return (
-        uiSlice.actions.setUI.match(action) &&
-        !!action.payload.graphTimeFrameRange
-      );
-    },
-    effect: (_, { dispatch }) => {
-      dispatch(
-        setForecast({
-          forecastModel: null,
-          forecastPrices: [],
-        })
-      );
-    },
-  });
-};
 
 ////////////////////////////////////////
 /// WebSocket

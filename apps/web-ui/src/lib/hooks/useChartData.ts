@@ -10,7 +10,6 @@ import {
 } from "@components/graphs/graph-utils";
 import { useAppSelector } from "./store.hooks";
 import { selectUI } from "../slices/ui.slice";
-import { selectForecast } from "../slices/price.slice";
 
 type IUseChartData = {
   btcPrice?: number;
@@ -47,17 +46,11 @@ export const useChartData = (opts: IUseChartData) => {
 
   const { group: graphTimeFrameGroup } = btcPrices;
 
-  let prices = btcPrices.prices ? btcPrices.prices.slice() : [];
+  const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
   // const selectedPlot = WalletUIContext.useSelector(
   //   (current) => current.context.plotData[current.context.selectedPlotIndex]
   // );
-
-  const { forecastModel, forecastPrices } = useAppSelector(selectForecast);
-
-  if (forecastModel) {
-    prices = prices.concat(forecastPrices);
-  }
 
   // this is kinda broken.  the chart flickers because the
   // group updates immediately but the data doesn't
@@ -130,7 +123,6 @@ export const useChartData = (opts: IUseChartData) => {
     // prices?.[0]?.[0], // if first date changes, update
     prices?.[0]?.closePrice, // if first date changes, update
     chartTimeDiffInDays,
-    forecastModel,
     lastTs,
     last?.closePrice,
   ]);
