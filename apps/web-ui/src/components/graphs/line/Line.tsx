@@ -6,7 +6,6 @@ import findLastIndex from "lodash/findLastIndex";
 import { addDays, startOfDay } from "date-fns";
 import { useBreakpoints } from "@lib/hooks/useBreakpoints";
 import { IPlotData } from "@root/types";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
 // import { setStreamPause } from "@lib/slices/price.slice";
 import { selectOrAppend } from "./d3.utils";
 import "./tooltip.css";
@@ -17,7 +16,6 @@ import {
   trim,
 } from "@root/lib/utils";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
-import { selectForecast } from "@root/lib/slices/price.slice";
 // https://observablehq.com/@d3/bar-line-chart
 export type Plot = {
   x: number;
@@ -94,7 +92,6 @@ export const Line = (props: ILine) => {
   const [activePlotTs, setActivePlotTs] = useState<number | null>(null);
 
   const privateNumber = useNumberObfuscation();
-  const { forecastModel } = useAppSelector(selectForecast);
 
   const tomorrow = addDays(new Date(), 1);
 
@@ -130,7 +127,7 @@ export const Line = (props: ILine) => {
 
   const last = lineData[lineData.length - 1];
   const tomorrowStart = TOMORROW_START.getTime();
-  if (!forecastModel && last?.x > tomorrowStart) {
+  if (last?.x > tomorrowStart) {
     last.x = tomorrowStart;
   }
 
@@ -1035,18 +1032,6 @@ export const Line = (props: ILine) => {
 
   const getLatestDateInPast = (lineData: Plot[]) => {
     const len = lineData.length;
-    const now = new Date().getTime();
-    if (forecastModel) {
-      for (let i = len - 1; i >= 0; i--) {
-        const current = lineData[i];
-        if (current.x <= now) {
-          if (lineData[i + 1]) {
-            return lineData[i + 1];
-          }
-          return current;
-        }
-      }
-    }
 
     return lineData[len - 1];
   };
@@ -1179,15 +1164,7 @@ export const Line = (props: ILine) => {
     if (width > 0 && height > 0) {
       render();
     }
-  }, [
-    height,
-    width,
-    breakpoint,
-    activePlotTs,
-    forecastModel,
-    btcPrice,
-    render,
-  ]);
+  }, [height, width, breakpoint, activePlotTs, btcPrice, render]);
 
   function closePriceTooltip() {
     const tooltip = d3.select("#price-tooltip");
