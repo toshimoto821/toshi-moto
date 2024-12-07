@@ -40,14 +40,14 @@ export const useWallets = () => {
 
   const currency = "usd";
 
-  const { btcPrice, forcastPrice } = useBtcPrice();
+  const { btcPrice } = useBtcPrice();
 
   const walletRows = walletsState
     .map(
       (wallet) =>
         new Wallet(wallet, {
           cur: currency,
-          btcPrice: forcastPrice ?? btcPrice,
+          btcPrice,
         })
     )
     .sort((a, b) => b.balance - a.balance);

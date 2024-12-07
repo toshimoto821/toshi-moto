@@ -3,7 +3,7 @@ import {
   useGetPriceQuery,
   useGetCirculatingSupplyQuery,
 } from "../slices/api.slice";
-import { selectBtcPrice, selectForecastPrice } from "../slices/price.slice";
+import { selectBtcPrice } from "../slices/price.slice";
 
 export const useBtcPrice = () => {
   const { refetch, isLoading: loading, error } = useGetPriceQuery();
@@ -18,12 +18,10 @@ export const useBtcPrice = () => {
 
   const refresh = refetch;
 
-  const forcastPrice = useAppSelector(selectForecastPrice);
 
   const updatedTime = updatedAt ? new Date(updatedAt).toLocaleString() : "";
   return {
     btcPrice,
-    forcastPrice,
     loading,
     refresh,
     updatedAt,

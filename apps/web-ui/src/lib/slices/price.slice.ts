@@ -30,15 +30,14 @@ interface PriceState {
   usd_24h_change: number;
   usd_24h_vol: number;
   circulatingSupply: number;
-  forecastPrices: BinanceKlineMetric[];
-  forecastModel: IForcastModelType | null;
+
   streamStatus: "CONNECTED" | "DISCONNECTED";
   streamPaused: boolean;
   priceDiffs: Record<GraphTimeFrameRange, number>;
 }
 
 export type IPrices = [number, number, number][];
-export type IForcastModelType = "BEAR" | "BULL" | "CRAB" | "SAYLOR";
+
 
 const initialState: PriceState = {
   btcPrice: 0,
@@ -47,8 +46,6 @@ const initialState: PriceState = {
   usd_24h_change: 0,
   usd_24h_vol: 0,
   circulatingSupply: 0,
-  forecastPrices: [],
-  forecastModel: null,
   streamStatus: "DISCONNECTED",
   streamPaused: false,
   priceDiffs: {
@@ -72,16 +69,7 @@ export const priceSlice = createSlice({
     setStreamPause(state, action: PayloadAction<boolean>) {
       state.streamPaused = action.payload;
     },
-    setForecast(
-      state,
-      action: PayloadAction<{
-        forecastModel: IForcastModelType | null;
-        forecastPrices?: BinanceKlineMetric[];
-      }>
-    ) {
-      state.forecastModel = action.payload.forecastModel;
-      state.forecastPrices = action.payload.forecastPrices || [];
-    },
+
     setPrice(state, action: PayloadAction<number>) {
       state.btcPrice = action.payload;
       state.last_updated_at = Date.now();
