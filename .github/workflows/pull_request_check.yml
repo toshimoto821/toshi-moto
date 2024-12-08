@@ -91,19 +91,11 @@ jobs:
           echo "COMPARE_SHA=$COMPARE_SHA" >> $GITHUB_ENV
 
       - name: WebshotArchive Action
-        uses: toshimoto821/webshotarchive@main
+        uses: toshimoto821/webshotarchive@default-values
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          milliseconds: 1000
           screenshotsFolder: dist/cypress
-          commitSha: ${{ github.event.pull_request.head.sha }}
-          compareCommitSha: ${{ github.event.pull_request.base.sha }} #the sha the pr is going into
-          compareBranch: ${{ github.event.pull_request.base.ref }}
-          branchName: ${{ github.event.pull_request.head.ref }}
-          mergedBranch: ${{ github.event.pull_request.base.ref }}
-          type: "push"
-          comment: true
           tags: pr
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}

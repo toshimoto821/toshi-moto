@@ -113,6 +113,11 @@ export const Onboarding = () => {
                 friends and family on how to understand and use Bitcoin.
               </Text>
             </div>
+            <div className="mb-2">
+              <Text>
+                <b>Note:</b> Testing webshot action default values.
+              </Text>
+            </div>
             <div className="my-8">
               <Separator size="4" />
             </div>
