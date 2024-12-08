@@ -96,7 +96,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           screenshotsFolder: dist/cypress
-          tags: pr
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}

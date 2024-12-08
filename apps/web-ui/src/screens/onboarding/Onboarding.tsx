@@ -115,7 +115,7 @@ export const Onboarding = () => {
             </div>
             <div className="mb-2">
               <Text>
-                <b>Note:</b> Testing webshot action default values.
+                <b>Note:</b> Testing webshot action default values!
               </Text>
             </div>
             <div className="my-8">
