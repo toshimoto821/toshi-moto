@@ -63,7 +63,8 @@ jobs:
           cat apps/web-ui/.env
 
       - name: Install Cypress
-        run: cypress install
+        run: |
+          npx cypress install
 
       - name: Cypress Run
         id: cypress_run
