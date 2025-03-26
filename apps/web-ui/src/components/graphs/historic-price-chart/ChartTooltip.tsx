@@ -45,18 +45,19 @@ export const ChartTooltip = (props: IChartTooltip) => {
   }
 
   const showTime = (time: number) => {
+    const opts = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: undefined, // This will exclude seconds
+      hour12: true, // Use 24-hour format, set to true for 12-hour format
+    } as Intl.DateTimeFormatOptions;
     if (range === "1D" || range === "1W") {
-      return new Date(time).toLocaleTimeString(undefined, {
-        year: undefined,
-        month: undefined,
-        day: undefined,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: undefined, // This will exclude seconds
-        hour12: true, // Use 24-hour format, set to true for 12-hour format
-      });
+      return new Date(time).toLocaleTimeString(undefined, opts);
     }
-    return new Date(time).toLocaleDateString();
+    return new Date(time).toLocaleDateString(undefined, opts);
   };
 
   if (open) {

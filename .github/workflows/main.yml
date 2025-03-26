@@ -135,7 +135,7 @@ jobs:
       # so we can use the commit from the release to point commitSha
       # also allow tags to be updated
       - name: WebshotArchive Action
-        uses: toshimoto821/webshotarchive@main
+        uses: webshotarchive/github-action@v0.4.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

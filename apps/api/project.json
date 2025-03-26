@@ -28,7 +28,7 @@
         ]
       }
     },
-    "build": {
+    "_build": {
       "builder": "@nx/js:node",
       "options": {
         "outputPath": "dist/apps/api",

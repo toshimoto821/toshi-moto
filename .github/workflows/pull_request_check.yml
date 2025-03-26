@@ -21,18 +21,18 @@ jobs:
           node-version: "18"
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@
 
-      # - name: Cache pnpm dependencies
-      #   id: pnpm-cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       ~/.pnpm-store
-      #       node_modules
-      #     key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-pnpm-
+      - name: Cache pnpm dependencies
+        id: pnpm-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -61,6 +61,10 @@ jobs:
       - name: Debug dir
         run: |
           cat apps/web-ui/.env
+
+      - name: Install Cypress
+        run: |
+          npx cypress install
 
       - name: Cypress Run
         id: cypress_run
@@ -91,7 +95,7 @@ jobs:
           echo "COMPARE_SHA=$COMPARE_SHA" >> $GITHUB_ENV
 
       - name: WebshotArchive Action
-        uses: toshimoto821/webshotarchive@default-values
+        uses: webshotarchive/github-action@v0.4.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

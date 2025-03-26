@@ -55,8 +55,19 @@ https://github.com/toshimoto821/toshimoto-app-store
 
 ![community-app-store](./docs/assets/community-app-store.png)
 
+# Developer Setup
+
+How to run the app locally
+
+```bash
+npm run dev:mongo # start the mongo db
+npm run dev:api # start the api
+npm run dev:ui # start the ui
+```
+
 ## License
 
+vn
 This software is licensed under the PolyForm Noncommercial 1.0.0 license. TL;DR — You're free to use, fork, modify, and redistribute it for personal and nonprofit use under the same license.
 
 ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-%235351FB)
