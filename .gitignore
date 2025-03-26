@@ -3,3 +3,5 @@ dist
 .nx
 .vscode
 .notes
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
