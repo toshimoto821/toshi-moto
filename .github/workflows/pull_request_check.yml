@@ -62,6 +62,9 @@ jobs:
         run: |
           cat apps/web-ui/.env
 
+      - name: Install Cypress
+        run: cypress install
+
       - name: Cypress Run
         id: cypress_run
         continue-on-error: true
