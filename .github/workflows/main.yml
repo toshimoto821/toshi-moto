@@ -129,7 +129,7 @@ jobs:
         id: cypress_run
         continue-on-error: false
         run: |
-          npx nx run web-ui-e2e:e2e-ci
+          npx nx e2e web-ui-e2e --configuration=production
 
       # create a way to update the commitSha from the release
       # so we can use the commit from the release to point commitSha
