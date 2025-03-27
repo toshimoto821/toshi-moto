@@ -5,7 +5,6 @@ import rangeDiff from "../fixtures/range-diff.json";
 const viewport = [1280, 1480] as const;
 
 describe("web-ui-e2e", () => {
-
   beforeEach(async () => {
     cy.viewport(...viewport);
     const databases = await indexedDB.databases();
@@ -22,11 +21,9 @@ describe("web-ui-e2e", () => {
         last_updated_at: 1720107348,
       },
     }).as("getPrice");
-    
   });
 
   it("Hero", () => {
-    
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
@@ -60,52 +57,44 @@ describe("web-ui-e2e", () => {
     cy.wait(1000);
     cy.fixFixed();
     cy.waitForLogProgress();
-    cy.screenshot({ 
-      capture: 'fullPage',
+    cy.screenshot({
+      capture: "fullPage",
       overwrite: true,
     });
   });
 
   it("should import the wallet", () => {
-    
-
-
     cy.intercept("https://blockchain.info/q/totalbc", "1971957500000000").as(
       "getTotalBc"
     );
 
-
     cy.intercept("GET", "**/api/prices/kline*", range).as("getRange");
     cy.actAsToshi("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
-    
 
-    
-  
-    
     cy.get("[data-testid=btc-wallet-balance]", {
       timeout: 21000,
     }).should("contain", "0.00,100,000");
 
     cy.get("[data-testid=btc-wallet-balance]").click();
-    
+
     // wait for address row to be visible
     cy.get("[data-testid=address-row]", {
       timeout: 60000,
     }).should("be.visible");
     cy.wait("@getPrice", { timeout: 20000 });
-  
+
     const p = getPrice();
     // cy.debug();
     // p.should("be.visible");
     p.contains("$90,482.36", { timeout: 20000 });
-    
+
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.fixFixed();
     cy.waitForLogProgress();
 
-    cy.screenshot({ 
-      capture: 'fullPage',
+    cy.screenshot({
+      capture: "fullPage",
       overwrite: true,
     });
   });
