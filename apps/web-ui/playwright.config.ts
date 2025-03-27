@@ -27,9 +27,9 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "nx run web-ui:dev",
+    command: "nx run web-ui:serve-static",
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    // reuseExistingServer: !process.env.CI,
     cwd: workspaceRoot,
   },
   projects: [

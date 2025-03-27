@@ -19,12 +19,6 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
     }
   };
 
-  const handleRetry = () => {
-    // if (request.retry) {
-    //   request.retry();
-    // }
-    console.log("implement retry");
-  };
   return (
     <div className="p-4">
       <Card className="mb-2">

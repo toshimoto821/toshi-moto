@@ -4,9 +4,9 @@ export class HomepagePO {
   constructor(private readonly page: Page) {}
 
   // Navigation
-  async goto(projectId: string, queryParams = "") {
-    // await this.page.goto(`/project/dashboard/${projectId}?${queryParams}`);
-  }
+  // async goto(projectId: string, queryParams = "") {
+  //   // await this.page.goto(`/project/dashboard/${projectId}?${queryParams}`);
+  // }
 
   async importWallet() {
     // getByTestId('import-toshi-moto-wallet')
