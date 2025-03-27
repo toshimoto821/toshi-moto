@@ -104,7 +104,6 @@ export default {
 			},
 		});
 
-		// @ts-ignore
 		const resp = new Response(response.body, {
 			status: response.status,
 			statusText: response.statusText,
