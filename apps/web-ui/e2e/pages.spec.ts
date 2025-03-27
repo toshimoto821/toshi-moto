@@ -24,7 +24,8 @@ test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
     page.locator("div").filter({ hasText: /^Toshi Moto$/ })
   ).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, 0));
+
+  await expect(homepage.getCompleteCount(26)).toBeVisible();
   const path = testInfo.outputPath("homepage.png");
   await page.screenshot({ path, fullPage: true });
-  await expect(homepage.getCompleteCount(26)).toBeVisible();
 });
