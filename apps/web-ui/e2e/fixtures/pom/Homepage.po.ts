@@ -18,4 +18,8 @@ export class HomepagePO {
     // // getByTestId('import-wallet-modal-submit')
     // this.page.getByTestId("import-wallet-modal-submit").click();
   }
+
+  getCompleteCount(count: number) {
+    return this.page.getByText(`${count}completed`);
+  }
 }
