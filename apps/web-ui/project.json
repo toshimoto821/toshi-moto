@@ -102,6 +102,12 @@
         "command": "echo 'Versioning UI'"
       },
       "dependsOn": ["scripts:version"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/web-ui/**/*"]
+      }
     }
   }
 }

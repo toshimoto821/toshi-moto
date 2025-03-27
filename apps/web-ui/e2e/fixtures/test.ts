@@ -8,9 +8,11 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   homepage: async ({ page }, use) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new HomepagePO(page));
   },
   api: async ({ page }, use) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new Api(page));
   },
 });

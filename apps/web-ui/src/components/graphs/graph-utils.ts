@@ -321,11 +321,7 @@ export function generateRandomPriceSeries({
   return prices;
 }
 
-export function createFakeKline(
-  price: number,
-  date: number,
-  volume: number = 0
-) {
+export function createFakeKline(price: number, date: number, volume = 0) {
   return {
     openTime: date,
     openPrice: price + "",

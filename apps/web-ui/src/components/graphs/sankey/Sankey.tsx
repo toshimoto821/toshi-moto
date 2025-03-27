@@ -230,7 +230,6 @@ export const Sankey = ({
         );
         if (sourceLinkAddress && d.type !== "tx") return 1;
         return 0;
-        ("");
       })
       .attr("x", function (d: any) {
         const x = d.x0;

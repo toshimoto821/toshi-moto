@@ -8,7 +8,7 @@ export const useWallet = (xpubs: string[]) => {
   const dispatch = useAppDispatch();
   const { wallets } = useWallets();
 
-  const createWallet = async (name: string = "test wallet", id?: string) => {
+  const createWallet = async (name = "test wallet", id?: string) => {
     const walletId = id ?? nanoid();
 
     dispatch(

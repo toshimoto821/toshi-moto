@@ -44,7 +44,7 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
           </Box>
         </div>
       </Card>
-      {false && (
+      {/*       
         <Card>
           <div className="flex justify-between items-end">
             <Box>
@@ -63,7 +63,7 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
             </Box>
           </div>
         </Card>
-      )}
+       */}
     </div>
   );
 };
