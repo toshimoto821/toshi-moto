@@ -8,10 +8,14 @@ test.beforeEach(async ({ api }) => {
   await api.mockHomepage();
 });
 
-test("onboarding tags-[fullpage]", async ({ page, api }, testInfo) => {
+test("onboarding tags-[fullpage]", async ({
+  page,
+  api,
+  homepage,
+}, testInfo) => {
   await api.mockHomepage();
   await page.goto("/");
-
+  await homepage.fixFixed();
   const path = testInfo.outputPath("onboarding.png");
   await page.screenshot({ path, fullPage: true });
 });
