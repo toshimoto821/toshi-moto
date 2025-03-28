@@ -26,4 +26,16 @@ export class HomepagePO {
   getCompleteCount(count: number) {
     return this.page.getByText(`${count}completed`);
   }
+
+  async fixFixed() {
+    const p1 = this.page.getByTestId("navbar").evaluate((el) => {
+      el.style.position = "static";
+    });
+
+    const p2 = this.page.getByTestId("chart-tooltip").evaluate((el) => {
+      el.style.position = "static";
+    });
+
+    return Promise.all([p1, p2]);
+  }
 }

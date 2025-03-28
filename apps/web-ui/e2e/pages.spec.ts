@@ -32,6 +32,7 @@ test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
   await expect(page.getByText("Toshi Moto")).toBeVisible();
 
   await homepage.selectWalletByName("Toshi Moto");
+  await homepage.fixFixed();
 
   const path = testInfo.outputPath("homepage.png");
   await page.screenshot({ path, fullPage: true });
