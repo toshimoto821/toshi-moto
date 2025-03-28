@@ -152,9 +152,10 @@ jobs:
           CLIENT_ID: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
           # todo change this image path to use branch
+          # dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png
           FILES: |
-            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
-            https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+            https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+            https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
