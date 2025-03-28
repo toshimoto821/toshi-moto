@@ -36,6 +36,10 @@ export class HomepagePO {
       el.style.position = "static";
     });
 
-    return Promise.all([p1, p2]);
+    const p3 = this.page.getByTestId("network-log").evaluate((el) => {
+      el.style.position = "static";
+    });
+
+    return Promise.all([p1, p2, p3]);
   }
 }
