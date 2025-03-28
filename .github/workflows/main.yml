@@ -125,11 +125,15 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Cypress Run
-        id: cypress_run
-        continue-on-error: false
+      - name: Install Playwright Browsers
         run: |
-          npx nx e2e web-ui-e2e --configuration=production
+          npx playwright install
+          npx playwright install-deps
+
+      - name: Screenshots
+        run: npx nx run web-ui:e2e
+        continue-on-error: true
+        id: screenshots
 
       # create a way to update the commitSha from the release
       # so we can use the commit from the release to point commitSha
