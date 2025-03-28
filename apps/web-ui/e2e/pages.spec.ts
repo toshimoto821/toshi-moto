@@ -26,6 +26,13 @@ test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
   await page.evaluate(() => window.scrollTo(0, 0));
 
   await expect(homepage.getCompleteCount(26)).toBeVisible();
+
+  // eslint-disable-next-line playwright/no-wait-for-timeout
+  await page.waitForTimeout(1000);
+  await expect(page.getByText("Toshi Moto")).toBeVisible();
+
+  await homepage.selectWalletByName("Toshi Moto");
+
   const path = testInfo.outputPath("homepage.png");
   await page.screenshot({ path, fullPage: true });
 });

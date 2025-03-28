@@ -19,6 +19,10 @@ export class HomepagePO {
     // this.page.getByTestId("import-wallet-modal-submit").click();
   }
 
+  async selectWalletByName(name: string) {
+    await this.page.getByText(name).click();
+  }
+
   getCompleteCount(count: number) {
     return this.page.getByText(`${count}completed`);
   }
