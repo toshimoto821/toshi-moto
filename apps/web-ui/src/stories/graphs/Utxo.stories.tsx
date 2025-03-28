@@ -36,7 +36,9 @@ const UtxoSankeyWrapper = () => {
         width={900}
         height={300}
         wallets={wallets}
-        toggleTx={() => {}}
+        toggleTx={() => {
+          console.log("toggleTx");
+        }}
         index={0}
       />
     </div>

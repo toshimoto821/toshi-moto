@@ -445,7 +445,7 @@ export class Wallet {
     });
   }
 
-  getAddressAtIndex(index: number, change: boolean = false) {
+  getAddressAtIndex(index: number, change = false) {
     const address = this.listAddresses.find(
       (addr) => addr.index === index && addr.isChange === change
     );

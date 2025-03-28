@@ -1,8 +1,10 @@
 /// <reference lib="webworker" />
-// @ts-expect-error workbox
-self.__WB_DISABLE_DEV_LOGS = true;
 
 import { precacheAndRoute } from "workbox-precaching";
+// @ts-expect-error workbox
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+self.__WB_DISABLE_DEV_LOGS = true;
+
 // const VITE_BITCOIN_NODE_URL = import.meta.env.VITE_BITCOIN_NODE_URL;
 // import { NavigationRoute, registerRoute } from "workbox-routing";
 

@@ -7,6 +7,7 @@ import { jade, ruby } from "@radix-ui/colors";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 import { SELECTED_OPACITIY } from "./HeroChart";
 import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
+
 interface IVolumeChart {
   height: number;
   width: number;

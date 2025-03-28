@@ -62,23 +62,23 @@ jobs:
         run: |
           cat apps/web-ui/.env
 
-      - name: Install Cypress
+      - name: Install Playwright Browsers
         run: |
-          npx cypress install
+          npx playwright install
+          npx playwright install-deps
 
-      - name: Cypress Run
-        id: cypress_run
+      - name: Screenshots
+        run: npx nx run web-ui:e2e
         continue-on-error: true
-        run: |
-          npx nx e2e web-ui-e2e --configuration=production
+        id: screenshots
 
-      - name: Check Cypress Result
-        id: check_cypress
+      - name: Check Playwright Result
+        id: check_playwright
         run: |
-          if [ "${{ steps.cypress_run.outcome }}" == "failure" ]; then
-            echo "cypress_failed=true" >> $GITHUB_ENV
+          if [ "${{ steps.screenshots.outcome }}" == "failure" ]; then
+            echo "playwright_failed=true" >> $GITHUB_ENV
           else
-            echo "cypress_failed=false" >> $GITHUB_ENV
+            echo "playwright_failed=false" >> $GITHUB_ENV
           fi
 
       # this needs to be done internal to plugin
@@ -99,15 +99,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          screenshotsFolder: dist/cypress
+          screenshotsFolder: dist/.playwright/screenshots
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
 
-      - name: Fail Pipeline if Cypress Failed
-        if: env.cypress_failed == 'true'
+      - name: Fail Pipeline if Playwright Failed
+        if: env.playwright_failed == 'true'
         run: |
-          echo "Cypress tests failed"
+          echo "Playwright tests failed"
           exit 1
 
       - name: Send bundle stats to RelativeCI
@@ -116,17 +116,3 @@ jobs:
           webpackStatsFile: ./dist/apps/web-ui/webpack-stats.json
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Upload Cypress Screenshots
-      #   if: failure() # This ensures screenshots are uploaded only if the previous step fails
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: cypress-screenshots
-      #     path: dist/cypress/apps/web-ui-e2e/screenshots/**/*
-      #if-no-files-found: ignore # This option will prevent the step from failing if no screenshots are found
-
-      # this may not be needed. the build is run when docker is built
-      # - name: Build
-      #   run: |
-      #     npx nx affected --target=build --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
-      #

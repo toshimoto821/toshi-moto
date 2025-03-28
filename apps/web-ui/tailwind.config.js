@@ -1,12 +1,19 @@
 import { mauve, violet } from "@radix-ui/colors";
-// eslint-disable-next-line
+const { join } = require("path");
 const isCI = process.env.CI === "true";
 
 const path = isCI ? "apps/web-ui/" : "./";
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: [`${path}index.html`, `${path}src/**/*.{ts,tsx}`],
+  content: [
+    `${path}index.html`,
+    `${path}src/**/*.{ts,tsx}`,
+    join(
+      __dirname,
+      "{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}"
+    ),
+  ],
   theme: {
     container: {
       center: true,

@@ -142,6 +142,7 @@ export const Onboarding = () => {
                       href="https://react.dev/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       React
                     </a>
@@ -157,6 +158,7 @@ export const Onboarding = () => {
                       href="https://redux-toolkit.js.org/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Redux Toolkit
                     </a>
@@ -171,6 +173,7 @@ export const Onboarding = () => {
                       href="https://d3js.org/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       D3.js
                     </a>
@@ -185,6 +188,7 @@ export const Onboarding = () => {
                       href="https://www.radix-ui.com/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Radix UI
                     </a>
@@ -199,6 +203,7 @@ export const Onboarding = () => {
                       href="https://github.com/bitcoinjs/bitcoinjs-lib"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       BitcoinJS
                     </a>
@@ -214,6 +219,7 @@ export const Onboarding = () => {
                       href="https://github.com/localForage/localForage"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Local Forage
                     </a>
@@ -228,6 +234,7 @@ export const Onboarding = () => {
                       href="https://tailwindcss.com/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Tailwind
                     </a>
@@ -242,6 +249,7 @@ export const Onboarding = () => {
                       href="https://vitejs.dev/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Vite
                     </a>
@@ -256,6 +264,7 @@ export const Onboarding = () => {
                       href="https://vite-pwa-org.netlify.app/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Vite PWA
                     </a>
@@ -270,6 +279,7 @@ export const Onboarding = () => {
                       href="https://www.typescriptlang.org/"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Typescript
                     </a>
@@ -287,6 +297,7 @@ export const Onboarding = () => {
                       href="https://mempool.space/docs/api/rest"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       https://mempool.space/
                     </a>
@@ -301,6 +312,7 @@ export const Onboarding = () => {
                       href="https://dev.binance.vision/c/api-en/7"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       https://dev.binance.vision/c/api-en/7
                     </a>
@@ -315,6 +327,7 @@ export const Onboarding = () => {
                       href="https://blockchain.info/q/totalbc"
                       className="text-blue-500 underline"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       https://blockchain.info
                     </a>
@@ -332,6 +345,7 @@ export const Onboarding = () => {
                   className="text-blue-500 underline"
                   href="https://www.webshotarchive.com/"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   Webshot Archive
                 </a>
@@ -340,6 +354,7 @@ export const Onboarding = () => {
                   className="text-blue-500 underline"
                   href="https://www.cypress.io/"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   Cypress.io
                 </a>{" "}
@@ -348,6 +363,7 @@ export const Onboarding = () => {
                   className="text-blue-500 underline"
                   href="https://playwright.dev/"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   Playwrite
                 </a>

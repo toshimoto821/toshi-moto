@@ -19,12 +19,6 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
     }
   };
 
-  const handleRetry = () => {
-    // if (request.retry) {
-    //   request.retry();
-    // }
-    console.log("implement retry");
-  };
   return (
     <div className="p-4">
       <Card className="mb-2">
@@ -44,7 +38,7 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
           </Box>
         </div>
       </Card>
-      {false && (
+      {/*       
         <Card>
           <div className="flex justify-between items-end">
             <Box>
@@ -63,7 +57,7 @@ export const LogDetailActions = ({ request, onDelete }: ILogDetailActions) => {
             </Box>
           </div>
         </Card>
-      )}
+       */}
     </div>
   );
 };
