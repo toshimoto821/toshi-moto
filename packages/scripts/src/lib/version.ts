@@ -1,6 +1,8 @@
 import { changelogAndVersion } from "./util/changelogAndVersion";
 
-const [, ,
+const [
+  ,
+  ,
   sha = process.env["SHA"],
   files = process.env["FILES"],
   projectId = process.env["PROJECT_ID"],
@@ -21,7 +23,10 @@ if (!sha || !files) {
 }
 changelogAndVersion({
   // files is going to be new line delimited
-  files: files.split("\n").map((f) => f.trim()),
+  files: files
+    .split("\n")
+    .map((f) => f.trim())
+    .filter((f) => f),
   sha,
   dryRun: false,
   projectId: projectId as string,
