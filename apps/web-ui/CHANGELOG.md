@@ -14,9 +14,9 @@
 
 ## [1.24.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.23.3...web-ui-1.24.0) (2025-03-29)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.24.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.24.0)|![Image 2](?tag=1.24.0)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.24.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.24.0)|
 
   
 
@@ -35,33 +35,33 @@
 
 ## [1.23.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.23.2...web-ui-1.23.3) (2024-12-08)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.3)|![Image 2](?tag=1.23.3)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.3)|
 
   
 
 ## [1.23.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.23.1...web-ui-1.23.2) (2024-12-08)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.2)|![Image 2](?tag=1.23.2)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.2)|
 
   
 
 ## [1.23.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.23.0...web-ui-1.23.1) (2024-12-07)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.1)|![Image 2](?tag=1.23.1)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.1)|
 
   
 
 ## [1.23.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.3...web-ui-1.23.0) (2024-12-05)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.0)|![Image 2](?tag=1.23.0)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.23.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.23.0)|
 
   
 
@@ -72,9 +72,9 @@
 
 ## [1.22.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.2...web-ui-1.22.3) (2024-12-04)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.3)|![Image 2](?tag=1.22.3)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.3)|
 
   
 
@@ -85,9 +85,9 @@
 
 ## [1.22.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.1...web-ui-1.22.2) (2024-11-28)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.2)|![Image 2](?tag=1.22.2)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.2)|
 
   
 
@@ -98,9 +98,9 @@
 
 ## [1.22.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.22.0...web-ui-1.22.1) (2024-11-28)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.1)|![Image 2](?tag=1.22.1)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.1)|
 
   
 
@@ -112,9 +112,9 @@
 
 ## [1.22.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.21.16...web-ui-1.22.0) (2024-11-28)
 
-  |      |     |     |
-  |  --- | --- | --- |
-  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.0)|![Image 2](?tag=1.22.0)|
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20Hero.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.22.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/cypress/apps/web-ui-e2e/screenshots/app.cy.ts/web-ui-e2e%20--%20should%20import%20the%20wallet.png?projectId=673fc8a05aecc1e3059940e8&tag=1.22.0)|
 
   
 
