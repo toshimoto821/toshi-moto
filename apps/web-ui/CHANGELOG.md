@@ -1,4 +1,25 @@
 # UI Changelog
+## [1.24.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.23.3...web-ui-1.24.0) (2025-03-29)
+
+  |      |     |     |
+  |  --- | --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.24.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.24.0)|![Image 2](?tag=1.24.0)|
+
+  
+
+
+### ✨ Features
+
+* adds playwright ([e4a28ae](https://github.com/toshimoto821/toshi-moto/commit/e4a28aeccb4e3018738237ceeeae18041dd1e60a))
+* initial playwright ([5047ac7](https://github.com/toshimoto821/toshi-moto/commit/5047ac7345924f7395cb13cdf52dd9a9b93f43fb))
+* updates chart tooltip header ([cb6e90c](https://github.com/toshimoto821/toshi-moto/commit/cb6e90c45593138563a84374d7e0ff0097d128c5))
+
+
+### 🐞 Bug Fixes
+
+* e2e ([6db5a6d](https://github.com/toshimoto821/toshi-moto/commit/6db5a6daed64377195eebc85e10dec6cc60558e2))
+* e2e ([6c31408](https://github.com/toshimoto821/toshi-moto/commit/6c3140854abaab20846f02aa2d932b7f829da002))
+
 ## [1.23.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.23.2...web-ui-1.23.3) (2024-12-08)
 
   |      |     |     |
