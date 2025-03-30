@@ -203,6 +203,11 @@ export const HeroChart = (props: IHeroChart) => {
     return priceChange;
   };
 
+  // Calculate optimal number of ticks based on available height
+  const calculateOptimalTicks = (height: number, minTickSpacing = 40) => {
+    return Math.floor(height / minTickSpacing);
+  };
+
   useEffect(() => {
     const render = () => {
       const svg = select(svgRef.current);
@@ -810,16 +815,23 @@ export const HeroChart = (props: IHeroChart) => {
       // y1 (btc) axis (left)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y1Axis = (g: any) => {
-        // const padding = { top: 1, right: 3, bottom: 1, left: 3 }; // Adjust as needed
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };
+
+        const last = data[data.length - 1];
+
+        const val = netAssetValue
+          ? yScale(lineData[lineData.length - 1].y1SumInDollars)
+          : yScale(parseFloat(last.closePrice));
+        const availableHeight = height - margin.top - margin.bottom - val;
+        const optimalTicks = calculateOptimalTicks(availableHeight);
+
         g.attr("transform", `translate(70,0)`)
           .call(
             axisLeft(btcScale)
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               .tickFormat((d: any) => {
                 return `₿${privateNumber(formatBtc(d))}`;
               })
-              .ticks(5)
+              .ticks(Math.max(1, optimalTicks)) // Ensure at least 2 ticks
           )
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .call((g: any) => g.select(".domain").remove())
