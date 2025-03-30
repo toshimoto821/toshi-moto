@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.24.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.24.3...web-ui-1.24.4) (2025-03-30)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.24.4)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.24.4)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* btc axis squished ([dbbcf66](https://github.com/toshimoto821/toshi-moto/commit/dbbcf66face2af3859d3bdadfe5fdcbc6e8f423c)), closes [#255](https://github.com/toshimoto821/toshi-moto/issues/255)
+
 ## [1.24.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.24.2...web-ui-1.24.3) (2025-03-30)
 
   |      |     |
