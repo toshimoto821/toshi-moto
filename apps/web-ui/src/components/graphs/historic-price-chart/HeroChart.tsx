@@ -325,12 +325,15 @@ export const HeroChart = (props: IHeroChart) => {
 
           return x;
         })
-        .attr("y", (d) => {
-          // const priceChange = i === 0 ? 0 : d[1] - data[i - 1][1];
-          // return priceChange >= 0 ? yScale(d[2]) : yScale(0);
-
+        .attr("y", (d, i) => {
           if (netAssetValue) {
-            return yScale((d as IRawNode)[yValueToUse]);
+            const next = lineData[i + 1];
+            const vals = [(d as IRawNode)[yValueToUse]];
+            if (next) {
+              vals.push(next[yValueToUse]);
+            }
+            const max = Math.max(...vals);
+            return yScale(max);
           }
 
           const price = Math.max(
