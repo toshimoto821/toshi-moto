@@ -149,7 +149,6 @@ export const ChartTooltip = (props: IChartTooltip) => {
       <div className="">
         <div className="flex space-x-2">
           <p>
-            Close:{" "}
             <span className="font-mono">{showTime(kline.closeTime)}</span>
           </p>
           <p>|</p>
