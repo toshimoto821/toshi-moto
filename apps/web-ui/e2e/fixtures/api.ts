@@ -53,7 +53,7 @@ export class Api {
   }
 
   async mockAddress(initAddress: string) {
-    await this.page.route(`**/api/address/*`, async (route) => {
+    await this.page.route(`**/api/address/**/*`, async (route) => {
       const url = new URL(route.request().url());
 
       const [, , , address] = url.pathname.split("/");
