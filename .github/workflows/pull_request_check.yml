@@ -87,7 +87,7 @@ jobs:
 
       - name: Upload Artifacts
         if: env.playwright_failed == 'true'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-ui-screenshots
           path: dist/.playwright/screenshots
