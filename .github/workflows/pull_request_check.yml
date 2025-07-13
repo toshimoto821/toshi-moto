@@ -39,17 +39,13 @@ jobs:
 
       - name: Write env file
         run: |
-          echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env
-          echo "VITE_COINGECKO_PRICE_API_URL=https://api.toshimoto.app/api/prices/simple" >> apps/web-ui/.env
           echo "VITE_TOSHI_MOTO_XPUB=${{ secrets.VITE_TOSHI_MOTO_XPUB }}" >> apps/web-ui/.env
           echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
           echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
           echo "CI=true" >> apps/web-ui/.env
-          echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env
-          echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env
           echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env
-          echo "VITE_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env
+          echo "VITE_API_URL=http://umbrel.local:8021" >> apps/web-ui/.env
           echo "VITE_PRICING_STREAM_DISABLED=1" >> apps/web-ui/.env
 
       - name: Lint

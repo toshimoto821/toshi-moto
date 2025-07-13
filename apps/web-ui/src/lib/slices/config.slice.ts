@@ -8,9 +8,6 @@ import { getBitcoinNodeUrl } from "../utils";
 import { getConfig } from "./api.slice";
 import type { Config } from "./api.slice.types";
 
-const historicPriceUrl = import.meta.env.VITE_COINGECKO_API_URL;
-const priceUrl = import.meta.env.VITE_COINGECKO_PRICE_API_URL;
-
 const nodeUrl = getBitcoinNodeUrl();
 const apiUrl = import.meta.env.VITE_API_URL;
 const conconcurrentRequests = import.meta.env.VITE_MAX_CONCURRENT_REQUESTS;
@@ -19,9 +16,9 @@ const timeBetweenRequests = import.meta.env.VITE_REST_TIME_BETWEEN_REQUESTS;
 export interface ConfigState {
   appVersion: string;
   api: {
-    priceUrl: string;
-    historicPriceUrl: string;
+    // nodeUrl is really mempool url. on umbrel its umbrel.local:3006
     nodeUrl: string;
+    // url is the api url for this app, on umbrel its umbrel.local:8021
     url: string;
   };
   network: {
@@ -38,8 +35,6 @@ export interface ConfigState {
 export const initialState: ConfigState = {
   appVersion: "0.0.0",
   api: {
-    priceUrl,
-    historicPriceUrl,
     nodeUrl,
     url: apiUrl,
   },
