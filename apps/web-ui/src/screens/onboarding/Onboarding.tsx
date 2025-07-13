@@ -333,7 +333,7 @@ export const Onboarding = () => {
               Webshot Archive dashboard. Toshi Moto uses it in its GitHub repo
               and you can see an example comment and screenshot{" "}
               <a
-                href="https://github.com/webshotarchive/webshotarchive/pull/100"
+                href="https://github.com/toshimoto821/toshi-moto/pull/259"
                 className="text-blue-600 hover:text-blue-800 underline"
               >
                 here
