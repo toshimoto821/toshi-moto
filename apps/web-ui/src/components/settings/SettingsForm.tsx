@@ -198,22 +198,12 @@ export const SettingsForm = () => {
       <Flex direction="column" gap="3">
         <label>
           <Text as="div" size="2" mb="1" weight="bold">
-            API URL (for pricing data)
-          </Text>
-          <TextField.Root
-            value={formState.api.url}
-            onChange={setApiField("url")}
-            placeholder="Enter a name for this wallet (can be anything)"
-          />
-        </label>
-        <label>
-          <Text as="div" size="2" mb="1" weight="bold">
-            Mempool URL (for transactions / address data)
+            Mempool Host (for transactions / address data)
           </Text>
           <TextField.Root
             value={formState.api.nodeUrl}
             onChange={setApiField("nodeUrl")}
-            placeholder="Enter a name for this wallet (can be anything)"
+            placeholder="http://umbrel.local:3006"
           />
         </label>
         <label className="ml-4">
