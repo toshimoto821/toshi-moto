@@ -45,7 +45,7 @@ jobs:
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
           echo "CI=true" >> apps/web-ui/.env
           echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env
-          echo "VITE_API_URL=http://umbrel.local:8021" >> apps/web-ui/.env
+          echo "VITE_API_URL=http://localhost:5173" >> apps/web-ui/.env
           echo "VITE_PRICING_STREAM_DISABLED=1" >> apps/web-ui/.env
 
       - name: Lint
@@ -84,6 +84,13 @@ jobs:
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
+
+      - name: Upload Artifacts
+        if: env.playwright_failed == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-ui-screenshots
+          path: dist/.playwright/screenshots
 
       - name: Fail Pipeline if Playwright Failed
         if: env.playwright_failed == 'true'
