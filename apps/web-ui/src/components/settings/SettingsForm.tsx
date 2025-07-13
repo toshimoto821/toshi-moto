@@ -63,9 +63,7 @@ export const SettingsForm = () => {
 
   const [formState, setFormState] = useState({
     api: {
-      priceUrl: apiConfig.priceUrl,
       nodeUrl: apiConfig.nodeUrl,
-      historicPriceUrl: apiConfig.historicPriceUrl,
       url: apiConfig.url,
     },
     network: {
@@ -200,7 +198,17 @@ export const SettingsForm = () => {
       <Flex direction="column" gap="3">
         <label>
           <Text as="div" size="2" mb="1" weight="bold">
-            Node URL
+            API URL (for pricing data)
+          </Text>
+          <TextField.Root
+            value={formState.api.url}
+            onChange={setApiField("url")}
+            placeholder="Enter a name for this wallet (can be anything)"
+          />
+        </label>
+        <label>
+          <Text as="div" size="2" mb="1" weight="bold">
+            Mempool URL (for transactions / address data)
           </Text>
           <TextField.Root
             value={formState.api.nodeUrl}
@@ -229,29 +237,6 @@ export const SettingsForm = () => {
               value={formState.network.timeBetweenRequests}
             />
           </div>
-        </label>
-      </Flex>
-
-      <Flex direction="column" gap="3" className="my-4">
-        <label>
-          <Text as="div" size="2" mb="1" weight="bold">
-            Historical Pricing Url
-          </Text>
-          <TextField.Root
-            value={formState.api.historicPriceUrl}
-            onChange={setApiField("historicPriceUrl")}
-            placeholder="https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range"
-          />
-        </label>
-        <label>
-          <Text as="div" size="2" mb="1" weight="bold">
-            Price URL
-          </Text>
-          <TextField.Root
-            onChange={setApiField("priceUrl")}
-            value={formState.api.priceUrl}
-            placeholder="https://api.coingecko.com/api/v3/simple/price"
-          />
         </label>
       </Flex>
 

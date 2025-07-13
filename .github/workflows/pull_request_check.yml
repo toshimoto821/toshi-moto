@@ -39,17 +39,13 @@ jobs:
 
       - name: Write env file
         run: |
-          echo "VITE_COINGECKO_API_URL=https://api.toshimoto.app/api/prices/range" >> apps/web-ui/.env
-          echo "VITE_COINGECKO_PRICE_API_URL=https://api.toshimoto.app/api/prices/simple" >> apps/web-ui/.env
           echo "VITE_TOSHI_MOTO_XPUB=${{ secrets.VITE_TOSHI_MOTO_XPUB }}" >> apps/web-ui/.env
           echo "VITE_BITCOIN_NETWORK=mainnet" >> apps/web-ui/.env
           echo "VITE_REST_TIME_BETWEEN_REQUESTS=0" >> apps/web-ui/.env
           echo "VITE_MAX_CONCURRENT_REQUESTS=8" >> apps/web-ui/.env
           echo "CI=true" >> apps/web-ui/.env
-          echo "VITE_PRICING_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env
-          echo "VITE_BITCOIN_NODE_URL=https://mempool.space" >> apps/web-ui/.env
           echo "VITE_IS_UMBREL=false" >> apps/web-ui/.env
-          echo "VITE_API_URL=https://api.toshimoto.app" >> apps/web-ui/.env
+          echo "VITE_API_URL=http://localhost:5173" >> apps/web-ui/.env
           echo "VITE_PRICING_STREAM_DISABLED=1" >> apps/web-ui/.env
 
       - name: Lint
@@ -58,9 +54,9 @@ jobs:
       - name: Tests
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
-      - name: Debug dir
+      - name: Run build
         run: |
-          cat apps/web-ui/.env
+          npx nx run web-ui:build
 
       - name: Install Playwright Browsers
         run: |
@@ -81,28 +77,20 @@ jobs:
             echo "playwright_failed=false" >> $GITHUB_ENV
           fi
 
-      # this needs to be done internal to plugin
-      - name: Set comparison SHA
-        run: |
-          if [ "$EVENT_TYPE" = "merge" ]; then
-            # For merge commits, use the first parent (the main branch state before merge)
-            PARENTS=$(git rev-list --parents -n 1 ${{ env.COMMIT_SHA }})
-            COMPARE_SHA=$(echo "$PARENTS" | cut -d' ' -f2)  # Get the second word (first parent)
-          else
-            # For regular commits, use the same as BASE
-            COMPARE_SHA=${{ env.BASE }}
-          fi
-          echo "COMPARE_SHA=$COMPARE_SHA" >> $GITHUB_ENV
-
       - name: WebshotArchive Action
-        uses: webshotarchive/github-action@v0.4.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: webshotarchive/github-action@latest
         with:
           screenshotsFolder: dist/.playwright/screenshots
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
           clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
           clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
+
+      - name: Upload Artifacts
+        if: env.playwright_failed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-ui-screenshots
+          path: dist/.playwright/screenshots
 
       - name: Fail Pipeline if Playwright Failed
         if: env.playwright_failed == 'true'
