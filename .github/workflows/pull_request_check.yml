@@ -54,9 +54,9 @@ jobs:
       - name: Tests
         run: npx nx affected --target=test --base=origin/${{ github.event.pull_request.base.ref }} --head=$GITHUB_SHA
 
-      - name: Debug dir
+      - name: Run build
         run: |
-          cat apps/web-ui/.env
+          npx nx run web-ui:build
 
       - name: Install Playwright Browsers
         run: |
@@ -77,23 +77,8 @@ jobs:
             echo "playwright_failed=false" >> $GITHUB_ENV
           fi
 
-      # this needs to be done internal to plugin
-      - name: Set comparison SHA
-        run: |
-          if [ "$EVENT_TYPE" = "merge" ]; then
-            # For merge commits, use the first parent (the main branch state before merge)
-            PARENTS=$(git rev-list --parents -n 1 ${{ env.COMMIT_SHA }})
-            COMPARE_SHA=$(echo "$PARENTS" | cut -d' ' -f2)  # Get the second word (first parent)
-          else
-            # For regular commits, use the same as BASE
-            COMPARE_SHA=${{ env.BASE }}
-          fi
-          echo "COMPARE_SHA=$COMPARE_SHA" >> $GITHUB_ENV
-
       - name: WebshotArchive Action
-        uses: webshotarchive/github-action@v0.4.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: webshotarchive/github-action@latest
         with:
           screenshotsFolder: dist/.playwright/screenshots
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}

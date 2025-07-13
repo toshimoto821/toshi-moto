@@ -135,9 +135,7 @@ jobs:
       # so we can use the commit from the release to point commitSha
       # also allow tags to be updated
       - name: WebshotArchive Action
-        uses: webshotarchive/github-action@v0.4.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: webshotarchive/github-action@latest
         with:
           screenshotsFolder: dist/.playwright/screenshots
           projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
