@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.26.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.3...web-ui-1.26.0) (2025-07-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.0)|
+
+  
+
+
+### ✨ Features
+
+* tagging ([5d7bd5a](https://github.com/toshimoto821/toshi-moto/commit/5d7bd5a1b4597b695cd74ed67e5d981b0752361a))
+
 ## [1.25.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.2...web-ui-1.25.3) (2025-07-14)
 
   |      |     |
