@@ -61,6 +61,10 @@ npm run dev:api # start the api
 npm run dev:ui # start the ui
 ```
 
+## Credits
+
+This app was created by the team at [Webshot Archive](https://www.webshotarchive.com/?utm_source=toshi-moto&utm_medium=open-source), a developer tool for comparing changes using screenshots from E2E tests. During the development of this app, we wanted a better way to visualize our UI changes as they occurred and track them over time.
+
 ## License
 
 This software is licensed under the PolyForm Noncommercial 1.0.0 license. TL;DR — You're free to use, fork, modify, and redistribute it for personal and nonprofit use under the same license.
