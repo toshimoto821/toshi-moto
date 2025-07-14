@@ -106,7 +106,6 @@ export const HeroChart = (props: IHeroChart) => {
 
   const range1 = [margin.left, width - margin.right];
   const domain1 = data.map((_, i) => i.toString());
-  // console.log(range1, domain1);
 
   const xScale = scaleBand()
     // prices = [date, price, volume]
@@ -179,7 +178,9 @@ export const HeroChart = (props: IHeroChart) => {
   //   .range([height - margin.bottom, margin.top]);
 
   const btcLine = line<IRawNode>()
-    .x((_, i) => xScale(i.toString())!)
+    .x((_, i) => {
+      return xScale(i.toString())! + xScale.bandwidth() / 2;
+    })
     .y((d) => {
       const t = d.y1Sum;
       const val = btcScale(t);
@@ -502,17 +503,26 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("y2", y1);
 
       const cx = x;
-      const cy = btcScale(lastRawNode.y1Sum * btcPrice);
+      // const cy = btcScale(lastRawNode.y1Sum * btcPrice);
       if (graphBtcAllocation) {
         svg
           .append("circle")
           .attr("id", "orange-dot")
           .attr("cx", cx)
-          .attr("cy", cy)
+          .attr("cy", y1)
           .attr("r", 3)
           .attr("opacity", 0.5)
           .attr("fill", "orange");
       }
+
+      svg
+        .append("circle")
+        .attr("id", "green-dot")
+        .attr("cx", cx)
+        .attr("cy", y1)
+        .attr("r", 3)
+        .attr("opacity", 0.5)
+        .attr("fill", jade.jade11);
 
       // ---------------------------------------------------------------------//
 
@@ -599,9 +609,15 @@ export const HeroChart = (props: IHeroChart) => {
           }
           currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
 
-          const orangeDot = select("#orange-dot");
-          const cy = btcScale(lineData[index].y1Sum * btcPrice);
+          const orangeDot = svg.select("#orange-dot");
+
+          // console.log(lineData[index], index);
+          const cy = btcScale(lineData[index].y1Sum);
+
           orangeDot.attr("cx", x + mid).attr("cy", cy);
+
+          const greenDot = svg.select("#green-dot");
+          greenDot.attr("cx", x + mid).attr("cy", y1);
 
           if (isLocked) return;
 
@@ -654,8 +670,11 @@ export const HeroChart = (props: IHeroChart) => {
           currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
 
           const orangeDot = svg.select("#orange-dot");
-          const cy = btcScale(lineData[index].y1Sum * btcPrice);
+          const cy = btcScale(lineData[index].y1Sum);
           orangeDot.attr("cx", x).attr("cy", cy);
+
+          const greenDot = svg.select("#green-dot");
+          greenDot.attr("cx", x).attr("cy", y1);
 
           if (isLocked) return;
           // select(this).attr("fill", "transparent"); // Revert to original color
@@ -671,7 +690,7 @@ export const HeroChart = (props: IHeroChart) => {
             })
             .attr("opacity", SELECTED_OPACITIY);
 
-          const volChart = select("#volume-chart");
+          const volChart = svg.select("#volume-chart");
           volChart
             .selectAll(".bar")
             .attr("fill", (_, i) =>
@@ -816,6 +835,7 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // y1 (btc) axis (left)
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const y1Axis = (g: any) => {
         const textMargin = { top: 0, right: 0, bottom: 0, left: 5 };

@@ -1,0 +1,94 @@
+---
+sidebar_position: 1
+title: External Access
+---
+
+# How to Expose Your Umbrel App to the Internet Securely with Cloudflare Tunnel
+
+Running your Toshi Moto app (or any web app) on Umbrel is convenient for local access, but what if you want to access it securely from anywhere? By default, your app is only available at `http://umbrel.local:8021/` (or a similar local address), which:
+
+- Is not accessible outside your home network
+- Uses HTTP, not HTTPS, limiting features like service workers and web app installability
+
+Cloudflare Tunnel (formerly Argo Tunnel) solves this by creating a secure, outbound-only connection from your Umbrel device to Cloudflare’s edge, exposing your app to the internet over HTTPS—without opening ports on your router.
+
+## Prerequisites
+
+- An Umbrel node running your app (e.g., Toshi Moto)
+- A domain name managed by Cloudflare (free plan is fine)
+- Cloudflare account credentials
+
+---
+
+## Step 1: Install the Cloudflare Tunnel App on Umbrel
+
+Instead of manually installing `cloudflared` via SSH, you can now install the official [Cloudflare Tunnel app from the Umbrel App Store](https://apps.umbrel.com/app/cloudflared). This app provides a simple interface to set up and manage your tunnels directly from your Umbrel dashboard.
+
+1. **Open the Umbrel App Store** on your Umbrel dashboard.
+2. **Search for "Cloudflare Tunnel"** and install the app by Radiokot.
+3. **Open the Cloudflare Tunnel app** from your Umbrel dashboard after installation.
+
+For more details and configuration examples, see the [official setup guide](https://github.com/Radiokot/umbrel-cloudflared/wiki/How-to-set-up-Cloudflare-Tunnel-on-your-Umbrel).
+
+---
+
+## Step 2: Authenticate and Configure the Tunnel
+
+1. **Authenticate with Cloudflare**
+
+   - The app will guide you through logging in to your Cloudflare account and selecting your domain.
+
+2. **Configure the Tunnel**
+
+   In Cloudflare under Networks > Tunnels Create a new tunnel
+
+   - Use the app’s interface to set up a tunnel to your local app (e.g., Toshi Moto at `http://umbrel.local:8021`).
+   - Specify the subdomain you want to use (e.g., `toshimoto.yourdomain.com`).
+   - Create another tunnel to map to your Umbrel's Mempool.space (`http://umbrel.local:3006`)
+     ![tunnel](/img/tunnel-setup.png)
+
+---
+
+## Step 3: Start the Tunnel
+
+- Use the Cloudflare Tunnel app’s interface to start and manage your tunnel. No need to run manual commands or manage Docker containers.
+
+---
+
+## Step 4: Access Your App
+
+- Visit `https://toshimoto.yourdomain.com` from anywhere in the world!
+- Update the mempool host in settings of Toshi Moto:
+  ![mempool](/img/settings-mempool.png)
+
+- The connection is end-to-end encrypted, and you don’t need to open any ports on your router.
+
+---
+
+## Troubleshooting
+
+- **Tunnel not connecting?** Check the app’s logs and status page.
+- **App not loading?** Double-check the `service` URL in your config matches your app’s local address.
+- **DNS not resolving?** Make sure your CNAME record is correct and proxied (orange cloud in Cloudflare DNS).
+
+---
+
+## Security Tips
+
+- Use strong passwords for your Umbrel and Cloudflare accounts.
+- Regularly update your Umbrel and the Cloudflare Tunnel app.
+- Consider restricting access with Cloudflare Access for extra security.
+
+---
+
+## References
+
+- [Cloudflare Tunnel App on Umbrel App Store](https://apps.umbrel.com/app/cloudflared)
+- [Official Setup Guide](https://github.com/Radiokot/umbrel-cloudflared/wiki/How-to-set-up-Cloudflare-Tunnel-on-your-Umbrel)
+- [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
+- [Umbrel Community](https://community.getumbrel.com/)
+- [cloudflared GitHub](https://github.com/cloudflare/cloudflared)
+
+---
+
+With this setup, your Umbrel-hosted app is securely accessible from anywhere, with all the benefits of HTTPS and Cloudflare’s global edge network!

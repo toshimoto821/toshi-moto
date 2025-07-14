@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Separator, Text, IconButton } from "@radix-ui/themes";
+import { Separator, Text, IconButton, Button } from "@radix-ui/themes";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useWallets } from "@lib/hooks/useWallets";
 import { useNavigate } from "react-router-dom";
@@ -201,8 +201,23 @@ export const WalletDetail = () => {
             {walletId && filterUtxoOnly.includes(walletId) && (
               <Text>No receive UTXO's in wallet found</Text>
             )}
-            {walletId && !filterUtxoOnly.includes(walletId) && (
-              <Text>Loading receive addresses...</Text>
+            {walletId &&
+              !filterUtxoOnly.includes(walletId) &&
+              !wallet.error && <Text>Loading receive addresses...</Text>}
+            {wallet.error && (
+              <Text color="red" className="flex items-center flex-col gap-2">
+                {wallet.error}
+                <Button
+                  onClick={() => {
+                    actions.refreshWallet(wallet.id, 0);
+                  }}
+                  variant="soft"
+                  size="1"
+                  color="red"
+                >
+                  Try again
+                </Button>
+              </Text>
             )}
           </div>
         )}
@@ -247,8 +262,23 @@ export const WalletDetail = () => {
             {walletId && filterUtxoOnly.includes(walletId) && (
               <Text>No change UTXO's in wallet found</Text>
             )}
-            {walletId && !filterUtxoOnly.includes(walletId) && (
-              <Text>Loading change addresses...</Text>
+            {walletId &&
+              !filterUtxoOnly.includes(walletId) &&
+              !wallet.error && <Text>Loading change addresses...</Text>}
+            {wallet.error && (
+              <Text color="red" className="flex items-center flex-col gap-2">
+                {wallet.error}
+                <Button
+                  onClick={() => {
+                    actions.refreshWallet(wallet.id, 0);
+                  }}
+                  variant="soft"
+                  size="1"
+                  color="red"
+                >
+                  Try again
+                </Button>
+              </Text>
             )}
           </div>
         )}

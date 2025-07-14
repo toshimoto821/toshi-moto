@@ -28,7 +28,7 @@ export class Api {
   }
 
   async mockTotalBtc() {
-    await this.mockResponse(
+    return this.mockResponse(
       "https://blockchain.info/q/totalbc",
       "1971957500000000"
     );

@@ -13,8 +13,10 @@ test("onboarding tags-[fullpage]", async ({
   api,
   homepage,
 }, testInfo) => {
+  await api.mockTotalBtc();
   await api.mockHomepage();
   await page.goto("/");
+  await homepage.mockVersion("v0.0.0");
   await homepage.fixFixed();
   // eslint-disable-next-line playwright/no-wait-for-timeout
   await page.waitForTimeout(5000);
@@ -22,8 +24,11 @@ test("onboarding tags-[fullpage]", async ({
   await page.screenshot({ path, fullPage: true });
 });
 
-test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
+test("homepage tags-[fullpage]", async ({ page, homepage, api }, testInfo) => {
   await page.goto("/");
+
+  await api.mockTotalBtc();
+  await homepage.mockVersion("v0.0.0");
 
   await homepage.importWallet();
   await expect(
@@ -38,6 +43,11 @@ test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
   await expect(page.getByText("Toshi Moto")).toBeVisible();
 
   await homepage.selectWalletByName("Toshi Moto");
+  await expect(
+    page.getByRole("link", {
+      name: "bc1q35gv6h0a2nevhecdekrcwq4favhnnc5kl56c5u",
+    })
+  ).toBeVisible();
   await homepage.fixFixed();
 
   const path = testInfo.outputPath("homepage.png");

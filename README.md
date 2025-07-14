@@ -1,3 +1,6 @@
+![CI](https://github.com/toshimoto821/toshi-moto/actions/workflows/main.yml/badge.svg)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 # Toshi Moto
 
 ![logo](./docs/assets/toshi-256.svg)
@@ -6,15 +9,15 @@ Toshi Moto is a watch only bitcoin wallet aggregator app for [Umbrel](https://um
 
 # Screenshots
 
-![1](./docs/assets/1.png)
+![1](./docs/assets/banner1.png)
 
 ---
 
-![2](./docs/assets/2.png)
+![2](./docs/assets/banner2.png)
 
 ---
 
-![3](./docs/assets/3.png)
+![3](./docs/assets/banner3.png)
 
 ## Application Architecture
 
@@ -67,6 +70,4 @@ This app was created by the team at [Webshot Archive](https://www.webshotarchive
 
 ## License
 
-This software is licensed under the PolyForm Noncommercial 1.0.0 license. TL;DR — You're free to use, fork, modify, and redistribute it for personal and nonprofit use under the same license.
-
-![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-%235351FB)
+This software is licensed under the Apache 2.0 License

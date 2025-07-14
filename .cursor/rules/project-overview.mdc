@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Toshi Moto Project Overview
+
+## Project Description
+Toshi Moto is a watch-only Bitcoin wallet aggregator app designed for [Umbrel](mdc:https:/umbrel.com). It's built as a monorepo using Nx workspace with a React frontend and NestJS backend.
+
+## Architecture
+- **Frontend**: React app with Vite bundler, Tailwind CSS, Redux Toolkit
+- **Backend**: NestJS API with MongoDB, Mongoose ODM
+- **Monorepo**: Nx workspace with multiple apps and packages
+- **Package Manager**: pnpm (always use pnpm, not npm)
+
+## Key Files
+- [package.json](mdc:package.json) - Root package configuration and scripts
+- [nx.json](mdc:nx.json) - Nx workspace configuration
+- [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml) - pnpm workspace configuration
+- [README.md](mdc:README.md) - Project documentation and setup instructions
+
+## Development Commands
+- `pnpm dev` - Start both web-ui and api in development mode
+- `pnpm dev:ui` - Start only the web-ui
+- `pnpm dev:api` - Start only the api
+- `pnpm dev:mongo` - Start MongoDB for development
+- `pnpm build` - Build the web-ui
+- `pnpm build:api` - Build the api
+- `pnpm test` - Run tests for web-ui
+
+## Project Structure
+- `apps/web-ui/` - React frontend application
+- `apps/api/` - NestJS backend API
+- `apps/docs/` - Documentation website
+- `packages/` - Shared packages and libraries
+- `packages/toshi-proxy/` - Custom proxy package
+- `packages/scripts/` - Build and deployment scripts

@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Backend Development Guidelines
+
+## API App Structure
+The backend is located in [apps/api/](mdc:apps/api) and uses NestJS with MongoDB and Mongoose ODM.
+
+### Key Configuration Files
+- [apps/api/package.json](mdc:apps/api/package.json) - Backend dependencies and scripts
+- [apps/api/project.json](mdc:apps/api/project.json) - Nx project configuration
+- [apps/api/tsconfig.json](mdc:apps/api/tsconfig.json) - TypeScript configuration
+- [apps/api/jest.config.ts](mdc:apps/api/jest.config.ts) - Jest testing configuration
+- [apps/api/webpack.config.js](mdc:apps/api/webpack.config.js) - Webpack configuration
+
+### Development Guidelines
+1. **Package Manager**: Always use `pnpm` instead of `npm`
+2. **Framework**: Use NestJS decorators and dependency injection
+3. **Database**: Use MongoDB with Mongoose ODM
+4. **Testing**: Use Jest for unit and integration tests
+5. **Code Quality**: ESLint is configured for code quality
+
+### Key Dependencies
+- NestJS framework
+- MongoDB with Mongoose ODM
+- Express platform
+- RxJS for reactive programming
+- Jest for testing
+
+### Development Commands
+- `pnpm dev:api` - Start API in development mode
+- `pnpm dev:mongo` - Start MongoDB for development
+- `pnpm build:api` - Build API for production
+- `pnpm api` - Serve the API
+
+### File Structure
+- `src/` - Source code
+- `public/` - Static assets
+- `data/` - Data files
+- `jest.config.ts` - Jest testing configuration
+
+### Database
+- MongoDB is used as the primary database
+- Mongoose ODM for MongoDB interactions
+- Database connection is handled through NestJS configuration

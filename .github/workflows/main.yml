@@ -1,4 +1,4 @@
-name: PR Merge
+name: Continuous Integration
 # This runs twice on merge to main.
 # once for versioning from merge
 # once for pushing to relative ci
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Install pnpm
         run: npm install -g pnpm

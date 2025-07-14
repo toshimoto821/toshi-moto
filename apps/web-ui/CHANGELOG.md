@@ -1,4 +1,114 @@
 # UI Changelog
+## [1.26.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.8...web-ui-1.26.9) (2025-07-23)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.9)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.9)|
+
+  
+
+## [1.26.8](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.7...web-ui-1.26.8) (2025-07-23)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.8)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.8)|
+
+  
+
+## [1.26.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.6...web-ui-1.26.7) (2025-07-20)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.7)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.7)|
+
+  
+
+## [1.26.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.5...web-ui-1.26.6) (2025-07-19)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.6)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.6)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* minor ux ([20c8cd8](https://github.com/toshimoto821/toshi-moto/commit/20c8cd8ae4abb909e6c90b7f77be3e67ff5f6086))
+
+## [1.26.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.4...web-ui-1.26.5) (2025-07-19)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.5)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.5)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* wallet export ([59a3fb7](https://github.com/toshimoto821/toshi-moto/commit/59a3fb725addb1f18e966506a221e4c5d099da2e))
+
+## [1.26.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.3...web-ui-1.26.4) (2025-07-17)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.4)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.4)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* mempool host flow ([10c8f28](https://github.com/toshimoto821/toshi-moto/commit/10c8f285e03a1c789c8edec281a2a81ad589e758))
+
+## [1.26.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.2...web-ui-1.26.3) (2025-07-16)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.3)|
+
+  
+
+## [1.26.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.1...web-ui-1.26.2) (2025-07-15)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.2)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* chart hero ([b710f48](https://github.com/toshimoto821/toshi-moto/commit/b710f4821063c99a4e09eeb67b60a72f94ea8a28))
+
+## [1.26.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.0...web-ui-1.26.1) (2025-07-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.1)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* proxy pass ([ab842e7](https://github.com/toshimoto821/toshi-moto/commit/ab842e7fdff3fd1818e603d7600fa13362a6ff3a))
+
+## [1.26.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.3...web-ui-1.26.0) (2025-07-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.0)|
+
+  
+
+
+### ✨ Features
+
+* tagging ([5d7bd5a](https://github.com/toshimoto821/toshi-moto/commit/5d7bd5a1b4597b695cd74ed67e5d981b0752361a))
+
 ## [1.25.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.2...web-ui-1.25.3) (2025-07-14)
 
   |      |     |

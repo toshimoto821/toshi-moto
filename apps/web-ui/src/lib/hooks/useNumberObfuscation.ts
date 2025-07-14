@@ -3,7 +3,7 @@ import { selectPrivatePrice } from "../slices/ui.slice";
 
 export const useNumberObfuscation = () => {
   const privatePrice = useAppSelector(selectPrivatePrice);
-  return (price: string) => {
+  return (price: string | number) => {
     if (privatePrice) {
       return "••.•••";
     }
