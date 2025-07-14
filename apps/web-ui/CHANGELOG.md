@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.25.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.1...web-ui-1.25.2) (2025-07-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.25.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.25.2)|
+
+  
+
 ## [1.25.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.0...web-ui-1.25.1) (2025-07-14)
 
   |      |     |
