@@ -16,6 +16,8 @@ test("onboarding tags-[fullpage]", async ({
   await api.mockHomepage();
   await page.goto("/");
   await homepage.fixFixed();
+  // eslint-disable-next-line playwright/no-wait-for-timeout
+  await page.waitForTimeout(5000);
   const path = testInfo.outputPath("onboarding.png");
   await page.screenshot({ path, fullPage: true });
 });
