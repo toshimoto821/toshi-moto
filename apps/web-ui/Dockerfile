@@ -62,6 +62,6 @@ RUN chown -R 1000:1000 /var/cache/nginx \
 # Switch to user 1000:1000
 USER 1000:1000
 
-EXPOSE 8080
+EXPOSE 8021
 
 CMD ["nginx", "-g", "daemon off;"]
