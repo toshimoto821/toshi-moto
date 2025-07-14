@@ -56,7 +56,8 @@ RUN chown -R 1000:1000 /var/cache/nginx \
     /var/run \
     /var/lib/nginx \
     /usr/share/nginx/html \
-    /etc/nginx/conf.d
+    /etc/nginx/conf.d \
+    /run
 
 # Switch to user 1000:1000
 USER 1000:1000
