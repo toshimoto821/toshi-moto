@@ -35,8 +35,32 @@ RUN pnpm run build:umbrel
 # Production stage
 FROM nginx as production
 COPY --from=builder /build/apps/web-ui/dist /usr/share/nginx/html
+
+# Create nginx cache directories and set permissions for non-root user
+RUN mkdir -p /var/cache/nginx/client_temp \
+    /var/cache/nginx/fastcgi_temp \
+    /var/cache/nginx/proxy_temp \
+    /var/cache/nginx/scgi_temp \
+    /var/cache/nginx/uwsgi_temp \
+    /var/log/nginx \
+    /var/run \
+    /var/lib/nginx/body \
+    /var/lib/nginx/fastcgi \
+    /var/lib/nginx/proxy \
+    /var/lib/nginx/scgi \
+    /var/lib/nginx/uwsgi
+
+# Set ownership to user 1000:1000
+RUN chown -R 1000:1000 /var/cache/nginx \
+    /var/log/nginx \
+    /var/run \
+    /var/lib/nginx \
+    /usr/share/nginx/html \
+    /etc/nginx/conf.d
+
+# Switch to user 1000:1000
+USER 1000:1000
+
 EXPOSE 8080
-
-
 
 CMD ["nginx", "-g", "daemon off;"]
