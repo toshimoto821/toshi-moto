@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.25.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.24.9...web-ui-1.25.0) (2025-07-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.25.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.25.0)|
+
+  
+
+
+### ✨ Features
+
+* reverts docker user for web ([898892f](https://github.com/toshimoto821/toshi-moto/commit/898892feb4180a6954e2cdd892ba9c04e0e44125))
+
 ## [1.24.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.24.8...web-ui-1.24.9) (2025-07-14)
 
   |      |     |
