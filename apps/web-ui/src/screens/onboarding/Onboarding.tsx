@@ -99,7 +99,7 @@ export const Onboarding = () => {
               a comprehensive view of your Bitcoin holdings across multiple
               wallets. Built with privacy and education in mind, it helps users
               understand Bitcoin transactions, track their portfolio, and learn
-              about cryptocurrency fundamentals.
+              about bitcoin fundamentals.
             </Text>
 
             <div className="space-y-4">
@@ -107,13 +107,13 @@ export const Onboarding = () => {
                 <Text className="text-gray-700">
                   <strong>Privacy First:</strong> No analytics or tracking
                   software. Uses hash-based routing to prevent data leakage to
-                  servers.
+                  servers on network requests.
                 </Text>
               </div>
               <div className="flex items-start space-x-4">
                 <Text className="text-gray-700">
-                  <strong>Transparency:</strong> Open-source code available for
-                  review under PolyForm Noncommercial 1.0.0 license.
+                  <strong>Transparency:</strong> Code available for personal use
+                  and review under PolyForm Noncommercial 1.0.0 license.
                 </Text>
               </div>
               <div className="flex items-start space-x-4">
@@ -291,7 +291,7 @@ export const Onboarding = () => {
             >
               <div>
                 <Text className="font-medium text-gray-900">{source.name}</Text>
-                <Text className="text-sm text-gray-600">
+                <Text className="text-sm text-gray-600 ml-2">
                   {source.description}
                 </Text>
               </div>
