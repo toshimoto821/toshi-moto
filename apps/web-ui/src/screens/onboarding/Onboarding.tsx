@@ -323,7 +323,7 @@ export const Onboarding = () => {
             <Text className="text-blue-700 text-sm">
               Toshi Moto was built and is sponsored by the creator of{" "}
               <a
-                href="https://www.webshotarchive.com?utm_source=toshi-moto&utm_medium=open-source"
+                href="https://www.webshotarchive.com?utm_source=toshi-moto&utm_medium=referral&utm_campaign=open-source"
                 className="text-blue-600 hover:text-blue-800 underline"
               >
                 Webshot Archive
