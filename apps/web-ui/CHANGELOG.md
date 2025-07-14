@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.26.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.0...web-ui-1.26.1) (2025-07-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.26.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.26.1)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* proxy pass ([ab842e7](https://github.com/toshimoto821/toshi-moto/commit/ab842e7fdff3fd1818e603d7600fa13362a6ff3a))
+
 ## [1.26.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.3...web-ui-1.26.0) (2025-07-14)
 
   |      |     |
