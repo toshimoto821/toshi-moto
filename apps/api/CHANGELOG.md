@@ -1,4 +1,16 @@
 # API Changelog
+## [1.8.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.4...api-1.8.0) (2025-07-14)
+
+
+### Features
+
+* initial playwright ([5047ac7](https://github.com/toshimoto821/toshi-moto/commit/5047ac7345924f7395cb13cdf52dd9a9b93f43fb))
+
+
+### Bug Fixes
+
+* allows non root docker user ([954081c](https://github.com/toshimoto821/toshi-moto/commit/954081c69cb649e9bf95decc90d9c4cfc299ac15))
+
 ## [1.7.4](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.3...api-1.7.4) (2024-11-27)
 
 ## [1.7.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.2...api-1.7.3) (2024-11-25)
