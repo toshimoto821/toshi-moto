@@ -14,6 +14,7 @@ interface IChartTooltip {
 }
 
 const formatValue = format(",.2f");
+const formatBtc = format(",.8f");
 const BTC_ORANGE = "#F7931A";
 
 export const ChartTooltip = (props: IChartTooltip) => {
@@ -156,7 +157,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
           <p>
             BTC:{" "}
             <span className="font-mono" style={{ color: BTC_ORANGE }}>
-              ₿{rawNode?.y1Sum || 0}
+              ₿{formatBtc(rawNode?.y1Sum || 0)}
             </span>
           </p>
           <p>|</p>
