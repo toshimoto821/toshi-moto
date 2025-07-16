@@ -38,6 +38,11 @@ test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
   await expect(page.getByText("Toshi Moto")).toBeVisible();
 
   await homepage.selectWalletByName("Toshi Moto");
+  await expect(
+    page.getByRole("link", {
+      name: "bc1q35gv6h0a2nevhecdekrcwq4favhnnc5kl56c5u",
+    })
+  ).toBeVisible();
   await homepage.fixFixed();
 
   const path = testInfo.outputPath("homepage.png");
