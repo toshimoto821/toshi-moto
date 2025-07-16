@@ -1,4 +1,4 @@
-name: PR Merge
+name: Continuous Integration
 # This runs twice on merge to main.
 # once for versioning from merge
 # once for pushing to relative ci

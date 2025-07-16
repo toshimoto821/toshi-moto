@@ -1,3 +1,6 @@
+![CI](https://github.com/webshotarchive/github-action/actions/workflows/main.yml/badge.svg)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 # Toshi Moto
 
 ![logo](./docs/assets/toshi-256.svg)
@@ -67,6 +70,4 @@ This app was created by the team at [Webshot Archive](https://www.webshotarchive
 
 ## License
 
-This software is licensed under the PolyForm Noncommercial 1.0.0 license. TL;DR — You're free to use, fork, modify, and redistribute it for personal and nonprofit use under the same license.
-
-![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-%235351FB)
+This software is licensed under the Apache 2.0 License
