@@ -1,4 +1,4 @@
-![CI](https://github.com/webshotarchive/github-action/actions/workflows/main.yml/badge.svg)
+![CI](https://github.com/toshimoto821/toshi-moto/actions/workflows/main.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 # Toshi Moto
