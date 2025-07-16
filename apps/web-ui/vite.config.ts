@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 /// <reference types="vite-plugin-svgr/client" />
+/// <reference types="vite-plugin-pwa/client" />
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import { nxViteTsPaths } from "@nx/vite/plugins/nx-tsconfig-paths.plugin";
