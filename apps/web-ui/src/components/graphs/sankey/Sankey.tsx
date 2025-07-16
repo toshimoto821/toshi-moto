@@ -61,7 +61,9 @@ export const Sankey = ({
     useAppSelector(selectUI);
 
   const selectedElements =
-    useRef<d3.Selection<SVGPathElement | null, Node, SVGGElement, unknown>>();
+    useRef<d3.Selection<SVGPathElement | null, Node, SVGGElement, unknown>>(
+      null
+    );
 
   const nodeAlign = sankeyCenter; //sankeyJustify;
   const isHoverRef = useRef(false);
