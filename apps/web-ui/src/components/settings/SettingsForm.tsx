@@ -8,7 +8,6 @@ import {
   Checkbox,
 } from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
-
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import {
   selectApiConfig,
@@ -21,9 +20,10 @@ import { subscribeUserToPush, getSubscription } from "./settings.util";
 import {
   useGetConfigQuery,
   useSavePushSubscriptionMutation,
+  useLazyTestMempoolConnectionQuery,
   useUnsubscribePushSubscriptionMutation,
 } from "@root/lib/slices/api.slice";
-import { PushSubscription } from "@root/lib/slices/api.slice.types";
+import type { PushSubscription } from "@root/lib/slices/api.slice.types";
 import {
   selectDebugMode,
   setDebugMode,
@@ -51,6 +51,8 @@ export const SettingsForm = () => {
   const pushNotificationConfig = useAppSelector(selectPushNotificationsConfig);
 
   const debugMode = useAppSelector(selectDebugMode);
+  const [testMempoolConnection, { error, status: mempoolTestStatus }] =
+    useLazyTestMempoolConnectionQuery();
 
   const [pushSubscription, setPushSubscription] =
     useState<PushSubscription | null>(null);
@@ -77,6 +79,7 @@ export const SettingsForm = () => {
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
+
     // @todo error handline
     dispatch(
       setConfig({
@@ -84,6 +87,10 @@ export const SettingsForm = () => {
         api: formState.api,
       })
     );
+    setTimeout(() => {
+      testMempoolConnection();
+    }, 100);
+
     setMessage({ message: "Settings Saved", type: "success" });
     if (pushSubscription && formState.pushNotifications.enabled) {
       await savePushNotification(pushSubscription);
@@ -204,7 +211,19 @@ export const SettingsForm = () => {
             value={formState.api.nodeUrl}
             onChange={setApiField("nodeUrl")}
             placeholder="http://umbrel.local:3006"
+            color={error ? "ruby" : undefined}
+            variant={error ? "soft" : undefined}
           />
+          {mempoolTestStatus === "pending" && (
+            <Text as="div" size="1" mt="1">
+              Testing connection to mempool host...
+            </Text>
+          )}
+          {error && mempoolTestStatus === "rejected" && (
+            <Text as="div" size="1" color="red" mt="1">
+              Failed to connect to mempool host
+            </Text>
+          )}
         </label>
         <label className="ml-4">
           <Text as="div" size="2" mb="1" weight="bold">
@@ -282,6 +301,7 @@ export const SettingsForm = () => {
 
       <Flex direction="column" gap="3" className="mt-4">
         <Button className="btn btn-primary">Save</Button>
+
         {message && (
           <Callout.Root
             color={message.type === "success" ? "green" : "red"}
