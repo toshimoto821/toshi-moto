@@ -22,6 +22,7 @@ export interface Wallet {
   color: string;
   xpubs: string[];
   meta: {
+    error?: string;
     refreshedAt: number;
     change: {
       lastAddressIndex: number | null;
@@ -92,6 +93,15 @@ export const walletsSlice = createSlice({
     },
     removeWallet(state, action: PayloadAction<string>) {
       walletsAdapter.removeOne(state, action.payload);
+    },
+    updateWalletMeta(
+      state,
+      action: PayloadAction<{ walletId: string; meta: Partial<Wallet["meta"]> }>
+    ) {
+      const wallet = state.entities[action.payload.walletId];
+      if (wallet) {
+        wallet.meta = { ...wallet.meta, ...action.payload.meta };
+      }
     },
     upsertAddresses(state, action: PayloadAction<AddressPayload>) {
       const wallet = state.entities[action.payload.walletId];
@@ -340,14 +350,35 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
           ])
         );
 
-        await listenerApi.condition((_, currentState) => {
+        const result = await listenerApi.condition((_, currentState) => {
           const wallet = currentState.wallets.entities[walletId];
           if (!wallet) return false;
           return (
             wallet.meta.receive.lastAddressIndex !== null &&
             wallet.meta.change.lastAddressIndex !== null
           );
-        });
+        }, 10000);
+        if (!result) {
+          dispatch(
+            walletsSlice.actions.updateWalletMeta({
+              walletId,
+              meta: {
+                error:
+                  "Could not fetch wallet from xpub. Please check your mempool host is valid in settings.",
+              },
+            })
+          );
+          console.log("could not fetch wallet form xpub ");
+          return;
+        }
+        dispatch(
+          walletsSlice.actions.updateWalletMeta({
+            walletId,
+            meta: {
+              error: undefined,
+            },
+          })
+        );
 
         // ready to scan
 
@@ -525,17 +556,21 @@ export const refreshWallet = createAppAsyncThunk(
       }
       dispatch(walletsSlice.actions.refreshWallet(walletId));
 
-      const addresses = Object.values(wallet.addresses.entities).map(
-        (address) => {
-          return {
-            address: address.id,
-            walletId,
-            index: address.index,
-            isChange: address.isChange,
-          } as AddressArgs;
-        }
-      );
-      dispatch(refreshAddresses(addresses));
+      if (wallet.addresses.ids.length > 0) {
+        const addresses = Object.values(wallet.addresses.entities).map(
+          (address) => {
+            return {
+              address: address.id,
+              walletId,
+              index: address.index,
+              isChange: address.isChange,
+            } as AddressArgs;
+          }
+        );
+        dispatch(refreshAddresses(addresses));
+      } else {
+        dispatch(walletsSlice.actions.upsertWallet(wallet));
+      }
     }
   }
 );

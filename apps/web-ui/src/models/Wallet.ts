@@ -116,6 +116,10 @@ export class Wallet {
     return this._data.archived || false;
   }
 
+  get error() {
+    return this._data.meta?.error || null;
+  }
+
   get balance() {
     if (this._balance) return this._balance;
     const utxos = this.listUtxos;

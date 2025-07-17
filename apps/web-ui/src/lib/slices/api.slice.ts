@@ -31,7 +31,11 @@ export const dynamicBaseQuery: BaseQueryFn<
   const state = api.getState() as RootState;
   const endpoint = api.endpoint;
   let baseUrl = "";
-  if (endpoint === "getAddress" || endpoint === "getTransactions") {
+  if (
+    endpoint === "getAddress" ||
+    endpoint === "getTransactions" ||
+    endpoint === "testMempoolConnection"
+  ) {
     baseUrl = selectBaseNodeUrl(state);
   } else {
     baseUrl = selectBaseApiUrl(state);
@@ -118,6 +122,10 @@ export const apiSlice = createApi({
     getConfig: builder.query<ConfigResponse, void>({
       query: () => "/api/config/list",
     }),
+    testMempoolConnection: builder.query<GenericResponse, void>({
+      // checks to see if it can get a response for an address
+      query: () => "/api/address/bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel",
+    }),
     testPush: builder.mutation<GenericResponse, PushSubscription>({
       query: (subscription) => ({
         url: "/api/device/push-test",
@@ -154,6 +162,7 @@ export const {
   useSavePushSubscriptionMutation,
   useUnsubscribePushSubscriptionMutation,
   useTestPushMutation,
+  useLazyTestMempoolConnectionQuery,
 } = apiSlice;
 
 export const {
