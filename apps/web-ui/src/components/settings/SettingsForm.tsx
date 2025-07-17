@@ -8,7 +8,6 @@ import {
   Checkbox,
 } from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
-import {} from "@root/lib/slices/api.slice";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import {
   selectApiConfig,
