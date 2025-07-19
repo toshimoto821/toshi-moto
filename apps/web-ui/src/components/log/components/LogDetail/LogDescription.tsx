@@ -8,6 +8,58 @@ type ILogDescription = {
 export const LogDescription = (props: ILogDescription) => {
   const type = props.request?.meta?.type;
 
+  if (type === "supply") {
+    return (
+      <div className="p-4">
+        <Text size="3" weight="bold">
+          Supply Request
+        </Text>
+        <Separator className="mb-4" />
+        <div className="mb-4">
+          <Text>
+            This request fetches the current supply of Bitcoin from{" "}
+            <a
+              href="https://blockchain.info/q/totalbc"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              blockchain.info
+            </a>
+            . This is the total amount of Bitcoin that has ever been mined.
+          </Text>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "price") {
+    return (
+      <div className="p-4">
+        <Text size="3" weight="bold">
+          Price Request
+        </Text>
+        <Separator className="mb-4" />
+        <div className="mb-4">
+          <Text>
+            This request fetches the current price of Bitcoin. The backend API
+            fetches pricing data from Binance{" "}
+            <a
+              href="https://data-api.binance.vision/api/v3/ticker/tradingDay?symbol=BTCUSDT"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              tradingDay
+            </a>{" "}
+            endpoint. The request is cached for 5 minutes using the{" "}
+            <code>Cache-Control</code> header.
+          </Text>
+        </div>
+      </div>
+    );
+  }
+
   if (type === "btc-historic-price") {
     return (
       <div className="p-4">

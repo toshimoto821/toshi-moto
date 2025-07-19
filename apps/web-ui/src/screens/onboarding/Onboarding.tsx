@@ -28,7 +28,7 @@ export const Onboarding = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
+    <div className="container mx-auto p-2 md:p-6 space-y-8">
       {/* Hero Section */}
       <div className="text-center space-y-4">
         <Heading size="8" className="text-4xl font-bold text-gray-900">
@@ -65,11 +65,12 @@ export const Onboarding = () => {
                 defaultValue={VITE_TOSHI_MOTO_XPUB}
                 className="font-mono text-xs"
               />
-
-              <Text className="text-gray-700 text-xs ml-1 italic">
-                This is a demo wallet for educational purposes. You can view
-                transactions and send Bitcoin to it, but cannot spend from it.
-              </Text>
+              <div className="flex justify-center">
+                <Text className="text-gray-700 text-xs italic mt-2 text-center">
+                  This is a demo wallet for educational purposes. You can view
+                  transactions and send Bitcoin to it, but cannot spend from it.
+                </Text>
+              </div>
             </div>
 
             <div>
