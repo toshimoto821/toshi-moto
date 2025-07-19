@@ -6,6 +6,7 @@ import { selectGraphTimeframeRange } from "@lib/slices/ui.slice";
 import { useAppSelector } from "@lib/hooks/store.hooks";
 import { useBtcPrice } from "@lib/hooks/useBtcPrice";
 import { useChartData } from "@lib/hooks/useChartData";
+import { useNumberObfuscation } from "@lib/hooks/useNumberObfuscation";
 import { useWallets } from "@lib/hooks/useWallets";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 interface IChartTooltip {
@@ -26,7 +27,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
   const { btcPrice } = useBtcPrice();
   const { wallets } = useWallets();
   const { lineData } = useChartData({ btcPrice, wallets });
-
+  const obfuscate = useNumberObfuscation();
   const { prices } = useBtcHistoricPrices();
 
   let rawNode =
@@ -76,11 +77,13 @@ export const ChartTooltip = (props: IChartTooltip) => {
           </p>
 
           <p className="font-semibold">BTC:</p>
-          <p className="col-span-2 text-right">₿{rawNode?.y1Sum || 0}</p>
+          <p className="col-span-2 text-right">
+            ₿{obfuscate(rawNode?.y1Sum || 0)}
+          </p>
 
           <p className="font-semibold">BTC Value:</p>
           <p className="col-span-2 text-right">
-            ${formatValue(rawNode?.y1SumInDollars || 0)}
+            ${obfuscate(formatValue(rawNode?.y1SumInDollars || 0))}
           </p>
 
           <p className="font-semibold">Open:</p>
@@ -157,7 +160,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
           <p>
             BTC:{" "}
             <span className="font-mono" style={{ color: BTC_ORANGE }}>
-              ₿{formatBtc(rawNode?.y1Sum || 0)}
+              ₿{obfuscate(formatBtc(rawNode?.y1Sum || 0))}
             </span>
           </p>
           <p>|</p>
@@ -165,7 +168,7 @@ export const ChartTooltip = (props: IChartTooltip) => {
           <p>
             Value:{" "}
             <span className="font-mono">
-              ${formatValue(rawNode?.y1SumInDollars || 0)}
+              ${obfuscate(formatValue(rawNode?.y1SumInDollars || 0))}
             </span>
           </p>
 
