@@ -29,15 +29,15 @@ export const ExportWalletDialog = ({
   const run = async () => {
     const { xpubs, name, color } = data;
     setQrcodeString(`manifest:${buidlManifest(data)}`);
-    await wait(1000);
+    await wait(2000);
     setQrcodeString(`name:${name}`);
 
-    await wait(1000);
+    await wait(2000);
     setQrcodeString(`color:${color}`);
-    await wait(1000);
+    await wait(2000);
     for (const pub of xpubs) {
       setQrcodeString(`xpub:${pub}`);
-      await wait(1000);
+      await wait(2000);
     }
     setRunCount(runCount + 1);
   };
@@ -70,7 +70,7 @@ export const ExportWalletDialog = ({
         </Flex>
         <Separator size="4" className="mb-4" />
         <Flex justify="center" className="mb-4">
-          <QRCodeSVG value={qrcodeString} size={380} />
+          <QRCodeSVG value={qrcodeString} size={300} />
         </Flex>
         <Separator size="4" className="mb-4" />
         <Flex gap="3" mt="4" justify="between">
