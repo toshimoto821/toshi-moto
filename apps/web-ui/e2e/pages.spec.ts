@@ -14,9 +14,9 @@ test("onboarding tags-[fullpage]", async ({
   homepage,
 }, testInfo) => {
   await api.mockTotalBtc();
-  await homepage.mockVersion("v0.0.0");
   await api.mockHomepage();
   await page.goto("/");
+  await homepage.mockVersion("v0.0.0");
   await homepage.fixFixed();
   // eslint-disable-next-line playwright/no-wait-for-timeout
   await page.waitForTimeout(5000);
