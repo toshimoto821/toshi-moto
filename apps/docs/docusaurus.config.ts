@@ -84,7 +84,7 @@ const config: Config = {
           position: "left",
           label: "Documentation",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        // { to: "/blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/toshimoto821/toshi-moto",
           label: "GitHub",
@@ -107,14 +107,14 @@ const config: Config = {
               label: "Getting Started",
               to: "/docs/intro",
             },
-            {
-              label: "Installation",
-              to: "/docs/installation",
-            },
-            {
-              label: "Features",
-              to: "/docs/features",
-            },
+            // {
+            //   label: "Installation",
+            //   to: "/docs/installation",
+            // },
+            // {
+            //   label: "Features",
+            //   to: "/docs/features",
+            // },
           ],
         },
         {
@@ -137,10 +137,6 @@ const config: Config = {
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
             {
               label: "Umbrel",
               href: "https://umbrel.com",

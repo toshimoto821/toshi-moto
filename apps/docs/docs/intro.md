@@ -2,46 +2,97 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Getting Started with Toshi Moto
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Welcome to Toshi Moto, your comprehensive bitcoin wallet and transaction analysis tool. This guide will walk you through the essential features to get you started.
 
-## Getting Started
+## Import Your Wallet
 
-Get started by **creating a new site**.
+![Import Wallet](/img/import-wallet.png)
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+The first step is to import the toshi-moto wallet to get started. After that you may import any existing wallets of your own and delete the toshi-moto wallet. Toshi Moto supports multiple wallet formats and provides a secure way to import your bitcoin holdings.
 
-### What you'll need
+**Key Features:**
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- Support for single and multi-sig
+- Secure import process
+- Automatic balance aggregation
+- Transaction history import
 
-## Generate a new site
+## Add Additional Wallets
 
-Generate a new Docusaurus site using the **classic template**.
+![Add Wallet](/img/add-wallet.png)
 
-The classic template will automatically be added to your project after you run the command:
+Expand your portfolio by adding multiple wallets to track all your bitcoin in one place.
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+**Benefits:**
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+- Centralized portfolio management
+- Multi-sig support
+- Unified transaction view
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+## Visualize Transaction Flow
 
-## Start your site
+![Vin Vout Diagram](/img/vin-vout-sankey.png)
 
-Run the development server:
+Toshi Moto provides powerful visualization tools to understand transaction flows. The Sankey diagram shows how inputs (Vin) and outputs (Vout) are connected in your transactions.
 
-```bash
-cd my-website
-npm run start
-```
+**What you can see:**
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+- Input sources and their amounts
+- Output destinations and distributions
+- Transaction flow patterns
+- Network fee allocations
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+## Detailed Transaction Analysis
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+![Vin Vout Details](/img/vin-vout-details.png)
+
+Dive deep into transaction details with comprehensive Vin/Vout analysis. Understand exactly how your transactions are structured and where funds are flowing.
+
+**Analysis features:**
+
+- Input address analysis
+- Output address tracking
+- Fee breakdown
+- Transaction confirmation status
+- Block information
+
+## Monitor Network Activity
+
+![Network log](/img/network-log.png)
+
+Keep track of all network activity and transaction status in real-time. The network log provides detailed information about your wallet's interactions with the blockchain.
+
+**Monitoring capabilities:**
+
+- Real-time transaction status
+- Network connectivity status
+- Block confirmations
+- Error tracking and resolution
+
+## Configure Network Settings
+
+![Network settings](/img/network-settings.png)
+
+Customize your network configuration to optimize performance and security. Configure the location of mempool.space that your node connects to for blockchain details.
+
+**Configuration options:**
+
+- Node selection and management
+- RPC endpoint configuration
+- Network timeout settings
+- Security preferences
+- Connection optimization
+
+## Next Steps
+
+Now that you're familiar with the core features, you can:
+
+1. **Import your first wallet** - Start by importing your existing cryptocurrency wallet
+2. **Add additional wallets** - Expand your portfolio tracking
+3. **Explore transaction analysis** - Use the Vin/Vout tools to understand your transaction history
+4. **Configure your network** - Optimize your connection settings
+5. **Monitor your activity** - Keep track of all network interactions
+
+For more detailed information about specific features, check out our advanced guides in the sidebar.
