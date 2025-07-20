@@ -13,6 +13,8 @@ test("onboarding tags-[fullpage]", async ({
   api,
   homepage,
 }, testInfo) => {
+  await api.mockTotalBtc();
+  await homepage.mockVersion("v0.0.0");
   await api.mockHomepage();
   await page.goto("/");
   await homepage.fixFixed();
@@ -22,8 +24,11 @@ test("onboarding tags-[fullpage]", async ({
   await page.screenshot({ path, fullPage: true });
 });
 
-test("homepage tags-[fullpage]", async ({ page, homepage }, testInfo) => {
+test("homepage tags-[fullpage]", async ({ page, homepage, api }, testInfo) => {
   await page.goto("/");
+
+  await api.mockTotalBtc();
+  await homepage.mockVersion("v0.0.0");
 
   await homepage.importWallet();
   await expect(
