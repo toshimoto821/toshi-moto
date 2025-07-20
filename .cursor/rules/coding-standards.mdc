@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Coding Standards and Best Practices
+
+## Package Manager
+**Always use `pnpm` instead of `npm`** for all package management operations.
+
+## TypeScript Configuration
+- Base configuration in [tsconfig.base.json](mdc:tsconfig.base.json)
+- Project-specific configurations in each app's `tsconfig.json`
+- Strict TypeScript settings are enabled
+
+## Code Quality Tools
+- **ESLint**: Configured in [eslint.config.js](mdc:eslint.config.js)
+- **Prettier**: Configured in [.prettierrc](mdc:.prettierrc)
+- **Husky**: Git hooks for pre-commit checks
+- **Commitlint**: Conventional commit message validation
+
+## Testing Strategy
+- **Unit Tests**: Jest for backend, Vitest for frontend
+- **E2E Tests**: Playwright for end-to-end testing
+- **Component Tests**: Storybook for React components
+- **Coverage**: Configured for both frontend and backend
+
+## Code Style Guidelines
+1. **TypeScript**: Use strict typing, avoid `any` types
+2. **React**: Use functional components with hooks
+3. **NestJS**: Follow dependency injection patterns
+4. **Styling**: Use Tailwind CSS utility classes
+5. **State Management**: Use Redux Toolkit for global state
+
+## Git Workflow
+- **Conventional Commits**: Use conventional commit message format
+- **Pre-commit Hooks**: Husky runs linting and formatting
+- **Branch Strategy**: Feature branches for development
+- **Submodules**: This repo contains git submodules
+
+## File Organization
+- **Apps**: Each app has its own directory in `apps/`
+- **Packages**: Shared code in `packages/`
+- **Configuration**: Root-level config files
+- **Documentation**: In `docs/` and `apps/docs/`
+
+## Development Environment
+- **Node Version**: 20.11.0 (specified in package.json)
+- **Package Manager**: pnpm
+- **Build Tool**: Nx workspace
+- **Database**: MongoDB for development and production

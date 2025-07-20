@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Nx Workspace Configuration
+
+## Workspace Structure
+This project uses Nx as a monorepo build system with multiple applications and packages.
+
+### Key Configuration Files
+- [nx.json](mdc:nx.json) - Nx workspace configuration with plugins and generators
+- [tsconfig.base.json](mdc:tsconfig.base.json) - Base TypeScript configuration
+- [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml) - pnpm workspace configuration
+- [eslint.config.js](mdc:eslint.config.js) - ESLint configuration
+- [jest.config.ts](mdc:jest.config.ts) - Jest configuration
+- [vitest.workspace.js](mdc:vitest.workspace.js) - Vitest workspace configuration
+
+### Nx Plugins Configured
+- `@nx/webpack/plugin` - Webpack bundling
+- `@nx/vite/plugin` - Vite bundling for React apps
+- `@nx/eslint/plugin` - ESLint integration
+- `@nx/jest/plugin` - Jest testing
+- `@nx/playwright/plugin` - Playwright E2E testing
+- `@nx/react/router-plugin` - React Router integration
+
+### Project Structure
+- **Apps**: Located in `apps/` directory
+  - `web-ui` - React frontend application
+  - `api` - NestJS backend API
+  - `docs` - Documentation website
+- **Packages**: Located in `packages/` directory
+  - `toshi-proxy` - Custom proxy package
+  - `scripts` - Build and deployment scripts
+
+### Development Guidelines
+1. **Package Manager**: Always use `pnpm` instead of `npm`
+2. **Build System**: Use Nx for all build operations
+3. **Caching**: Nx provides intelligent caching for builds
+4. **Dependencies**: Use Nx's dependency graph for efficient builds
+5. **Testing**: Use Nx's test runners for consistent testing
+
+### Common Nx Commands
+- `pnpm nx build <project>` - Build a specific project
+- `pnpm nx serve <project>` - Serve a project in development mode
+- `pnpm nx test <project>` - Run tests for a project
+- `pnpm nx lint <project>` - Lint a project
+- `pnpm nx graph` - View dependency graph

@@ -1,0 +1,52 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Deployment and Build Configuration
+
+## Docker Configuration
+The project includes Docker support for containerized deployment:
+
+### Dockerfiles
+- [apps/web-ui/Dockerfile](mdc:apps/web-ui/Dockerfile) - Frontend container configuration
+- [apps/api/Dockerfile](mdc:apps/api/Dockerfile) - Backend container configuration
+- [.dockerignore](mdc:.dockerignore) - Docker ignore patterns
+
+### Docker Build Commands
+- `pnpm build:docker` - Build both web-ui and api containers
+- `pnpm docker:build:web-ui` - Build web-ui container for multiple platforms
+- `pnpm docker:build:api` - Build api container for multiple platforms
+
+## Umbrel Deployment
+This app is designed for [Umbrel](mdc:https:/umbrel.com) deployment:
+- Community app store: `https://github.com/toshimoto821/toshimoto-app-store`
+- App submission process is in progress
+- Docker containers are optimized for ARM64 and AMD64 platforms
+
+## Build Targets
+- `pnpm build` - Build web-ui for production
+- `pnpm build:api` - Build api for production
+- `pnpm build:umbrel` - Build web-ui specifically for Umbrel
+
+## CI/CD Configuration
+- GitHub Actions workflow configured
+- Automated testing and building
+- Docker image publishing
+- Version management with semantic versioning
+
+## Environment Configuration
+- Development: Local MongoDB, hot reloading
+- Production: Containerized deployment
+- Umbrel: Specialized build for Umbrel platform
+
+## Version Management
+- Semantic versioning in [package.json](mdc:package.json)
+- Automated version bumping with @jscutlery/semver
+- Changelog generation for releases
+
+## Platform Support
+- **Linux**: Primary target platform
+- **ARM64**: Raspberry Pi and ARM-based systems
+- **AMD64**: Standard x86_64 systems
+- **Docker**: Multi-platform container support
