@@ -5,8 +5,8 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "Toshi Moto",
+  tagline: "Watch-only Bitcoin wallet aggregator for Umbrel",
   favicon: "img/favicon.ico",
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -14,15 +14,15 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://toshimoto.app",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "toshimoto821", // Usually your GitHub org/user name.
+  projectName: "toshi-moto", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -44,7 +44,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/toshimoto821/toshi-moto/tree/main/apps/docs/",
         },
         blog: {
           showReadingTime: true,
@@ -55,7 +55,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/toshimoto821/toshi-moto/tree/main/apps/docs/",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
@@ -70,24 +70,29 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: "img/docusaurus-social-card.jpg",
+    image: "img/toshi-moto-social-card.jpg",
     navbar: {
-      title: "My Site",
+      title: "Toshi Moto",
       logo: {
-        alt: "My Site Logo",
-        src: "img/logo.svg",
+        alt: "Toshi Moto Logo",
+        src: "img/toshi-256.svg",
       },
       items: [
         {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "Documentation",
         },
         { to: "/blog", label: "Blog", position: "left" },
         {
-          href: "https://github.com/facebook/docusaurus",
+          href: "https://github.com/toshimoto821/toshi-moto",
           label: "GitHub",
+          position: "right",
+        },
+        {
+          href: "https://umbrel.com",
+          label: "Umbrel",
           position: "right",
         },
       ],
@@ -96,11 +101,19 @@ const config: Config = {
       style: "dark",
       links: [
         {
-          title: "Docs",
+          title: "Documentation",
           items: [
             {
-              label: "Tutorial",
+              label: "Getting Started",
               to: "/docs/intro",
+            },
+            {
+              label: "Installation",
+              to: "/docs/installation",
+            },
+            {
+              label: "Features",
+              to: "/docs/features",
             },
           ],
         },
@@ -108,16 +121,16 @@ const config: Config = {
           title: "Community",
           items: [
             {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              label: "GitHub",
+              href: "https://github.com/toshimoto821/toshi-moto",
             },
             {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
+              label: "Issues",
+              href: "https://github.com/toshimoto821/toshi-moto/issues",
             },
             {
-              label: "X",
-              href: "https://x.com/docusaurus",
+              label: "Discussions",
+              href: "https://github.com/toshimoto821/toshi-moto/discussions",
             },
           ],
         },
@@ -129,13 +142,17 @@ const config: Config = {
               to: "/blog",
             },
             {
-              label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
+              label: "Umbrel",
+              href: "https://umbrel.com",
+            },
+            {
+              label: "App Store",
+              href: "https://github.com/toshimoto821/toshimoto-app-store",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Toshi Moto. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
