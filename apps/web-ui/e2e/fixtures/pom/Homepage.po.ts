@@ -42,4 +42,12 @@ export class HomepagePO {
 
     return Promise.all([p1, p2, p3]);
   }
+  async mockVersion(version = "v0.0.0") {
+    await this.page
+      .getByTestId("network-log-version")
+      .getByRole("button")
+      .evaluate((el, newVersion) => {
+        el.textContent = newVersion;
+      }, version);
+  }
 }

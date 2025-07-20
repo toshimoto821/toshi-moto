@@ -1,0 +1,43 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Frontend Development Guidelines
+
+## Web UI App Structure
+The frontend is located in [apps/web-ui/](mdc:apps/web-ui) and uses React with Vite, Tailwind CSS, and Redux Toolkit.
+
+### Key Configuration Files
+- [apps/web-ui/package.json](mdc:apps/web-ui/package.json) - Frontend dependencies and scripts
+- [apps/web-ui/vite.config.ts](mdc:apps/web-ui/vite.config.ts) - Vite bundler configuration
+- [apps/web-ui/tailwind.config.js](mdc:apps/web-ui/tailwind.config.js) - Tailwind CSS configuration
+- [apps/web-ui/project.json](mdc:apps/web-ui/project.json) - Nx project configuration
+- [apps/web-ui/tsconfig.json](mdc:apps/web-ui/tsconfig.json) - TypeScript configuration
+
+### Development Guidelines
+1. **Package Manager**: Always use `pnpm` instead of `npm`
+2. **Styling**: Use Tailwind CSS for all styling
+3. **State Management**: Use Redux Toolkit for global state
+4. **Testing**: Use Vitest for unit tests, Playwright for E2E tests
+5. **Code Quality**: ESLint and Prettier are configured
+
+### Key Dependencies
+- React 19.0.0
+- Redux Toolkit for state management
+- React Router for navigation
+- Tailwind CSS for styling
+- Vite for bundling
+- Vitest for testing
+
+### Development Commands
+- `pnpm dev:ui` - Start web-ui in development mode
+- `pnpm build` - Build web-ui for production
+- `pnpm test` - Run tests for web-ui
+
+### File Structure
+- `src/` - Source code
+- `public/` - Static assets
+- `e2e/` - End-to-end tests
+- `config/` - Configuration files
+- `.storybook/` - Storybook configuration

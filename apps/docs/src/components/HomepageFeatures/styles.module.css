@@ -1,0 +1,44 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  width: 100%;
+  background-color: var(--bg-secondary);
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+  margin-bottom: 1rem;
+}
+
+/* Feature card styling */
+.features .col {
+  padding: 1rem;
+}
+
+.features .col > div {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+  height: 100%;
+  transition: all 0.2s ease;
+}
+
+.features .col > div:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+  transform: translateY(-2px);
+}
+
+.features h3 {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.features p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
