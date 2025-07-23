@@ -193,6 +193,56 @@ function UmbrelSection() {
   );
 }
 
+function CreatorSection() {
+  return (
+    <section className={styles.creator}>
+      <div className="container">
+        <div className="row">
+          <div className="col col--12">
+            <Heading as="h2" className="text--center">
+              Created & Maintained by Webshot Archive
+            </Heading>
+            <div className={styles.creatorContent}>
+              <div className={styles.creatorScreenshot}>
+                <img
+                  width={500}
+                  src="/img/github-comment.png"
+                  alt="Webshot Archive Projects"
+                  className={styles.creatorImage}
+                />
+              </div>
+              <div className={styles.creatorInfo}>
+                <img src="/img/wsa-logo.png" alt="Webshot Archive" />
+
+                <p
+                  style={{
+                    color: "var(--text-secondary)",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  Toshi Moto is proudly created and maintained by{" "}
+                  <a href="https://www.webshotarchive.com">Webshot Archive</a>.
+                  Upload screenshots from your test runner and automatically
+                  detect visual differences between branches, with intelligent
+                  PR commenting for effortless code review.
+                </p>
+                <div className={styles.creatorButtons}>
+                  <Link
+                    className="button button--secondary"
+                    to="https://www.webshotarchive.com"
+                  >
+                    Visit Website
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
@@ -206,6 +256,7 @@ export default function Home(): ReactNode {
         <HomepageFeatures />
         <ArchitectureSection />
         <UmbrelSection />
+        <CreatorSection />
       </main>
     </Layout>
   );
