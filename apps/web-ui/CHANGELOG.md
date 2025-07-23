@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.27.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.1...web-ui-1.27.2) (2025-07-23)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.27.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.27.2)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* refresh wallet ([afb036d](https://github.com/toshimoto821/toshi-moto/commit/afb036da115442786119a1ed279260b3580f2608))
+
 ## [1.27.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.0...web-ui-1.27.1) (2025-07-23)
 
   |      |     |
