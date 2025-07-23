@@ -1,4 +1,12 @@
 # UI Changelog
+## [1.26.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.25.3...web-ui-1.26.0) (2025-07-23)
+
+
+### ✨ Features
+
+* 1.30.0 ([dcdddc1](https://github.com/toshimoto821/toshi-moto/commit/dcdddc12d9c416bf4ac3500a9f6b5ece7cacdd13))
+* tagging ([5d7bd5a](https://github.com/toshimoto821/toshi-moto/commit/5d7bd5a1b4597b695cd74ed67e5d981b0752361a))
+
 ## [1.26.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.26.8...web-ui-1.26.9) (2025-07-23)
 
   |      |     |
