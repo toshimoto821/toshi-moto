@@ -106,7 +106,6 @@ export const HeroChart = (props: IHeroChart) => {
 
   const range1 = [margin.left, width - margin.right];
   const domain1 = data.map((_, i) => i.toString());
-  // console.log(range1, domain1);
 
   const xScale = scaleBand()
     // prices = [date, price, volume]
@@ -179,7 +178,9 @@ export const HeroChart = (props: IHeroChart) => {
   //   .range([height - margin.bottom, margin.top]);
 
   const btcLine = line<IRawNode>()
-    .x((_, i) => xScale(i.toString())!)
+    .x((_, i) => {
+      return xScale(i.toString())! + xScale.bandwidth() / 2;
+    })
     .y((d) => {
       const t = d.y1Sum;
       const val = btcScale(t);
@@ -610,6 +611,7 @@ export const HeroChart = (props: IHeroChart) => {
 
           const orangeDot = svg.select("#orange-dot");
 
+          // console.log(lineData[index], index);
           const cy = btcScale(lineData[index].y1Sum);
 
           orangeDot.attr("cx", x + mid).attr("cy", cy);
