@@ -556,21 +556,7 @@ export const refreshWallet = createAppAsyncThunk(
       }
       dispatch(walletsSlice.actions.refreshWallet(walletId));
 
-      if (wallet.addresses.ids.length > 0) {
-        const addresses = Object.values(wallet.addresses.entities).map(
-          (address) => {
-            return {
-              address: address.id,
-              walletId,
-              index: address.index,
-              isChange: address.isChange,
-            } as AddressArgs;
-          }
-        );
-        dispatch(refreshAddresses(addresses));
-      } else {
-        dispatch(walletsSlice.actions.upsertWallet(wallet));
-      }
+      dispatch(walletsSlice.actions.upsertWallet(wallet));
     }
   }
 );
