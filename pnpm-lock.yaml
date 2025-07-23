@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  stylus: github:stylus/stylus#0.59.0
+
 importers:
 
   .:
@@ -82,7 +85,7 @@ importers:
         version: 2.6.2
       vite-plugin-pwa:
         specifier: ^0.20.2
-        version: 0.20.2(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
+        version: 0.20.2(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
       web-push:
         specifier: ^3.6.7
         version: 3.6.7
@@ -143,7 +146,7 @@ importers:
         version: 21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)(@zkochan/js-yaml@0.0.7)(eslint@9.23.0(jiti@2.4.2))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.3.3)(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9)
       '@nx/vite':
         specifier: 21.2.3
-        version: 21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))(vitest@1.6.0)
+        version: 21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))(vitest@1.6.0)
       '@nx/web':
         specifier: 21.2.3
         version: 21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))
@@ -185,7 +188,7 @@ importers:
         version: 8.37.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.3.3)
       '@vitejs/plugin-react':
         specifier: ^4.2.0
-        version: 4.2.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+        version: 4.2.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       '@vitest/coverage-v8':
         specifier: ^1.0.4
         version: 1.6.0(vitest@1.6.0)
@@ -269,13 +272,13 @@ importers:
         version: 8.37.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.3.3)
       vite:
         specifier: ^5.0.0
-        version: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+        version: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       vite-plugin-svgr:
         specifier: ^4.2.0
-        version: 4.2.0(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+        version: 4.2.0(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       vitest:
         specifier: ^1.3.1
-        version: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+        version: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       webpack-cli:
         specifier: ^5.1.4
         version: 5.1.4(webpack@5.99.9)
@@ -417,7 +420,7 @@ importers:
         version: 7.6.17(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.3.3)
       '@storybook/react-vite':
         specifier: ^7.6.5
-        version: 7.6.17(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+        version: 7.6.17(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       '@storybook/test':
         specifier: ^7.6.5
         version: 7.6.17(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.12.7)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@20.12.7)(typescript@5.3.3)))(vitest@1.6.0)
@@ -441,7 +444,7 @@ importers:
         version: 6.21.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.3.3)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.2.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+        version: 4.2.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.19(postcss@8.4.38)
@@ -471,10 +474,10 @@ importers:
         version: 5.3.3
       vite-plugin-replace:
         specifier: ^0.1.1
-        version: 0.1.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+        version: 0.1.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+        version: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       workbox-core:
         specifier: ^7.0.0
         version: 7.0.0
@@ -498,7 +501,7 @@ importers:
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.1.0
-        version: 0.1.19(@cloudflare/workers-types@4.20240419.0)(@vitest/runner@1.6.0)(@vitest/snapshot@1.6.0)(vitest@1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+        version: 0.1.19(@cloudflare/workers-types@4.20240419.0)(@vitest/runner@1.6.0)(@vitest/snapshot@1.6.0)(vitest@1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       '@cloudflare/workers-types':
         specifier: ^4.20240404.0
         version: 4.20240419.0
@@ -507,7 +510,7 @@ importers:
         version: 5.3.3
       vitest:
         specifier: 1.3.0
-        version: 1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+        version: 1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       wrangler:
         specifier: ^3.0.0
         version: 3.51.2(@cloudflare/workers-types@4.20240419.0)
@@ -2472,6 +2475,7 @@ packages:
 
   '@cloudflare/vitest-pool-workers@0.1.19':
     resolution: {integrity: sha512-fb3rxrihwd4OsBf4mALlezo6nnuL5p/BopGu47MeV5LlTjP3sGFT1QYbXsdv6rfNsxBGSP7uAahCWBhTsNFy0w==}
+    version: 0.1.19
     peerDependencies:
       '@vitest/runner': 1.3.0
       '@vitest/snapshot': 1.3.0
@@ -3713,6 +3717,7 @@ packages:
 
   '@joshwooding/vite-plugin-react-docgen-typescript@0.3.0':
     resolution: {integrity: sha512-2D6y7fNvFmsLmRt6UCOFJPvFoPMJGT0Uh1Wg0RaigUp7kdQPs6yYn8Dmx6GZkOH/NW0yMTwRz/p0SRMMRo50vA==}
+    version: 0.3.0
     peerDependencies:
       typescript: '>= 4.3.x'
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -4381,6 +4386,7 @@ packages:
 
   '@nx/vite@21.2.3':
     resolution: {integrity: sha512-OgmrjnV6fuq/b8P7+KSPc0IKAOD7kE0gWZdNmL9Bzhn+NVew6mMVgGsuqH02twbucp3eEbnpCFQPCXso+5NJTw==}
+    version: 21.2.3
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0
       vitest: ^1.3.1 || ^2.0.0 || ^3.0.0
@@ -5957,6 +5963,7 @@ packages:
 
   '@storybook/builder-vite@7.6.17':
     resolution: {integrity: sha512-2Q32qalI401EsKKr9Hkk8TAOcHEerqwsjCpQgTNJnCu6GgCVKoVUcb99oRbR9Vyg0xh+jb19XiWqqQujFtLYlQ==}
+    version: 7.6.17
     peerDependencies:
       '@preact/preset-vite': '*'
       typescript: '>= 4.3.x'
@@ -6054,6 +6061,7 @@ packages:
 
   '@storybook/react-vite@7.6.17':
     resolution: {integrity: sha512-4dIm3CuRl44X1TLzN3WoZh/bChzJF7Ud28li9atj9C8db0bb/y0zl8cahrsRFoR7/LyfqdOVLqaztrnA5SsWfg==}
+    version: 7.6.17
     engines: {node: '>=16'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -6981,12 +6989,14 @@ packages:
 
   '@vitejs/plugin-react@3.1.0':
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
+    version: 3.1.0
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.1.0-beta.0
 
   '@vitejs/plugin-react@4.2.1':
     resolution: {integrity: sha512-oojO9IDc4nCUUi8qIR11KoQm0XFFLIwsRBwHRR4d/88IWghn1y6ckz/bJ8GHDCsYEJee8mDzqtJxh15/cisJNQ==}
+    version: 4.2.1
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
@@ -14019,6 +14029,9 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  sax@1.2.4:
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
+
   sax@1.4.1:
     resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
 
@@ -14544,14 +14557,15 @@ packages:
 
   stylus-loader@7.1.3:
     resolution: {integrity: sha512-TY0SKwiY7D2kMd3UxaWKSf3xHF0FFN/FAfsSqfrhxRT/koXTwffq2cgEWDkLQz7VojMu7qEEHt5TlMjkPx9UDw==}
+    version: 7.1.3
     engines: {node: '>= 14.15.0'}
     peerDependencies:
-      stylus: '>=0.52.4'
+      stylus: github:stylus/stylus#0.59.0
       webpack: ^5.0.0
 
-  stylus@0.64.0:
-    resolution: {integrity: sha512-ZIdT8eUv8tegmqy1tTIdJv9We2DumkNZFdCF5mz/Kpq3OcTaxSuCAYZge6HKK2CmNC02G1eJig2RV7XTw5hQrA==}
-    engines: {node: '>=16'}
+  stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec:
+    resolution: {tarball: https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec}
+    version: 0.59.0
     hasBin: true
 
   sucrase@3.35.0:
@@ -15405,16 +15419,19 @@ packages:
 
   vite-node@1.3.0:
     resolution: {integrity: sha512-D/oiDVBw75XMnjAXne/4feCkCEwcbr2SU1bjAhCcfI5Bq3VoOHji8/wCPAfUkDIeohJ5nSZ39fNxM3dNZ6OBOA==}
+    version: 1.3.0
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
   vite-node@1.6.0:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
+    version: 1.6.0
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
   vite-plugin-pwa@0.20.2:
     resolution: {integrity: sha512-9wLqHt/NjP7YKj6CCEKS5+Fhffo6tHGrAa+wvoqCG59oZkmpX5lBBl38MVjLaO4ELrLqjdtUhILJDwZu+q/hGQ==}
+    version: 0.20.2
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@vite-pwa/assets-generator': ^0.2.4
@@ -15427,16 +15444,19 @@ packages:
 
   vite-plugin-replace@0.1.1:
     resolution: {integrity: sha512-v+okl3JNt2pf1jDYijw+WPVt6h9FWa/atTi+qnSFBqmKThLTDhlesx0r3bh+oFPmxRJmis5tNx9HtN6lGFoqWg==}
+    version: 0.1.1
     peerDependencies:
       vite: ^2
 
   vite-plugin-svgr@4.2.0:
     resolution: {integrity: sha512-SC7+FfVtNQk7So0XMjrrtLAbEC8qjFPifyD7+fs/E6aaNdVde6umlVVh0QuwDLdOMu7vp5RiGFsB70nj5yo0XA==}
+    version: 4.2.0
     peerDependencies:
       vite: ^2.6.0 || 3 || 4 || 5
 
   vite@5.4.2:
     resolution: {integrity: sha512-dDrQTRHp5C1fTFzcSaMxjk6vdpKvT+2/mIdE07Gw2ykehT49O0z/VHS3zZ8iV/Gh8BJJKHWOe5RjaNrW5xf/GA==}
+    version: 5.4.2
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -15445,7 +15465,7 @@ packages:
       lightningcss: ^1.21.0
       sass: '*'
       sass-embedded: '*'
-      stylus: '*'
+      stylus: github:stylus/stylus#0.59.0
       sugarss: '*'
       terser: ^5.4.0
     peerDependenciesMeta:
@@ -15468,6 +15488,7 @@ packages:
 
   vitest@1.3.0:
     resolution: {integrity: sha512-V9qb276J1jjSx9xb75T2VoYXdO1UKi+qfflY7V7w93jzX7oA/+RtYE6TcifxksxsZvygSSMwu2Uw6di7yqDMwg==}
+    version: 1.3.0
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -15493,6 +15514,7 @@ packages:
 
   vitest@1.6.0:
     resolution: {integrity: sha512-H5r/dN06swuFnzNFhq/dnz37bPXnq8xB2xB5JOVk8K09rUtoeNN+LHWkoQ0A/i3hvbUKKcCei9KpbxqHMLhLLA==}
+    version: 1.6.0
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -18860,7 +18882,7 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@cloudflare/vitest-pool-workers@0.1.19(@cloudflare/workers-types@4.20240419.0)(@vitest/runner@1.6.0)(@vitest/snapshot@1.6.0)(vitest@1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))':
+  '@cloudflare/vitest-pool-workers@0.1.19(@cloudflare/workers-types@4.20240419.0)(@vitest/runner@1.6.0)(@vitest/snapshot@1.6.0)(vitest@1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))':
     dependencies:
       '@vitest/runner': 1.6.0
       '@vitest/snapshot': 1.6.0
@@ -18869,7 +18891,7 @@ snapshots:
       devalue: 4.3.3
       esbuild: 0.17.19
       miniflare: 3.20240405.1
-      vitest: 1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vitest: 1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       wrangler: 3.50.0(@cloudflare/workers-types@4.20240419.0)
       zod: 3.23.0
     transitivePeerDependencies:
@@ -20720,13 +20742,13 @@ snapshots:
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.3.0(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))':
     dependencies:
       glob: 7.2.3
       glob-promise: 4.2.2(glob@7.2.3)
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.3.3)
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     optionalDependencies:
       typescript: 5.3.3
 
@@ -21856,7 +21878,7 @@ snapshots:
       - webpack
       - webpack-cli
 
-  '@nx/vite@21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))(vitest@1.6.0)':
+  '@nx/vite@21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))(vitest@1.6.0)':
     dependencies:
       '@nx/devkit': 21.2.3(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))
       '@nx/js': 21.2.3(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11))(nx@21.2.3(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.12)(typescript@5.3.3))(@swc/core@1.5.29(@swc/helpers@0.5.11)))
@@ -21867,8 +21889,8 @@ snapshots:
       picomatch: 4.0.2
       semver: 7.6.3
       tsconfig-paths: 4.2.0
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
-      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
+      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - '@babel/traverse'
       - '@swc-node/register'
@@ -21926,8 +21948,8 @@ snapshots:
       sass-loader: 16.0.5(@rspack/core@1.4.8(@swc/helpers@0.5.11))(sass-embedded@1.86.0)(sass@1.86.0)(webpack@5.99.9)
       source-map-loader: 5.0.0(webpack@5.99.9)
       style-loader: 3.3.4(webpack@5.99.9)
-      stylus: 0.64.0
-      stylus-loader: 7.1.3(stylus@0.64.0)(webpack@5.99.9)
+      stylus: https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec
+      stylus-loader: 7.1.3(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(webpack@5.99.9)
       terser-webpack-plugin: 5.3.10(@swc/core@1.5.29(@swc/helpers@0.5.11))(webpack@5.99.9)
       ts-loader: 9.5.1(typescript@5.3.3)(webpack@5.99.9)
       tsconfig-paths-webpack-plugin: 4.0.0
@@ -22159,13 +22181,13 @@ snapshots:
 
   '@radix-ui/number@1.0.1':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
 
   '@radix-ui/number@1.1.1': {}
 
   '@radix-ui/primitive@1.0.1':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
 
   '@radix-ui/primitive@1.1.2': {}
 
@@ -22211,7 +22233,7 @@ snapshots:
 
   '@radix-ui/react-arrow@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -22284,7 +22306,7 @@ snapshots:
 
   '@radix-ui/react-collection@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       '@radix-ui/react-context': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -22309,7 +22331,7 @@ snapshots:
 
   '@radix-ui/react-compose-refs@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -22336,7 +22358,7 @@ snapshots:
 
   '@radix-ui/react-context@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -22371,7 +22393,7 @@ snapshots:
 
   '@radix-ui/react-direction@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -22384,7 +22406,7 @@ snapshots:
 
   '@radix-ui/react-dismissable-layer@1.0.4(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -22426,7 +22448,7 @@ snapshots:
 
   '@radix-ui/react-focus-guards@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -22439,7 +22461,7 @@ snapshots:
 
   '@radix-ui/react-focus-scope@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@19.0.0)(react@19.0.0)
@@ -22497,7 +22519,7 @@ snapshots:
 
   '@radix-ui/react-id@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
@@ -22646,7 +22668,7 @@ snapshots:
 
   '@radix-ui/react-popper@1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@floating-ui/react-dom': 2.0.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-arrow': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@19.0.0)(react@19.0.0)
@@ -22683,7 +22705,7 @@ snapshots:
 
   '@radix-ui/react-portal@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -22713,7 +22735,7 @@ snapshots:
 
   '@radix-ui/react-primitive@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-slot': 1.0.2(@types/react@19.0.0)(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -22760,7 +22782,7 @@ snapshots:
 
   '@radix-ui/react-roving-focus@1.0.4(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collection': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@19.0.0)(react@19.0.0)
@@ -22812,7 +22834,7 @@ snapshots:
 
   '@radix-ui/react-select@1.2.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/number': 1.0.1
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collection': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -22871,7 +22893,7 @@ snapshots:
 
   '@radix-ui/react-separator@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -22909,7 +22931,7 @@ snapshots:
 
   '@radix-ui/react-slot@1.0.2(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
@@ -22975,7 +22997,7 @@ snapshots:
 
   '@radix-ui/react-toggle-group@1.0.4(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@19.0.0)(react@19.0.0)
@@ -23006,7 +23028,7 @@ snapshots:
 
   '@radix-ui/react-toggle@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@19.0.0)(react@19.0.0)
@@ -23029,7 +23051,7 @@ snapshots:
 
   '@radix-ui/react-toolbar@1.0.4(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@19.0.0)(react@19.0.0)
@@ -23080,7 +23102,7 @@ snapshots:
 
   '@radix-ui/react-use-callback-ref@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -23093,7 +23115,7 @@ snapshots:
 
   '@radix-ui/react-use-controllable-state@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
@@ -23116,7 +23138,7 @@ snapshots:
 
   '@radix-ui/react-use-escape-keydown@1.0.3(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
@@ -23138,7 +23160,7 @@ snapshots:
 
   '@radix-ui/react-use-layout-effect@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -23151,7 +23173,7 @@ snapshots:
 
   '@radix-ui/react-use-previous@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.0
@@ -23164,7 +23186,7 @@ snapshots:
 
   '@radix-ui/react-use-rect@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/rect': 1.0.1
       react: 19.0.0
     optionalDependencies:
@@ -23179,7 +23201,7 @@ snapshots:
 
   '@radix-ui/react-use-size@1.0.1(@types/react@19.0.0)(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@19.0.0)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
@@ -23194,7 +23216,7 @@ snapshots:
 
   '@radix-ui/react-visually-hidden@1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.27.6
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -23213,7 +23235,7 @@ snapshots:
 
   '@radix-ui/rect@1.0.1':
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
 
   '@radix-ui/rect@1.1.1': {}
 
@@ -23647,7 +23669,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@storybook/builder-vite@7.6.17(encoding@0.1.13)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))':
+  '@storybook/builder-vite@7.6.17(encoding@0.1.13)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))':
     dependencies:
       '@storybook/channels': 7.6.17
       '@storybook/client-logger': 7.6.17
@@ -23665,7 +23687,7 @@ snapshots:
       fs-extra: 11.2.0
       magic-string: 0.30.10
       rollup: 3.29.4
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     optionalDependencies:
       typescript: 5.3.3
     transitivePeerDependencies:
@@ -23965,18 +23987,18 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@storybook/react-vite@7.6.17(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))':
+  '@storybook/react-vite@7.6.17(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.3.0(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.3.0(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       '@rollup/pluginutils': 5.1.0(rollup@4.37.0)
-      '@storybook/builder-vite': 7.6.17(encoding@0.1.13)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+      '@storybook/builder-vite': 7.6.17(encoding@0.1.13)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       '@storybook/react': 7.6.17(encoding@0.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.3.3)
-      '@vitejs/plugin-react': 3.1.0(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))
+      '@vitejs/plugin-react': 3.1.0(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))
       magic-string: 0.30.10
       react: 19.0.0
       react-docgen: 7.0.3
       react-dom: 19.0.0(react@19.0.0)
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - '@preact/preset-vite'
       - encoding
@@ -24362,7 +24384,7 @@ snapshots:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.12
       jest: 29.7.0(@types/node@20.12.7)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@20.12.7)(typescript@5.3.3))
-      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
 
   '@testing-library/react@14.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -25151,25 +25173,25 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vitejs/plugin-react@3.1.0(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))':
+  '@vitejs/plugin-react@3.1.0(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))':
     dependencies:
       '@babel/core': 7.24.6
       '@babel/plugin-transform-react-jsx-self': 7.24.1(@babel/core@7.24.6)
       '@babel/plugin-transform-react-jsx-source': 7.24.1(@babel/core@7.24.6)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-react@4.2.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))':
+  '@vitejs/plugin-react@4.2.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))':
     dependencies:
       '@babel/core': 7.24.4
       '@babel/plugin-transform-react-jsx-self': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-react-jsx-source': 7.24.1(@babel/core@7.24.4)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -25188,7 +25210,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -25255,7 +25277,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vitest: 1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
 
   '@vitest/utils@0.34.7':
     dependencies:
@@ -33769,7 +33791,7 @@ snapshots:
 
   regenerator-transform@0.15.2:
     dependencies:
-      '@babel/runtime': 7.25.6
+      '@babel/runtime': 7.27.6
 
   regexp.prototype.flags@1.5.4:
     dependencies:
@@ -34239,6 +34261,8 @@ snapshots:
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.1
+
+  sax@1.2.4: {}
 
   sax@1.4.1: {}
 
@@ -34882,19 +34906,19 @@ snapshots:
       postcss: 8.5.6
       postcss-selector-parser: 6.0.16
 
-  stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.99.9):
+  stylus-loader@7.1.3(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(webpack@5.99.9):
     dependencies:
       fast-glob: 3.3.2
       normalize-path: 3.0.0
-      stylus: 0.64.0
+      stylus: https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec
       webpack: 5.99.9(@swc/core@1.5.29(@swc/helpers@0.5.11))(webpack-cli@5.1.4(webpack@5.99.9))
 
-  stylus@0.64.0:
+  stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec:
     dependencies:
       '@adobe/css-tools': 4.3.3
-      debug: 4.3.6(supports-color@8.1.1)
-      glob: 10.4.5
-      sax: 1.4.1
+      debug: 4.4.1
+      glob: 7.2.3
+      sax: 1.2.4
       source-map: 0.7.4
     transitivePeerDependencies:
       - supports-color
@@ -35849,13 +35873,13 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-node@1.3.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1):
+  vite-node@1.3.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1):
     dependencies:
       cac: 6.7.14
       debug: 4.3.6(supports-color@8.1.1)
       pathe: 1.1.2
       picocolors: 1.0.1
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -35867,13 +35891,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.6.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1):
+  vite-node@1.6.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1):
     dependencies:
       cac: 6.7.14
       debug: 4.3.6(supports-color@8.1.1)
       pathe: 1.1.2
       picocolors: 1.0.1
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -35885,33 +35909,33 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-pwa@0.20.2(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
+  vite-plugin-pwa@0.20.2(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
     dependencies:
       debug: 4.3.4
       pretty-bytes: 6.1.1
       tinyglobby: 0.2.5
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       workbox-build: 7.1.1(@types/babel__core@7.20.5)
       workbox-window: 7.1.0
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-replace@0.1.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)):
+  vite-plugin-replace@0.1.1(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)):
     dependencies:
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
 
-  vite-plugin-svgr@4.2.0(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)):
+  vite-plugin-svgr@4.2.0(rollup@4.37.0)(typescript@5.3.3)(vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)):
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.37.0)
       '@svgr/core': 8.1.0(typescript@5.3.3)
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@5.3.3))
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - typescript
 
-  vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1):
+  vite@5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.3
@@ -35922,10 +35946,10 @@ snapshots:
       less: 4.1.3
       sass: 1.86.0
       sass-embedded: 1.86.0
-      stylus: 0.64.0
+      stylus: https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec
       terser: 5.43.1
 
-  vitest@1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1):
+  vitest@1.3.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1):
     dependencies:
       '@vitest/expect': 1.3.0
       '@vitest/runner': 1.3.0
@@ -35944,8 +35968,8 @@ snapshots:
       strip-literal: 2.1.0
       tinybench: 2.8.0
       tinypool: 0.8.4
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
-      vite-node: 1.3.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
+      vite-node: 1.3.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.7
@@ -35962,7 +35986,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1):
+  vitest@1.6.0(@types/node@20.12.7)(@vitest/ui@1.6.0)(happy-dom@12.10.3)(jsdom@22.1.0)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -35981,8 +36005,8 @@ snapshots:
       strip-literal: 2.1.0
       tinybench: 2.8.0
       tinypool: 0.8.4
-      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
-      vite-node: 1.6.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@0.64.0)(terser@5.43.1)
+      vite: 5.4.2(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
+      vite-node: 1.6.0(@types/node@20.12.7)(less@4.1.3)(sass-embedded@1.86.0)(sass@1.86.0)(stylus@https://codeload.github.com/stylus/stylus/tar.gz/8e29ff39fb563f91ef4eaff9b2c9f29e2a1910ec)(terser@5.43.1)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.7

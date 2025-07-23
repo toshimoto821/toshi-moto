@@ -115,6 +115,11 @@
     "vite-plugin-pwa": "^0.20.2",
     "web-push": "^3.6.7"
   },
+  "pnpm": {
+    "overrides": {
+      "stylus": "github:stylus/stylus#0.59.0"
+    }
+  },
   "volta": {
     "node": "20.11.0"
   }
