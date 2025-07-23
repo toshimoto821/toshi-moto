@@ -540,10 +540,14 @@ export const refreshAddresses = createAppAsyncThunk(
 interface RefresWalletArgs {
   walletId: string;
   ttl?: number;
+  reset?: boolean;
 }
 export const refreshWallet = createAppAsyncThunk(
   walletsSlice.actions.refreshWallet.type,
-  async ({ walletId, ttl }: RefresWalletArgs, { dispatch, getState }) => {
+  async (
+    { walletId, ttl, reset }: RefresWalletArgs,
+    { dispatch, getState }
+  ) => {
     const state = getState();
     const wallet = state.wallets.entities[walletId];
     if (wallet) {
@@ -556,7 +560,21 @@ export const refreshWallet = createAppAsyncThunk(
       }
       dispatch(walletsSlice.actions.refreshWallet(walletId));
 
-      dispatch(walletsSlice.actions.upsertWallet(wallet));
+      if (wallet.addresses.ids.length > 0 && !reset) {
+        const addresses = Object.values(wallet.addresses.entities).map(
+          (address) => {
+            return {
+              address: address.id,
+              walletId,
+              index: address.index,
+              isChange: address.isChange,
+            } as AddressArgs;
+          }
+        );
+        dispatch(refreshAddresses(addresses));
+      } else {
+        dispatch(walletsSlice.actions.upsertWallet(wallet));
+      }
     }
   }
 );

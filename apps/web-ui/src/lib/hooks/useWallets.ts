@@ -184,8 +184,8 @@ export const useWallets = () => {
         })
       );
     },
-    refreshWallet(walletId: string, ttl = 1000 * 60 * 60 * 24) {
-      dispatch(refreshWallet({ walletId, ttl }));
+    refreshWallet(walletId: string, ttl = 1000 * 60 * 60 * 24, reset = false) {
+      dispatch(refreshWallet({ walletId, ttl, reset }));
     },
     refreshAddresses({
       walletId,

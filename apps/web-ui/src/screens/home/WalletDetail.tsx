@@ -209,7 +209,7 @@ export const WalletDetail = () => {
                 {wallet.error}
                 <Button
                   onClick={() => {
-                    actions.refreshWallet(wallet.id, 0);
+                    actions.refreshWallet(wallet.id, 0, true);
                   }}
                   variant="soft"
                   size="1"
@@ -270,7 +270,7 @@ export const WalletDetail = () => {
                 {wallet.error}
                 <Button
                   onClick={() => {
-                    actions.refreshWallet(wallet.id, 0);
+                    actions.refreshWallet(wallet.id, 0, true);
                   }}
                   variant="soft"
                   size="1"
