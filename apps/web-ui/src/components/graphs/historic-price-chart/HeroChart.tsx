@@ -690,7 +690,7 @@ export const HeroChart = (props: IHeroChart) => {
             })
             .attr("opacity", SELECTED_OPACITIY);
 
-          const volChart = svg.select("#volume-chart");
+          const volChart = select("#volume-chart");
           volChart
             .selectAll(".bar")
             .attr("fill", (_, i) =>
