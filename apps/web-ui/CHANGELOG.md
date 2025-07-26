@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.27.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.2...web-ui-1.27.3) (2025-07-26)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.27.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.27.3)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* volchart ([e2890cd](https://github.com/toshimoto821/toshi-moto/commit/e2890cd2a7a88df0edc53663daf5ac19dffada96))
+
 ## [1.27.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.1...web-ui-1.27.2) (2025-07-23)
 
   |      |     |
