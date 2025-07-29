@@ -381,9 +381,53 @@ export const useChartData = (opts: IUseChartData) => {
     selectedTxs.length,
   ]);
 
+  const { gain, percentGain, totalInvested } = useMemo(() => {
+    if (!lineData || lineData.length === 0) {
+      return { gain: 0, percentGain: 0 };
+    }
+
+    let costBasis = 0;
+    let totalInvested = 0;
+    let firstBuyFound = false;
+    let previousY1Sum = 0;
+
+    // Loop through line data to find the first increase (buy) and calculate cost basis
+    for (const dataPoint of lineData) {
+      const currentY1Sum = dataPoint.y1Sum;
+
+      // Check if this is the first increase (buy)
+      if (!firstBuyFound && currentY1Sum > previousY1Sum) {
+        firstBuyFound = true;
+        // Calculate cost basis from the increase
+        const increase = currentY1Sum - previousY1Sum;
+        costBasis += increase * dataPoint.y2; // y2 is the BTC price at this time
+        totalInvested += increase;
+      } else if (firstBuyFound && currentY1Sum > previousY1Sum) {
+        // Additional buys
+        const increase = currentY1Sum - previousY1Sum;
+        costBasis += increase * dataPoint.y2;
+        totalInvested += increase;
+      }
+
+      previousY1Sum = currentY1Sum;
+    }
+
+    // Calculate current value and gains
+    const lastDataPoint = lineData[lineData.length - 1];
+    const currentValue = lastDataPoint.y1Sum * lastDataPoint.y2;
+
+    const gain = currentValue - costBasis;
+    const percentGain = costBasis > 0 ? (gain / costBasis) * 100 : 0;
+
+    return { gain, percentGain, totalInvested };
+  }, [lineData]);
+
   return {
     plotData,
     lineData,
     loading: btcPrices.loading,
+    gain,
+    percentGain,
+    totalInvested,
   };
 };
