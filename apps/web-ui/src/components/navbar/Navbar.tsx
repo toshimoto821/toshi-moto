@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { Text, Flex, Button, DropdownMenu } from "@radix-ui/themes";
+import { Text, Button, DropdownMenu } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { ArrowRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as d3 from "d3";
