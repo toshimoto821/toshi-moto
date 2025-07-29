@@ -85,7 +85,7 @@ export const HeroChart = (props: IHeroChart) => {
     (state) => state.ui.graphBtcAllocation
   );
 
-  const netAssetValue = useAppSelector((state) => state.ui.netAssetValue);
+  const { displayMode } = useAppSelector((state) => state.ui);
 
   const { lineData, plotData } = useChartData({ btcPrice, wallets });
 
@@ -115,7 +115,7 @@ export const HeroChart = (props: IHeroChart) => {
 
   let yExtent;
 
-  if (netAssetValue) {
+  if (displayMode !== "standard") {
     yExtent = [
       min(
         lineData.map((d) => {
@@ -154,7 +154,7 @@ export const HeroChart = (props: IHeroChart) => {
   const formatDefault = format("~s");
   const formatBtc = format(".4f");
 
-  const yValueToUse = netAssetValue ? "y1SumInDollars" : "y2";
+  const yValueToUse = displayMode !== "standard" ? "y1SumInDollars" : "y2";
 
   const btcExt = extent(lineData, (d) => d.y1Sum) as [number, number];
 
@@ -288,7 +288,7 @@ export const HeroChart = (props: IHeroChart) => {
         .x((_, i) => adjustedX(i))
         .y0(height)
         .y1((d, i) => {
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             // cast d as IRawNode
             return yScale((d as IRawNode)[yValueToUse]);
           }
@@ -303,7 +303,7 @@ export const HeroChart = (props: IHeroChart) => {
       svg
         .append("path")
         .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-        .datum(netAssetValue ? lineData : data)
+        .datum(displayMode !== "standard" ? lineData : data)
         .attr("class", "area")
         .attr("opacity", 0.2)
         .attr("d", areaGenerator)
@@ -321,7 +321,9 @@ export const HeroChart = (props: IHeroChart) => {
         .append("g")
         .attr("class", "bar-group")
         .selectAll(".bar")
-        .data<BinanceKlineMetric | IRawNode>(netAssetValue ? lineData : data)
+        .data<BinanceKlineMetric | IRawNode>(
+          displayMode !== "standard" ? lineData : data
+        )
         .enter()
 
         .append("rect")
@@ -332,7 +334,7 @@ export const HeroChart = (props: IHeroChart) => {
           return x;
         })
         .attr("y", (d, i) => {
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             const next = lineData[i + 1];
             const vals = [(d as IRawNode)[yValueToUse]];
             if (next) {
@@ -356,7 +358,7 @@ export const HeroChart = (props: IHeroChart) => {
           direction > 0 ? "url(#gradient-green)" : `url(#gradient-red__${id})`
         )
         .attr("height", (d) => {
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             return (
               height - margin.bottom - yScale((d as IRawNode)[yValueToUse])
             );
@@ -379,7 +381,7 @@ export const HeroChart = (props: IHeroChart) => {
           if (suppressEvents) return;
 
           let index: number;
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             index = lineData.findIndex((d) => d.x === (kline as IRawNode).x);
           } else {
             index = data.findIndex(
@@ -414,7 +416,7 @@ export const HeroChart = (props: IHeroChart) => {
       const lineGenerator = line<BinanceKlineMetric | IRawNode>()
         .x((_, i) => xScale(i.toString())!)
         .y((d, i) => {
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             return yScale((d as IRawNode)[yValueToUse]);
           } else {
             if (i > data.length - numBuffer - 1) {
@@ -428,7 +430,7 @@ export const HeroChart = (props: IHeroChart) => {
       svg
         .append("path")
         .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-        .datum(netAssetValue ? lineData : data)
+        .datum(displayMode !== "standard" ? lineData : data)
         .attr("class", "line")
         .attr("d", lineGenerator)
         .attr("fill", "none")
@@ -445,7 +447,7 @@ export const HeroChart = (props: IHeroChart) => {
         })
         .y0(0)
         .y1((d, i) => {
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             return yScale((d as IRawNode)[yValueToUse]);
           } else {
             if (i > data.length - numBuffer - 1) {
@@ -459,7 +461,7 @@ export const HeroChart = (props: IHeroChart) => {
       svg
         .append("path")
         .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-        .datum(netAssetValue ? lineData : data)
+        .datum(displayMode !== "standard" ? lineData : data)
         .attr("class", "inverse-area")
         .attr("d", inverseAreaGenerator)
         .attr("fill", bgColor); // Apply a semi-transparent white fill
@@ -484,7 +486,7 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("x2", x);
 
       let y1: number;
-      if (netAssetValue) {
+      if (displayMode !== "standard") {
         y1 = yScale(lastRawNode.y1SumInDollars || 0);
       } else {
         y1 = yScale(parseFloat(lastPrice.closePrice || "0"));
@@ -601,8 +603,7 @@ export const HeroChart = (props: IHeroChart) => {
 
           const currentPriceLine = svg.select("#current-price-line");
           let y1: number;
-
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             y1 = yScale(lineData[index].y1SumInDollars);
           } else {
             y1 = yScale(parseFloat(data[index].closePrice));
@@ -662,7 +663,7 @@ export const HeroChart = (props: IHeroChart) => {
 
           const currentPriceLine = svg.select("#current-price-line");
           let y1: number;
-          if (netAssetValue) {
+          if (displayMode !== "standard") {
             y1 = yScale(lineData[index].y1SumInDollars);
           } else {
             y1 = yScale(parseFloat(data[index].closePrice));
@@ -842,9 +843,10 @@ export const HeroChart = (props: IHeroChart) => {
 
         const last = data[data.length - 1];
 
-        const val = netAssetValue
-          ? yScale(lineData[lineData.length - 1].y1SumInDollars)
-          : yScale(parseFloat(last.closePrice));
+        const val =
+          displayMode !== "standard"
+            ? yScale(lineData[lineData.length - 1].y1SumInDollars)
+            : yScale(parseFloat(last.closePrice));
         const availableHeight = height - margin.top - margin.bottom - val;
         const optimalTicks = calculateOptimalTicks(availableHeight);
 
