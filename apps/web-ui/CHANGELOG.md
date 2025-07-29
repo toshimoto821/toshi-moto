@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.27.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.3...web-ui-1.27.4) (2025-07-29)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.27.4)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.27.4)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* gains ([f21ebd0](https://github.com/toshimoto821/toshi-moto/commit/f21ebd0abb0cdbc7ccbcfc8e7021b06b5a7afdab))
+
 ## [1.27.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.2...web-ui-1.27.3) (2025-07-26)
 
   |      |     |
