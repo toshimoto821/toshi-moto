@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.28.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.4...web-ui-1.28.0) (2025-07-29)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.28.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.28.0)|
+
+  
+
+
+### ✨ Features
+
+* adds cagr ([94de3f8](https://github.com/toshimoto821/toshi-moto/commit/94de3f86c7499c552ddb8de7a0fde41784e976d5))
+
 ## [1.27.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.27.3...web-ui-1.27.4) (2025-07-29)
 
   |      |     |
