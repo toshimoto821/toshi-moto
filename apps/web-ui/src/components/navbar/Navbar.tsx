@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { Text, Flex, Switch, Button } from "@radix-ui/themes";
+import { Text, Flex, Button, DropdownMenu } from "@radix-ui/themes";
 import { format } from "date-fns";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as d3 from "d3";
 import { DateRangeDialog } from "../dialogs/DateRangeDialog";
 import { useWallets } from "@root/lib/hooks/useWallets";
@@ -12,8 +12,8 @@ import { formatPrice, padBtcZeros } from "@root/lib/utils";
 import { currencySymbols } from "@root/lib/currencies";
 import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { useChartData } from "@root/lib/hooks/useChartData";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI } from "@root/lib/slices/ui.slice";
+import { useAppSelector, useAppDispatch } from "@root/lib/hooks/store.hooks";
+import { selectUI, setUI } from "@root/lib/slices/ui.slice";
 import { selectGraphRange } from "@root/lib/slices/navbar.slice";
 import { HeroChart } from "../graphs/historic-price-chart/HeroChart";
 
@@ -49,7 +49,7 @@ const bottomScale = d3
 
 export const Navbar = () => {
   const { btcPrice: rawPrice, change: btcChangePrice } = useBtcPrice();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const btcPrice = rawPrice;
   const { actions, data, wallets } = useWallets();
   const [dateRangeOpen, setDateRangeOpen] = useState(false);
@@ -58,13 +58,21 @@ export const Navbar = () => {
     "start"
   );
 
-  const { lineData, gain, percentGain } = useChartData({
+  const {
+    lineData,
+    gain,
+    percentGain,
+    percentageChange,
+    valueChange,
+    cagrPercentage,
+    cagrDollar,
+  } = useChartData({
     wallets,
     btcPrice,
   });
 
   const uiState = useAppSelector(selectUI);
-  const { netAssetValue } = uiState;
+  const { displayMode } = uiState;
   const privateNumber = useNumberObfuscation();
   // const [chartOpacity, setChartOpacity] = useState(0);
   const lineWrapperRef = useRef<HTMLDivElement>(null);
@@ -82,22 +90,29 @@ export const Navbar = () => {
   const currencySymbol = currencySymbols[currency];
 
   let change = btcChangePrice;
-  let valueChange;
+  // Use the values from useChartData hook instead of calculating locally
   if (lineData?.length) {
-    const key = netAssetValue ? "y1SumInDollars" : "y2";
-    const firstPrice: number = lineData[0][key];
-    const lastPrice = lineData[lineData.length - 1][key];
-
-    const percentageChange = ((lastPrice - firstPrice) / firstPrice) * 100;
     change = percentageChange;
-    valueChange = lastPrice - firstPrice;
   }
 
   let priceToShow = btcPrice;
-  if (netAssetValue) {
+  let changeToShow = change;
+  let valueChangeToShow = valueChange;
+  let percentChangeToShow = change;
+
+  if (displayMode === "netAsset") {
     priceToShow = data.totalBalance * btcPrice;
+    changeToShow = percentGain || 0;
+    valueChangeToShow = gain || 0;
+    percentChangeToShow = percentGain || 0;
+  } else if (displayMode === "cagr") {
+    priceToShow = data.totalBalance * btcPrice;
+    changeToShow = cagrPercentage || 0;
+    valueChangeToShow = cagrDollar || 0;
+    percentChangeToShow = cagrPercentage || 0;
   }
-  const fontColor = colorScale(change ?? 0);
+
+  const fontColor = colorScale(changeToShow ?? 0);
 
   // you cant rerender react so much cause its janky
   // so we use a ref to update style manually
@@ -165,6 +180,19 @@ export const Navbar = () => {
     actions.selectInputAddresses();
   };
 
+  const getDisplayModeLabel = () => {
+    switch (displayMode) {
+      case "standard":
+        return "BTC/USD";
+      case "netAsset":
+        return "Net Asset";
+      case "cagr":
+        return "CAGR";
+      default:
+        return "BTC/USD";
+    }
+  };
+
   // This was an attempt to better align the dates of the chart data.
   // however it was more confusing because the user would select
   // a particular date with the picker and the chart would not match that date
@@ -230,16 +258,59 @@ export const Navbar = () => {
           <div className="flex flex-col">
             <div className="flex items-center justify-end">
               <div className="flex items-center">
-                <Text as="label" size="2">
-                  <Flex gap="2">
-                    Net
-                    <Switch
-                      disabled={wallets.length === 0}
-                      checked={netAssetValue}
-                      onClick={() => actions.toggleNetAssetValue()}
-                    />{" "}
-                  </Flex>
-                </Text>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger>
+                    <Button variant="ghost" size="1">
+                      <Text size="2">{getDisplayModeLabel()}</Text>
+                      <ChevronDownIcon width="12" height="12" />
+                    </Button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content>
+                    <DropdownMenu.Item
+                      shortcut={displayMode === "standard" ? "✓" : ""}
+                      onSelect={() =>
+                        dispatch(setUI({ displayMode: "standard" }))
+                      }
+                    >
+                      <div>
+                        <Text size="2" weight="bold">
+                          Standard Bitcoin Value
+                        </Text>
+                        <Text size="1" color="gray" className="ml-1">
+                          BTC price and change
+                        </Text>
+                      </div>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      shortcut={displayMode === "netAsset" ? "✓" : ""}
+                      onSelect={() =>
+                        dispatch(setUI({ displayMode: "netAsset" }))
+                      }
+                    >
+                      <div>
+                        <Text size="2" weight="bold">
+                          Net Asset Value
+                        </Text>
+                        <Text size="1" color="gray" className="ml-1">
+                          Total portfolio value
+                        </Text>
+                      </div>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      shortcut={displayMode === "cagr" ? "✓" : ""}
+                      onSelect={() => dispatch(setUI({ displayMode: "cagr" }))}
+                    >
+                      <div>
+                        <Text size="2" weight="bold">
+                          CAGR
+                        </Text>
+                        <Text size="1" color="gray" className="ml-1">
+                          Compound annual growth rate
+                        </Text>
+                      </div>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
               </div>
             </div>
           </div>
@@ -254,25 +325,25 @@ export const Navbar = () => {
             >
               {priceToShow > 0 &&
                 currencySymbol +
-                  (netAssetValue
+                  (displayMode !== "standard"
                     ? privateNumber(formatPrice(priceToShow))
                     : formatPrice(priceToShow))}
               {!priceToShow && currencySymbol + "..."}
             </Text>
 
             <Text size="1" color="gray">
-              {netAssetValue ? "USD" : "BTC/USD"}
+              {displayMode === "standard" ? "BTC/USD" : "USD"}
             </Text>
           </div>
           <div className="text-right">
             <div className="flex justify-end items-center">
-              {priceToShow > 0 && valueChange && (
+              {priceToShow > 0 && valueChangeToShow && (
                 <div ref={priceChangeRef}>
                   <Text style={{ color: fontColor }} size="1">
                     {currencySymbol}
-                    {netAssetValue
-                      ? privateNumber(formatPrice(gain))
-                      : formatPrice(valueChange)}
+                    {displayMode !== "standard"
+                      ? privateNumber(formatPrice(valueChangeToShow))
+                      : formatPrice(valueChangeToShow)}
                   </Text>
 
                   <Text size="1" style={{ color: fontColor }}>
@@ -280,11 +351,12 @@ export const Navbar = () => {
                     /{" "}
                   </Text>
 
-                  {priceToShow > 0 && valueChange && (
+                  {priceToShow > 0 && valueChangeToShow && (
                     <Text className="" size="1" style={{ color: fontColor }}>
-                      {netAssetValue
-                        ? percentGain && percentGain.toFixed(2) + "%"
-                        : change && change.toFixed(2) + "%"}
+                      {displayMode !== "standard"
+                        ? percentChangeToShow &&
+                          percentChangeToShow.toFixed(2) + "%"
+                        : changeToShow && changeToShow.toFixed(2) + "%"}
                     </Text>
                   )}
                   <div className="-mt-1">

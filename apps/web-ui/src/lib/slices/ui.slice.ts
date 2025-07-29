@@ -50,7 +50,7 @@ const initialState: UIState = {
   graphIsLocked: false,
   graphSelectedIndex: null,
   navbarBalanceVisibility: false,
-  netAssetValue: false,
+  displayMode: "standard" as const,
   privatePrice: false,
   selectedWalletId: null,
   toastOpen: false,

@@ -38,7 +38,7 @@ export const useChartData = (opts: IUseChartData) => {
     graphSelectedTransactions: selectedTxs,
     graphStartDate,
     graphEndDate,
-    netAssetValue,
+    displayMode,
     selectedWalletId,
   } = useAppSelector(selectUI);
 
@@ -209,7 +209,7 @@ export const useChartData = (opts: IUseChartData) => {
   }, [
     filteredWallets.length,
     selectedTxs.length,
-    netAssetValue,
+    displayMode,
     prices.length,
     selectedWalletId,
     chartTimeDiffInDays,
@@ -305,7 +305,7 @@ export const useChartData = (opts: IUseChartData) => {
     nodes.length,
     inputNodes.length,
     selectedTxs.length,
-    netAssetValue,
+    displayMode,
     groupedKeys.length,
     groupedKeys[0],
     chartTimeDiffInDays,
@@ -420,7 +420,93 @@ export const useChartData = (opts: IUseChartData) => {
     const percentGain = costBasis > 0 ? (gain / costBasis) * 100 : 0;
 
     return { gain, percentGain, totalInvested };
-  }, [lineData]);
+  }, [lineData[lineData.length - 1]?.y1, lineData[0]]);
+
+  const { percentageChange, valueChange } = useMemo(() => {
+    if (!lineData?.length) {
+      return { percentageChange: 0, valueChange: 0 };
+    }
+
+    const key = displayMode !== "standard" ? "y1SumInDollars" : "y2";
+    const firstPrice: number = lineData[0][key];
+    const lastPrice = lineData[lineData.length - 1][key];
+
+    const percentageChange = ((lastPrice - firstPrice) / firstPrice) * 100;
+    const valueChange = lastPrice - firstPrice;
+
+    return { percentageChange, valueChange };
+  }, [lineData[lineData.length - 1]?.y1, lineData[0], displayMode]);
+
+  const { cagrPercentage, cagrDollar } = useMemo(() => {
+    if (!lineData?.length) {
+      return { cagrPercentage: 0, cagrDollar: 0 };
+    }
+
+    // Find the first non-zero data point for CAGR calculation
+    let firstNonZeroIndex = 0;
+    for (let i = 0; i < lineData.length; i++) {
+      const key = displayMode !== "standard" ? "y1SumInDollars" : "y2";
+      if (lineData[i][key] > 0) {
+        firstNonZeroIndex = i;
+        break;
+      }
+    }
+
+    // If no non-zero data points found, return 0
+    if (firstNonZeroIndex >= lineData.length) {
+      return { cagrPercentage: 0, cagrDollar: 0 };
+    }
+
+    // Calculate cost basis using the same logic as gain calculation
+    let costBasis = 0;
+    let firstBuyFound = false;
+    let previousY1Sum = 0;
+
+    // Loop through line data to find the first increase (buy) and calculate cost basis
+    for (const dataPoint of lineData) {
+      const currentY1Sum = dataPoint.y1Sum;
+
+      // Check if this is the first increase (buy)
+      if (!firstBuyFound && currentY1Sum > previousY1Sum) {
+        firstBuyFound = true;
+        // Calculate cost basis from the increase
+        const increase = currentY1Sum - previousY1Sum;
+        costBasis += increase * dataPoint.y2; // y2 is the BTC price at this time
+      } else if (firstBuyFound && currentY1Sum > previousY1Sum) {
+        // Additional buys
+        const increase = currentY1Sum - previousY1Sum;
+        costBasis += increase * dataPoint.y2;
+      }
+
+      previousY1Sum = currentY1Sum;
+    }
+
+    // Calculate current value
+    const lastDataPoint = lineData[lineData.length - 1];
+    const currentValue = lastDataPoint.y1Sum * lastDataPoint.y2;
+
+    const firstDate = new Date(lineData[firstNonZeroIndex].x);
+    const lastDate = new Date(lineData[lineData.length - 1].x);
+
+    // Calculate time period in years
+    const timeInYears =
+      (lastDate.getTime() - firstDate.getTime()) /
+      (1000 * 60 * 60 * 24 * 365.25);
+
+    if (timeInYears <= 0 || costBasis <= 0) {
+      return { cagrPercentage: 0, cagrDollar: 0 };
+    }
+
+    // Calculate CAGR percentage using cost basis: (final_value / initial_cost_basis)^(1/time_in_years) - 1
+    const cagrPercentage =
+      (Math.pow(currentValue / costBasis, 1 / timeInYears) - 1) * 100;
+
+    // Calculate average annual dollar gain
+    const totalValueChange = currentValue - costBasis;
+    const cagrDollar = totalValueChange / timeInYears;
+
+    return { cagrPercentage, cagrDollar };
+  }, [lineData[lineData.length - 1]?.y1, lineData.length, displayMode]);
 
   return {
     plotData,
@@ -429,5 +515,9 @@ export const useChartData = (opts: IUseChartData) => {
     gain,
     percentGain,
     totalInvested,
+    percentageChange,
+    valueChange,
+    cagrPercentage,
+    cagrDollar,
   };
 };

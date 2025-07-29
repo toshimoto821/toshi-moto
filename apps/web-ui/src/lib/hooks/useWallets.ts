@@ -56,23 +56,12 @@ export const useWallets = () => {
 
   const chartStartDate = uiState.graphStartDate;
 
-  const netAssetValue = uiState.netAssetValue;
-
-  const toggleNetAssetValue = () => {
-    dispatch(
-      setUI({
-        netAssetValue: !netAssetValue,
-      })
-    );
-  };
-
   const actions = {
     updateMeta: (meta: Partial<UIState>) => {
       console.log(meta);
       throw new Error("@todo, implement");
       // appRef.send({ type: "APP_MACHINE_UPDATE_META", data: { meta } });
     },
-    toggleNetAssetValue,
     toggleAddress: (walletId: string, address: string) => {
       const key = `wallet-id:${walletId};utxo:${address}` as IExpandAddressKey;
       dispatch(toggleAddress(key));
@@ -354,7 +343,7 @@ export const useWallets = () => {
     wallets: walletRows,
     data,
     // @todo move into ui
-    netAssetValue,
+    displayMode: uiState.displayMode,
     actions,
   };
 };

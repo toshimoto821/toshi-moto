@@ -23,7 +23,7 @@ export interface UIState {
   graphIsLocked: boolean;
   graphSelectedIndex: number | null;
   navbarBalanceVisibility: boolean;
-  netAssetValue: boolean;
+  displayMode: "standard" | "netAsset" | "cagr";
   privatePrice: boolean;
   selectedWalletId: string | null;
   toastOpen: boolean;
