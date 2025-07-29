@@ -58,7 +58,7 @@ export const Navbar = () => {
     "start"
   );
 
-  const { lineData } = useChartData({
+  const { lineData, gain, percentGain } = useChartData({
     wallets,
     btcPrice,
   });
@@ -182,174 +182,163 @@ export const Navbar = () => {
   const lastDate = new Date(lastDateAsNumber);
 
   return (
-    <>
-      <div
-        data-testid="navbar"
-        className={`sticky top-0 z-50 h-[${chartHeight}px] bg-white drop-shadow-sm overflow-hidden border-b w-screen backface-visibility-none`}
-        ref={containerRef}
-      >
-        {lineData && (
-          <div
-            ref={lineWrapperRef}
-            className={`absolute opacity-0 z-30 w-[${dimensions.width}]px`}
-          >
-            {/* <HeroChartHeader height={chartHeight} width={dimensions.width} /> */}
-            <HeroChart
-              height={chartHeight}
-              width={dimensions.width}
-              bgColor="white"
-              id="hero-chart-header"
-              suppressEvents
-              suppressLegengs
-            />
-          </div>
-        )}
+    <div
+      data-testid="navbar"
+      className={`sticky top-0 z-50 h-[${chartHeight}px] bg-white drop-shadow-sm overflow-hidden border-b w-screen backface-visibility-none`}
+      ref={containerRef}
+    >
+      {lineData && (
         <div
-          className="flex flex-col absolute z-40 w-screen h-[140px]"
-          ref={topHeaderToFifty}
+          ref={lineWrapperRef}
+          className={`absolute opacity-0 z-30 w-[${dimensions.width}]px`}
         >
-          <div className="flex px-4 pt-6 backface-visibility-none">
-            <div ref={myBtcRef}>
-              <Button
-                variant="ghost"
-                onClick={toggleBalance}
-                data-testid="my-btc-btn"
-              >
-                <Text
-                  size="4"
-                  color="orange"
-                  className={uiState.navbarBalanceVisibility ? "font-mono" : ""}
-                >
-                  {uiState.navbarBalanceVisibility
-                    ? `₿${padBtcZeros(data.totalBalance)}`
-                    : "My BTC"}
-                </Text>
-              </Button>
-            </div>
-
-            <div className="flex-1"></div>
-            <div className="flex flex-col">
-              <div className="flex items-center justify-end">
-                <div className="flex items-center">
-                  <Text as="label" size="2">
-                    <Flex gap="2">
-                      Net
-                      <Switch
-                        disabled={wallets.length === 0}
-                        checked={netAssetValue}
-                        onClick={() => actions.toggleNetAssetValue()}
-                      />{" "}
-                    </Flex>
-                  </Text>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex px-4 justify-between flex-1 backface-visibility-none font-mono">
-            <div className=" flex flex-1 flex-col text-left">
+          {/* <HeroChartHeader height={chartHeight} width={dimensions.width} /> */}
+          <HeroChart
+            height={chartHeight}
+            width={dimensions.width}
+            bgColor="white"
+            id="hero-chart-header"
+            suppressEvents
+            suppressLegengs
+          />
+        </div>
+      )}
+      <div
+        className="flex flex-col absolute z-40 w-screen h-[140px]"
+        ref={topHeaderToFifty}
+      >
+        <div className="flex px-4 pt-6 backface-visibility-none">
+          <div ref={myBtcRef}>
+            <Button
+              variant="ghost"
+              onClick={toggleBalance}
+              data-testid="my-btc-btn"
+            >
               <Text
-                data-testid="btc-price"
-                className="font-bold font-mono"
-                style={{ color: fontColor }}
-                size="6"
+                size="4"
+                color="orange"
+                className={uiState.navbarBalanceVisibility ? "font-mono" : ""}
               >
-                {priceToShow > 0 &&
-                  currencySymbol +
-                    (netAssetValue
-                      ? privateNumber(formatPrice(priceToShow))
-                      : formatPrice(priceToShow))}
-                {!priceToShow && currencySymbol + "..."}
+                {uiState.navbarBalanceVisibility
+                  ? `₿${padBtcZeros(data.totalBalance)}`
+                  : "My BTC"}
               </Text>
-
-              <Text size="1" color="gray">
-                {netAssetValue ? "USD" : "BTC/USD"}
-              </Text>
-            </div>
-            <div className="text-right">
-              <div className="flex justify-end items-center">
-                {priceToShow > 0 && valueChange && (
-                  <div ref={priceChangeRef}>
-                    <Text style={{ color: fontColor }} size="1">
-                      {currencySymbol}
-                      {netAssetValue
-                        ? privateNumber(formatPrice(valueChange))
-                        : formatPrice(valueChange)}
-                    </Text>
-                    {priceToShow > 0 &&
-                      valueChange &&
-                      priceToShow > 0 &&
-                      valueChange &&
-                      change < Infinity && (
-                        <Text size="1" style={{ color: fontColor }}>
-                          {" "}
-                          /{" "}
-                        </Text>
-                      )}
-                    {priceToShow > 0 && valueChange && change < Infinity && (
-                      <Text className="" size="1" style={{ color: fontColor }}>
-                        {change && change.toFixed(2) + "%"}
-                      </Text>
-                    )}
-                    <div className="-mt-1">
-                      <Text size="1" color="gray">
-                        {uiState.graphTimeFrameRange} &Delta;
-                      </Text>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            </Button>
           </div>
-          <div
-            className="border border-b-0 border-x-0 "
-            ref={headerControlsRef}
-          >
-            <div className="flex justify-between px-4 text-gray-400 py-2">
-              <div className="flex" data-testid="date-picker-container">
-                <div className="flex items-center">
-                  <Button
-                    size="1"
-                    variant="ghost"
-                    onClick={onClickDate("start")}
-                  >
-                    <Text size="1" className="font-mono">
-                      {format(firstDate, "PP, hh:mm a")}
-                    </Text>
-                  </Button>
-                </div>
-                <div className="flex items-center mx-2">
-                  <ArrowRightIcon width={12} height={12} />
-                </div>
-                <div className="flex items-center">
-                  <Button size="1" variant="ghost" onClick={onClickDate("end")}>
-                    <Text size="1" className="font-mono">
-                      {format(lastDate, "PP, hh:mm a")}
-                    </Text>
-                  </Button>
-                </div>
-              </div>
-              <div className="flex-1"></div>
-              <div className="mr-2 text-xs">{/* <CurrencyDropdown /> */}</div>
-              <div className="mr-2">
-                {/* <Separator orientation="vertical" /> */}
-              </div>
-              <div>
-                <div className="flex items-center">
-                  <SelectionDropdown
-                    onClickToggleInputAddresses={handleSelectInputAddresses}
-                  />
-                </div>
+
+          <div className="flex-1"></div>
+          <div className="flex flex-col">
+            <div className="flex items-center justify-end">
+              <div className="flex items-center">
+                <Text as="label" size="2">
+                  <Flex gap="2">
+                    Net
+                    <Switch
+                      disabled={wallets.length === 0}
+                      checked={netAssetValue}
+                      onClick={() => actions.toggleNetAssetValue()}
+                    />{" "}
+                  </Flex>
+                </Text>
               </div>
             </div>
           </div>
         </div>
+        <div className="flex px-4 justify-between flex-1 backface-visibility-none font-mono">
+          <div className=" flex flex-1 flex-col text-left">
+            <Text
+              data-testid="btc-price"
+              className="font-bold font-mono"
+              style={{ color: fontColor }}
+              size="6"
+            >
+              {priceToShow > 0 &&
+                currencySymbol +
+                  (netAssetValue
+                    ? privateNumber(formatPrice(priceToShow))
+                    : formatPrice(priceToShow))}
+              {!priceToShow && currencySymbol + "..."}
+            </Text>
 
-        <DateRangeDialog
-          open={dateRangeOpen}
-          onClose={handleClose}
-          defaultTab={defaultDateTab}
-        />
+            <Text size="1" color="gray">
+              {netAssetValue ? "USD" : "BTC/USD"}
+            </Text>
+          </div>
+          <div className="text-right">
+            <div className="flex justify-end items-center">
+              {priceToShow > 0 && valueChange && (
+                <div ref={priceChangeRef}>
+                  <Text style={{ color: fontColor }} size="1">
+                    {currencySymbol}
+                    {netAssetValue
+                      ? privateNumber(formatPrice(gain))
+                      : formatPrice(valueChange)}
+                  </Text>
+
+                  <Text size="1" style={{ color: fontColor }}>
+                    {" "}
+                    /{" "}
+                  </Text>
+
+                  {priceToShow > 0 && valueChange && (
+                    <Text className="" size="1" style={{ color: fontColor }}>
+                      {netAssetValue
+                        ? percentGain && percentGain.toFixed(2) + "%"
+                        : change && change.toFixed(2) + "%"}
+                    </Text>
+                  )}
+                  <div className="-mt-1">
+                    <Text size="1" color="gray">
+                      {uiState.graphTimeFrameRange} &Delta;
+                    </Text>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="border border-b-0 border-x-0 " ref={headerControlsRef}>
+          <div className="flex justify-between px-4 text-gray-400 py-2">
+            <div className="flex" data-testid="date-picker-container">
+              <div className="flex items-center">
+                <Button size="1" variant="ghost" onClick={onClickDate("start")}>
+                  <Text size="1" className="font-mono">
+                    {format(firstDate, "PP, hh:mm a")}
+                  </Text>
+                </Button>
+              </div>
+              <div className="flex items-center mx-2">
+                <ArrowRightIcon width={12} height={12} />
+              </div>
+              <div className="flex items-center">
+                <Button size="1" variant="ghost" onClick={onClickDate("end")}>
+                  <Text size="1" className="font-mono">
+                    {format(lastDate, "PP, hh:mm a")}
+                  </Text>
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1"></div>
+            <div className="mr-2 text-xs">{/* <CurrencyDropdown /> */}</div>
+            <div className="mr-2">
+              {/* <Separator orientation="vertical" /> */}
+            </div>
+            <div>
+              <div className="flex items-center">
+                <SelectionDropdown
+                  onClickToggleInputAddresses={handleSelectInputAddresses}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+
+      <DateRangeDialog
+        open={dateRangeOpen}
+        onClose={handleClose}
+        defaultTab={defaultDateTab}
+      />
+    </div>
   );
 };
