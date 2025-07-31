@@ -357,9 +357,15 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
             wallet.meta.receive.lastAddressIndex !== null &&
             wallet.meta.change.lastAddressIndex !== null
           );
-        }, 10000);
+        }, 60000);
         if (!result) {
-          alert("could not fetch wallet form xpub ");
+          const updatedState = listenerApi.getState();
+          const updatedWallet = updatedState.wallets.entities[walletId];
+          alert(
+            `could ${walletId} / ${!!updatedWallet} not fetch wallet form xpub ${
+              updatedWallet.meta.receive.lastAddressIndex
+            }`
+          );
           dispatch(
             walletsSlice.actions.updateWalletMeta({
               walletId,
