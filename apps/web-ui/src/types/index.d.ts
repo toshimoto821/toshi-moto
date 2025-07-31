@@ -102,6 +102,7 @@ export type IRawNode = {
   quoteAssetVolume: number;
   // y1, // shows the net value at the current price, not price of date range
   y2: number;
+  isForecast?: boolean;
 };
 
 export type IPlotType = "VIN" | "VOUT";
@@ -113,4 +114,5 @@ export type IPlotData = {
   type: IPlotType;
   value: number;
   grpSum: number;
+  isForecast?: boolean;
 };

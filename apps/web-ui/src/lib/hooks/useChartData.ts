@@ -27,6 +27,7 @@ type Data = {
   data: number[];
   i: number;
   key: string;
+  isForecast: boolean;
 };
 
 type Grouped = Record<string, Data>;
@@ -40,11 +41,12 @@ export const useChartData = (opts: IUseChartData) => {
     graphEndDate,
     displayMode,
     selectedWalletId,
+    forecastEnabled,
   } = useAppSelector(selectUI);
 
   const btcPrices = useBtcHistoricPrices();
 
-  const { group: graphTimeFrameGroup } = btcPrices;
+  const { group: graphTimeFrameGroup, forecastData } = btcPrices;
 
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
@@ -79,6 +81,13 @@ export const useChartData = (opts: IUseChartData) => {
   const dateToKeyFn = getGroupKey(graphTimeFrameGroup!);
   const last = prices[prices.length - 1];
   const lastTs = last ? new Date(last.closeTime).getTime() : null;
+
+  const isForecastData = (price: any) => {
+    if (!forecastEnabled || !forecastData.length) return false;
+    const forecastStartTime = forecastData[0].openTime;
+    return price.openTime >= forecastStartTime;
+  };
+
   // group the prices into buckets (hours, or weeks based on range)
   const grouped = useMemo(() => {
     return prices?.reduce((acc, curr) => {
@@ -98,6 +107,7 @@ export const useChartData = (opts: IUseChartData) => {
           data: [...acc[key].data, price],
           i: acc[key].i + 1,
           key,
+          isForecast: acc[key].isForecast || isForecastData(curr),
         };
       } else {
         acc[key] = {
@@ -111,6 +121,7 @@ export const useChartData = (opts: IUseChartData) => {
           quoteAssetVolume: parseFloat(quoteAssetVolume),
           i: 1,
           key,
+          isForecast: isForecastData(curr),
         };
       }
       return acc;
@@ -125,6 +136,8 @@ export const useChartData = (opts: IUseChartData) => {
     chartTimeDiffInDays,
     lastTs,
     last?.closePrice,
+    forecastEnabled,
+    forecastData.length,
   ]);
 
   const filteredWallets = selectedWalletId
@@ -144,6 +157,7 @@ export const useChartData = (opts: IUseChartData) => {
       quoteAssetVolume: d.quoteAssetVolume,
       // y1, // shows the net value at the current price, not price of date range
       y2: round(d.last, 2),
+      isForecast: d.isForecast,
     } as IRawNode;
   });
 
@@ -368,6 +382,7 @@ export const useChartData = (opts: IUseChartData) => {
             node: yValue,
             data: n,
             grpSum: grp.sum,
+            isForecast: grp.isForecast,
           };
           plotData.push(plot);
         }
@@ -386,13 +401,22 @@ export const useChartData = (opts: IUseChartData) => {
       return { gain: 0, percentGain: 0 };
     }
 
+    // Use all data (historical + forecast) when forecast is enabled, otherwise only historical
+    const calculationLineData = forecastEnabled
+      ? lineData // Include forecast data for projections
+      : lineData.filter((d) => !d.isForecast); // Only historical data
+
+    if (calculationLineData.length === 0) {
+      return { gain: 0, percentGain: 0 };
+    }
+
     let costBasis = 0;
     let totalInvested = 0;
     let firstBuyFound = false;
     let previousY1Sum = 0;
 
     // Loop through line data to find the first increase (buy) and calculate cost basis
-    for (const dataPoint of lineData) {
+    for (const dataPoint of calculationLineData) {
       const currentY1Sum = dataPoint.y1Sum;
 
       // Check if this is the first increase (buy)
@@ -412,15 +436,15 @@ export const useChartData = (opts: IUseChartData) => {
       previousY1Sum = currentY1Sum;
     }
 
-    // Calculate current value and gains
-    const lastDataPoint = lineData[lineData.length - 1];
+    // Calculate current value and gains (using last data point which could be forecast)
+    const lastDataPoint = calculationLineData[calculationLineData.length - 1];
     const currentValue = lastDataPoint.y1Sum * lastDataPoint.y2;
 
     const gain = currentValue - costBasis;
     const percentGain = costBasis > 0 ? (gain / costBasis) * 100 : 0;
 
     return { gain, percentGain, totalInvested };
-  }, [lineData[lineData.length - 1]?.y1, lineData[0]]);
+  }, [lineData[lineData.length - 1]?.x, lineData[0]?.x, forecastEnabled]);
 
   const { percentageChange, valueChange } = useMemo(() => {
     if (!lineData?.length) {
@@ -435,25 +459,40 @@ export const useChartData = (opts: IUseChartData) => {
     const valueChange = lastPrice - firstPrice;
 
     return { percentageChange, valueChange };
-  }, [lineData[lineData.length - 1]?.y1, lineData[0], displayMode]);
+  }, [
+    lineData[lineData.length - 1]?.x,
+    lineData[0]?.x,
+    displayMode,
+    selectedWalletId,
+    gain,
+    percentGain,
+    totalInvested,
+  ]);
 
   const { cagrPercentage, cagrDollar } = useMemo(() => {
     if (!lineData?.length) {
       return { cagrPercentage: 0, cagrDollar: 0 };
     }
 
+    // Always use only historical data for CAGR calculation to keep it consistent
+    const historicalLineData = lineData.filter((d) => !d.isForecast);
+
+    if (historicalLineData.length === 0) {
+      return { cagrPercentage: 0, cagrDollar: 0 };
+    }
+
     // Find the first non-zero data point for CAGR calculation
     let firstNonZeroIndex = 0;
-    for (let i = 0; i < lineData.length; i++) {
+    for (let i = 0; i < historicalLineData.length; i++) {
       const key = displayMode !== "standard" ? "y1SumInDollars" : "y2";
-      if (lineData[i][key] > 0) {
+      if (historicalLineData[i][key] > 0) {
         firstNonZeroIndex = i;
         break;
       }
     }
 
     // If no non-zero data points found, return 0
-    if (firstNonZeroIndex >= lineData.length) {
+    if (firstNonZeroIndex >= historicalLineData.length) {
       return { cagrPercentage: 0, cagrDollar: 0 };
     }
 
@@ -463,7 +502,7 @@ export const useChartData = (opts: IUseChartData) => {
     let previousY1Sum = 0;
 
     // Loop through line data to find the first increase (buy) and calculate cost basis
-    for (const dataPoint of lineData) {
+    for (const dataPoint of historicalLineData) {
       const currentY1Sum = dataPoint.y1Sum;
 
       // Check if this is the first increase (buy)
@@ -481,12 +520,14 @@ export const useChartData = (opts: IUseChartData) => {
       previousY1Sum = currentY1Sum;
     }
 
-    // Calculate current value
-    const lastDataPoint = lineData[lineData.length - 1];
+    // Calculate current value using only historical data
+    const lastDataPoint = historicalLineData[historicalLineData.length - 1];
     const currentValue = lastDataPoint.y1Sum * lastDataPoint.y2;
 
-    const firstDate = new Date(lineData[firstNonZeroIndex].x);
-    const lastDate = new Date(lineData[lineData.length - 1].x);
+    const firstDate = new Date(historicalLineData[firstNonZeroIndex].x);
+    const lastDate = new Date(
+      historicalLineData[historicalLineData.length - 1].x
+    );
 
     // Calculate time period in years
     const timeInYears =
@@ -506,7 +547,101 @@ export const useChartData = (opts: IUseChartData) => {
     const cagrDollar = totalValueChange / timeInYears;
 
     return { cagrPercentage, cagrDollar };
-  }, [lineData[lineData.length - 1]?.y1, lineData.length, displayMode]);
+  }, [
+    lineData[lineData.length - 1]?.x,
+    lineData[0]?.x,
+    lineData.length,
+    displayMode,
+    selectedWalletId,
+    gain,
+    percentGain,
+    totalInvested,
+  ]);
+
+  // Calculate projected CAGR when forecast is enabled
+  const { projectedCagrPercentage, projectedCagrDollar } = useMemo(() => {
+    if (!forecastEnabled || !lineData?.length) {
+      return { projectedCagrPercentage: 0, projectedCagrDollar: 0 };
+    }
+
+    // Use all data (historical + forecast) for projected CAGR
+    const allLineData = lineData;
+
+    // Find the first non-zero data point for CAGR calculation
+    let firstNonZeroIndex = 0;
+    for (let i = 0; i < allLineData.length; i++) {
+      const key = displayMode !== "standard" ? "y1SumInDollars" : "y2";
+      if (allLineData[i][key] > 0) {
+        firstNonZeroIndex = i;
+        break;
+      }
+    }
+
+    // If no non-zero data points found, return 0
+    if (firstNonZeroIndex >= allLineData.length) {
+      return { projectedCagrPercentage: 0, projectedCagrDollar: 0 };
+    }
+
+    // Calculate cost basis using the same logic as gain calculation
+    let costBasis = 0;
+    let firstBuyFound = false;
+    let previousY1Sum = 0;
+
+    // Loop through line data to find the first increase (buy) and calculate cost basis
+    for (const dataPoint of allLineData) {
+      const currentY1Sum = dataPoint.y1Sum;
+
+      // Check if this is the first increase (buy)
+      if (!firstBuyFound && currentY1Sum > previousY1Sum) {
+        firstBuyFound = true;
+        // Calculate cost basis from the increase
+        const increase = currentY1Sum - previousY1Sum;
+        costBasis += increase * dataPoint.y2; // y2 is the BTC price at this time
+      } else if (firstBuyFound && currentY1Sum > previousY1Sum) {
+        // Additional buys
+        const increase = currentY1Sum - previousY1Sum;
+        costBasis += increase * dataPoint.y2;
+      }
+
+      previousY1Sum = currentY1Sum;
+    }
+
+    // Calculate projected value using last data point (which includes forecast)
+    const lastDataPoint = allLineData[allLineData.length - 1];
+    const projectedValue = lastDataPoint.y1Sum * lastDataPoint.y2;
+
+    const firstDate = new Date(allLineData[firstNonZeroIndex].x);
+    const lastDate = new Date(allLineData[allLineData.length - 1].x);
+
+    // Calculate time period in years
+    const timeInYears =
+      (lastDate.getTime() - firstDate.getTime()) /
+      (1000 * 60 * 60 * 24 * 365.25);
+
+    if (timeInYears <= 0 || costBasis <= 0) {
+      return { projectedCagrPercentage: 0, projectedCagrDollar: 0 };
+    }
+
+    // Calculate projected CAGR percentage
+    const projectedCagrPercentage =
+      (Math.pow(projectedValue / costBasis, 1 / timeInYears) - 1) * 100;
+
+    // Calculate average annual dollar gain
+    const totalValueChange = projectedValue - costBasis;
+    const projectedCagrDollar = totalValueChange / timeInYears;
+
+    return { projectedCagrPercentage, projectedCagrDollar };
+  }, [
+    lineData[lineData.length - 1]?.x,
+    lineData[0]?.x,
+    lineData.length,
+    displayMode,
+    forecastEnabled,
+    selectedWalletId,
+    gain,
+    percentGain,
+    totalInvested,
+  ]);
 
   return {
     plotData,
@@ -519,5 +654,8 @@ export const useChartData = (opts: IUseChartData) => {
     valueChange,
     cagrPercentage,
     cagrDollar,
+    forecastEnabled,
+    projectedCagrPercentage,
+    projectedCagrDollar,
   };
 };

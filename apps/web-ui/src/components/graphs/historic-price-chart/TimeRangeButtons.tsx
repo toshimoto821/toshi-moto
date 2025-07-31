@@ -8,6 +8,7 @@ import {
   resetGraphIfEmptyRange,
   selectUI,
   setUI,
+  setForecastEnabled,
 } from "@lib/slices/ui.slice";
 import { type GraphTimeFrameRange } from "@lib/slices/ui.slice.types";
 import { openPriceSocket } from "@lib/slices/price.slice";
@@ -36,6 +37,9 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
       dispatch(setGraphByRange(timeframe));
       dispatch(setUI({ graphIsLocked: false, graphSelectedIndex: null }));
       dispatch(openPriceSocket({ retry: false, forceRange: timeframe }));
+
+      // Disable forecast if switching to any timeframe other than 5Y
+      dispatch(setForecastEnabled(false));
     };
   };
 
@@ -117,6 +121,7 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
       </div>
     );
   };
+
   return (
     <div className="flex space-x-2 items-center justify-end w-full pt-2 py-1 px-4 shadow-inner-top-bottom">
       <NavButton range="1D" />

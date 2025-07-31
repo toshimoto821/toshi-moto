@@ -2,7 +2,13 @@
 import { DropdownMenu, IconButton, Text } from "@radix-ui/themes";
 import { CommitIcon } from "@radix-ui/react-icons";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI, setUI } from "@lib/slices/ui.slice";
+import {
+  selectUI,
+  setUI,
+  selectForecastEnabled,
+  setForecastEnabled,
+  setGraphByRange,
+} from "@lib/slices/ui.slice";
 
 type ISelectionDropdown = {
   onClickToggleInputAddresses: ({
@@ -22,7 +28,20 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
     graphBtcAllocation,
     graphSelectedTransactions,
   } = useAppSelector(selectUI);
+
+  const forecastEnabled = useAppSelector(selectForecastEnabled);
   const { onClickToggleInputAddresses } = props;
+
+  const handleToggleForecast = () => {
+    if (!forecastEnabled) {
+      // Enable forecast and switch to 5Y timeframe
+      dispatch(setForecastEnabled(true));
+      dispatch(setGraphByRange("5Y"));
+    } else {
+      // Disable forecast
+      dispatch(setForecastEnabled(false));
+    }
+  };
 
   return (
     <DropdownMenu.Root>
@@ -67,6 +86,16 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
         <DropdownMenu.Separator />
+
+        {/* Forecast toggle - always show */}
+        <DropdownMenu.Item
+          shortcut={forecastEnabled ? "✓" : ""}
+          onSelect={handleToggleForecast}
+        >
+          {forecastEnabled ? "Forecast ON" : "Forecast"}
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+
         <DropdownMenu.Item
           shortcut={privatePrice ? "✓" : ""}
           onSelect={() => {
