@@ -359,6 +359,7 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
           );
         }, 10000);
         if (!result) {
+          alert("could not fetch wallet form xpub ");
           dispatch(
             walletsSlice.actions.updateWalletMeta({
               walletId,
@@ -380,10 +381,12 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
           })
         );
 
-        // ready to scan
-
         const updatedState = listenerApi.getState();
         const updatedWallet = updatedState.wallets.entities[walletId];
+        // ready to scan
+        alert(
+          `lastAddressIndex  ${updatedWallet.meta.receive.lastAddressIndex}`
+        );
         const receiveAddresses = await Xpub.scanXpubs(updatedWallet.xpubs, {
           start: 1,
           limit: Math.max(
@@ -392,6 +395,7 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
           ),
           isChange: false,
         });
+        alert(`receiveAddresses  ${receiveAddresses.length}`);
         listenerApi.dispatch(
           enqueueAction(
             receiveAddresses.map((address, index) => ({
