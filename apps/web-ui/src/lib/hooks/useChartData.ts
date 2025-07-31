@@ -83,7 +83,7 @@ export const useChartData = (opts: IUseChartData) => {
   const lastTs = last ? new Date(last.closeTime).getTime() : null;
 
   const isForecastData = (price: any) => {
-    if (!forecastEnabled || !forecastData.length) return false;
+    if (!forecastEnabled || !forecastData?.length) return false;
     const forecastStartTime = forecastData[0].openTime;
     return price.openTime >= forecastStartTime;
   };
@@ -137,7 +137,7 @@ export const useChartData = (opts: IUseChartData) => {
     lastTs,
     last?.closePrice,
     forecastEnabled,
-    forecastData.length,
+    forecastData?.length,
   ]);
 
   const filteredWallets = selectedWalletId
