@@ -23,7 +23,7 @@ export const useBtcPrice = () => {
 
   // When forecast is enabled, use the last forecast price instead of real-time price
   const effectiveBtcPrice = useMemo(() => {
-    if (forecastEnabled && forecastData.length > 0) {
+    if (forecastEnabled && forecastData?.length > 0) {
       const lastForecastPrice = parseFloat(
         forecastData[forecastData.length - 1].closePrice
       );
