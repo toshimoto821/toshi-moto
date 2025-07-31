@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.29.7](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.29.6...web-ui-1.29.7) (2025-07-31)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.29.7)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.29.7)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* forecastData undefined ([0a4578d](https://github.com/toshimoto821/toshi-moto/commit/0a4578de2a18f04157406459d07a3484c2aaa1e9))
+
 ## [1.29.6](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.29.5...web-ui-1.29.6) (2025-07-31)
 
   |      |     |
