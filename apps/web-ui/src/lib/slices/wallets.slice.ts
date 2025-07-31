@@ -357,7 +357,7 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
             wallet.meta.receive.lastAddressIndex !== null &&
             wallet.meta.change.lastAddressIndex !== null
           );
-        }, 12000);
+        }, 120000);
         if (!result) {
           dispatch(
             walletsSlice.actions.updateWalletMeta({
