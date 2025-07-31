@@ -82,12 +82,6 @@ export const useChartData = (opts: IUseChartData) => {
   const last = prices[prices.length - 1];
   const lastTs = last ? new Date(last.closeTime).getTime() : null;
 
-  // Separate historical and forecast data for processing
-  const historicalPrices =
-    forecastEnabled && forecastData.length > 0
-      ? prices.slice(0, prices.length - forecastData.length)
-      : prices;
-
   const isForecastData = (price: any) => {
     if (!forecastEnabled || !forecastData.length) return false;
     const forecastStartTime = forecastData[0].openTime;

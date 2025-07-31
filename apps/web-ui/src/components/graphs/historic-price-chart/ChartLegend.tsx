@@ -6,7 +6,6 @@ import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
-import { selectUI } from "@root/lib/slices/ui.slice";
 import { selectOrAppend } from "../line/d3.utils";
 import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";

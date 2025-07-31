@@ -27,7 +27,6 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
     graphPlotDots,
     graphBtcAllocation,
     graphSelectedTransactions,
-    graphTimeFrameRange,
   } = useAppSelector(selectUI);
 
   const forecastEnabled = useAppSelector(selectForecastEnabled);
