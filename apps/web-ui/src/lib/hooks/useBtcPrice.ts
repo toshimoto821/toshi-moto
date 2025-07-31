@@ -34,7 +34,7 @@ export const useBtcPrice = () => {
 
   // When forecast is enabled, use forecast timestamp instead of real-time timestamp
   const effectiveUpdatedAt = useMemo(() => {
-    if (forecastEnabled && forecastData.length > 0) {
+    if (forecastEnabled && forecastData?.length > 0) {
       return forecastData[forecastData.length - 1].closeTime;
     }
     return updatedAt;
@@ -55,6 +55,6 @@ export const useBtcPrice = () => {
     change,
     circulatingSupply,
     error,
-    isForecastPrice: forecastEnabled && forecastData.length > 0,
+    isForecastPrice: forecastEnabled && forecastData?.length > 0,
   };
 };
