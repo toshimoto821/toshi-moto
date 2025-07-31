@@ -37,7 +37,6 @@ interface PriceState {
 
 export type IPrices = [number, number, number][];
 
-
 const initialState: PriceState = {
   btcPrice: 0,
   last_updated_at: 0,
@@ -137,8 +136,6 @@ export const selectBtcPrice = createSelector(
   })
 );
 
-
-
 ////////////////////////////////////////
 /// WebSocket
 ////////////////////////////////////////
@@ -154,7 +151,13 @@ export const updatePricing = createAsyncThunk<
     graphEndDate,
     graphTimeFrameRange,
     previousGraphTimeFrameRange,
+    forecastEnabled,
   } = state.ui;
+
+  // Skip price updates when forecast is enabled
+  if (forecastEnabled) {
+    return;
+  }
 
   const { last_updated_stream_at } = state.price;
 

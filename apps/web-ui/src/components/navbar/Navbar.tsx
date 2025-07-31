@@ -48,7 +48,11 @@ const bottomScale = d3
   .clamp(true); //
 
 export const Navbar = () => {
-  const { btcPrice: rawPrice, change: btcChangePrice } = useBtcPrice();
+  const {
+    btcPrice: rawPrice,
+    change: btcChangePrice,
+    isForecastPrice,
+  } = useBtcPrice();
   const dispatch = useAppDispatch();
   const btcPrice = rawPrice;
   const { actions, data, wallets } = useWallets();
@@ -66,6 +70,9 @@ export const Navbar = () => {
     valueChange,
     cagrPercentage,
     cagrDollar,
+    forecastEnabled,
+    projectedCagrPercentage,
+    projectedCagrDollar,
   } = useChartData({
     wallets,
     btcPrice,
@@ -107,9 +114,16 @@ export const Navbar = () => {
     percentChangeToShow = percentGain || 0;
   } else if (displayMode === "cagr") {
     priceToShow = data.totalBalance * btcPrice;
-    changeToShow = cagrPercentage || 0;
-    valueChangeToShow = cagrDollar || 0;
-    percentChangeToShow = cagrPercentage || 0;
+    // Use projected CAGR values when forecast is enabled, otherwise use historical CAGR
+    changeToShow = forecastEnabled
+      ? projectedCagrPercentage || 0
+      : cagrPercentage || 0;
+    valueChangeToShow = forecastEnabled
+      ? projectedCagrDollar || 0
+      : cagrDollar || 0;
+    percentChangeToShow = forecastEnabled
+      ? projectedCagrPercentage || 0
+      : cagrPercentage || 0;
   }
 
   const fontColor = colorScale(changeToShow ?? 0);
@@ -183,11 +197,11 @@ export const Navbar = () => {
   const getDisplayModeLabel = () => {
     switch (displayMode) {
       case "standard":
-        return "BTC/USD";
+        return forecastEnabled ? "BTC/USD (Forecast)" : "BTC/USD";
       case "netAsset":
-        return "Net Asset";
+        return forecastEnabled ? "Net Asset (Forecast)" : "Net Asset";
       case "cagr":
-        return "CAGR";
+        return forecastEnabled ? "CAGR (Forecast)" : "CAGR";
       default:
         return "BTC/USD";
     }
@@ -329,10 +343,16 @@ export const Navbar = () => {
                     ? privateNumber(formatPrice(priceToShow))
                     : formatPrice(priceToShow))}
               {!priceToShow && currencySymbol + "..."}
+              {isForecastPrice && (
+                <span className="ml-2 text-xs text-green-500 font-normal">
+                  (Forecast)
+                </span>
+              )}
             </Text>
 
             <Text size="1" color="gray">
               {displayMode === "standard" ? "BTC/USD" : "USD"}
+              {isForecastPrice && " • Forecast"}
             </Text>
           </div>
           <div className="text-right">
@@ -373,7 +393,15 @@ export const Navbar = () => {
           <div className="flex justify-between px-4 text-gray-400 py-2">
             <div className="flex" data-testid="date-picker-container">
               <div className="flex items-center">
-                <Button size="1" variant="ghost" onClick={onClickDate("start")}>
+                <Button
+                  size="1"
+                  variant="ghost"
+                  onClick={onClickDate("start")}
+                  disabled={forecastEnabled}
+                  className={
+                    forecastEnabled ? "opacity-50 cursor-not-allowed" : ""
+                  }
+                >
                   <Text size="1" className="font-mono">
                     {format(firstDate, "PP, hh:mm a")}
                   </Text>
@@ -383,7 +411,15 @@ export const Navbar = () => {
                 <ArrowRightIcon width={12} height={12} />
               </div>
               <div className="flex items-center">
-                <Button size="1" variant="ghost" onClick={onClickDate("end")}>
+                <Button
+                  size="1"
+                  variant="ghost"
+                  onClick={onClickDate("end")}
+                  disabled={forecastEnabled}
+                  className={
+                    forecastEnabled ? "opacity-50 cursor-not-allowed" : ""
+                  }
+                >
                   <Text size="1" className="font-mono">
                     {format(lastDate, "PP, hh:mm a")}
                   </Text>

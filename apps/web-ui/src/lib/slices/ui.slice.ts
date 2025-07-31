@@ -56,6 +56,10 @@ const initialState: UIState = {
   toastOpen: false,
   toastMessage: null,
   walletExpandedAddresses: [],
+  // Forecast functionality
+  forecastEnabled: false,
+  forecastCagr: 0,
+  forecastData: [],
 };
 
 export const uiSlice = createSlice({
@@ -131,6 +135,21 @@ export const uiSlice = createSlice({
     setDebugMode(state, action: PayloadAction<boolean>) {
       state.debugMode = action.payload;
     },
+    // Forecast functionality
+    setForecastEnabled(state, action: PayloadAction<boolean>) {
+      state.forecastEnabled = action.payload;
+    },
+    setForecastCagr(state, action: PayloadAction<number>) {
+      state.forecastCagr = action.payload;
+    },
+    setForecastData(state, action: PayloadAction<UIState["forecastData"]>) {
+      state.forecastData = action.payload;
+    },
+    resetForecast(state) {
+      state.forecastEnabled = false;
+      state.forecastCagr = 0;
+      state.forecastData = [];
+    },
   },
   extraReducers(builder) {
     builder.addMatcher(API_REQUEST_REJECTED, (state, action) => {
@@ -161,6 +180,10 @@ export const {
   showToast,
   clearToast,
   setDebugMode,
+  setForecastEnabled,
+  setForecastCagr,
+  setForecastData,
+  resetForecast,
 } = uiSlice.actions;
 
 export const roundUpToNearHour = (date: Date) => {
@@ -208,6 +231,17 @@ export const setGraphByRange = (
     graphTimeFrameGroup = FIVE_YEAR_GROUP_BY;
     graphTimeFrameRange = "5Y";
   }
+
+  // Reset forecast when changing timeframes (forecast only available on 5Y)
+  const forecastReset =
+    range !== "5Y"
+      ? {
+          forecastEnabled: false,
+          forecastCagr: 0,
+          forecastData: [],
+        }
+      : {};
+
   return {
     type: setUI.type,
     payload: {
@@ -215,6 +249,7 @@ export const setGraphByRange = (
       graphEndDate: endDate,
       graphTimeFrameRange,
       graphTimeFrameGroup,
+      ...forecastReset,
     },
   };
 };
@@ -258,6 +293,12 @@ export const chartByDateRangeAction = (
 export const selectDebugMode = (state: RootState) => state.ui.debugMode;
 export const selectPrivatePrice = (state: RootState) => state.ui.privatePrice;
 export const selectUI = (state: RootState) => state.ui;
+
+// Forecast selectors
+export const selectForecastEnabled = (state: RootState) =>
+  state.ui.forecastEnabled;
+export const selectForecastCagr = (state: RootState) => state.ui.forecastCagr;
+export const selectForecastData = (state: RootState) => state.ui.forecastData;
 
 export const groupByHistoricCallback = (
   currentRange: GraphTimeFrameRange | null,

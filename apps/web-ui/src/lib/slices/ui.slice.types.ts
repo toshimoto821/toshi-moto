@@ -1,4 +1,5 @@
 import type { ICurrency } from "@root/types";
+import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 
 interface ToastMessage {
   line1: string;
@@ -29,6 +30,10 @@ export interface UIState {
   toastOpen: boolean;
   toastMessage: ToastMessage | null;
   walletExpandedAddresses: string[];
+  // Forecast functionality
+  forecastEnabled: boolean;
+  forecastCagr: number;
+  forecastData: BinanceKlineMetric[];
 }
 
 export type GraphTimeFrameRange =

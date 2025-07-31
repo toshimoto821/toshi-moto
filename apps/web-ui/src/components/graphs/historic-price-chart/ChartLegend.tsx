@@ -6,6 +6,7 @@ import debounce from "lodash/debounce";
 import { useBreakpoints } from "@root/lib/hooks/useBreakpoints";
 import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { selectUI } from "@root/lib/slices/ui.slice";
 import { selectOrAppend } from "../line/d3.utils";
 import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
 import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
@@ -35,7 +36,12 @@ export const ChartLegend = ({
   const breakpoint = useBreakpoints();
   const [screensize, setScreensize] = useState(window.innerWidth);
   const currentSelecion = useRef<BrushSelection | null>(null);
-  const { prices, loading, range: _rangeFromApi } = useBtcHistoricPrices();
+  const {
+    prices,
+    loading,
+    range: _rangeFromApi,
+    forecastEnabled,
+  } = useBtcHistoricPrices();
 
   const previousGraphTimeFrameRange = useAppSelector(
     (state) => state.ui.previousGraphTimeFrameRange
@@ -153,6 +159,11 @@ export const ChartLegend = ({
       [width - margin.right, height],
     ])
     .on("brush", (event: any) => {
+      // Disable brush functionality when forecast is enabled
+      if (forecastEnabled) {
+        return;
+      }
+
       if (onBrushMove && event.selection) {
         // let interval = d3.timeMinute.every(30);
         // const d0 = event.selection.map(xScale.invert);
@@ -176,6 +187,11 @@ export const ChartLegend = ({
     })
     // .on("brush", brushed)
     .on("end", function (event: any) {
+      // Disable brush functionality when forecast is enabled
+      if (forecastEnabled) {
+        return;
+      }
+
       currentSelecion.current = event;
 
       updateChart(event);
@@ -461,7 +477,14 @@ export const ChartLegend = ({
       selectOrAppend(svg, "#brush-g", "g", {
         id: "brush-g",
       });
-    brushSelection.attr("class", "brush").call(brush);
+
+    // Only render brush when forecast is disabled
+    if (!forecastEnabled) {
+      brushSelection.attr("class", "brush").call(brush);
+    } else {
+      // Remove brush when forecast is enabled
+      brushSelection.selectAll("*").remove();
+    }
   };
 
   const hasPrices = (cachedPrices?.length || 0) > 0;
@@ -507,6 +530,7 @@ export const ChartLegend = ({
     prices?.length,
     cachedPrices.length,
     numBuffer,
+    forecastEnabled,
   ]);
 
   useEffect(() => {
