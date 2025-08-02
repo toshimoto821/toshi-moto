@@ -46,7 +46,7 @@ export const useChartData = (opts: IUseChartData) => {
 
   const btcPrices = useBtcHistoricPrices();
 
-  const { group: graphTimeFrameGroup, forecastData } = btcPrices;
+  const { group: graphTimeFrameGroup, forecastData = [] } = btcPrices;
 
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
