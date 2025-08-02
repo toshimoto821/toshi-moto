@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.30.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.29.9...web-ui-1.30.0) (2025-08-02)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.30.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.30.0)|
+
+  
+
+
+### ✨ Features
+
+* add hideDatePicker method to HomepagePO and update tests to utilize it ([02e31a9](https://github.com/toshimoto821/toshi-moto/commit/02e31a927b23dc6d4c0a50caf3b60f6d0c61d9a7))
+
 ## [1.29.9](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.29.8...web-ui-1.29.9) (2025-08-02)
 
   |      |     |
