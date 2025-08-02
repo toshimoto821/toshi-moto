@@ -17,6 +17,7 @@ test("onboarding tags-[fullpage]", async ({
   await api.mockHomepage();
   await page.goto("/");
   await homepage.mockVersion("v0.0.0");
+  await homepage.hideDatePicker();
   await homepage.fixFixed();
   // eslint-disable-next-line playwright/no-wait-for-timeout
   await page.waitForTimeout(5000);
@@ -26,7 +27,6 @@ test("onboarding tags-[fullpage]", async ({
 
 test("homepage tags-[fullpage]", async ({ page, homepage, api }, testInfo) => {
   await page.goto("/");
-
   await api.mockTotalBtc();
   await homepage.mockVersion("v0.0.0");
 
@@ -48,6 +48,7 @@ test("homepage tags-[fullpage]", async ({ page, homepage, api }, testInfo) => {
       name: "bc1q35gv6h0a2nevhecdekrcwq4favhnnc5kl56c5u",
     })
   ).toBeVisible();
+  await homepage.hideDatePicker();
   await homepage.fixFixed();
 
   const path = testInfo.outputPath("homepage.png");
