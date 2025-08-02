@@ -50,4 +50,10 @@ export class HomepagePO {
         el.textContent = newVersion;
       }, version);
   }
+
+  async hideDatePicker() {
+    await this.page.getByTestId("date-picker-container").evaluate((el) => {
+      el.style.display = "none";
+    });
+  }
 }
