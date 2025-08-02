@@ -967,6 +967,7 @@ export const HeroChart = (props: IHeroChart) => {
     yValueToUse,
     graphBtcAllocation,
     graphSelectedTransactions,
+    privateNumber,
   ]);
 
   return (
