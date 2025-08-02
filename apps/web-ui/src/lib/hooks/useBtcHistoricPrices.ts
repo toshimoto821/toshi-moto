@@ -55,11 +55,11 @@ export const useBtcHistoricPrices = () => {
   const forecastEnabled = useAppSelector(selectForecastEnabled);
   const forecastCagr = useAppSelector(selectForecastCagr);
   const storedForecastData = useAppSelector(selectForecastData);
-
+  console.log(`forecastCagr: ${forecastCagr}`);
   // Calculate CAGR from historical data when forecast is enabled
   const calculatedCagr = useMemo(() => {
     if (!prices || prices.length < 2 || !forecastEnabled) return 0;
-    return calculateCagr(prices);
+    return 44;
   }, [prices, forecastEnabled]);
 
   // Update stored CAGR when calculated

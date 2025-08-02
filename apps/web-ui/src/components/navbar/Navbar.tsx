@@ -381,7 +381,8 @@ export const Navbar = () => {
                   )}
                   <div className="-mt-1">
                     <Text size="1" color="gray">
-                      {uiState.graphTimeFrameRange} &Delta;
+                      {forecastEnabled ? "10" : uiState.graphTimeFrameRange}
+                      &Delta;
                     </Text>
                   </div>
                 </div>

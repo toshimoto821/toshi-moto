@@ -18,7 +18,13 @@ export const calculateCagr = (prices: BinanceKlineMetric[]): number => {
   if (timeInYears <= 0 || firstPrice <= 0) return 0;
 
   // CAGR formula: (final_value / initial_value)^(1/time_in_years) - 1
-  return (Math.pow(lastPrice / firstPrice, 1 / timeInYears) - 1) * 100;
+  return Math.min(
+    20, // limit cagr to 20%
+    Math.max(
+      45, // limit cagr to 45%
+      (Math.pow(lastPrice / firstPrice, 1 / timeInYears) - 1) * 100
+    )
+  );
 };
 
 /**
@@ -55,6 +61,7 @@ const getTimeInterval = (groupBy: GroupBy): number => {
  */
 export const generateForecastData = (
   basePrice: number,
+  baseVolume: number,
   cagr: number,
   years = 5,
   groupBy: GroupBy = "1M"
@@ -65,6 +72,7 @@ export const generateForecastData = (
   const totalIntervals = Math.floor(years * intervalsPerYear);
 
   let currentPrice = basePrice;
+  let currentVolume = baseVolume; // Track base asset volume separately
   let currentTime = Date.now();
 
   for (let i = 0; i < totalIntervals; i++) {
@@ -75,13 +83,18 @@ export const generateForecastData = (
       1 / intervalsPerYear
     );
 
-    // Apply growth with some randomness
+    // Apply growth with some randomness to price
     const growthWithRandomness = addRandomness(intervalGrowthFactor, 0.1);
     currentPrice *= growthWithRandomness;
 
-    // Generate volume with some randomness
-    const baseVolume = 1000000; // Base volume
-    const volumeRandomness = addRandomness(baseVolume, 0.3);
+    // Volume should also follow a trend, but with more volatility
+    // Volume typically increases with price increases, but not linearly
+    const volumeGrowthFactor = Math.pow(
+      annualGrowthFactor,
+      0.5 / intervalsPerYear
+    ); // Volume grows slower than price
+    const volumeWithRandomness = addRandomness(volumeGrowthFactor, 0.4); // More volatility for volume
+    currentVolume *= volumeWithRandomness;
 
     // Create kline data
     const openPrice = currentPrice * (1 + (Math.random() - 0.5) * 0.02);
@@ -91,22 +104,21 @@ export const generateForecastData = (
       Math.min(openPrice, currentPrice) * (1 - Math.random() * 0.01);
     const closePrice = currentPrice;
 
+    // Calculate quote asset volume (base volume * price)
+    const quoteAssetVolume = currentVolume * currentPrice;
+
     const kline: BinanceKlineMetric = {
       openTime: currentTime,
       openPrice: openPrice.toString(),
       highPrice: highPrice.toString(),
       lowPrice: lowPrice.toString(),
       closePrice: closePrice.toString(),
-      volume: volumeRandomness.toString(),
+      volume: currentVolume.toString(), // Base asset volume
       closeTime: currentTime + timeInterval,
-      quoteAssetVolume: volumeRandomness.toString(),
+      quoteAssetVolume: quoteAssetVolume.toString(), // Quote asset volume
       numberOfTrades: Math.floor(Math.random() * 1000) + 100,
-      takerBuyBaseAssetVolume: (volumeRandomness * 0.6).toString(),
-      takerBuyQuoteAssetVolume: (
-        volumeRandomness *
-        0.6 *
-        currentPrice
-      ).toString(),
+      takerBuyBaseAssetVolume: (currentVolume * 0.6).toString(),
+      takerBuyQuoteAssetVolume: (quoteAssetVolume * 0.6).toString(),
     };
 
     forecastData.push(kline);
@@ -129,9 +141,24 @@ export const generateForecastFromHistorical = (
 
   const lastDataPoint = historicalData[historicalData.length - 1];
   const basePrice = parseFloat(lastDataPoint.closePrice);
+
+  // Use average of last 3-5 data points for volume to avoid incomplete data
+  const volumeSampleSize = Math.min(5, Math.max(3, historicalData.length));
+  const recentDataPoints = historicalData.slice(-volumeSampleSize);
+  const totalVolume = recentDataPoints.reduce((sum, dataPoint) => {
+    return sum + parseFloat(dataPoint.volume);
+  }, 0);
+  const baseVolume = totalVolume / recentDataPoints.length;
+
   const startTime = lastDataPoint.closeTime;
 
-  const forecastData = generateForecastData(basePrice, cagr, years, groupBy);
+  const forecastData = generateForecastData(
+    basePrice,
+    baseVolume,
+    cagr,
+    years,
+    groupBy
+  );
 
   // Adjust timestamps to continue from the last historical point
   const timeInterval = getTimeInterval(groupBy);
