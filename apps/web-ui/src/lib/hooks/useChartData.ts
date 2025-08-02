@@ -46,7 +46,7 @@ export const useChartData = (opts: IUseChartData) => {
 
   const btcPrices = useBtcHistoricPrices();
 
-  const { group: graphTimeFrameGroup, forecastData } = btcPrices;
+  const { group: graphTimeFrameGroup, forecastData = [] } = btcPrices;
 
   const prices = btcPrices.prices ? btcPrices.prices.slice() : [];
 
@@ -138,6 +138,8 @@ export const useChartData = (opts: IUseChartData) => {
     last?.closePrice,
     forecastEnabled,
     forecastData?.length,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   const filteredWallets = selectedWalletId
@@ -229,6 +231,8 @@ export const useChartData = (opts: IUseChartData) => {
     chartTimeDiffInDays,
     totalTransactions,
     lastTs,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   const allNodes = [
@@ -325,6 +329,8 @@ export const useChartData = (opts: IUseChartData) => {
     chartTimeDiffInDays,
     totalTransactions,
     lastTs,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   const { lineData, lineMap } = useMemo(() => {
@@ -394,6 +400,8 @@ export const useChartData = (opts: IUseChartData) => {
     allNodes.length,
     allNodes[0]?.date?.getTime(),
     selectedTxs.length,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   const { gain, percentGain, totalInvested } = useMemo(() => {
@@ -467,6 +475,8 @@ export const useChartData = (opts: IUseChartData) => {
     gain,
     percentGain,
     totalInvested,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   const { cagrPercentage, cagrDollar } = useMemo(() => {
@@ -556,6 +566,8 @@ export const useChartData = (opts: IUseChartData) => {
     gain,
     percentGain,
     totalInvested,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   // Calculate projected CAGR when forecast is enabled
@@ -641,6 +653,8 @@ export const useChartData = (opts: IUseChartData) => {
     gain,
     percentGain,
     totalInvested,
+    forecastData[0]?.closePrice,
+    forecastData[forecastData.length - 1]?.closePrice,
   ]);
 
   return {
