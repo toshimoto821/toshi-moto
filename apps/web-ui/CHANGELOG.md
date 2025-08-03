@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.30.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.2...web-ui-1.30.3) (2025-08-03)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.30.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.30.3)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* chart shift ([31ff06f](https://github.com/toshimoto821/toshi-moto/commit/31ff06fa39db1b7dc024fb7faad98aefc0e8d8b6))
+
 ## [1.30.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.1...web-ui-1.30.2) (2025-08-03)
 
   |      |     |
