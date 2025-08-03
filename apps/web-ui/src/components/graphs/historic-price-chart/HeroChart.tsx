@@ -24,7 +24,11 @@ import { useWallets } from "@lib/hooks/useWallets";
 import { IRawNode } from "@root/types";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
 import { setUI } from "@root/lib/slices/ui.slice";
-import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
+import {
+  addBufferItems,
+  BUFFER_LENGTH,
+  createBufferedData,
+} from "./hero-chart.utils";
 import { COLOR_NEGATIVE_CHANGE, COLOR_POSITIVE_CHANGE } from "./VolumeChart";
 
 interface IHeroChart {
@@ -92,13 +96,10 @@ export const HeroChart = (props: IHeroChart) => {
 
   const margin = { top: 25, right: 0, bottom: 10, left: 0 };
 
-  const data = [...(prices || [])];
+  const data = createBufferedData(prices || []);
   const numBuffer = BUFFER_LENGTH; //getNumBuffer(data.length, breakpoint);
-  if (data.length) {
-    // const len = data.length / 10;
+  if (lineData.length) {
     addBufferItems(lineData, numBuffer);
-
-    addBufferItems(data, numBuffer);
   }
 
   const lastPrice = data[data.length - 1] || {};

@@ -8,7 +8,7 @@ import { useBtcHistoricPrices } from "@root/lib/hooks/useBtcHistoricPrices";
 import { useAppSelector } from "@root/lib/hooks/store.hooks";
 import { selectOrAppend } from "../line/d3.utils";
 import type { BinanceKlineMetric } from "@root/lib/slices/api.slice.types";
-import { addBufferItems, BUFFER_LENGTH } from "./hero-chart.utils";
+import { BUFFER_LENGTH, createBufferedData } from "./hero-chart.utils";
 
 type IChartLegendProps = {
   height: number;
@@ -55,12 +55,8 @@ export const ChartLegend = ({
   //   return prices;
   // }, [group, forecastModel, len > 0, previousGraphTimeFrameRange, range]);
 
-  const cachedPrices = [...(prices || [])];
+  const cachedPrices = createBufferedData(prices || []);
   const numBuffer = BUFFER_LENGTH; // getNumBuffer(cachedPrices.length, breakpoint);
-
-  if (cachedPrices.length) {
-    addBufferItems(cachedPrices, numBuffer);
-  }
   const xDomain = [] as Date[];
   if (cachedPrices?.length) {
     const firstPrice = cachedPrices[0];

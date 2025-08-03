@@ -194,12 +194,7 @@ export const updatePricing = createAsyncThunk<
         apiSlice.util.updateQueryData("getHistoricPrice", args, (draft) => {
           const current = [...draft.prices];
           const lastPrice = current[current.length - 1];
-          const secondToLastPrice = current[current.length - 2];
-          const lastPriceTs = new Date(lastPrice.closeTime).getTime();
-          const secondToLastPriceTs = new Date(
-            secondToLastPrice.closeTime
-          ).getTime();
-          const diff = lastPriceTs - secondToLastPriceTs;
+
           // console.log("lastPrice", new Date(lastPrice[0]), lastPrice[1]);
           // console.log(
           //   "secondToLastPrice",
@@ -208,11 +203,7 @@ export const updatePricing = createAsyncThunk<
           // );
           // const FIVE_MINUTES = 1000 * 60 * 5;
 
-          const shouldAppend = shouldAppendPrice(
-            range,
-            diff,
-            state.ui.breakpoint
-          );
+          const shouldAppend = kline.closeTime > lastPrice.closeTime;
 
           if (shouldAppend) {
             // console.log("ts: appending", new Date(eventTime), price);
