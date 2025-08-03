@@ -13,6 +13,14 @@ export function addBufferItems<T>(data: T[], len: number) {
   }
 }
 
+export function createBufferedData<T>(data: T[]): T[] {
+  const bufferedData = [...data];
+  if (bufferedData.length) {
+    addBufferItems(bufferedData, BUFFER_LENGTH);
+  }
+  return bufferedData;
+}
+
 export function getNumBuffer(len: number, breakpoint: number) {
   if (breakpoint < 2) {
     return Math.floor(len / 4);
