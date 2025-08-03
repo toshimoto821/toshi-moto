@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.30.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.1...web-ui-1.30.2) (2025-08-03)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.30.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.30.2)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* selected wallet id ([8011f6b](https://github.com/toshimoto821/toshi-moto/commit/8011f6b8f453ca45894db00f918639b94ee03b72))
+
 ## [1.30.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.0...web-ui-1.30.1) (2025-08-02)
 
   |      |     |
