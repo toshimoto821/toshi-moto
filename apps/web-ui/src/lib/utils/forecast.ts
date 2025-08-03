@@ -21,7 +21,7 @@ export const calculateCagr = (prices: BinanceKlineMetric[]): number => {
   return Math.min(
     20, // limit cagr to 20%
     Math.max(
-      45, // limit cagr to 45%
+      55, // limit cagr to 55%
       (Math.pow(lastPrice / firstPrice, 1 / timeInYears) - 1) * 100
     )
   );
