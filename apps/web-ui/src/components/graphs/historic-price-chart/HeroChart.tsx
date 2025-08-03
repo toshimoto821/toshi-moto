@@ -71,6 +71,7 @@ export const HeroChart = (props: IHeroChart) => {
   const { btcPrice } = useBtcPrice();
   const { wallets } = useWallets();
   const privateNumber = useNumberObfuscation();
+  const selectedWalletId = useAppSelector((state) => state.ui.selectedWalletId);
 
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
@@ -968,6 +969,7 @@ export const HeroChart = (props: IHeroChart) => {
     graphBtcAllocation,
     graphSelectedTransactions,
     privateNumber,
+    selectedWalletId,
   ]);
 
   return (
