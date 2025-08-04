@@ -72,7 +72,7 @@ export const generateForecastData = (
   const totalIntervals = Math.floor(years * intervalsPerYear);
 
   // Calculate target final price based on CAGR
-  const targetFinalPrice = basePrice * Math.pow(1 + cagr / 100, years);
+  // const targetFinalPrice = basePrice * Math.pow(1 + cagr / 100, years);
 
   // Calculate the base growth factor per interval (without randomness)
   const annualGrowthFactor = 1 + cagr / 100;
