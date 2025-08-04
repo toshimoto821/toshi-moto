@@ -18,10 +18,10 @@ export const calculateCagr = (prices: BinanceKlineMetric[]): number => {
   if (timeInYears <= 0 || firstPrice <= 0) return 0;
 
   // CAGR formula: (final_value / initial_value)^(1/time_in_years) - 1
-  return Math.min(
+  return Math.max(
     20, // limit cagr to 20%
-    Math.max(
-      55, // limit cagr to 55%
+    Math.min(
+      45, // limit cagr to 45%
       (Math.pow(lastPrice / firstPrice, 1 / timeInYears) - 1) * 100
     )
   );
@@ -57,7 +57,7 @@ const getTimeInterval = (groupBy: GroupBy): number => {
 };
 
 /**
- * Generate forecast data based on CAGR
+ * Generate forecast data based on CAGR with controlled randomness
  */
 export const generateForecastData = (
   basePrice: number,
@@ -71,32 +71,51 @@ export const generateForecastData = (
   const intervalsPerYear = (365.25 * 24 * 60 * 60 * 1000) / timeInterval;
   const totalIntervals = Math.floor(years * intervalsPerYear);
 
+  // Calculate target final price based on CAGR
+  const targetFinalPrice = basePrice * Math.pow(1 + cagr / 100, years);
+
+  // Calculate the base growth factor per interval (without randomness)
+  const annualGrowthFactor = 1 + cagr / 100;
+  const baseIntervalGrowthFactor = Math.pow(
+    annualGrowthFactor,
+    1 / intervalsPerYear
+  );
+
   let currentPrice = basePrice;
-  let currentVolume = baseVolume; // Track base asset volume separately
+  let currentVolume = baseVolume;
   let currentTime = Date.now();
 
   for (let i = 0; i < totalIntervals; i++) {
-    // Calculate growth factor for this interval
-    const annualGrowthFactor = 1 + cagr / 100;
-    const intervalGrowthFactor = Math.pow(
-      annualGrowthFactor,
-      1 / intervalsPerYear
-    );
+    // Calculate how far we are from the target path
+    const expectedPriceAtStep =
+      basePrice * Math.pow(baseIntervalGrowthFactor, i + 1);
+    const deviationFromTarget =
+      (currentPrice - expectedPriceAtStep) / expectedPriceAtStep;
 
-    // Apply growth with some randomness to price
-    const growthWithRandomness = addRandomness(intervalGrowthFactor, 0.1);
-    currentPrice *= growthWithRandomness;
+    // Apply mean reversion - if we're too high, reduce growth; if too low, increase growth
+    const meanReversionFactor = 1 - deviationFromTarget * 0.3; // 30% mean reversion strength
 
-    // Volume should also follow a trend, but with more volatility
-    // Volume typically increases with price increases, but not linearly
+    // Calculate the growth factor with controlled randomness
+    const randomFactor = 1 + (Math.random() - 0.5) * 0.2; // ±10% randomness
+    const adjustedGrowthFactor =
+      baseIntervalGrowthFactor * meanReversionFactor * randomFactor;
+
+    // Apply growth
+    currentPrice *= adjustedGrowthFactor;
+
+    // Ensure we don't go negative or too extreme
+    currentPrice = Math.max(currentPrice, basePrice * 0.1); // Don't go below 10% of original price
+
+    // Volume follows a similar pattern but with more volatility
     const volumeGrowthFactor = Math.pow(
       annualGrowthFactor,
       0.5 / intervalsPerYear
-    ); // Volume grows slower than price
-    const volumeWithRandomness = addRandomness(volumeGrowthFactor, 0.4); // More volatility for volume
-    currentVolume *= volumeWithRandomness;
+    );
+    const volumeRandomFactor = 1 + (Math.random() - 0.5) * 0.6; // ±30% randomness for volume
+    currentVolume *= volumeGrowthFactor * volumeRandomFactor;
+    currentVolume = Math.max(currentVolume, baseVolume * 0.1);
 
-    // Create kline data
+    // Create kline data with intra-interval price movement
     const openPrice = currentPrice * (1 + (Math.random() - 0.5) * 0.02);
     const highPrice =
       Math.max(openPrice, currentPrice) * (1 + Math.random() * 0.01);
@@ -104,7 +123,7 @@ export const generateForecastData = (
       Math.min(openPrice, currentPrice) * (1 - Math.random() * 0.01);
     const closePrice = currentPrice;
 
-    // Calculate quote asset volume (base volume * price)
+    // Calculate quote asset volume
     const quoteAssetVolume = currentVolume * currentPrice;
 
     const kline: BinanceKlineMetric = {
@@ -113,9 +132,9 @@ export const generateForecastData = (
       highPrice: highPrice.toString(),
       lowPrice: lowPrice.toString(),
       closePrice: closePrice.toString(),
-      volume: currentVolume.toString(), // Base asset volume
+      volume: currentVolume.toString(),
       closeTime: currentTime + timeInterval,
-      quoteAssetVolume: quoteAssetVolume.toString(), // Quote asset volume
+      quoteAssetVolume: quoteAssetVolume.toString(),
       numberOfTrades: Math.floor(Math.random() * 1000) + 100,
       takerBuyBaseAssetVolume: (currentVolume * 0.6).toString(),
       takerBuyQuoteAssetVolume: (quoteAssetVolume * 0.6).toString(),
