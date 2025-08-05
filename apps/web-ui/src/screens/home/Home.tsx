@@ -29,7 +29,7 @@ export const Home = () => {
           <Outlet />
 
           {pathname === "/" && (
-            <div className="mx-4 md:mx-0 mt-4 flex justify-end">
+            <div className=" mt-4 flex justify-end">
               <Button
                 variant="surface"
                 color="gray"
