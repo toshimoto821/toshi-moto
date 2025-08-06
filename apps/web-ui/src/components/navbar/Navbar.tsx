@@ -78,6 +78,12 @@ export const Navbar = () => {
     btcPrice,
   });
 
+  // Calculate if time range is less than 30 days
+  const timeRangeInDays = lineData?.length
+    ? (lineData[lineData.length - 1].x - lineData[0].x) / (1000 * 60 * 60 * 24)
+    : 0;
+  const isShortRange = timeRangeInDays < 30;
+
   const uiState = useAppSelector(selectUI);
   const { displayMode } = uiState;
   const privateNumber = useNumberObfuscation();
@@ -357,6 +363,11 @@ export const Navbar = () => {
           </div>
           <div className="text-right">
             <div className="flex justify-end items-center">
+              {displayMode === "cagr" && isShortRange && (
+                <Text size="1" color="gray">
+                  CAGR disabled for &lt; 30 days
+                </Text>
+              )}
               {priceToShow > 0 && !!valueChangeToShow && (
                 <div ref={priceChangeRef}>
                   <Text style={{ color: fontColor }} size="1">

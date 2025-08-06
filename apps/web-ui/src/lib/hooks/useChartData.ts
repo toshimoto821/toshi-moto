@@ -544,7 +544,10 @@ export const useChartData = (opts: IUseChartData) => {
       (lastDate.getTime() - firstDate.getTime()) /
       (1000 * 60 * 60 * 24 * 365.25);
 
-    if (timeInYears <= 0 || costBasis <= 0) {
+    // Return 0 if time range is less than 30 days
+    const timeInDays =
+      (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (timeInDays < 30 || timeInYears <= 0 || costBasis <= 0) {
       return { cagrPercentage: 0, cagrDollar: 0 };
     }
 
@@ -630,7 +633,10 @@ export const useChartData = (opts: IUseChartData) => {
       (lastDate.getTime() - firstDate.getTime()) /
       (1000 * 60 * 60 * 24 * 365.25);
 
-    if (timeInYears <= 0 || costBasis <= 0) {
+    // Return 0 if time range is less than 30 days
+    const timeInDays =
+      (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (timeInDays < 30 || timeInYears <= 0 || costBasis <= 0) {
       return { projectedCagrPercentage: 0, projectedCagrDollar: 0 };
     }
 
