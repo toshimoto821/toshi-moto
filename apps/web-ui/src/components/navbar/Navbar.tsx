@@ -357,7 +357,7 @@ export const Navbar = () => {
           </div>
           <div className="text-right">
             <div className="flex justify-end items-center">
-              {priceToShow > 0 && valueChangeToShow && (
+              {priceToShow > 0 && !!valueChangeToShow && (
                 <div ref={priceChangeRef}>
                   <Text style={{ color: fontColor }} size="1">
                     {currencySymbol}
