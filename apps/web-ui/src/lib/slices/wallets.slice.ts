@@ -144,6 +144,22 @@ export const walletsSlice = createSlice({
         });
 
         addressAdapter.removeMany(wallet.addresses, addressesToRemove);
+        // calculate the new last address index
+        const lastAddressIndex = wallet.addresses.ids.reduce(
+          (acc, addressId) => {
+            const address = wallet.addresses.entities[addressId];
+            if (address.isChange === action.payload.change) {
+              return Math.max(acc, address.index);
+            }
+            return acc;
+          },
+          0
+        );
+        if (action.payload.change) {
+          wallet.meta.change.lastAddressIndex = lastAddressIndex + 1;
+        } else {
+          wallet.meta.receive.lastAddressIndex = lastAddressIndex + 1;
+        }
       }
     },
     refreshWallet(state, action: PayloadAction<string>) {
