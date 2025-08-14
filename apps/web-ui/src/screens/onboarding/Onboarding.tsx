@@ -322,14 +322,14 @@ export const Onboarding = () => {
               Built by Webshot Archive
             </Text>
             <Text className="text-blue-700 text-sm">
-              Toshi Moto was built and is sponsored by the creator of{" "}
+              Toshi Moto was built bythe creator of{" "}
               <a
                 href="https://www.webshotarchive.com?utm_source=toshi-moto&utm_medium=referral&utm_campaign=open-source"
                 className="text-blue-600 hover:text-blue-800 underline"
               >
                 Webshot Archive
               </a>
-              . Webshot Archive allos software development teams to move fast!
+              . Webshot Archive allows software development teams to move fast!
               Seeing every change -- past, present and future. From upcoming
               updates to historical changes, know exactly whats happening, who's
               responsible, and how it impacts your app or website.
