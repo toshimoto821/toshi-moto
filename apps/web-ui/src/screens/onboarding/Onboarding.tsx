@@ -114,7 +114,7 @@ export const Onboarding = () => {
               <div className="flex items-start space-x-4">
                 <Text className="text-gray-700">
                   <strong>Transparency:</strong> Code available for personal use
-                  and review under PolyForm Noncommercial 1.0.0 license.
+                  and review under Apache 2.0 license.
                 </Text>
               </div>
               <div className="flex items-start space-x-4">
@@ -319,7 +319,7 @@ export const Onboarding = () => {
           </div>
           <div className="flex flex-col">
             <Text className="font-semibold text-blue-900 text-lg">
-              Sponsored by Webshot Archive
+              Built by Webshot Archive
             </Text>
             <Text className="text-blue-700 text-sm">
               Toshi Moto was built and is sponsored by the creator of{" "}
@@ -329,10 +329,14 @@ export const Onboarding = () => {
               >
                 Webshot Archive
               </a>
-              . Webshot Archive is a frontend developer tool that allows you to
-              visually compare screenshots on GitHub PRs and across time in the
-              Webshot Archive dashboard. Toshi Moto uses it in its GitHub repo
-              and you can see an example comment and screenshot{" "}
+              . Webshot Archive allos software development teams to move fast!
+              Seeing every change -- past, present and future. From upcoming
+              updates to historical changes, know exactly whats happening, who's
+              responsible, and how it impacts your app or website.
+              <br />
+              <br />
+              Toshi Moto uses Webshot Archive in its GitHub repo and you can see
+              an example comment and screenshot{" "}
               <a
                 href="https://github.com/toshimoto821/toshi-moto/pull/259"
                 className="text-blue-600 hover:text-blue-800 underline"
