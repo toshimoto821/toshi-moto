@@ -166,15 +166,15 @@ function UmbrelSection() {
           <div className="col col--6">
             <Heading as="h2">Available on Umbrel</Heading>
             <p style={{ color: "var(--text-secondary)", marginBottom: "2rem" }}>
-              Install Toshi Moto directly from the Umbrel Community App Store.
-              Get started with your Bitcoin wallet management in minutes.
+              Install Toshi Moto directly from the Umbrel App Store. Get started
+              with your Bitcoin wallet management in minutes.
             </p>
             <div className={styles.umbrelButtons}>
               <Link
                 className="button button--primary"
-                to="https://github.com/toshimoto821/toshimoto-app-store"
+                to="https://apps.umbrel.com/app/toshi-moto"
               >
-                Community App Store
+                Umbrel App Store
               </Link>
             </div>
           </div>
