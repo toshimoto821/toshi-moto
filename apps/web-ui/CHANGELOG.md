@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.31.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.13...web-ui-1.31.0) (2025-09-04)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.31.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.31.0)|
+
+  
+
+
+### ✨ Features
+
+* supports ypub and zpub ([c140536](https://github.com/toshimoto821/toshi-moto/commit/c1405366f79a6377a3bcd1872e697888326a6096))
+
 ## [1.30.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.12...web-ui-1.30.13) (2025-09-04)
 
   |      |     |
