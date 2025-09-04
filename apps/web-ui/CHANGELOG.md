@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.30.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.11...web-ui-1.30.12) (2025-09-04)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.30.12)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.30.12)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* wallet validation ([5a17799](https://github.com/toshimoto821/toshi-moto/commit/5a17799d538ffd3419c36d875620ef17e422fdf8)), closes [#306](https://github.com/toshimoto821/toshi-moto/issues/306)
+
 ## [1.30.11](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.10...web-ui-1.30.11) (2025-08-14)
 
   |      |     |
