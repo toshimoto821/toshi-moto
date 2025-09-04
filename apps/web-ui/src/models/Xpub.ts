@@ -6,7 +6,7 @@ const VITE_BITCOIN_NETWORK: "mainnet" | "testnet" =
 export class Xpub {
   address: string;
 
-  bitcoinjs?: any;
+  bitcoinjs?: unknown;
   constructor(address: string) {
     this.address = address;
   }
@@ -67,6 +67,31 @@ export class Xpub {
 
   static async preload() {
     return Xpub.getBitcoinjs();
+  }
+
+  static async isValidXpub(xpub: string): Promise<boolean> {
+    try {
+      if (!xpub || typeof xpub !== "string") {
+        return false;
+      }
+
+      const bitcoinjs = await Xpub.getBitcoinjs();
+
+      // Try to parse the xpub with both mainnet and testnet networks
+      try {
+        bitcoinjs.bip32.fromBase58(xpub, bitcoinjs.networks.bitcoin);
+        return true;
+      } catch {
+        try {
+          bitcoinjs.bip32.fromBase58(xpub, bitcoinjs.networks.testnet);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+    } catch {
+      return false;
+    }
   }
 
   static async scanXpubs(
