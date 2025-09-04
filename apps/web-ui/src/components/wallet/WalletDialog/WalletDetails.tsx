@@ -38,6 +38,9 @@ const walletValidationSchema = yup.object().shape({
     .of(
       yup
         .string()
+        .transform((value) =>
+          typeof value === "string" ? value.trim() : value
+        )
         .required("XPUB is required")
         .test("is-valid-xpub", "Invalid XPUB format", async function (value) {
           if (!value) return false;
@@ -101,6 +104,15 @@ export const WalletDetails = ({
     }
   };
 
+  const handleXpubBlur = (
+    index: number,
+    value: string,
+    setFieldValue: (field: string, value: unknown) => void
+  ) => {
+    const trimmedValue = value.trim();
+    setFieldValue(`xpubs.${index}`, trimmedValue);
+  };
+
   return (
     <Formik
       initialValues={initialData}
@@ -133,7 +145,7 @@ export const WalletDetails = ({
               />
               {errors.name && touched.name && (
                 <Text size="1" color="red" className="mt-1">
-                  {errors.name}
+                  {String(errors.name)}
                 </Text>
               )}
             </label>
@@ -152,7 +164,7 @@ export const WalletDetails = ({
               />
               {errors.color && touched.color && (
                 <Text size="1" color="red" className="mt-1">
-                  {errors.color}
+                  {String(errors.color)}
                 </Text>
               )}
             </label>
@@ -164,14 +176,21 @@ export const WalletDetails = ({
               <FieldArray name="xpubs">
                 {({ push, remove }) => (
                   <>
-                    {values.xpubs.map((xpub, index) => (
+                    {values.xpubs.map((xpub: string, index: number) => (
                       <div className="mb-2" key={index}>
                         <TextField.Root
                           name={`xpubs.${index}`}
                           placeholder="Enter an XPUB"
                           value={xpub}
                           onChange={handleChange}
-                          onBlur={handleBlur}
+                          onBlur={(e) => {
+                            handleBlur(e);
+                            handleXpubBlur(
+                              index,
+                              e.target.value,
+                              setFieldValue
+                            );
+                          }}
                         >
                           {index > 0 && (
                             <TextField.Slot onClick={() => remove(index)}>
