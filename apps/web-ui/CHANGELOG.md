@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.30.13](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.12...web-ui-1.30.13) (2025-09-04)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.30.13)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.30.13)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* trims xpub ([1c88f2a](https://github.com/toshimoto821/toshi-moto/commit/1c88f2aa2489c9ccdc8ece3dc3d12aca3fea19a4))
+
 ## [1.30.12](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.11...web-ui-1.30.12) (2025-09-04)
 
   |      |     |
