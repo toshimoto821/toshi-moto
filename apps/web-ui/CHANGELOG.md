@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.31.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.31.0...web-ui-1.31.1) (2025-09-05)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.31.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.31.1)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* form reset on blur ([318b419](https://github.com/toshimoto821/toshi-moto/commit/318b419bced9f5cb0232a83ec23a9bfb447aacd1))
+
 ## [1.31.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.30.13...web-ui-1.31.0) (2025-09-04)
 
   |      |     |
