@@ -118,7 +118,7 @@ export const WalletDetails = ({
       initialValues={initialData}
       validationSchema={walletValidationSchema}
       onSubmit={handleSubmit}
-      enableReinitialize
+      enableReinitialize={false}
     >
       {({
         values,
@@ -180,7 +180,7 @@ export const WalletDetails = ({
                       <div className="mb-2" key={index}>
                         <TextField.Root
                           name={`xpubs.${index}`}
-                          placeholder="Enter an XPUB"
+                          placeholder="Enter an XPUB, YPUB, or ZPUB"
                           value={xpub}
                           onChange={handleChange}
                           onBlur={(e) => {

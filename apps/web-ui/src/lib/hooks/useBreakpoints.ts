@@ -14,10 +14,37 @@ export function useBreakpoints() {
     };
 
     setResizedWindowBreakpoint();
-    window.addEventListener("resize", setResizedWindowBreakpoint);
+
+    // Debounce resize events to prevent excessive re-renders on mobile
+    // Use longer debounce for mobile keyboard events
+    let timeoutId: NodeJS.Timeout;
+    const debouncedResize = () => {
+      clearTimeout(timeoutId);
+      // Longer timeout to handle mobile keyboard show/hide
+      timeoutId = setTimeout(setResizedWindowBreakpoint, 300);
+    };
+
+    // Handle mobile keyboard events more gracefully
+    const handleResize = () => {
+      // On mobile, check if this is likely a keyboard event
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      if (isMobile) {
+        // Use longer debounce for mobile to handle keyboard transitions
+        debouncedResize();
+      } else {
+        // Desktop gets immediate response
+        setResizedWindowBreakpoint();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", setResizedWindowBreakpoint);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
     };
   }, []);
 

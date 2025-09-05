@@ -29,8 +29,10 @@ export const AddWalletDialog = ({
     onClose(success);
   }
 
-  const onOpenChange = () => {
-    // send({ type: "RESET_FORM", data: { wallet: wallet } });
+  const onOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose(false);
+    }
   };
 
   const handleImportDone = (result: ImportResult) => {
@@ -40,7 +42,10 @@ export const AddWalletDialog = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content>
+      <Dialog.Content
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <Dialog.Title>{wallet ? "Update Wallet" : "Add Wallet"}</Dialog.Title>
 
         <Tabs.Root
