@@ -279,7 +279,47 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("stop-color", grayRGB)
         .attr("stop-opacity", 1);
 
+      const gradientOrange = defs
+        .append("linearGradient")
+        .attr("id", `gradient-orange__${id}`)
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%");
+
+      gradientOrange
+        .append("stop")
+        .attr("id", "orange-stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "orange")
+        .attr("stop-opacity", 1);
+
+      gradientOrange
+        .append("stop")
+        .attr("id", "gray-stop-3")
+        .attr("offset", "100%")
+        .attr("stop-color", grayRGB)
+        .attr("stop-opacity", 1);
+
       // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
+      // Orange BTC Area chart (behind the green area)
+      if (graphBtcAllocation && lineData.length) {
+        const btcAreaGenerator = area<IRawNode>()
+          .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
+          .y0(height)
+          .y1((d) => btcScale(d.y1Sum))
+          .curve(curveBumpX);
+
+        svg
+          .append("path")
+          .datum(lineData)
+          .attr("class", "btc-area")
+          .attr("opacity", 0.15)
+          .attr("d", btcAreaGenerator)
+          .attr("fill", `url(#gradient-orange__${id})`);
+      }
 
       // ---------------------------------------------------------------------//
       // Area chart
@@ -443,30 +483,30 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // Inverse Area chart
-      const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
-        .x((_, i) => {
-          return adjustedX(i);
-        })
-        .y0(0)
-        .y1((d, i) => {
-          if (displayMode !== "standard") {
-            return yScale((d as IRawNode)[yValueToUse]);
-          } else {
-            if (i > data.length - numBuffer - 1) {
-              return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
-            }
-            return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
-          }
-        })
-        .curve(curveBumpX);
+      // const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
+      //   .x((_, i) => {
+      //     return adjustedX(i);
+      //   })
+      //   .y0(0)
+      //   .y1((d, i) => {
+      //     if (displayMode !== "standard") {
+      //       return yScale((d as IRawNode)[yValueToUse]);
+      //     } else {
+      //       if (i > data.length - numBuffer - 1) {
+      //         return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
+      //       }
+      //       return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
+      //     }
+      //   })
+      //   .curve(curveBumpX);
 
-      svg
-        .append("path")
-        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-        .datum(displayMode !== "standard" ? lineData : data)
-        .attr("class", "inverse-area")
-        .attr("d", inverseAreaGenerator)
-        .attr("fill", bgColor); // Apply a semi-transparent white fill
+      // svg
+      //   .append("path")
+      //   .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+      //   .datum(displayMode !== "standard" ? lineData : data)
+      //   .attr("class", "inverse-area")
+      //   .attr("d", inverseAreaGenerator)
+      //   .attr("fill", bgColor); // Apply a semi-transparent white fill
 
       // ---------------------------------------------------------------------//
 
