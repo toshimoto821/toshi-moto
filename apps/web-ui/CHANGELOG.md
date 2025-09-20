@@ -1,4 +1,23 @@
 # UI Changelog
+## [1.32.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.31.1...web-ui-1.32.0) (2025-09-20)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.32.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.32.0)|
+
+  
+
+
+### ✨ Features
+
+* updates btc chart ([0d2323a](https://github.com/toshimoto821/toshi-moto/commit/0d2323a2cf6bdbc4753eb85ea22ec1df5c5e2790))
+
+
+### 🐞 Bug Fixes
+
+* pricing popover ([fd48bf4](https://github.com/toshimoto821/toshi-moto/commit/fd48bf487c035d97cda9b0da94a5a54f76f09a43))
+* zero btc ([6f5f159](https://github.com/toshimoto821/toshi-moto/commit/6f5f159aefe58546a0237ea23e31fcce38e24a44))
+
 ## [1.31.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.31.0...web-ui-1.31.1) (2025-09-05)
 
   |      |     |
