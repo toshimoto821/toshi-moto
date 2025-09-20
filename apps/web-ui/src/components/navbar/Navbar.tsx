@@ -14,6 +14,7 @@ import { useNumberObfuscation } from "@root/lib/hooks/useNumberObfuscation";
 import { useChartData } from "@root/lib/hooks/useChartData";
 import { useAppSelector, useAppDispatch } from "@root/lib/hooks/store.hooks";
 import { selectUI, setUI } from "@root/lib/slices/ui.slice";
+import { Popover } from "@root/components/popover/Popover";
 import { selectGraphRange } from "@root/lib/slices/navbar.slice";
 import { HeroChart } from "../graphs/historic-price-chart/HeroChart";
 
@@ -370,12 +371,37 @@ export const Navbar = () => {
               )}
               {priceToShow > 0 && !!valueChangeToShow && (
                 <div ref={priceChangeRef}>
-                  <Text style={{ color: fontColor }} size="1">
-                    {currencySymbol}
-                    {displayMode !== "standard"
-                      ? privateNumber(formatPrice(valueChangeToShow))
-                      : formatPrice(valueChangeToShow)}
-                  </Text>
+                  <Popover
+                    title={
+                      displayMode === "netAsset"
+                        ? "Bitcoin Holdings Gain / Loss"
+                        : displayMode === "cagr"
+                        ? "CAGR Gain / Loss"
+                        : "Bitcoin Price Change"
+                    }
+                    text={(classNames) => (
+                      <Text
+                        style={{ color: fontColor }}
+                        size="1"
+                        className={classNames}
+                      >
+                        {currencySymbol}
+                        {displayMode !== "standard"
+                          ? privateNumber(formatPrice(valueChangeToShow))
+                          : formatPrice(valueChangeToShow)}
+                      </Text>
+                    )}
+                  >
+                    {displayMode === "netAsset"
+                      ? `This is the net asset gain or loss of your Bitcoin holdings. It is calculated by subtracting the sum of every new UTXO (${currencySymbol}${privateNumber(
+                          formatPrice(priceToShow - valueChangeToShow)
+                        )}) at time of the transaction from the sum of every UTXO right now (${currencySymbol}${privateNumber(
+                          formatPrice(priceToShow)
+                        )}).`
+                      : displayMode === "cagr"
+                      ? "This is the average annual dollar gain/loss from your Bitcoin holdings based on CAGR. The percentage CAGR is shown to the right."
+                      : "This is the price change of Bitcoin for the selected time range."}
+                  </Popover>
 
                   <Text size="1" style={{ color: fontColor }}>
                     {" "}
@@ -383,12 +409,29 @@ export const Navbar = () => {
                   </Text>
 
                   {priceToShow > 0 && valueChangeToShow && (
-                    <Text className="" size="1" style={{ color: fontColor }}>
-                      {displayMode !== "standard"
-                        ? percentChangeToShow &&
-                          percentChangeToShow.toFixed(2) + "%"
-                        : changeToShow && changeToShow.toFixed(2) + "%"}
-                    </Text>
+                    <Popover
+                      title={
+                        displayMode === "netAsset"
+                          ? "Bitcoin Holdings Performance"
+                          : displayMode === "cagr"
+                          ? "Compound Annual Growth Rate"
+                          : "Bitcoin Price Change %"
+                      }
+                      text={(classNames) => (
+                        <Text className={classNames} size="1" style={{ color: fontColor }}>
+                          {displayMode !== "standard"
+                            ? percentChangeToShow &&
+                              percentChangeToShow.toFixed(2) + "%"
+                            : changeToShow && changeToShow.toFixed(2) + "%"}
+                        </Text>
+                      )}
+                    >
+                      {displayMode === "netAsset"
+                        ? `This is the percentage gain or loss of your Bitcoin holdings. It represents the total return on your investment, calculated as (current value - cost basis) / cost basis × 100.`
+                        : displayMode === "cagr"
+                        ? "The Compound Annual Growth Rate (CAGR) represents the annualized rate of return of your Bitcoin holdings, assuming reinvestment of all gains. This metric smooths out volatility to show your average yearly performance."
+                        : "This is the percentage change in Bitcoin's price for the selected time range, calculated as (current price - starting price) / starting price × 100."}
+                    </Popover>
                   )}
                   <div className="-mt-1">
                     <Text size="1" color="gray">

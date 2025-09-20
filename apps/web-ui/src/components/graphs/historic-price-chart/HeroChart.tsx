@@ -66,7 +66,6 @@ export const HeroChart = (props: IHeroChart) => {
     suppressEvents,
     suppressLegengs,
     onMouseOver,
-    bgColor = grayRGB,
     id = "hero-chart",
   } = props;
 
@@ -167,9 +166,10 @@ export const HeroChart = (props: IHeroChart) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const top = yScale(lineData[lineData.length - 1]?.[yValueToUse]!);
 
+  // When user has zero BTC (d1 === 0 && d2 === 0), position the line at the bottom
   const btcScale = scaleLinear()
-    .domain([d1, d2])
-    .range([height - margin.bottom, top]);
+    .domain([d1, d2 === 0 ? 1 : d2]) // Ensure domain has some range when BTC is zero
+    .range([height - margin.bottom, d2 === 0 ? height - margin.bottom : top]);
 
   // this messes up the scale
   // was intending to use this to show the full scale
@@ -279,7 +279,47 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("stop-color", grayRGB)
         .attr("stop-opacity", 1);
 
+      const gradientOrange = defs
+        .append("linearGradient")
+        .attr("id", `gradient-orange__${id}`)
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%");
+
+      gradientOrange
+        .append("stop")
+        .attr("id", "orange-stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "orange")
+        .attr("stop-opacity", 1);
+
+      gradientOrange
+        .append("stop")
+        .attr("id", "gray-stop-3")
+        .attr("offset", "100%")
+        .attr("stop-color", grayRGB)
+        .attr("stop-opacity", 1);
+
       // ---------------------------------------------------------------------//
+
+      // ---------------------------------------------------------------------//
+      // Orange BTC Area chart (behind the green area)
+      if (graphBtcAllocation && lineData.length) {
+        const btcAreaGenerator = area<IRawNode>()
+          .x((_, i) => xScale(i.toString())! + xScale.bandwidth() / 2)
+          .y0(height)
+          .y1((d) => btcScale(d.y1Sum))
+          .curve(curveBumpX);
+
+        svg
+          .append("path")
+          .datum(lineData)
+          .attr("class", "btc-area")
+          .attr("opacity", 0.15)
+          .attr("d", btcAreaGenerator)
+          .attr("fill", `url(#gradient-orange__${id})`);
+      }
 
       // ---------------------------------------------------------------------//
       // Area chart
@@ -443,30 +483,30 @@ export const HeroChart = (props: IHeroChart) => {
 
       // ---------------------------------------------------------------------//
       // Inverse Area chart
-      const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
-        .x((_, i) => {
-          return adjustedX(i);
-        })
-        .y0(0)
-        .y1((d, i) => {
-          if (displayMode !== "standard") {
-            return yScale((d as IRawNode)[yValueToUse]);
-          } else {
-            if (i > data.length - numBuffer - 1) {
-              return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
-            }
-            return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
-          }
-        })
-        .curve(curveBumpX);
+      // const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
+      //   .x((_, i) => {
+      //     return adjustedX(i);
+      //   })
+      //   .y0(0)
+      //   .y1((d, i) => {
+      //     if (displayMode !== "standard") {
+      //       return yScale((d as IRawNode)[yValueToUse]);
+      //     } else {
+      //       if (i > data.length - numBuffer - 1) {
+      //         return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
+      //       }
+      //       return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
+      //     }
+      //   })
+      //   .curve(curveBumpX);
 
-      svg
-        .append("path")
-        .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-        .datum(displayMode !== "standard" ? lineData : data)
-        .attr("class", "inverse-area")
-        .attr("d", inverseAreaGenerator)
-        .attr("fill", bgColor); // Apply a semi-transparent white fill
+      // svg
+      //   .append("path")
+      //   .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+      //   .datum(displayMode !== "standard" ? lineData : data)
+      //   .attr("class", "inverse-area")
+      //   .attr("d", inverseAreaGenerator)
+      //   .attr("fill", bgColor); // Apply a semi-transparent white fill
 
       // ---------------------------------------------------------------------//
 
@@ -852,14 +892,26 @@ export const HeroChart = (props: IHeroChart) => {
         const availableHeight = height - margin.top - margin.bottom - val;
         const optimalTicks = calculateOptimalTicks(availableHeight);
 
+        // Check if user has zero BTC
+        const hasZeroBtc = d2 === 0;
+
+        const axis = axisLeft(btcScale)
+          .tickFormat((d: any) => {
+            // If user has zero BTC, only show 0 for the actual data value
+            if (hasZeroBtc) {
+              return d === 0 ? `₿${privateNumber(formatBtc(0))}` : "";
+            }
+            return `₿${privateNumber(formatBtc(d))}`;
+          })
+          .ticks(hasZeroBtc ? 1 : Math.max(1, optimalTicks)); // Show only one tick when zero BTC
+
+        // Force only 0 tick when zero BTC
+        if (hasZeroBtc) {
+          axis.tickValues([0]);
+        }
+
         g.attr("transform", `translate(70,0)`)
-          .call(
-            axisLeft(btcScale)
-              .tickFormat((d: any) => {
-                return `₿${privateNumber(formatBtc(d))}`;
-              })
-              .ticks(Math.max(1, optimalTicks)) // Ensure at least 2 ticks
-          )
+          .call(axis)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .call((g: any) => g.select(".domain").remove())
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
