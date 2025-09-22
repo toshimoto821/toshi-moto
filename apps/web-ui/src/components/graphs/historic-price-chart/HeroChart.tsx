@@ -66,6 +66,7 @@ export const HeroChart = (props: IHeroChart) => {
     suppressEvents,
     suppressLegengs,
     onMouseOver,
+    bgColor = grayRGB,
     id = "hero-chart",
   } = props;
 
@@ -382,6 +383,7 @@ export const HeroChart = (props: IHeroChart) => {
             if (next) {
               vals.push(next[yValueToUse]);
             }
+            // const last = vals[vals.length - 1];
             const max = Math.max(...vals);
             return yScale(max);
           }
@@ -391,6 +393,7 @@ export const HeroChart = (props: IHeroChart) => {
             parseFloat((d as BinanceKlineMetric).closePrice)
           );
           const y = yScale(price);
+
           return y;
         })
         .attr("width", xScale.bandwidth())
@@ -643,24 +646,86 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("x1", x + mid)
             .attr("x2", x + mid);
 
-          const currentPriceLine = svg.select("#current-price-line");
+          // Calculate fallback y position based on index
           let y1: number;
           if (displayMode !== "standard") {
             y1 = yScale(lineData[index].y1SumInDollars);
           } else {
             y1 = yScale(parseFloat(data[index].closePrice));
           }
-          currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
+
+          // Get the y position from the curve at the mouse x position
+          const linePath = svg.select(".line").node() as SVGPathElement;
+          let curveY = y1; // fallback to indexed value
+
+          if (linePath) {
+            // Account for the line's transform offset
+            const lineOffset = xScale.bandwidth() / 2;
+            const pathLength = linePath.getTotalLength();
+            let low = 0;
+            let high = pathLength;
+            // Adjust target x to account for the line's transform
+            const targetX = x + mid - lineOffset;
+
+            // Use binary search to find the length that gives us the closest x coordinate
+            while (high - low > 1) {
+              const midLength = (low + high) / 2;
+              const point = linePath.getPointAtLength(midLength);
+
+              if (point.x < targetX) {
+                low = midLength;
+              } else {
+                high = midLength;
+              }
+            }
+
+            // Get the final point
+            const finalPoint = linePath.getPointAtLength((low + high) / 2);
+            curveY = finalPoint.y;
+          }
+
+          const currentPriceLine = svg.select("#current-price-line");
+          currentPriceLine
+            .attr("opacity", 0.5)
+            .attr("y1", curveY)
+            .attr("y2", curveY);
 
           const orangeDot = svg.select("#orange-dot");
 
-          // console.log(lineData[index], index);
-          const cy = btcScale(lineData[index].y1Sum);
+          // Get the y position from the BTC curve at the mouse x position
+          const btcLinePath = svg
+            .select("#btc-past-line")
+            .node() as SVGPathElement;
+          let btcCurveY = btcScale(lineData[index].y1Sum); // fallback to indexed value
 
-          orangeDot.attr("cx", x + mid).attr("cy", cy);
+          if (btcLinePath) {
+            const pathLength = btcLinePath.getTotalLength();
+            let low = 0;
+            let high = pathLength;
+            // BTC line doesn't have the same transform offset as the main line
+            const targetX = x + mid;
+
+            // Use binary search to find the length that gives us the closest x coordinate
+            while (high - low > 1) {
+              const midLength = (low + high) / 2;
+              const point = btcLinePath.getPointAtLength(midLength);
+
+              if (point.x < targetX) {
+                low = midLength;
+              } else {
+                high = midLength;
+              }
+            }
+
+            // Get the final point
+            const finalPoint = btcLinePath.getPointAtLength((low + high) / 2);
+            btcCurveY = finalPoint.y;
+          }
+
+          orangeDot.attr("cx", x + mid).attr("cy", btcCurveY);
 
           const greenDot = svg.select("#green-dot");
-          greenDot.attr("cx", x + mid).attr("cy", y1);
+          greenDot.attr("cx", x + mid).attr("cy", curveY);
 
           if (isLocked) return;
 
@@ -713,8 +778,37 @@ export const HeroChart = (props: IHeroChart) => {
           currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
 
           const orangeDot = svg.select("#orange-dot");
-          const cy = btcScale(lineData[index].y1Sum);
-          orangeDot.attr("cx", x).attr("cy", cy);
+
+          // Get the y position from the BTC curve at the reset x position
+          const btcLinePath = svg
+            .select("#btc-past-line")
+            .node() as SVGPathElement;
+          let btcCurveY = btcScale(lineData[index].y1Sum); // fallback to indexed value
+
+          if (btcLinePath) {
+            const pathLength = btcLinePath.getTotalLength();
+            let low = 0;
+            let high = pathLength;
+            const targetX = x;
+
+            // Use binary search to find the length that gives us the closest x coordinate
+            while (high - low > 1) {
+              const midLength = (low + high) / 2;
+              const point = btcLinePath.getPointAtLength(midLength);
+
+              if (point.x < targetX) {
+                low = midLength;
+              } else {
+                high = midLength;
+              }
+            }
+
+            // Get the final point
+            const finalPoint = btcLinePath.getPointAtLength((low + high) / 2);
+            btcCurveY = finalPoint.y;
+          }
+
+          orangeDot.attr("cx", x).attr("cy", btcCurveY);
 
           const greenDot = svg.select("#green-dot");
           greenDot.attr("cx", x).attr("cy", y1);
