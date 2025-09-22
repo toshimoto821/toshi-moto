@@ -66,7 +66,7 @@ export const HeroChart = (props: IHeroChart) => {
     suppressEvents,
     suppressLegengs,
     onMouseOver,
-    bgColor = grayRGB,
+    // bgColor = grayRGB,
     id = "hero-chart",
   } = props;
 
