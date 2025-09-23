@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.32.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.1...web-ui-1.32.2) (2025-09-23)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.32.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.32.2)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* bar opacity ([7370b72](https://github.com/toshimoto821/toshi-moto/commit/7370b72fff0025d38ef7f92c97916540551457c2))
+
 ## [1.32.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.0...web-ui-1.32.1) (2025-09-23)
 
   |      |     |
