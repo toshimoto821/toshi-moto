@@ -57,7 +57,7 @@ export type Plot = {
 };
 
 const grayRGB = "rgb(243 244 246)";
-export const SELECTED_OPACITIY = 0.18;
+export const SELECTED_OPACITIY = 0.07;
 
 export const HeroChart = (props: IHeroChart) => {
   const {
