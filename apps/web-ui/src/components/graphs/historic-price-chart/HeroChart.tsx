@@ -66,6 +66,7 @@ export const HeroChart = (props: IHeroChart) => {
     suppressEvents,
     suppressLegengs,
     onMouseOver,
+    // bgColor = grayRGB,
     id = "hero-chart",
   } = props;
 
@@ -302,6 +303,7 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("stop-opacity", 1);
 
       // ---------------------------------------------------------------------//
+      const adjustedX = (i: number) => xScale(i.toString())!;
 
       // ---------------------------------------------------------------------//
       // Orange BTC Area chart (behind the green area)
@@ -322,9 +324,35 @@ export const HeroChart = (props: IHeroChart) => {
       }
 
       // ---------------------------------------------------------------------//
+      // Inverse Area chart (render first so it doesn't cover other elements)
+      // const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
+      //   .x((_, i) => {
+      //     return adjustedX(i);
+      //   })
+      //   .y0((d, i) => {
+      //     if (displayMode !== "standard") {
+      //       return yScale((d as IRawNode)[yValueToUse]);
+      //     } else {
+      //       if (i > data.length - numBuffer - 1) {
+      //         return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
+      //       }
+      //       return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
+      //     }
+      //   })
+      //   .y1(0)
+      //   .curve(curveBumpX);
+
+      // svg
+      //   .append("path")
+      //   .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
+      //   .datum(displayMode !== "standard" ? lineData : data)
+      //   .attr("class", "inverse-area")
+      //   .attr("d", inverseAreaGenerator)
+      //   .attr("fill", bgColor); // Apply a semi-transparent white fill
+
+      // ---------------------------------------------------------------------//
       // Area chart
       // Adjust x-coordinates for line and area charts
-      const adjustedX = (i: number) => xScale(i.toString())!;
 
       const areaGenerator = area<BinanceKlineMetric | IRawNode>()
         .x((_, i) => adjustedX(i))
@@ -375,23 +403,8 @@ export const HeroChart = (props: IHeroChart) => {
 
           return x;
         })
-        .attr("y", (d, i) => {
-          if (displayMode !== "standard") {
-            const next = lineData[i + 1];
-            const vals = [(d as IRawNode)[yValueToUse]];
-            if (next) {
-              vals.push(next[yValueToUse]);
-            }
-            const max = Math.max(...vals);
-            return yScale(max);
-          }
-
-          const price = Math.max(
-            parseFloat((d as BinanceKlineMetric).openPrice),
-            parseFloat((d as BinanceKlineMetric).closePrice)
-          );
-          const y = yScale(price);
-          return y;
+        .attr("y", () => {
+          return 0; // Start bars from the very top
         })
         .attr("width", xScale.bandwidth())
 
@@ -399,15 +412,8 @@ export const HeroChart = (props: IHeroChart) => {
           "fill",
           direction > 0 ? "url(#gradient-green)" : `url(#gradient-red__${id})`
         )
-        .attr("height", (d) => {
-          if (displayMode !== "standard") {
-            return (
-              height - margin.bottom - yScale((d as IRawNode)[yValueToUse])
-            );
-          }
-
-          const price = parseFloat((d as BinanceKlineMetric).closePrice);
-          return height - margin.bottom - yScale(price) + 50;
+        .attr("height", () => {
+          return height; // Bars extend full height
         })
         .attr("opacity", (_, i) => {
           if (selectedIndex === null) {
@@ -480,33 +486,6 @@ export const HeroChart = (props: IHeroChart) => {
         .attr("stroke-opacity", "0.5")
         .attr("stroke-width", 2);
       // ---------------------------------------------------------------------//
-
-      // ---------------------------------------------------------------------//
-      // Inverse Area chart
-      // const inverseAreaGenerator = area<BinanceKlineMetric | IRawNode>()
-      //   .x((_, i) => {
-      //     return adjustedX(i);
-      //   })
-      //   .y0(0)
-      //   .y1((d, i) => {
-      //     if (displayMode !== "standard") {
-      //       return yScale((d as IRawNode)[yValueToUse]);
-      //     } else {
-      //       if (i > data.length - numBuffer - 1) {
-      //         return yScale(parseFloat((d as BinanceKlineMetric).closePrice));
-      //       }
-      //       return yScale(parseFloat((d as BinanceKlineMetric).openPrice));
-      //     }
-      //   })
-      //   .curve(curveBumpX);
-
-      // svg
-      //   .append("path")
-      //   .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
-      //   .datum(displayMode !== "standard" ? lineData : data)
-      //   .attr("class", "inverse-area")
-      //   .attr("d", inverseAreaGenerator)
-      //   .attr("fill", bgColor); // Apply a semi-transparent white fill
 
       // ---------------------------------------------------------------------//
 
@@ -643,24 +622,86 @@ export const HeroChart = (props: IHeroChart) => {
             .attr("x1", x + mid)
             .attr("x2", x + mid);
 
-          const currentPriceLine = svg.select("#current-price-line");
+          // Calculate fallback y position based on index
           let y1: number;
           if (displayMode !== "standard") {
             y1 = yScale(lineData[index].y1SumInDollars);
           } else {
             y1 = yScale(parseFloat(data[index].closePrice));
           }
-          currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
+
+          // Get the y position from the curve at the mouse x position
+          const linePath = svg.select(".line").node() as SVGPathElement;
+          let curveY = y1; // fallback to indexed value
+
+          if (linePath) {
+            // Account for the line's transform offset
+            const lineOffset = xScale.bandwidth() / 2;
+            const pathLength = linePath.getTotalLength();
+            let low = 0;
+            let high = pathLength;
+            // Adjust target x to account for the line's transform
+            const targetX = x + mid - lineOffset;
+
+            // Use binary search to find the length that gives us the closest x coordinate
+            while (high - low > 1) {
+              const midLength = (low + high) / 2;
+              const point = linePath.getPointAtLength(midLength);
+
+              if (point.x < targetX) {
+                low = midLength;
+              } else {
+                high = midLength;
+              }
+            }
+
+            // Get the final point
+            const finalPoint = linePath.getPointAtLength((low + high) / 2);
+            curveY = finalPoint.y;
+          }
+
+          const currentPriceLine = svg.select("#current-price-line");
+          currentPriceLine
+            .attr("opacity", 0.5)
+            .attr("y1", curveY)
+            .attr("y2", curveY);
 
           const orangeDot = svg.select("#orange-dot");
 
-          // console.log(lineData[index], index);
-          const cy = btcScale(lineData[index].y1Sum);
+          // Get the y position from the BTC curve at the mouse x position
+          const btcLinePath = svg
+            .select("#btc-past-line")
+            .node() as SVGPathElement;
+          let btcCurveY = btcScale(lineData[index].y1Sum); // fallback to indexed value
 
-          orangeDot.attr("cx", x + mid).attr("cy", cy);
+          if (btcLinePath) {
+            const pathLength = btcLinePath.getTotalLength();
+            let low = 0;
+            let high = pathLength;
+            // BTC line doesn't have the same transform offset as the main line
+            const targetX = x + mid;
+
+            // Use binary search to find the length that gives us the closest x coordinate
+            while (high - low > 1) {
+              const midLength = (low + high) / 2;
+              const point = btcLinePath.getPointAtLength(midLength);
+
+              if (point.x < targetX) {
+                low = midLength;
+              } else {
+                high = midLength;
+              }
+            }
+
+            // Get the final point
+            const finalPoint = btcLinePath.getPointAtLength((low + high) / 2);
+            btcCurveY = finalPoint.y;
+          }
+
+          orangeDot.attr("cx", x + mid).attr("cy", btcCurveY);
 
           const greenDot = svg.select("#green-dot");
-          greenDot.attr("cx", x + mid).attr("cy", y1);
+          greenDot.attr("cx", x + mid).attr("cy", curveY);
 
           if (isLocked) return;
 
@@ -713,8 +754,37 @@ export const HeroChart = (props: IHeroChart) => {
           currentPriceLine.attr("opacity", 0.5).attr("y1", y1).attr("y2", y1);
 
           const orangeDot = svg.select("#orange-dot");
-          const cy = btcScale(lineData[index].y1Sum);
-          orangeDot.attr("cx", x).attr("cy", cy);
+
+          // Get the y position from the BTC curve at the reset x position
+          const btcLinePath = svg
+            .select("#btc-past-line")
+            .node() as SVGPathElement;
+          let btcCurveY = btcScale(lineData[index].y1Sum); // fallback to indexed value
+
+          if (btcLinePath) {
+            const pathLength = btcLinePath.getTotalLength();
+            let low = 0;
+            let high = pathLength;
+            const targetX = x;
+
+            // Use binary search to find the length that gives us the closest x coordinate
+            while (high - low > 1) {
+              const midLength = (low + high) / 2;
+              const point = btcLinePath.getPointAtLength(midLength);
+
+              if (point.x < targetX) {
+                low = midLength;
+              } else {
+                high = midLength;
+              }
+            }
+
+            // Get the final point
+            const finalPoint = btcLinePath.getPointAtLength((low + high) / 2);
+            btcCurveY = finalPoint.y;
+          }
+
+          orangeDot.attr("cx", x).attr("cy", btcCurveY);
 
           const greenDot = svg.select("#green-dot");
           greenDot.attr("cx", x).attr("cy", y1);
