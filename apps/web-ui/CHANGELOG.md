@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.32.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.2...web-ui-1.32.3) (2025-09-24)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.32.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.32.3)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* timerange colors ([bb37f98](https://github.com/toshimoto821/toshi-moto/commit/bb37f983294597009c84c4e1862c2873019dcf54))
+
 ## [1.32.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.1...web-ui-1.32.2) (2025-09-23)
 
   |      |     |
