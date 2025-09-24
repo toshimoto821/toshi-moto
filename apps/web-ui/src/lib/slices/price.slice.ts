@@ -89,10 +89,51 @@ export const priceSlice = createSlice({
     });
 
     builder.addMatcher(getHistoricPriceDiff.matchFulfilled, (state, action) => {
+      console.log("action", action);
       const value = action.payload.data.reduce((acc, cur) => {
+        const firstTimestamp = new Date(cur.firstTimestamp).getTime();
+        const lastTimestamp = new Date(cur.lastTimestamp).getTime();
+        const timeDiff = lastTimestamp - firstTimestamp;
+        let diff: number | null = cur.diff;
+
+        const ONE_DAY = 1000 * 60 * 60 * 24;
+        const ONE_WEEK = ONE_DAY * 7;
+        const ONE_MONTH = ONE_DAY * 30;
+        const THREE_MONTHS = ONE_DAY * 90;
+        const ONE_YEAR = ONE_DAY * 365;
+        const TWO_YEARS = ONE_YEAR * 2;
+        const FIVE_YEARS = ONE_YEAR * 5;
+
+        // Use slightly smaller thresholds to account for backend time calculations
+        // that may not give exactly full periods due to hour rounding
+        const THRESHOLD_1D = ONE_DAY * 0.95; // 95% of 24 hours (~22.8 hours)
+        const THRESHOLD_1W = ONE_WEEK * 0.95; // 95% of 1 week
+        const THRESHOLD_1M = ONE_MONTH * 0.95; // 95% of 1 month
+        const THRESHOLD_3M = THREE_MONTHS * 0.95; // 95% of 3 months
+        const THRESHOLD_1Y = ONE_YEAR * 0.95; // 95% of 1 year
+        const THRESHOLD_2Y = TWO_YEARS * 0.95; // 95% of 2 years
+        const THRESHOLD_5Y = FIVE_YEARS * 0.95; // 95% of 5 years
+
+        // If we don't have sufficient data for the period, set diff to 0
+        if (cur.period === "1D" && timeDiff < THRESHOLD_1D) {
+          diff = null;
+        } else if (cur.period === "1W" && timeDiff < THRESHOLD_1W) {
+          diff = null;
+        } else if (cur.period === "1M" && timeDiff < THRESHOLD_1M) {
+          diff = null;
+        } else if (cur.period === "3M" && timeDiff < THRESHOLD_3M) {
+          diff = null;
+        } else if (cur.period === "1Y" && timeDiff < THRESHOLD_1Y) {
+          diff = null;
+        } else if (cur.period === "2Y" && timeDiff < THRESHOLD_2Y) {
+          diff = null;
+        } else if (cur.period === "5Y" && timeDiff < THRESHOLD_5Y) {
+          diff = null;
+        }
+
         return {
           ...acc,
-          [cur.period]: cur.diff,
+          [cur.period]: diff,
         };
       }, {} as Record<GraphTimeFrameRange, number>);
 
