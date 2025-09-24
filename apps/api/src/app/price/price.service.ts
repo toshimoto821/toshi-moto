@@ -452,6 +452,14 @@ export class PriceService {
   }
 
   async findRangeDiff(): Promise<IRangeDiffResponse["data"]> {
+    // Add debugging pipeline to see what data we have
+    // const debugPipeline = [
+    //   { $limit: 5 },
+    //   { $project: { timestamp: 1, price: 1, date: 1 } },
+    // ];
+
+    // console.log("Sample data:", await this.priceModel.aggregate(debugPipeline));
+
     const pipeline = [
       {
         $facet:
@@ -479,8 +487,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -488,6 +502,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "1D",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -513,8 +531,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -522,6 +546,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "1W",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -538,7 +566,7 @@ export class PriceService {
               },
               {
                 $sort: {
-                  date: 1,
+                  timestamp: 1,
                 },
               },
               {
@@ -547,8 +575,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -556,6 +590,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "1M",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -581,8 +619,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -590,6 +634,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "3M",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -615,8 +663,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -624,6 +678,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "1Y",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -649,8 +707,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -658,6 +722,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "2Y",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -683,8 +751,14 @@ export class PriceService {
                   firstPrice: {
                     $first: "$price",
                   },
+                  firstTimestamp: {
+                    $first: "$timestamp",
+                  },
                   lastPrice: {
                     $last: "$price",
+                  },
+                  lastTimestamp: {
+                    $last: "$timestamp",
                   },
                 },
               },
@@ -692,6 +766,10 @@ export class PriceService {
                 $project: {
                   _id: 0,
                   period: "5Y",
+                  firstPrice: "$firstPrice",
+                  firstTimestamp: "$firstTimestamp",
+                  lastPrice: "$lastPrice",
+                  lastTimestamp: "$lastTimestamp",
                   diff: {
                     $subtract: ["$lastPrice", "$firstPrice"],
                   },
@@ -734,6 +812,7 @@ export class PriceService {
           },
       },
     ];
+
     return this.priceModel.aggregate(pipeline as PipelineStage[]);
   }
 

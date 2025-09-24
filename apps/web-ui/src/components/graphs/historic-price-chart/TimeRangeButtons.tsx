@@ -98,7 +98,7 @@ export const TimeRangeButtons = ({ loading }: ITimeRangeButtonProps) => {
       <div
         className={cn("flex items-center justify-center w-full pb-1", {
           "border-b": graphTimeFrameRange === range,
-          "border-orange-300": graphTimeFrameRange == range,
+          "border-orange-300": graphTimeFrameRange === range,
         })}
       >
         <Button
