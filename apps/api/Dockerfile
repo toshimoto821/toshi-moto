@@ -22,9 +22,8 @@ RUN pnpm run build:api
 # Use a lightweight image for running the app
 FROM node:18-alpine
 
-# Create non-root user with UID 1000 and GID 1000
-RUN addgroup -g 1000 -S appuser && \
-    adduser -u 1000 -S appuser -G appuser
+# Use the existing node user (UID 1000, GID 1000) instead of creating a new one
+# The node:18-alpine image already has a 'node' user with UID/GID 1000
 
 # Set the working directory
 WORKDIR /app
@@ -33,11 +32,11 @@ WORKDIR /app
 COPY --from=build /app/dist/apps/api/ .
 COPY --from=build /app/node_modules ./node_modules
 
-# Ensure the user 1000 has write permissions to the /app directory
-RUN chown -R appuser:appuser /app
+# Ensure the node user has write permissions to the /app directory
+RUN chown -R node:node /app
 
-# Use user ID 1000
-USER appuser
+# Use the existing node user
+USER node
 
 # Set the necessary environment variables
 ENV MONGODB_URI="mongodb://toshi-moto_mongodb_1:27021/toshi-moto"
