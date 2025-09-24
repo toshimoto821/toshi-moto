@@ -9,6 +9,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TasksService } from "./services/TasksService";
+import { StartupService } from "./services/StartupService";
 import { PriceModule } from "./price/price.module";
 import { ApiKeyMiddleware } from "src/middleware/ApiKeyMiddleware";
 import { LoggerMiddleware } from "src/middleware/LoggerMiddleware";
@@ -17,7 +18,7 @@ import { DeviceModule } from "./device/device.module";
 
 const uri = process.env.MONGODB_URI;
 
-const providers = [AppService] as Provider[];
+const providers = [AppService, StartupService] as Provider[];
 if (!process.env.TASK_SERVICE_DISABLED) {
   providers.push(TasksService);
 }
