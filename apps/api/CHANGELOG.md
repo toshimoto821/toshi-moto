@@ -1,4 +1,11 @@
 # API Changelog
+## [1.8.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.0...api-1.8.1) (2025-09-24)
+
+
+### Bug Fixes
+
+* timerange colors ([bb37f98](https://github.com/toshimoto821/toshi-moto/commit/bb37f983294597009c84c4e1862c2873019dcf54))
+
 ## [1.8.0](https://github.com/toshimoto821/toshi-moto/compare/api-1.7.4...api-1.8.0) (2025-07-14)
 
 
