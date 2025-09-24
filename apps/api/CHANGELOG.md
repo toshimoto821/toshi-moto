@@ -1,4 +1,11 @@
 # API Changelog
+## [1.8.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.2...api-1.8.3) (2025-09-24)
+
+
+### Bug Fixes
+
+* loads binance data ([67a52c2](https://github.com/toshimoto821/toshi-moto/commit/67a52c2aead4ca7e5c8b96d4dc15ceea5b2dc48b))
+
 ## [1.8.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.1...api-1.8.2) (2025-09-24)
 
 
