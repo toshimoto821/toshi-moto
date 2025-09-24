@@ -1,4 +1,11 @@
 # API Changelog
+## [1.8.2](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.1...api-1.8.2) (2025-09-24)
+
+
+### Bug Fixes
+
+* docker build ([2549a8e](https://github.com/toshimoto821/toshi-moto/commit/2549a8e29badc5d2efcb7f9f9d6374882586af1e))
+
 ## [1.8.1](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.0...api-1.8.1) (2025-09-24)
 
 
