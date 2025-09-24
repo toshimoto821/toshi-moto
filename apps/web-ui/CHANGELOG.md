@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.32.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.3...web-ui-1.32.4) (2025-09-24)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.32.4)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.32.4)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* chart label colors ([01c3edd](https://github.com/toshimoto821/toshi-moto/commit/01c3edd17ca5713c7eed4276a0e336b8a71e49d6))
+
 ## [1.32.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.2...web-ui-1.32.3) (2025-09-24)
 
   |      |     |
