@@ -38,6 +38,10 @@ export interface PriceHistoryDiffResponse {
   data: {
     period: GraphTimeFrameRange;
     diff: number;
+    firstTimestamp: number;
+    lastTimestamp: number;
+    firstPrice: number;
+    lastPrice: number;
   }[];
 }
 
