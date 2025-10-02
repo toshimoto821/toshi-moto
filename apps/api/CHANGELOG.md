@@ -1,4 +1,11 @@
 # API Changelog
+## [1.8.4](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.3...api-1.8.4) (2025-10-02)
+
+
+### Bug Fixes
+
+* fixes for startup and start9 ([1f71b3c](https://github.com/toshimoto821/toshi-moto/commit/1f71b3cee31d8e4b29786c1edc591fefb2db3629))
+
 ## [1.8.3](https://github.com/toshimoto821/toshi-moto/compare/api-1.8.2...api-1.8.3) (2025-09-24)
 
 
