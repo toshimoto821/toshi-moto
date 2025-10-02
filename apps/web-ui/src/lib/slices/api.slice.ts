@@ -75,6 +75,10 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: dynamicBaseQuery,
   endpoints: (builder) => ({
+    getDataImported: builder.query<{ status: boolean }, { tryCount?: number }>({
+      query: ({ tryCount = 0 }) =>
+        `/api/prices/data-imported?tryCount=${tryCount}`,
+    }),
     getAddress: builder.query<AddressResponse, AddressArgs>({
       query: getAddressQuery,
     }),
@@ -163,6 +167,7 @@ export const {
   useUnsubscribePushSubscriptionMutation,
   useTestPushMutation,
   useLazyTestMempoolConnectionQuery,
+  useGetDataImportedQuery,
 } = apiSlice;
 
 export const {
@@ -174,6 +179,7 @@ export const {
   getHistoricPrice,
   getConfig,
   savePushSubscription,
+  getDataImported,
 } = apiSlice.endpoints;
 
 //////////////////////////////////////
