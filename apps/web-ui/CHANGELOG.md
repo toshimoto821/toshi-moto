@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.32.5](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.4...web-ui-1.32.5) (2025-10-02)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.32.5)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.32.5)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* fixes for startup and start9 ([1f71b3c](https://github.com/toshimoto821/toshi-moto/commit/1f71b3cee31d8e4b29786c1edc591fefb2db3629))
+
 ## [1.32.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.3...web-ui-1.32.4) (2025-09-24)
 
   |      |     |
