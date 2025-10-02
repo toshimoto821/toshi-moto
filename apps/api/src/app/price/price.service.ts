@@ -102,6 +102,7 @@ type IDateFromParts = {
 
 @Injectable()
 export class PriceService {
+  public dataImported = false;
   constructor(
     @InjectModel(Price.name) private readonly priceModel: Model<Price>
   ) {}
@@ -204,6 +205,8 @@ export class PriceService {
         running = false;
       }
     }
+
+    this.dataImported = true;
 
     return null;
   }

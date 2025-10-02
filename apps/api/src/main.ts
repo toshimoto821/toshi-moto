@@ -14,9 +14,12 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   const port = process.env.PORT || 3000;
-  await app.listen(port);
+  const host = process.env.HOST;
+  await app.listen(port, host);
   Logger.log(
-    `🚀 Toshi Moto App is running on http://localhost:${port}/${globalPrefix}`
+    `🚀 Toshi Moto App is running on http://${
+      host || "localhost"
+    }:${port}/${globalPrefix}`
   );
 }
 

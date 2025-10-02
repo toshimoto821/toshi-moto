@@ -201,6 +201,11 @@ export class PriceController {
     return this.priceService.findOne(id);
   }
 
+  @Get("data-imported")
+  async dataImported(): Promise<{ status: boolean }> {
+    return { status: this.priceService.dataImported };
+  }
+
   @Get("trim")
   async trimData(): Promise<boolean> {
     return this.priceService.trim();
