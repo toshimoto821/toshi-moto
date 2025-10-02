@@ -49,7 +49,12 @@ export class Api {
     await this.mockSimplePrice();
     await this.mockRangeDiff();
     await this.mockRange();
+    await this.mockDataImported();
     await this.mockAddress("bc1qpc54dq6p0xfvy305hga42chpaa02tzj3ajtqel");
+  }
+
+  async mockDataImported() {
+    await this.mockResponse("**/api/prices/data-imported*", { status: true });
   }
 
   async mockAddress(initAddress: string) {
