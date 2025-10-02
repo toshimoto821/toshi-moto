@@ -1,7 +1,7 @@
 import { useGetDataImportedQuery } from "@lib/slices/api.slice";
 import { useEffect, useState } from "react";
 
-const MAX_TRY_COUNT = 20;
+const MAX_TRY_COUNT = 60;
 const WAIT_TIME = 2000;
 
 export const WaitForData = ({
