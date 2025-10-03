@@ -14,7 +14,7 @@ export const AppProvider = ({ children }: IAppProvider) => {
   return (
     <Provider store={store}>
       <PersistGate loading={<Loading />} persistor={persistor}>
-        <WaitForData loading={<Loading />}>{children}</WaitForData>
+        <WaitForData>{children}</WaitForData>
       </PersistGate>
     </Provider>
   );

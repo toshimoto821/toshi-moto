@@ -1,18 +1,13 @@
 import { useGetDataImportedQuery } from "@lib/slices/api.slice";
 import { useEffect, useState } from "react";
+import { Loading } from "./Loading";
 
 const MAX_TRY_COUNT = 60;
 const WAIT_TIME = 2000;
 
-export const WaitForData = ({
-  loading,
-  children,
-}: {
-  loading: React.ReactNode;
-  children: React.ReactNode;
-}) => {
+export const WaitForData = ({ children }: { children: React.ReactNode }) => {
   const [tryCount, setTryCount] = useState(0);
-  const { data } = useGetDataImportedQuery({ tryCount });
+  const { data, error } = useGetDataImportedQuery({ tryCount });
 
   useEffect(() => {
     if (!data?.status && tryCount < MAX_TRY_COUNT) {
@@ -23,7 +18,12 @@ export const WaitForData = ({
   }, [tryCount, data?.status]);
 
   if (!data?.status && tryCount < MAX_TRY_COUNT) {
-    return loading;
+    if (error) {
+      return (
+        <Loading message="Setting up your app, this may take a few minutes..." />
+      );
+    }
+    return <Loading message="Loading..." />;
   }
   return children;
 };
