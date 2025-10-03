@@ -21,7 +21,9 @@ Toshi Moto is a watch only bitcoin wallet aggregator app for [Umbrel](https://um
 
 ## Application Architecture
 
-![architecture](./docs/assets/architecture.png?bust=2)
+![umbrel](./docs/assets/architecture.png?bust=2)
+
+![start9](./docs/assets/toshimoto-start9-diagram.png)
 
 ## Development
 
