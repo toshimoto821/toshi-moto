@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.33.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.33.0...web-ui-1.33.1) (2025-10-04)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.33.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.33.1)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* loading position ([817cc66](https://github.com/toshimoto821/toshi-moto/commit/817cc66f4251f9416f003b186a95562ef9c559ce))
+
 ## [1.33.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.32.6...web-ui-1.33.0) (2025-10-03)
 
   |      |     |
