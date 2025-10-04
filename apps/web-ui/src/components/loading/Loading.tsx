@@ -13,8 +13,8 @@ export const Loading = ({ message }: { message?: string }) => {
         <div className="mb-8 transform transition-all duration-1000 hover:scale-105">
           <div className="relative">
             <img
-              width="200"
-              height="200"
+              width="388"
+              height="388"
               src="/toshi.svg"
               alt="Toshi Moto"
               className="drop-shadow-2xl animate-pulse"
