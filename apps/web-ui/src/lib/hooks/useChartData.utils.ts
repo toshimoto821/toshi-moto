@@ -3,6 +3,7 @@ import { round, ONE_HUNDRED_MILLION } from "@lib/utils";
 import type { StackedBarData } from "@root/components/graphs/line/Line";
 import type { IRawNode, IPlotType, IPlotData } from "@root/types";
 import type { GroupBy } from "@lib/slices/ui.slice.types";
+import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 import {
   getGroupKey,
   getDatesForChartGroup,
@@ -29,15 +30,17 @@ export type InputOutputByDateMap = {
   spent: Map<number, StackedBarData[]>;
 };
 
+export type DisplayMode = "standard" | "netAsset" | "cagr";
+
 export const groupPricesByTimeframe = (
-  prices: any[],
+  prices: BinanceKlineMetric[],
   graphTimeFrameGroup: GroupBy,
-  forecastData: any[],
+  forecastData: BinanceKlineMetric[],
   forecastEnabled: boolean
 ): Grouped => {
   const dateToKeyFn = getGroupKey(graphTimeFrameGroup);
 
-  const isForecastData = (price: any) => {
+  const isForecastData = (price: BinanceKlineMetric) => {
     if (!forecastEnabled || !forecastData?.length) return false;
     const forecastStartTime = forecastData[0].openTime;
     return price.openTime >= forecastStartTime;
@@ -345,7 +348,7 @@ export const calculateCostBasisAndGains = (
 
 export const calculatePercentageChange = (
   lineData: IRawNode[],
-  displayMode: string
+  displayMode: DisplayMode
 ) => {
   if (!lineData?.length) {
     return { percentageChange: 0, valueChange: 0 };
@@ -363,7 +366,7 @@ export const calculatePercentageChange = (
 
 export const calculateCAGR = (
   lineData: IRawNode[],
-  displayMode: string,
+  displayMode: DisplayMode,
   includeForecasts = false
 ) => {
   if (!lineData?.length) {
