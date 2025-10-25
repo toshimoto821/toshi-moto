@@ -72,7 +72,7 @@ export const HeroChart = (props: IHeroChart) => {
   const { btcPrice } = useBtcPrice();
   const { wallets } = useWallets();
   const privateNumber = useNumberObfuscation();
-  const { prices, loading, range, group } = useBtcHistoricPrices();
+  const { prices, loading, range, group, from, to } = useBtcHistoricPrices();
   const { lineData, plotData } = useChartData({ btcPrice, wallets });
 
   // ============================================================================
@@ -319,10 +319,8 @@ export const HeroChart = (props: IHeroChart) => {
         .on("mouseleave touchend", handleMouseLeave);
     };
 
-    // Only render if not currently interacting with mouse
-    if (!isMouseInteracting.current) {
-      render();
-    }
+    // Always render - the chart needs to update when data changes
+    render();
   }, [
     // Data dependencies
     data,
@@ -350,6 +348,8 @@ export const HeroChart = (props: IHeroChart) => {
     loading,
     range,
     group,
+    from,
+    to,
     privateNumber,
     selectedWalletId,
     suppressEvents,
