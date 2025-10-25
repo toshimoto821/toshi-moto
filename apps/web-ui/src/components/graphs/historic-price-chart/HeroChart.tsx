@@ -316,11 +316,18 @@ export const HeroChart = (props: IHeroChart) => {
           isMouseInteracting.current = true;
         })
         .on("mousemove touchmove", handleMouseMove)
-        .on("mouseleave touchend", handleMouseLeave);
+        .on("mouseleave touchend", () => {
+          isMouseInteracting.current = false;
+          handleMouseLeave();
+        });
     };
 
-    // Always render - the chart needs to update when data changes
-    render();
+    // Skip full re-render during active mouse/touch interaction to prevent
+    // interrupting the interaction. The handlers will update crosshairs/highlights
+    // without needing a full re-render.
+    if (!isMouseInteracting.current) {
+      render();
+    }
   }, [
     // Data dependencies
     data,
