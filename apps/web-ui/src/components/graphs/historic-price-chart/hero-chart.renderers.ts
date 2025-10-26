@@ -18,6 +18,22 @@ import { calculateOptimalTicks } from "./hero-chart.scales";
 type SVGSelection = Selection<SVGSVGElement | null, unknown, null, undefined>;
 
 /**
+ * Gets the gradient ID suffix based on dark mode
+ */
+const getGradientSuffix = () => {
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  return isDarkMode ? "-dark" : "";
+};
+
+/**
+ * Gets the background color for axis labels based on dark mode
+ */
+const getAxisLabelBackground = () => {
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  return isDarkMode ? "#1a1a1a" : "#f6f4fa";
+};
+
+/**
  * Renders the BTC allocation area chart (orange area behind the main chart)
  */
 export const renderBtcArea = (
@@ -34,13 +50,14 @@ export const renderBtcArea = (
     .y1((d) => btcScale(d.y1Sum))
     .curve(curveBumpX);
 
+  const suffix = getGradientSuffix();
   svg
     .append("path")
     .datum(lineData)
     .attr("class", "btc-area")
     .attr("opacity", 0.15)
     .attr("d", btcAreaGenerator)
-    .attr("fill", `url(#gradient-orange__${id})`);
+    .attr("fill", `url(#gradient-orange${suffix}__${id})`);
 };
 
 /**
@@ -72,6 +89,7 @@ export const renderPriceArea = (
     })
     .curve(curveBumpX);
 
+  const suffix = getGradientSuffix();
   svg
     .append("path")
     .attr("transform", `translate(${xScale.bandwidth() / 2}, 0)`)
@@ -81,7 +99,9 @@ export const renderPriceArea = (
     .attr("d", areaGenerator)
     .attr(
       "fill",
-      direction > 0 ? "url(#gradient-green)" : `url(#gradient-red__${id})`
+      direction > 0
+        ? `url(#gradient-green${suffix})`
+        : `url(#gradient-red${suffix}__${id})`
     );
 };
 
@@ -136,6 +156,7 @@ export const renderInteractiveBars = (
   direction: number,
   id: string
 ) => {
+  const suffix = getGradientSuffix();
   svg
     .append("g")
     .attr("class", "bar-group")
@@ -151,7 +172,9 @@ export const renderInteractiveBars = (
     .attr("width", xScale.bandwidth())
     .attr(
       "fill",
-      direction > 0 ? "url(#gradient-green)" : `url(#gradient-red__${id})`
+      direction > 0
+        ? `url(#gradient-green${suffix})`
+        : `url(#gradient-red${suffix}__${id})`
     )
     .attr("height", height)
     .attr("opacity", (_, i) => {
@@ -166,6 +189,14 @@ export const renderInteractiveBars = (
 };
 
 /**
+ * Gets the crosshair color based on dark mode
+ */
+const getCrosshairColor = () => {
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  return isDarkMode ? "#d0d0d0" : "black";
+};
+
+/**
  * Renders crosshair lines (vertical and horizontal)
  */
 export const renderCrosshairs = (
@@ -175,11 +206,13 @@ export const renderCrosshairs = (
   width: number,
   height: number
 ) => {
+  const crosshairColor = getCrosshairColor();
+
   // Vertical line
   svg
     .append("line")
     .attr("id", "vertical-tooltip-line")
-    .attr("stroke", "black")
+    .attr("stroke", crosshairColor)
     .attr("stroke-dasharray", "3,3")
     .attr("opacity", 0.5)
     .attr("stroke-width", 0.5)
@@ -192,7 +225,7 @@ export const renderCrosshairs = (
   svg
     .append("line")
     .attr("id", "current-price-line")
-    .attr("stroke", "black")
+    .attr("stroke", crosshairColor)
     .attr("stroke-dasharray", "3,3")
     .attr("opacity", 0.5)
     .attr("stroke-width", 0.5)
@@ -386,7 +419,7 @@ export const renderY2Axis = (
           "transform",
           `translate(${config.textMargin.right}, ${config.textMargin.top})`
         )
-        .style("fill", "white");
+        .style("fill", getAxisLabelBackground());
 
       rect.exit().remove();
     });
@@ -481,7 +514,7 @@ export const renderY1Axis = (
         .attr("opacity", 0.6)
         .attr("stroke", "orange")
         .attr("stroke-opacity", 1)
-        .style("fill", "white")
+        .style("fill", getAxisLabelBackground())
         .attr(
           "transform",
           `translate(${config.textMargin.left * -1}, ${config.textMargin.top})`

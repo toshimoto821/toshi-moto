@@ -233,7 +233,7 @@ export const Navbar = () => {
   return (
     <div
       data-testid="navbar"
-      className={`sticky top-0 z-50 h-[${chartHeight}px] bg-white drop-shadow-sm overflow-hidden border-b w-screen backface-visibility-none`}
+      className={`sticky top-0 z-50 h-[${chartHeight}px] bg-white dark:bg-[#2d2d2d] drop-shadow-sm overflow-hidden border-b dark:border-[#404040] w-screen backface-visibility-none`}
       ref={containerRef}
     >
       {lineData && (
@@ -277,7 +277,7 @@ export const Navbar = () => {
 
           <div className="flex-1"></div>
           <div className="flex flex-col">
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end gap-2">
               <div className="flex items-center">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger>
@@ -418,7 +418,11 @@ export const Navbar = () => {
                           : "Bitcoin Price Change %"
                       }
                       text={(classNames) => (
-                        <Text className={classNames} size="1" style={{ color: fontColor }}>
+                        <Text
+                          className={classNames}
+                          size="1"
+                          style={{ color: fontColor }}
+                        >
                           {displayMode !== "standard"
                             ? percentChangeToShow &&
                               percentChangeToShow.toFixed(2) + "%"
@@ -444,7 +448,10 @@ export const Navbar = () => {
             </div>
           </div>
         </div>
-        <div className="border border-b-0 border-x-0 " ref={headerControlsRef}>
+        <div
+          className="border border-b-0 border-x-0 dark:border-[#404040]"
+          ref={headerControlsRef}
+        >
           <div className="flex justify-between px-4 text-gray-400 py-2">
             <div className="flex" data-testid="date-picker-container">
               <div className="flex items-center">

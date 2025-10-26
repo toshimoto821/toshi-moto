@@ -30,6 +30,22 @@ export default {
       colors: {
         ...mauve,
         ...violet,
+        background: {
+          light: "#f6f4fa",
+          dark: "#1a1a1a",
+        },
+        surface: {
+          light: "#ffffff",
+          dark: "#2d2d2d",
+        },
+        text: {
+          light: "#1a1a1a",
+          dark: "#f6f4fa",
+        },
+        border: {
+          light: "#e5e5e5",
+          dark: "#404040",
+        },
       },
       keyframes: {
         slideDown: {

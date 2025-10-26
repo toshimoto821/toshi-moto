@@ -1,5 +1,5 @@
 export const GRAY_RGB = "rgb(243 244 246)";
-export const SELECTED_OPACITY = 0.07;
+export const SELECTED_OPACITY = 0.05;
 
 export const DEFAULT_MARGIN = {
   top: 25,

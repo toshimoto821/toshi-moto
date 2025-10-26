@@ -9,10 +9,27 @@
   -webkit-transform-style: preserve-3d;
 }
 
+/* Light mode (default) */
 .radix-themes {
-  --color-background: #f6f4fa; /* #f0f0f0 Replace with your desired background color */
+  --color-background: #f6f4fa;
 }
-/* body,
-html {
-  overflow-x: hidden;
-} */
+
+body {
+  background-color: #f6f4fa;
+  color: #1a1a1a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode */
+.dark .radix-themes {
+  --color-background: #1a1a1a;
+}
+
+.dark body {
+  background-color: #1a1a1a;
+  color: #f6f4fa;
+}
+
+.dark {
+  color-scheme: dark;
+}

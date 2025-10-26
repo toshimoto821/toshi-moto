@@ -10,6 +10,7 @@ export interface UIState {
   breakpoint: number;
   currency: ICurrency;
   debugMode: boolean;
+  darkMode: boolean;
   filterUtxoOnly: string[];
   graphTimeFrameRange: GraphTimeFrameRange | null;
   previousGraphTimeFrameRange: GraphTimeFrameRange | null;

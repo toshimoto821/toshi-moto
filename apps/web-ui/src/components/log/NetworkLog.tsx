@@ -109,9 +109,12 @@ export const NetworkLog = (props: INetworkLog) => {
       )}
       <div
         data-testid="network-log"
-        className={cn("fixed bottom-0 left-0 w-screen bg-white z-50 ", {
-          "pb-6": isStandalone,
-        })}
+        className={cn(
+          "fixed bottom-0 left-0 w-screen bg-white dark:bg-[#1a1a1a] z-50 ",
+          {
+            "pb-6": isStandalone,
+          }
+        )}
       >
         <LogProgress
           value={counts.complete + 1}
@@ -150,7 +153,7 @@ export const NetworkLog = (props: INetworkLog) => {
                     text={(classNames) => (
                       <Text
                         size="1"
-                        className={`${classNames} text-gray-500 pr-1 font-mono`}
+                        className={`${classNames} text-gray-500 dark:text-gray-400 pr-1 font-mono`}
                       >
                         <span>{counts.queued}</span>
                         <span className="hidden md:inline pl-1">
@@ -170,7 +173,7 @@ export const NetworkLog = (props: INetworkLog) => {
                     text={(classNames) => (
                       <Text
                         size="1"
-                        className={`${classNames} text-gray-500  pl-1 pr-1 font-mono`}
+                        className={`${classNames} text-gray-500 dark:text-gray-400  pl-1 pr-1 font-mono`}
                       >
                         <span>{counts.pending}</span>
                         <span className="hidden md:inline pl-1">
@@ -189,7 +192,7 @@ export const NetworkLog = (props: INetworkLog) => {
                     text={(classNames) => (
                       <Text
                         size="1"
-                        className={`${classNames} text-gray-500 pl-1 font-mono`}
+                        className={`${classNames} text-gray-500 dark:text-gray-400 pl-1 font-mono`}
                       >
                         <span>{counts.complete}</span>
                         <span className="hidden md:inline pl-1">completed</span>

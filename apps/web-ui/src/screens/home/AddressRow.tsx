@@ -80,13 +80,13 @@ export const AddressRow = (prop: IAddressRow) => {
   return (
     <div id={`address-${address.address}`} data-testid="address-row">
       <div
-        className={cn("bg-white ", {
+        className={cn("bg-white dark:bg-[#1a1a1a] ", {
           // "sticky top-[140px] ": isUtxoExpanded,
-          "bg-red-50": address.status === "error",
+          "bg-red-50 dark:bg-red-950": address.status === "error",
           sticky: isUtxoExpanded,
           "top-[270px]": isUtxoExpanded,
           "z-40": isUtxoExpanded,
-          "bg-gray-50": isUtxoExpanded,
+          "bg-gray-50 dark:bg-[#2a2a2a]": isUtxoExpanded,
         })}
       >
         <div

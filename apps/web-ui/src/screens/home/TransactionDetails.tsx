@@ -40,15 +40,20 @@ export const TransactionDetails = (props: ITransactionDetails) => {
     wallets.find((w) => w.id === address.walletId)?.color || "#ccc";
 
   return (
-    <div className="mb-8  bg-gray-50">
+    <div className="mb-8  bg-gray-50 dark:bg-[#0a0a0a]">
       <div className=" p-4">
         <div className="flex justify-between mb-2 items-end">
           <div>
-            <Text className="font-bold text-gray-500" size="6">
+            <Text
+              className="font-bold text-gray-500 dark:text-gray-400"
+              size="6"
+            >
               Transaction {index + 1}
             </Text>
             {!tx.confirmed && (
-              <Text className="text-xs text-red-500">Unconfirmed</Text>
+              <Text className="text-xs text-red-500 dark:text-red-400">
+                Unconfirmed
+              </Text>
             )}
           </div>
           <div>
@@ -65,20 +70,28 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="bg-white border p-2 flex justify-between">
-            <Text className="font-bold text-gray-500">Date</Text>
-            <Text className="text-gray-500 italic">{tx.timestamp}</Text>
+          <div className="bg-white dark:bg-[#1a1a1a] border dark:border-[#404040] p-2 flex justify-between">
+            <Text className="font-bold text-gray-500 dark:text-gray-400">
+              Date
+            </Text>
+            <Text className="text-gray-500 dark:text-gray-400 italic">
+              {tx.timestamp}
+            </Text>
           </div>
-          <div className="bg-white border p-2 flex justify-between">
-            <Text className="font-bold text-gray-500">Fee</Text>
-            <Text className="text-gray-500 italic">{tx.fee} sats</Text>
+          <div className="bg-white dark:bg-[#1a1a1a] border dark:border-[#404040] p-2 flex justify-between">
+            <Text className="font-bold text-gray-500 dark:text-gray-400">
+              Fee
+            </Text>
+            <Text className="text-gray-500 dark:text-gray-400 italic">
+              {tx.fee} sats
+            </Text>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-1 items-center text-xs py-4 font-bold top-[330px] border border-x-0 px-6 sticky bg-gray-100 z-30">
+      <div className="grid grid-cols-12 gap-1 items-center text-xs py-4 font-bold top-[330px] border dark:border-[#404040] border-x-0 px-6 sticky bg-gray-100 dark:bg-[#2a2a2a] z-30">
         <div className="col-span-3 lg:col-span-4 text-left">
-          <Text className="">Adddress</Text>
+          <Text className="dark:text-gray-300">Adddress</Text>
         </div>
         <div className="text-left col-span-3 lg:col-span-2 flex items-center">
           <PinTopIcon className="mr-1" width={12} />
@@ -101,7 +114,7 @@ export const TransactionDetails = (props: ITransactionDetails) => {
           </Popover>
         </div>
         <div className="col-span-3 lg:col-span-4 text-right">
-          <Text className="">Value</Text>
+          <Text className="dark:text-gray-300">Value</Text>
         </div>
       </div>
       <div className={cn("mb-2 pb-2")}>
