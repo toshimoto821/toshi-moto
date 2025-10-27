@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { select } from "d3";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import { useNumberObfuscation } from "@lib/hooks/useNumberObfuscation";
@@ -6,7 +6,7 @@ import { useBtcPrice } from "@lib/hooks/useBtcPrice";
 import { useChartData } from "@lib/hooks/useChartData";
 import { useWallets } from "@lib/hooks/useWallets";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { setUI } from "@root/lib/slices/ui.slice";
+import { setUI, selectDarkMode } from "@root/lib/slices/ui.slice";
 import {
   addBufferItems,
   BUFFER_LENGTH,
@@ -86,6 +86,8 @@ export const HeroChart = (props: IHeroChart) => {
     graphBtcAllocation,
     displayMode,
   } = useAppSelector((state) => state.ui);
+  const darkMode = useAppSelector(selectDarkMode);
+  const [lastDarkMode, setLastDarkMode] = useState(darkMode);
 
   // ============================================================================
   // DATA PREPARATION
@@ -294,6 +296,7 @@ export const HeroChart = (props: IHeroChart) => {
         displayMode,
         isLocked,
         suppressEvents,
+        darkMode,
         onMouseOver
       );
 
@@ -308,6 +311,7 @@ export const HeroChart = (props: IHeroChart) => {
         displayMode,
         isLocked,
         suppressEvents,
+        darkMode,
         onMouseOver
       );
 
@@ -325,8 +329,14 @@ export const HeroChart = (props: IHeroChart) => {
     // Skip full re-render during active mouse/touch interaction to prevent
     // interrupting the interaction. The handlers will update crosshairs/highlights
     // without needing a full re-render.
-    if (!isMouseInteracting.current) {
+    // EXCEPTION: Always re-render if dark mode changed (to update gradients)
+    const darkModeChanged = lastDarkMode !== darkMode;
+
+    if (!isMouseInteracting.current || darkModeChanged) {
       render();
+      if (darkModeChanged) {
+        setLastDarkMode(darkMode);
+      }
     }
   }, [
     // Data dependencies
@@ -366,6 +376,8 @@ export const HeroChart = (props: IHeroChart) => {
     prices,
     isLocked,
     dispatch,
+    darkMode,
+    lastDarkMode,
   ]);
 
   return (

@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { scaleBand, scaleLinear, select, min, max, pointers } from "d3";
 import { useBtcHistoricPrices } from "@lib/hooks/useBtcHistoricPrices";
 import { useAppDispatch, useAppSelector } from "@root/lib/hooks/store.hooks";
-import { setUI } from "@root/lib/slices/ui.slice";
+import { setUI, selectDarkMode } from "@root/lib/slices/ui.slice";
 import { jade, ruby } from "@radix-ui/colors";
 import type { BinanceKlineMetric } from "@lib/slices/api.slice.types";
 import { SELECTED_OPACITIY } from "./HeroChart";
@@ -30,6 +30,7 @@ export const VolumeChart = (props: IVolumeChart) => {
   const { prices, loading, range, group } = useBtcHistoricPrices();
   const selectedIndex = useAppSelector((state) => state.ui.graphSelectedIndex);
   const isLocked = useAppSelector((state) => state.ui.graphIsLocked);
+  const darkMode = useAppSelector(selectDarkMode);
   // const breakpoint = useBreakpoints();
   const dispatch = useAppDispatch();
 
@@ -50,8 +51,6 @@ export const VolumeChart = (props: IVolumeChart) => {
     parseFloat(lastMetric?.closePrice) > parseFloat(firstMetric?.openPrice)
       ? 1
       : -1;
-
-  const COLOR_SELECTED = direction > 0 ? jade.jade11 : ruby.ruby11;
 
   // const yScale = scaleLinear()
   //   .domain([
@@ -78,19 +77,40 @@ export const VolumeChart = (props: IVolumeChart) => {
     .domain([yExtent[0]!, yExtent[1]!])
     .range([height, 0]);
 
-  const isPositiveChange = (i: number) => {
-    // @todo fix me
-    if (i === 0) return true;
-    const d = data[i];
-    const price1 = parseFloat(d.closePrice);
-    const previous = data[i - 1];
-    const price2 = previous ? parseFloat(previous.closePrice) : 0;
-    const priceChange = i === 0 ? 0 : price1 > price2;
-
-    return priceChange;
-  };
-
   useEffect(() => {
+    // Helper function to get color based on dark mode
+    const getPositiveChangeColor = () => {
+      return darkMode ? "rgba(80, 80, 80, 0.9)" : "rgba(209, 213, 219, 0.9)";
+    };
+
+    // Helper function to get the color for a selected bar based on its price change
+    const getSelectedColor = (index: number) => {
+      if (index === numBuffer) {
+        // First bar - use overall direction as we don't have previous data
+        return direction > 0 ? jade.jade11 : ruby.ruby11;
+      }
+      const current = data[index];
+      const previous = data[index - 1];
+      if (!current || !previous) {
+        return direction > 0 ? jade.jade11 : ruby.ruby11;
+      }
+      const priceChange =
+        parseFloat(current.closePrice) - parseFloat(previous.closePrice);
+      return priceChange >= 0 ? jade.jade11 : ruby.ruby11;
+    };
+
+    const isPositiveChange = (i: number) => {
+      // @todo fix me
+      if (i === 0) return true;
+      const d = data[i];
+      const price1 = parseFloat(d.closePrice);
+      const previous = data[i - 1];
+      const price2 = previous ? parseFloat(previous.closePrice) : 0;
+      const priceChange = i === 0 ? 0 : price1 > price2;
+
+      return priceChange;
+    };
+
     const render = () => {
       const svg = select(svgRef.current);
       svg.selectAll("*").remove();
@@ -148,18 +168,18 @@ export const VolumeChart = (props: IVolumeChart) => {
           }
 
           if (selectedIndex === null && i === data.length - numBuffer - 1) {
-            return COLOR_SELECTED;
+            return getSelectedColor(i);
           }
 
-          if (i === selectedIndex) return COLOR_SELECTED;
+          if (i === selectedIndex) return getSelectedColor(i);
 
           if (i === numBuffer) {
             // fill should always be positive
-            return COLOR_POSITIVE_CHANGE;
+            return getPositiveChangeColor();
           }
 
           return priceChange >= 0
-            ? COLOR_POSITIVE_CHANGE
+            ? getPositiveChangeColor()
             : COLOR_NEGATIVE_CHANGE;
         })
         .attr("stroke", (d, i) => {
@@ -174,7 +194,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           if (i === numBuffer) {
             // @TODO fix me
             // we dont know if the first bar is positive or negative
-            return COLOR_POSITIVE_CHANGE;
+            return getPositiveChangeColor();
           }
 
           const price1 = parseFloat(d.closePrice);
@@ -184,7 +204,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           const priceChange = i === 0 ? 0 : price1 - price2;
           return priceChange >= 0
             ? COLOR_NEGATIVE_CHANGE
-            : COLOR_POSITIVE_CHANGE;
+            : getPositiveChangeColor();
         })
         .attr("data-index", (_, i) => i)
         .on("click", (_, kline) => {
@@ -230,11 +250,11 @@ export const VolumeChart = (props: IVolumeChart) => {
 
               if (ind === numBuffer) {
                 // fill should always be positive
-                return COLOR_POSITIVE_CHANGE;
+                return getPositiveChangeColor();
               }
 
               return isPositiveChange(ind)
-                ? COLOR_POSITIVE_CHANGE
+                ? getPositiveChangeColor()
                 : COLOR_NEGATIVE_CHANGE;
             })
             .filter((_, ind) => {
@@ -244,8 +264,8 @@ export const VolumeChart = (props: IVolumeChart) => {
 
               return ind === index;
             })
-            // Reset all bars to original color
-            .attr("fill", COLOR_SELECTED);
+            // Set selected bar to color based on its price change
+            .attr("fill", getSelectedColor(index));
 
           const heroChart = select("#hero-chart");
 
@@ -271,7 +291,7 @@ export const VolumeChart = (props: IVolumeChart) => {
               }
 
               return isPositiveChange(ind)
-                ? COLOR_POSITIVE_CHANGE
+                ? getPositiveChangeColor()
                 : COLOR_NEGATIVE_CHANGE;
             })
 
@@ -282,7 +302,7 @@ export const VolumeChart = (props: IVolumeChart) => {
 
               return ind === index;
             })
-            .attr("fill", COLOR_SELECTED);
+            .attr("fill", getSelectedColor(index));
 
           const heroChart = select("#hero-chart");
           heroChart
@@ -316,7 +336,6 @@ export const VolumeChart = (props: IVolumeChart) => {
     };
 
     render();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     loading,
     range,
@@ -327,7 +346,15 @@ export const VolumeChart = (props: IVolumeChart) => {
     lastPrice.closePrice,
     selectedIndex,
     isLocked,
-    data.length,
+    data,
+    darkMode,
+    xScale,
+    yScale,
+    numBuffer,
+    direction,
+    dispatch,
+    margin.left,
+    onMouseOver,
   ]);
 
   return (

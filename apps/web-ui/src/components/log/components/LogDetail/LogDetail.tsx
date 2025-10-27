@@ -27,7 +27,7 @@ export const LogDetail = ({ request, handleClose }: ILogDetail) => {
       <Tabs.Root
         value={activeTab}
         onValueChange={(value) => setActiveTab(value)}
-        className="h-full flex flex-col border border-gray-300 border-b-0 border-l-0 border-r-0"
+        className="h-full flex flex-col border border-gray-300 dark:border-[#404040] border-b-0 border-l-0 border-r-0"
       >
         <Tabs.List className="flex-shrink-0 mt-[1px]  ">
           <div className="flex h-full items-center justify-center w-8">

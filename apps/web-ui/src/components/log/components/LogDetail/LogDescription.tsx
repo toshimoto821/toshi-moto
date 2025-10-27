@@ -11,18 +11,18 @@ export const LogDescription = (props: ILogDescription) => {
   if (type === "supply") {
     return (
       <div className="p-4">
-        <Text size="3" weight="bold">
+        <Text size="3" weight="bold" className="dark:text-gray-200">
           Supply Request
         </Text>
-        <Separator className="mb-4" />
+        <Separator className="mb-4 dark:bg-[#404040]" />
         <div className="mb-4">
-          <Text>
+          <Text className="dark:text-gray-300">
             This request fetches the current supply of Bitcoin from{" "}
             <a
               href="https://blockchain.info/q/totalbc"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 dark:text-blue-400 hover:underline"
             >
               blockchain.info
             </a>
@@ -36,24 +36,24 @@ export const LogDescription = (props: ILogDescription) => {
   if (type === "price") {
     return (
       <div className="p-4">
-        <Text size="3" weight="bold">
+        <Text size="3" weight="bold" className="dark:text-gray-200">
           Price Request
         </Text>
-        <Separator className="mb-4" />
+        <Separator className="mb-4 dark:bg-[#404040]" />
         <div className="mb-4">
-          <Text>
+          <Text className="dark:text-gray-300">
             This request fetches the current price of Bitcoin. The backend API
             fetches pricing data from Binance{" "}
             <a
               href="https://data-api.binance.vision/api/v3/ticker/tradingDay?symbol=BTCUSDT"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 dark:text-blue-400 hover:underline"
             >
               tradingDay
             </a>{" "}
             endpoint. The request is cached for 5 minutes using the{" "}
-            <code>Cache-Control</code> header.
+            <code className="dark:bg-[#2a2a2a] dark:text-gray-300">Cache-Control</code> header.
           </Text>
         </div>
       </div>
@@ -63,23 +63,23 @@ export const LogDescription = (props: ILogDescription) => {
   if (type === "btc-historic-price") {
     return (
       <div className="p-4">
-        <Text size="3" weight="bold">
+        <Text size="3" weight="bold" className="dark:text-gray-200">
           BTC Historic Price Request
         </Text>
-        <Separator className="mb-4" />
+        <Separator className="mb-4 dark:bg-[#404040]" />
         <div className="mb-4">
-          <Text>
+          <Text className="dark:text-gray-300">
             This request fetches historic pricing data. The backend API fetches
             pricing data from CoinGecko every 5 minutes and stores it in a
             database. The frontend fetches this data and displays it in a chart.
           </Text>
         </div>
         <div>
-          <Callout.Root variant="outline">
+          <Callout.Root variant="outline" className="dark:border-[#404040]">
             <Callout.Icon>
               <InfoCircledIcon />
             </Callout.Icon>
-            <Callout.Text>
+            <Callout.Text className="dark:text-gray-300">
               Note: When self-hosting Toshi Moto, not all pricing data is
               available after install. Initial install will only have daily
               data. After install the backend will fetch 5 minute data and you
@@ -94,23 +94,23 @@ export const LogDescription = (props: ILogDescription) => {
   if (type === "btc-price") {
     return (
       <div className="p-4">
-        <Text size="3" weight="bold">
+        <Text size="3" weight="bold" className="dark:text-gray-200">
           BTC Current Price Request
         </Text>
-        <Separator className="mb-4" />
+        <Separator className="mb-4 dark:bg-[#404040]" />
         <div className="mb-4">
-          <Text>
+          <Text className="dark:text-gray-300">
             This request is fetching the current price of Bitcoin. The backend
             API fetches pricing data from CoinGecko every 5 minutes and stores
             it in a database.
           </Text>
         </div>
         <div>
-          <Callout.Root variant="outline">
+          <Callout.Root variant="outline" className="dark:border-[#404040]">
             <Callout.Icon>
               <InfoCircledIcon />
             </Callout.Icon>
-            <Callout.Text>
+            <Callout.Text className="dark:text-gray-300">
               Note: To prevent abuse, the backend API is rate limited to 1
               request per 5 minutes. Additionally the source data from CoinGecko
               is only updated every 5-10 minutes so making requests more
@@ -125,12 +125,12 @@ export const LogDescription = (props: ILogDescription) => {
   if (type === "transactions") {
     return (
       <div className="p-4">
-        <Text size="3" weight="bold">
+        <Text size="3" weight="bold" className="dark:text-gray-200">
           List Transactions for Address Request
         </Text>
-        <Separator className="mb-4" />
+        <Separator className="mb-4 dark:bg-[#404040]" />
         <div className="mb-4">
-          <Text>
+          <Text className="dark:text-gray-300">
             Returns a list of transactions for a given address. Although it is
             best practice to not re-use an address, a bitcoin address can have
             multiple transactions. This requests returns a list of transactions
@@ -138,11 +138,11 @@ export const LogDescription = (props: ILogDescription) => {
           </Text>
         </div>
         <div>
-          <Callout.Root variant="outline">
+          <Callout.Root variant="outline" className="dark:border-[#404040]">
             <Callout.Icon>
               <InfoCircledIcon />
             </Callout.Icon>
-            <Callout.Text>
+            <Callout.Text className="dark:text-gray-300">
               Note: This data is sourced from mempool.space and is not stored in
               the database. When self-hosted it requires a local installation of
               mempool.space.
@@ -156,12 +156,12 @@ export const LogDescription = (props: ILogDescription) => {
   if (type === "address") {
     return (
       <div className="p-4">
-        <Text size="3" weight="bold">
+        <Text size="3" weight="bold" className="dark:text-gray-200">
           UTXO Details Price Request
         </Text>
-        <Separator className="mb-4" />
+        <Separator className="mb-4 dark:bg-[#404040]" />
         <div className="mb-4">
-          <Text>
+          <Text className="dark:text-gray-300">
             Returns the on-chain stats and mempool stats for a given address.
             Details include high information about how many transactions are in
             the mempool, the total number of spent transactions, the total value

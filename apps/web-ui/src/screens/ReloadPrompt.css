@@ -17,6 +17,12 @@
   box-shadow: 3px 4px 5px 0 #8885;
   background-color: white;
 }
+
+.dark .ReloadPrompt-toast {
+  background-color: #2d2d2d;
+  border-color: #404040;
+  color: #f6f4fa;
+}
 .ReloadPrompt-toast-message {
   margin-bottom: 8px;
 }
@@ -26,4 +32,10 @@
   margin-right: 5px;
   border-radius: 2px;
   padding: 3px 10px;
+}
+
+.dark .ReloadPrompt-toast-button {
+  background-color: #1a1a1a;
+  border-color: #404040;
+  color: #f6f4fa;
 }

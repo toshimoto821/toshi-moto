@@ -14,7 +14,7 @@ export const WalletRows = () => {
     (wallet) => wallet.archived === true
   );
   return (
-    <div className="px-2 border rounded bg-white drop-shadow-lg">
+    <div className="px-2 border dark:border-[#404040] rounded bg-white dark:bg-[#2d2d2d] drop-shadow-lg">
       {wallets.map((wallet, index) => {
         return (
           <div key={index} className="">
@@ -32,7 +32,7 @@ export const WalletRows = () => {
       })}
       {archivedWallets.length > 0 && (
         <div>
-          <div className="bg-gray-100 p-2 border-t border-b">
+          <div className="bg-gray-100 dark:bg-[#1a1a1a] p-2 border-t border-b dark:border-[#404040]">
             <Popover
               title="Archived"
               text={(classNames: string) => (
@@ -47,7 +47,10 @@ export const WalletRows = () => {
           </div>
           {archivedWallets.map((wallet, index) => {
             return (
-              <div key={index} className="bg-gray-50 opacity-70">
+              <div
+                key={index}
+                className="bg-gray-50 dark:bg-[#252525] opacity-70"
+              >
                 <WalletRow
                   wallet={wallet}
                   className="px-2 py-4"

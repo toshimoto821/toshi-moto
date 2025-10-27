@@ -78,8 +78,8 @@ export const WalletDetail = () => {
   }
 
   return (
-    <div className="px-2 border rounded bg-white drop-shadow-lg">
-      <div className="sticky top-[140px] bg-white z-50">
+    <div className="px-2 border rounded bg-white dark:bg-[#1a1a1a] dark:border-[#404040] drop-shadow-lg">
+      <div className="sticky top-[140px] bg-white dark:bg-[#1a1a1a] z-50">
         <div className="flex items-center">
           <div className="mr-4 h-full ml-2">
             <IconButton variant="ghost" onClick={handleBack}>
@@ -97,7 +97,7 @@ export const WalletDetail = () => {
           </div>
         </div>
         <Separator color="orange" size="4" />
-        <div className="grid grid-cols-9 gap-1 bg-orange-50 py-4 px-2 border border-t-0 border-x-0 border-orange-300">
+        <div className="grid grid-cols-9 gap-1 bg-orange-50 dark:bg-orange-950 py-4 px-2 border border-t-0 border-x-0 border-orange-300 dark:border-orange-700">
           <div className="flex items-center">
             <AddressFilterDropdown
               wallet={wallet}
@@ -159,7 +159,7 @@ export const WalletDetail = () => {
       </div>
 
       <div ref={containerRef}>
-        <div className="p-2 bg-gray-50 border-b">
+        <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b dark:border-[#404040]">
           <Popover
             text={(classNames) => (
               <Text weight="bold" size="1" className={classNames}>
@@ -221,7 +221,7 @@ export const WalletDetail = () => {
             )}
           </div>
         )}
-        <div className="p-2 bg-gray-50 border-b border-t">
+        <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b border-t dark:border-[#404040]">
           <Popover
             text={(classNames) => (
               <Text weight="bold" size="1" className={classNames}>

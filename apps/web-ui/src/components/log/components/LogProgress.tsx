@@ -19,7 +19,7 @@ export const LogProgress = ({ max, value }: { max: number; value: number }) => {
   return (
     <Progress.Root
       data-testid="log-progress"
-      className="relative overflow-hidden bg-blue-300 w-screen h-[3px] border border-y-0 border-b-0"
+      className="relative overflow-hidden bg-orange-400 dark:bg-orange-600 w-screen h-[3px] border dark:border-[#404040] border-y-0 border-b-0"
       style={{
         // Fix overflow clipping in Safari
         // https://gist.github.com/domske/b66047671c780a238b51c51ffde8d3a0
@@ -29,7 +29,7 @@ export const LogProgress = ({ max, value }: { max: number; value: number }) => {
       max={max}
     >
       <Progress.Indicator
-        className="bg-white w-full h-full transition-transform duration-[660ms] ease-[cubic-bezier(0.65, 0, 0.35, 1)]"
+        className="bg-white dark:bg-[#1a1a1a] w-full h-full transition-transform duration-[660ms] ease-[cubic-bezier(0.65, 0, 0.35, 1)]"
         style={{ transform: `translateX(${percent * 100}%)` }}
       />
     </Progress.Root>

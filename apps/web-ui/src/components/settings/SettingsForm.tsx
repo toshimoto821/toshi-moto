@@ -28,6 +28,8 @@ import {
   selectDebugMode,
   setDebugMode,
   showToast,
+  selectDarkMode,
+  toggleDarkMode,
 } from "@root/lib/slices/ui.slice";
 
 const VITE_PUSH_NOTIFICATIONS_DISABLED = import.meta.env
@@ -51,6 +53,7 @@ export const SettingsForm = () => {
   const pushNotificationConfig = useAppSelector(selectPushNotificationsConfig);
 
   const debugMode = useAppSelector(selectDebugMode);
+  const darkMode = useAppSelector(selectDarkMode);
   const [testMempoolConnection, { error, status: mempoolTestStatus }] =
     useLazyTestMempoolConnectionQuery();
 
@@ -274,6 +277,25 @@ export const SettingsForm = () => {
                 }}
               />{" "}
               Subscribe To Push Notifications
+            </Flex>
+          </Text>
+        </label>
+      </Flex>
+
+      <Flex direction="column" gap="3" className="my-4">
+        <label>
+          <Text as="div" size="2" mb="1" weight="bold">
+            Dark Mode
+          </Text>
+          <Text as="label">
+            <Flex as="span" gap="2" className="items-center">
+              <Checkbox
+                checked={darkMode}
+                onCheckedChange={() => {
+                  dispatch(toggleDarkMode());
+                }}
+              />{" "}
+              Enable dark mode
             </Flex>
           </Text>
         </label>

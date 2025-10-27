@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { AppProvider } from "./providers/AppProvider";
+import { ThemeProvider } from "./providers/ThemeProvider";
 import { App } from "./App.tsx";
-import { Theme } from "@radix-ui/themes";
 import "./index.css";
 
 import "react-day-picker/dist/style.css";
@@ -17,9 +17,9 @@ if (window.location.pathname !== "/") {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
-      <Theme accentColor="orange" radius="small" scaling="90%">
+      <ThemeProvider>
         <App />
-      </Theme>
+      </ThemeProvider>
     </AppProvider>
   </React.StrictMode>
 );

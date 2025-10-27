@@ -36,6 +36,7 @@ const initialState: UIState = {
   breakpoint: 0,
   currency: "usd",
   debugMode: false,
+  darkMode: false,
   filterUtxoOnly: [],
   graphTimeFrameRange: "5Y",
   graphTimeFrameGroup: "1w",
@@ -135,6 +136,12 @@ export const uiSlice = createSlice({
     setDebugMode(state, action: PayloadAction<boolean>) {
       state.debugMode = action.payload;
     },
+    setDarkMode(state, action: PayloadAction<boolean>) {
+      state.darkMode = action.payload;
+    },
+    toggleDarkMode(state) {
+      state.darkMode = !state.darkMode;
+    },
     // Forecast functionality
     setForecastEnabled(state, action: PayloadAction<boolean>) {
       state.forecastEnabled = action.payload;
@@ -180,6 +187,8 @@ export const {
   showToast,
   clearToast,
   setDebugMode,
+  setDarkMode,
+  toggleDarkMode,
   setForecastEnabled,
   setForecastCagr,
   setForecastData,
@@ -291,6 +300,7 @@ export const chartByDateRangeAction = (
 /// Selectors
 ///////////////////////////////////////
 export const selectDebugMode = (state: RootState) => state.ui.debugMode;
+export const selectDarkMode = (state: RootState) => state.ui.darkMode;
 export const selectPrivatePrice = (state: RootState) => state.ui.privatePrice;
 export const selectUI = (state: RootState) => state.ui;
 

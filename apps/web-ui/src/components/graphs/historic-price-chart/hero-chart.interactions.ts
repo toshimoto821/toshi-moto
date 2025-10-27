@@ -6,7 +6,6 @@ import type { ChartMargin } from "./hero-chart.types";
 import { SELECTED_OPACITY } from "./hero-chart.constants";
 
 // Color constants for volume chart
-const COLOR_POSITIVE_CHANGE = "rgba(209, 213, 219, 0.9)";
 const COLOR_NEGATIVE_CHANGE = "transparent";
 
 type SVGSelection = Selection<SVGSVGElement, unknown, null, undefined>;
@@ -87,8 +86,14 @@ export const updateBarHighlight = (
   direction: number,
   isPositiveChangeFn: (i: number) => boolean,
   numBuffer: number,
-  dataLength: number
+  dataLength: number,
+  darkMode: boolean
 ) => {
+  // Helper function to get color based on dark mode
+  const getPositiveChangeColor = () => {
+    return darkMode ? "rgba(80, 80, 80, 0.9)" : "rgba(209, 213, 219, 0.9)";
+  };
+
   // Update main chart bars
   svg
     .selectAll(".bar")
@@ -98,7 +103,6 @@ export const updateBarHighlight = (
 
   // Update volume chart bars
   const volChart = select(`#${volumeChartId}`);
-  const colorSelected = direction > 0 ? jade.jade11 : ruby.ruby11;
 
   volChart.selectAll(".bar").attr("fill", (_, i) => {
     // Outside buffer range - transparent
@@ -106,19 +110,23 @@ export const updateBarHighlight = (
       return "transparent";
     }
 
-    // First visible bar - always positive color
+    // First visible bar - use overall direction as we don't have previous data
     if (i === numBuffer) {
-      return COLOR_POSITIVE_CHANGE;
+      if (i === index) {
+        // Selected first bar - use overall direction
+        return direction > 0 ? jade.jade11 : ruby.ruby11;
+      }
+      return getPositiveChangeColor();
     }
 
-    // Selected index - use colored highlight
+    // Selected index - use colored highlight based on that bar's price change
     if (i === index) {
-      return colorSelected;
+      return isPositiveChangeFn(i) ? jade.jade11 : ruby.ruby11;
     }
 
     // All other bars - gray or transparent based on price change
     return isPositiveChangeFn(i)
-      ? COLOR_POSITIVE_CHANGE
+      ? getPositiveChangeColor()
       : COLOR_NEGATIVE_CHANGE;
   });
 };
@@ -158,6 +166,7 @@ export const createMouseMoveHandler = (
   displayMode: string,
   isLocked: boolean,
   suppressEvents: boolean,
+  darkMode: boolean,
   onMouseOver?: (params: { datum: BinanceKlineMetric; index: number }) => void
 ) => {
   return function (event: unknown) {
@@ -234,7 +243,8 @@ export const createMouseMoveHandler = (
       direction,
       isPositiveChange,
       numBuffer,
-      data.length
+      data.length,
+      darkMode
     );
 
     if (onMouseOver) {
@@ -257,6 +267,7 @@ export const createMouseLeaveHandler = (
   displayMode: string,
   isLocked: boolean,
   suppressEvents: boolean,
+  darkMode: boolean,
   onMouseOver?: (params: { datum: BinanceKlineMetric; index: number }) => void
 ) => {
   return function () {
@@ -312,7 +323,8 @@ export const createMouseLeaveHandler = (
       direction,
       isPositiveChange,
       numBuffer,
-      data.length
+      data.length,
+      darkMode
     );
 
     if (onMouseOver) {
