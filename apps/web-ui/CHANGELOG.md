@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.34.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.33.4...web-ui-1.34.0) (2025-10-27)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.34.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.34.0)|
+
+  
+
+
+### ✨ Features
+
+* darkmode ([519836c](https://github.com/toshimoto821/toshi-moto/commit/519836c033d104f1d5be5dcef1458a78a8950de9))
+
 ## [1.33.4](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.33.3...web-ui-1.33.4) (2025-10-25)
 
   |      |     |
