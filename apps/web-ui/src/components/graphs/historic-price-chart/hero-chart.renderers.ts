@@ -384,7 +384,7 @@ export const renderY2Axis = (
           g
             .selectAll(".tick line")
             .attr("stroke", "gray")
-            .attr("opacity", 0.3)
+            .attr("opacity", 0.5)
             .attr("stroke-dasharray", "2,16")
             .attr("transform", "translate(-20, 0)") // Shift lines 20px left to start at the 20px mark
       )
@@ -492,7 +492,7 @@ export const renderY1Axis = (
           g
             .selectAll(".tick line")
             .attr("stroke", "orange")
-            .attr("opacity", 0.2)
+            .attr("opacity", 0.5)
             .attr("stroke-dasharray", "2,16")
             .attr("transform", "translate(20, 0)") // Shift lines 20px right to start at the 20px mark
       )
