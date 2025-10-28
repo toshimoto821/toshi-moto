@@ -362,7 +362,7 @@ export const renderY2Axis = (
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const y2Axis = (g: any) => {
-    g.attr("transform", `translate(${width - 60},0)`)
+    g.attr("transform", `translate(${width},0)`)
       .call(
         axisRight(yScale)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -374,20 +374,28 @@ export const renderY2Axis = (
             }`;
           })
           .ticks(5)
+          .tickSize(-(width - 40)) // Extend tick lines with 20px margin on each side
       )
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .call((g: any) => g.select(".domain").remove())
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .call((g: any) =>
-        g.selectAll(".tick line").attr("stroke", "gray").attr("opacity", 0.6)
+      .call(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (g: any) =>
+          g
+            .selectAll(".tick line")
+            .attr("stroke", "gray")
+            .attr("opacity", 0.5)
+            .attr("stroke-dasharray", "2,16")
+            .attr("transform", "translate(-20, 0)") // Shift lines 20px left to start at the 20px mark
       )
       .selectAll("text")
       .attr(
         "transform",
-        `translate(${config.textMargin.right}, ${config.textMargin.top})`
+        `translate(-20, -15)` // Move text above the tick line and inset from the right edge
       )
       .attr("fill", "gray")
-      .attr("font-size", config.fontSize);
+      .attr("font-size", config.fontSize)
+      .attr("text-anchor", "end"); // Right-align text (so it aligns nicely from the right)
 
     g.selectAll(".tick").each(function (this: SVGTextElement) {
       const tick = select(this);
@@ -417,7 +425,7 @@ export const renderY2Axis = (
         .attr("stroke-opacity", 0.2)
         .attr(
           "transform",
-          `translate(${config.textMargin.right}, ${config.textMargin.top})`
+          `translate(-20, -15)` // Move rect with text
         )
         .style("fill", getAxisLabelBackground());
 
@@ -471,22 +479,32 @@ export const renderY1Axis = (
       axis.tickValues([0]);
     }
 
-    g.attr("transform", `translate(${config.transform.x},0)`)
-      .call(axis)
+    // Get the chart width from the SVG
+    const svgWidth = parseFloat(svg.attr("width") || "0");
+
+    g.attr("transform", `translate(0,0)`)
+      .call(axis.tickSize(-(svgWidth - 40))) // Negative value makes lines extend to the right with 20px margins
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .call((g: any) => g.select(".domain").remove())
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .call((g: any) =>
-        g.selectAll(".tick line").attr("stroke", "orange").attr("opacity", 1)
+      .call(
+        (g: any) =>
+          g
+            .selectAll(".tick line")
+            .attr("stroke", "orange")
+            .attr("opacity", 0.5)
+            .attr("stroke-dasharray", "2,16")
+            .attr("transform", "translate(20, 0)") // Shift lines 20px right to start at the 20px mark
       )
       .selectAll("text")
       .attr("fill", "orange")
       .attr("opacity", 1)
       .attr(
         "transform",
-        `translate(${config.textMargin.left * -1}, ${config.textMargin.top})`
+        `translate(20, -15)` // Move text above the tick line with proper left margin inset
       )
-      .attr("font-size", config.fontSize);
+      .attr("font-size", config.fontSize)
+      .attr("text-anchor", "start"); // Left align the text
 
     g.selectAll(".tick").each(function (this: SVGTextElement) {
       const tick = select(this);
@@ -513,11 +531,11 @@ export const renderY1Axis = (
         .attr("ry", 2)
         .attr("opacity", 0.6)
         .attr("stroke", "orange")
-        .attr("stroke-opacity", 1)
+        .attr("stroke-opacity", 0.15)
         .style("fill", getAxisLabelBackground())
         .attr(
           "transform",
-          `translate(${config.textMargin.left * -1}, ${config.textMargin.top})`
+          `translate(20, -15)` // Move rect with text
         );
 
       rect.exit().remove();
