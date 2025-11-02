@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.35.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.34.1...web-ui-1.35.0) (2025-11-02)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.35.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.35.0)|
+
+  
+
+
+### ✨ Features
+
+* shows lines on hover ([876e1c4](https://github.com/toshimoto821/toshi-moto/commit/876e1c4533d120f37a54eece4f6c7dc87d10a4c6))
+
 ## [1.34.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.34.0...web-ui-1.34.1) (2025-10-28)
 
   |      |     |
