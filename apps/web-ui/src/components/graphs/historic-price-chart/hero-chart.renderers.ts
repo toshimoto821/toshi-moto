@@ -384,9 +384,10 @@ export const renderY2Axis = (
           g
             .selectAll(".tick line")
             .attr("stroke", "gray")
-            .attr("opacity", 0.5)
+            .attr("opacity", 0)
             .attr("stroke-dasharray", "2,16")
             .attr("transform", "translate(-20, 0)") // Shift lines 20px left to start at the 20px mark
+            .classed("tick-line-hoverable", true)
       )
       .selectAll("text")
       .attr(
@@ -487,14 +488,14 @@ export const renderY1Axis = (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .call((g: any) => g.select(".domain").remove())
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .call(
-        (g: any) =>
-          g
-            .selectAll(".tick line")
-            .attr("stroke", "orange")
-            .attr("opacity", 0.5)
-            .attr("stroke-dasharray", "2,16")
-            .attr("transform", "translate(20, 0)") // Shift lines 20px right to start at the 20px mark
+      .call((g: any) =>
+        g
+          .selectAll(".tick line")
+          .attr("stroke", "orange")
+          .attr("opacity", 0)
+          .attr("stroke-dasharray", "2,16")
+          .attr("transform", "translate(20, 0)") // Shift lines 20px right to start at the 20px mark
+          .classed("tick-line-hoverable", true)
       )
       .selectAll("text")
       .attr("fill", "orange")

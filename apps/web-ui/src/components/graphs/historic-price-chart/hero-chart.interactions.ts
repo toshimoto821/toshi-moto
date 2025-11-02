@@ -74,6 +74,16 @@ export const updateCrosshairPosition = (
     .select("#green-dot")
     .attr("cx", x + mid)
     .attr("cy", curveY);
+
+  // Show tick lines on hover
+  svg.selectAll(".tick-line-hoverable").attr("opacity", 0.5);
+};
+
+/**
+ * Hides the tick lines
+ */
+export const hideTickLines = (svg: SVGSelection) => {
+  svg.selectAll(".tick-line-hoverable").attr("opacity", 0);
 };
 
 /**
@@ -144,9 +154,13 @@ export const calculateIndexFromPosition = (
   const step = xScale.step();
   let index = Math.round((x - margin.left) / step) - 1;
 
-  if (index < numBuffer || index > dataLength - numBuffer - 1) {
+  // Clamp the index to the valid range instead of falling back to the last index
+  if (index < numBuffer) {
+    index = numBuffer;
+  } else if (index > dataLength - numBuffer - 1) {
     index = dataLength - numBuffer - 1;
   }
+  // console.log("index:A", index, numBuffer, dataLength);
 
   return index;
 };
@@ -247,6 +261,7 @@ export const createMouseMoveHandler = (
       darkMode
     );
 
+    // console.log("index:B", index, numBuffer);
     if (onMouseOver) {
       onMouseOver({ datum, index: index - numBuffer });
     }
@@ -293,6 +308,7 @@ export const createMouseLeaveHandler = (
     );
 
     updateCrosshairPosition(svg, x, y1, btcCurveY);
+    hideTickLines(svg);
 
     if (isLocked) return;
 

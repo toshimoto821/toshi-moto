@@ -166,7 +166,7 @@ export const VolumeChart = (props: IVolumeChart) => {
           if (i < numBuffer || i > data.length - numBuffer - 1) {
             return "transparent";
           }
-
+          // console.log("selectedIndex:A", i, numBuffer, data.length);
           if (selectedIndex === null && i === data.length - numBuffer - 1) {
             return getSelectedColor(i);
           }
