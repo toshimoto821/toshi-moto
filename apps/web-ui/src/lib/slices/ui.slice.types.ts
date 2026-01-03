@@ -24,6 +24,7 @@ export interface UIState {
   graphSelectedTransactions: string[];
   graphIsLocked: boolean;
   graphSelectedIndex: number | null;
+  graphShowAxisLines: boolean;
   navbarBalanceVisibility: boolean;
   displayMode: "standard" | "netAsset" | "cagr";
   privatePrice: boolean;

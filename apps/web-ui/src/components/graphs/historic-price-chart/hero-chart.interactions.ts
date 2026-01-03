@@ -74,16 +74,15 @@ export const updateCrosshairPosition = (
     .select("#green-dot")
     .attr("cx", x + mid)
     .attr("cy", curveY);
-
-  // Show tick lines on hover
-  svg.selectAll(".tick-line-hoverable").attr("opacity", 0.5);
 };
 
 /**
- * Hides the tick lines
+ * Hides the tick lines (only if showAxisLines is false)
  */
-export const hideTickLines = (svg: SVGSelection) => {
-  svg.selectAll(".tick-line-hoverable").attr("opacity", 0);
+export const hideTickLines = (svg: SVGSelection, showAxisLines: boolean) => {
+  if (!showAxisLines) {
+    svg.selectAll(".tick-line-hoverable").attr("opacity", 0);
+  }
 };
 
 /**
@@ -283,6 +282,7 @@ export const createMouseLeaveHandler = (
   isLocked: boolean,
   suppressEvents: boolean,
   darkMode: boolean,
+  showAxisLines: boolean,
   onMouseOver?: (params: { datum: BinanceKlineMetric; index: number }) => void
 ) => {
   return function () {
@@ -308,7 +308,7 @@ export const createMouseLeaveHandler = (
     );
 
     updateCrosshairPosition(svg, x, y1, btcCurveY);
-    hideTickLines(svg);
+    hideTickLines(svg, showAxisLines);
 
     if (isLocked) return;
 

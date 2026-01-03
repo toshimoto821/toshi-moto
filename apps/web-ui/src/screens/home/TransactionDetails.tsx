@@ -61,7 +61,7 @@ export const TransactionDetails = (props: ITransactionDetails) => {
               <a
                 href={tx.blockExplorerLink(bitcoinNodeUrl)}
                 target="_blank"
-                className="text-blue-500 hover:underline hover:cursor-pointer flex items-center font-mono text-xs"
+                className="text-blue-500 hover:underline hover:cursor-pointer flex items-center font-mono text-xs" rel="noreferrer"
               >
                 <span className="hidden md:inline">{tx.txid}</span>
                 <span className="inline md:hidden">{trimAddress(tx.txid)}</span>

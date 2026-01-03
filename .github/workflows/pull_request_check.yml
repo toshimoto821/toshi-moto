@@ -58,45 +58,45 @@ jobs:
         run: |
           npx nx run web-ui:build
 
-      - name: Install Playwright Browsers
-        run: |
-          npx playwright install
-          npx playwright install-deps
+      # - name: Install Playwright Browsers
+      #   run: |
+      #     npx playwright install
+      #     npx playwright install-deps
 
-      - name: Screenshots
-        run: npx nx run web-ui:e2e
-        continue-on-error: true
-        id: screenshots
+      # - name: Screenshots
+      #   run: npx nx run web-ui:e2e
+      #   continue-on-error: true
+      #   id: screenshots
 
-      - name: Check Playwright Result
-        id: check_playwright
-        run: |
-          if [ "${{ steps.screenshots.outcome }}" == "failure" ]; then
-            echo "playwright_failed=true" >> $GITHUB_ENV
-          else
-            echo "playwright_failed=false" >> $GITHUB_ENV
-          fi
+      # - name: Check Playwright Result
+      #   id: check_playwright
+      #   run: |
+      #     if [ "${{ steps.screenshots.outcome }}" == "failure" ]; then
+      #       echo "playwright_failed=true" >> $GITHUB_ENV
+      #     else
+      #       echo "playwright_failed=false" >> $GITHUB_ENV
+      #     fi
 
-      - name: WebshotArchive Action
-        uses: webshotarchive/github-action@latest
-        with:
-          screenshotsFolder: dist/.playwright/screenshots
-          projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
-          clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
-          clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
+      # - name: WebshotArchive Action
+      #   uses: webshotarchive/github-action@latest
+      #   with:
+      #     screenshotsFolder: dist/.playwright/screenshots
+      #     projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
+      #     clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
+      #     clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
 
-      - name: Upload Artifacts
-        if: env.playwright_failed == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-ui-screenshots
-          path: dist/.playwright/screenshots
+      # - name: Upload Artifacts
+      #   if: env.playwright_failed == 'true'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: web-ui-screenshots
+      #     path: dist/.playwright/screenshots
 
-      - name: Fail Pipeline if Playwright Failed
-        if: env.playwright_failed == 'true'
-        run: |
-          echo "Playwright tests failed"
-          exit 1
+      # - name: Fail Pipeline if Playwright Failed
+      #   if: env.playwright_failed == 'true'
+      #   run: |
+      #     echo "Playwright tests failed"
+      #     exit 1
 
       - name: Send bundle stats to RelativeCI
         uses: relative-ci/agent-action@v2

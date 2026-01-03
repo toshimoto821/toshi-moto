@@ -84,6 +84,7 @@ export const HeroChart = (props: IHeroChart) => {
     graphSelectedIndex: selectedIndex,
     graphSelectedTransactions,
     graphBtcAllocation,
+    graphShowAxisLines,
     displayMode,
   } = useAppSelector((state) => state.ui);
   const darkMode = useAppSelector(selectDarkMode);
@@ -223,7 +224,7 @@ export const HeroChart = (props: IHeroChart) => {
 
       // Render plot data (transaction markers)
       if (plotData.length) {
-        renderPlotData(svg, plotData, yScale, yValueToUse, width, margin);
+        renderPlotData(svg, plotData, yScale, data, xScale, displayMode, numBuffer);
       }
 
       // Render current price line
@@ -245,7 +246,8 @@ export const HeroChart = (props: IHeroChart) => {
           width,
           yValueToUse,
           privateNumber as (val: string) => string,
-          direction
+          direction,
+          graphShowAxisLines
         );
       }
 
@@ -264,7 +266,8 @@ export const HeroChart = (props: IHeroChart) => {
             margin,
             displayMode,
             privateNumber as (val: string) => string,
-            hasZeroBtc
+            hasZeroBtc,
+            graphShowAxisLines
           );
         }
       }
@@ -312,6 +315,7 @@ export const HeroChart = (props: IHeroChart) => {
         isLocked,
         suppressEvents,
         darkMode,
+        graphShowAxisLines,
         onMouseOver
       );
 
@@ -351,6 +355,7 @@ export const HeroChart = (props: IHeroChart) => {
     // UI state
     selectedIndex,
     graphBtcAllocation,
+    graphShowAxisLines,
     graphSelectedTransactions,
     displayMode,
     yValueToUse,

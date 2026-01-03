@@ -27,6 +27,7 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
     graphPlotDots,
     graphBtcAllocation,
     graphSelectedTransactions,
+    graphShowAxisLines,
   } = useAppSelector(selectUI);
 
   const forecastEnabled = useAppSelector(selectForecastEnabled);
@@ -82,6 +83,14 @@ export const SelectionDropdown = (props: ISelectionDropdown) => {
               }}
             >
               Transactions
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              shortcut={graphShowAxisLines ? "✓" : ""}
+              onSelect={() => {
+                dispatch(setUI({ graphShowAxisLines: !graphShowAxisLines }));
+              }}
+            >
+              Axis Lines
             </DropdownMenu.Item>
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
