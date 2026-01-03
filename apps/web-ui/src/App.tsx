@@ -10,6 +10,8 @@ const WalletDetail = lazy(
   () => import(/* webpackPrefetch: true */ "@root/screens/home/WalletDetail")
 );
 
+// bump
+
 export const App = () => {
   const router = createHashRouter([
     {
