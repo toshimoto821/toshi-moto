@@ -323,7 +323,8 @@ export const renderPlotData = (
   data: BinanceKlineMetric[],
   xScale: d3.ScaleBand<string>,
   displayMode: string,
-  numBuffer: number
+  numBuffer: number,
+  lineData: IRawNode[]
 ) => {
   const dots = svg.selectAll(".plot-dot").data(plotData).enter();
 
@@ -339,7 +340,11 @@ export const renderPlotData = (
       // Must match the same logic used in renderPriceLine
       const index = findClosestIndex(data, d.x);
       if (displayMode !== "standard") {
-        // In non-standard mode, use the node's dollar value
+        // In non-standard mode, use the line data's value at this index
+        // to ensure the dot is positioned ON the line
+        if (lineData[index]) {
+          return yScale(lineData[index].y1SumInDollars);
+        }
         return yScale(d.node.y1SumInDollars);
       }
       // In standard mode, use openPrice (same as price line)
