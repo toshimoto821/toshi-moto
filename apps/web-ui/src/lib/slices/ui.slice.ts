@@ -50,6 +50,7 @@ const initialState: UIState = {
   graphSelectedTransactions: [],
   graphIsLocked: false,
   graphSelectedIndex: null,
+  graphShowAxisLines: false,
   navbarBalanceVisibility: false,
   displayMode: "standard" as const,
   privatePrice: false,

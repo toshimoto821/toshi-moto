@@ -197,6 +197,22 @@ const getCrosshairColor = () => {
 };
 
 /**
+ * Gets the tick line color for price axis based on dark mode
+ */
+const getTickLineColor = () => {
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  return isDarkMode ? "gray" : "#333333";
+};
+
+/**
+ * Gets the tick line color for BTC axis based on dark mode
+ */
+const getBtcTickLineColor = () => {
+  const isDarkMode = document.documentElement.classList.contains("dark");
+  return isDarkMode ? "orange" : "#cc7000";
+};
+
+/**
  * Renders crosshair lines (vertical and horizontal)
  */
 export const renderCrosshairs = (
@@ -409,7 +425,8 @@ export const renderY2Axis = (
   width: number,
   yValueToUse: "y1SumInDollars" | "y2",
   privateNumber: (val: string) => string,
-  direction: number
+  direction: number,
+  showAxisLines: boolean
 ) => {
   const formatDefault = format("~s");
   const config = AXIS_CONFIG.y2;
@@ -437,9 +454,9 @@ export const renderY2Axis = (
         (g: any) =>
           g
             .selectAll(".tick line")
-            .attr("stroke", "gray")
-            .attr("opacity", 0)
-            .attr("stroke-dasharray", "2,16")
+            .attr("stroke", getTickLineColor())
+            .attr("opacity", showAxisLines ? 0.7 : 0)
+            .attr("stroke-dasharray", "4,12")
             .attr("transform", "translate(-20, 0)") // Shift lines 20px left to start at the 20px mark
             .classed("tick-line-hoverable", true)
       )
@@ -504,7 +521,8 @@ export const renderY1Axis = (
   margin: ChartMargin,
   displayMode: string,
   privateNumber: (val: string) => string,
-  hasZeroBtc: boolean
+  hasZeroBtc: boolean,
+  showAxisLines: boolean
 ) => {
   const formatBtc = format(".4f");
   const config = AXIS_CONFIG.y1;
@@ -545,9 +563,9 @@ export const renderY1Axis = (
       .call((g: any) =>
         g
           .selectAll(".tick line")
-          .attr("stroke", "orange")
-          .attr("opacity", 0)
-          .attr("stroke-dasharray", "2,16")
+          .attr("stroke", getBtcTickLineColor())
+          .attr("opacity", showAxisLines ? 0.7 : 0)
+          .attr("stroke-dasharray", "4,12")
           .attr("transform", "translate(20, 0)") // Shift lines 20px right to start at the 20px mark
           .classed("tick-line-hoverable", true)
       )
