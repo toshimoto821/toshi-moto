@@ -1,4 +1,23 @@
 # UI Changelog
+## [1.36.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.35.0...web-ui-1.36.0) (2026-01-03)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.36.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.36.0)|
+
+  
+
+
+### ✨ Features
+
+* adds saylor tracker dots ([388e186](https://github.com/toshimoto821/toshi-moto/commit/388e186e9f2e861a6ead2cacafb108fa532ee6c4)), closes [#326](https://github.com/toshimoto821/toshi-moto/issues/326)
+
+
+### 🐞 Bug Fixes
+
+* build ([24b3658](https://github.com/toshimoto821/toshi-moto/commit/24b365833b9393ef72c850f868941d248096b4be))
+* bump ui ([006ddc6](https://github.com/toshimoto821/toshi-moto/commit/006ddc668df77448f1b891999ca521bbe1bd6205))
+
 ## [1.35.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.34.1...web-ui-1.35.0) (2025-11-02)
 
   |      |     |
