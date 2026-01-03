@@ -151,9 +151,9 @@ jobs:
           CLIENT_SECRET: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
           # todo change this image path to use branch
           # dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png
-          # FILES: |
-          #   https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
-          #   https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+          FILES: |
+            https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+            https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
