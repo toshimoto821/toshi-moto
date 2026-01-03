@@ -266,29 +266,83 @@ export const renderIndicatorDots = (
 };
 
 /**
- * Renders plot data points (transaction markers)
+ * Finds the closest index in data array for a given timestamp
+ */
+const findClosestIndex = (
+  data: BinanceKlineMetric[],
+  timestamp: number
+): number => {
+  // Binary search for closest match
+  let left = 0;
+  let right = data.length - 1;
+
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    if (data[mid].openTime < timestamp) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+
+  // Check if left-1 is closer
+  if (left > 0) {
+    const diffLeft = Math.abs(data[left].openTime - timestamp);
+    const diffPrev = Math.abs(data[left - 1].openTime - timestamp);
+    if (diffPrev < diffLeft) {
+      return left - 1;
+    }
+  }
+
+  return left;
+};
+
+/**
+ * Renders plot data points (transaction markers) as dots
  */
 export const renderPlotData = (
   svg: SVGSelection,
   plotData: IPlotData[],
   yScale: d3.ScaleLinear<number, number>,
-  yValueToUse: "y1SumInDollars" | "y2",
-  width: number,
-  margin: ChartMargin
+  data: BinanceKlineMetric[],
+  xScale: d3.ScaleBand<string>,
+  displayMode: string,
+  numBuffer: number
 ) => {
-  const lines = svg.selectAll(".plot-line").data(plotData).enter();
+  const dots = svg.selectAll(".plot-dot").data(plotData).enter();
 
-  lines
-    .append("line")
-    .attr("x1", margin.left)
-    .attr("y1", (d) => yScale(d.node[yValueToUse]))
-    .attr("x2", width - margin.right)
-    .attr("y2", (d) => yScale(d.node[yValueToUse]))
+  dots
+    .append("circle")
+    .attr("cx", (d) => {
+      // Find closest matching index in the data array
+      const index = findClosestIndex(data, d.x);
+      return (xScale(index.toString()) ?? 0) + xScale.bandwidth() / 2;
+    })
+    .attr("cy", (d) => {
+      // Find the matching data point to get the price at this x position
+      // Must match the same logic used in renderPriceLine
+      const index = findClosestIndex(data, d.x);
+      if (displayMode !== "standard") {
+        // In non-standard mode, use the node's dollar value
+        return yScale(d.node.y1SumInDollars);
+      }
+      // In standard mode, use openPrice (same as price line)
+      // except for buffer items at the end which use closePrice
+      const pricePoint = data[index];
+      if (pricePoint) {
+        if (index > data.length - numBuffer - 1) {
+          return yScale(parseFloat(pricePoint.closePrice));
+        }
+        return yScale(parseFloat(pricePoint.openPrice));
+      }
+      return yScale(d.node.y2);
+    })
+    .attr("r", 4)
+    .attr("fill", (d) => d.data.color)
+    .attr("class", "plot-dot")
+    .attr("opacity", (d) => (d.data.visible ? 0.8 : 0))
     .attr("stroke", (d) => d.data.color)
-    .attr("class", "plot-line")
-    .attr("stroke-dasharray", (d) => (d.type === "VOUT" ? "" : "3,3"))
-    .attr("opacity", (d) => (d.data.visible ? 1 : 0))
-    .attr("stroke-width", 0.5);
+    .attr("stroke-width", 1);
 };
 
 /**

@@ -223,7 +223,7 @@ export const HeroChart = (props: IHeroChart) => {
 
       // Render plot data (transaction markers)
       if (plotData.length) {
-        renderPlotData(svg, plotData, yScale, yValueToUse, width, margin);
+        renderPlotData(svg, plotData, yScale, data, xScale, displayMode, numBuffer);
       }
 
       // Render current price line

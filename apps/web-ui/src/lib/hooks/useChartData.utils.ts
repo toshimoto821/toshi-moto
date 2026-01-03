@@ -87,7 +87,8 @@ export const groupPricesByTimeframe = (
 export const createTransactionNodes = (
   wallets: Wallet[],
   selectedTxs: string[],
-  selectedWalletId?: string | null
+  selectedWalletId?: string | null,
+  graphPlotDots: boolean = false
 ): { nodes: StackedBarData[]; inputNodes: StackedBarData[] } => {
   const filteredWallets = selectedWalletId
     ? wallets.filter((wallet) => wallet.id === selectedWalletId)
@@ -99,7 +100,7 @@ export const createTransactionNodes = (
   for (const wallet of filteredWallets) {
     for (const address of wallet.listAddresses) {
       for (const tx of address.listTransactions) {
-        const visible = selectedTxs.includes(tx.txid);
+        const visible = graphPlotDots || selectedTxs.includes(tx.txid);
         const vout = tx.sumVout(address.address);
         const vin = tx.sumVin(address.address);
         const value = vout || vin;

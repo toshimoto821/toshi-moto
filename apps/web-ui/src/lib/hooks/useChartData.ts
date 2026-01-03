@@ -39,6 +39,7 @@ export const useChartData = (opts: IUseChartData) => {
   // ============================================================================
   const {
     graphSelectedTransactions: selectedTxs,
+    graphPlotDots,
     displayMode,
     selectedWalletId,
     forecastEnabled,
@@ -73,8 +74,8 @@ export const useChartData = (opts: IUseChartData) => {
   // - nodes: transactions where BTC was received (vout)
   // - inputNodes: transactions where BTC was spent (vin)
   const { nodes: receivedNodes, inputNodes: spentNodes } = useMemo(() => {
-    return createTransactionNodes(wallets, selectedTxs, selectedWalletId);
-  }, [wallets, selectedTxs, selectedWalletId]);
+    return createTransactionNodes(wallets, selectedTxs, selectedWalletId, graphPlotDots);
+  }, [wallets, selectedTxs, selectedWalletId, graphPlotDots]);
 
   // ============================================================================
   // STEP 3: MAP TRANSACTIONS TO TIME BUCKETS
