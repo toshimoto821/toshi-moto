@@ -121,26 +121,26 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Install Playwright Browsers
-        run: |
-          npx playwright install
-          npx playwright install-deps
+      # - name: Install Playwright Browsers
+      #   run: |
+      #     npx playwright install
+      #     npx playwright install-deps
 
-      - name: Screenshots
-        run: npx nx run web-ui:e2e
-        continue-on-error: true
-        id: screenshots
+      # - name: Screenshots
+      #   run: npx nx run web-ui:e2e
+      #   continue-on-error: true
+      #   id: screenshots
 
       # create a way to update the commitSha from the release
       # so we can use the commit from the release to point commitSha
       # also allow tags to be updated
-      - name: WebshotArchive Action
-        uses: webshotarchive/github-action@latest
-        with:
-          screenshotsFolder: dist/.playwright/screenshots
-          projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
-          clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
-          clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
+      # - name: WebshotArchive Action
+      #   uses: webshotarchive/github-action@latest
+      #   with:
+      #     screenshotsFolder: dist/.playwright/screenshots
+      #     projectId: ${{secrets.TIMECHAIN_PROJECT_ID}}
+      #     clientId: ${{ secrets.TIMECHAIN_CLIENT_ID }}
+      #     clientSecret: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
 
       - name: Release
         run: npx nx affected --target=version --exclude='*,!tag:deployable' --base=$BASE --head=$HEAD
@@ -151,9 +151,9 @@ jobs:
           CLIENT_SECRET: ${{ secrets.TIMECHAIN_CLIENT_SECRET }}
           # todo change this image path to use branch
           # dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png
-          FILES: |
-            https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
-            https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+          # FILES: |
+          #   https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
+          #   https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=${{secrets.TIMECHAIN_PROJECT_ID}}
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.8.0
