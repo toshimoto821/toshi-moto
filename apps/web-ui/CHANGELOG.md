@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.36.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.36.0...web-ui-1.36.1) (2026-01-03)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.36.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.36.1)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* dot alignment ([85fc7ec](https://github.com/toshimoto821/toshi-moto/commit/85fc7ecbee32eb125b2980e7d8cfa006dc415ee8))
+
 ## [1.36.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.35.0...web-ui-1.36.0) (2026-01-03)
 
   |      |     |
