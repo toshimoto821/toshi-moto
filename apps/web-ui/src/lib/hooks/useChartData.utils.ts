@@ -88,7 +88,7 @@ export const createTransactionNodes = (
   wallets: Wallet[],
   selectedTxs: string[],
   selectedWalletId?: string | null,
-  graphPlotDots: boolean = false
+  graphPlotDots = false
 ): { nodes: StackedBarData[]; inputNodes: StackedBarData[] } => {
   const filteredWallets = selectedWalletId
     ? wallets.filter((wallet) => wallet.id === selectedWalletId)

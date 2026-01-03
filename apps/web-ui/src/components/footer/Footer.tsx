@@ -5,7 +5,7 @@ export const Footer = () => {
         <a
           href="https://github.com/toshimoto821/toshi-moto"
           target="_blank"
-          className="transition-opacity hover:opacity-70"
+          className="transition-opacity hover:opacity-70" rel="noreferrer"
         >
           <img
             src="/assets/github.svg"
