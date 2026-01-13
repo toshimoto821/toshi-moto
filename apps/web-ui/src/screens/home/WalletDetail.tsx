@@ -1,6 +1,6 @@
-import { useRef, useEffect } from "react";
-import { Separator, Text, IconButton, Button } from "@radix-ui/themes";
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useRef, useEffect, useState } from "react";
+import { Separator, Text, IconButton, Button, TextField } from "@radix-ui/themes";
+import { ArrowLeftIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useWallets } from "@lib/hooks/useWallets";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -11,8 +11,13 @@ import { useElementDimensions } from "@lib/hooks/useElementDimensions";
 import { useBtcPrice } from "@root/lib/hooks/useBtcPrice";
 import { Popover } from "@root/components/popover/Popover";
 import type { IAppAddressFilters, IExpandAddressKey } from "@root/types";
-import { useAppSelector } from "@root/lib/hooks/store.hooks";
+import { useAppSelector, useAppDispatch } from "@root/lib/hooks/store.hooks";
 import { selectUI } from "@root/lib/slices/ui.slice";
+import {
+  addManualAddress,
+  removeManualAddress,
+} from "@root/lib/slices/wallets.slice";
+import { isValidBitcoinAddress } from "@root/lib/utils";
 
 export const WalletDetail = () => {
   const useWalletRet = useWallets();
@@ -23,6 +28,12 @@ export const WalletDetail = () => {
   const { circulatingSupply, btcPrice } = useBtcPrice();
   const { filterUtxoOnly = [], walletExpandedAddresses = [] } =
     useAppSelector(selectUI);
+  const dispatch = useAppDispatch();
+
+  // Manual address input state
+  const [newAddress, setNewAddress] = useState("");
+  const [addressError, setAddressError] = useState<string | null>(null);
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
 
   const navigate = useNavigate();
   const wallet = wallets.find((wallet) => wallet.id === walletId);
@@ -42,6 +53,38 @@ export const WalletDetail = () => {
         actions.toggleAddress(walletId, address);
       }
     };
+  };
+
+  const handleAddManualAddress = () => {
+    if (!walletId || !newAddress.trim()) return;
+
+    setIsAddingAddress(true);
+    setAddressError(null);
+
+    const trimmedAddress = newAddress.trim();
+
+    // Check if address already exists in wallet
+    if (wallet?.hasAddress(trimmedAddress)) {
+      setAddressError("This address is already in the wallet");
+      setIsAddingAddress(false);
+      return;
+    }
+
+    // Basic sanity check - API will do authoritative validation
+    if (!isValidBitcoinAddress(trimmedAddress)) {
+      setAddressError("Invalid address format");
+      setIsAddingAddress(false);
+      return;
+    }
+
+    dispatch(addManualAddress({ walletId, address: trimmedAddress }));
+    setNewAddress("");
+    setIsAddingAddress(false);
+  };
+
+  const handleRemoveManualAddress = (addressId: string) => {
+    if (!walletId) return;
+    dispatch(removeManualAddress({ walletId, addressId }));
   };
 
   const changeAddresses =
@@ -159,128 +202,215 @@ export const WalletDetail = () => {
       </div>
 
       <div ref={containerRef}>
-        <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b dark:border-[#404040]">
-          <Popover
-            text={(classNames) => (
-              <Text weight="bold" size="1" className={classNames}>
-                Receive Addresses
+        {/* Manual Wallet UI */}
+        {wallet.isManualWallet && (
+          <>
+            <div className="p-3 bg-gray-50 dark:bg-[#2a2a2a] border-b dark:border-[#404040]">
+              <Text weight="bold" size="1">
+                Add Bitcoin Address
               </Text>
-            )}
-            title="Receive Addresses"
-          >
-            Wallets have two types of addresses - receive and change. Receive
-            addresses are used to receive funds. You can have multiple receive
-            addresses in a wallet. Each address is unique and should only be
-            used once to protect your privacy. When you spend from an address,
-            the remaining funds are sent to a change address.
-          </Popover>
-        </div>
-        {receiveAddresses.map((address, index) => {
-          return (
-            <AddressRow
-              key={index + address.address}
-              address={address}
-              isUtxoExpanded={isUtxoExpanded(address.address)}
-              onClickExpandUtxo={handleToggleAddress(address.address)}
-              separator={index < receiveAddresses.length - 1}
-              wallets={useWalletRet}
-              dimensions={dimensions}
-              onClickRefresh={({ address }) => {
-                actions.refreshAddresses({
-                  walletId: wallet.id,
-                  addresses: [address],
-                });
-              }}
-              currency={wallet.settings.cur}
-            />
-          );
-        })}
-
-        {receiveAddresses.length === 0 && (
-          <div className="h-48 flex flex-col items-center justify-center">
-            {walletId && filterUtxoOnly.includes(walletId) && (
-              <Text>No receive UTXO's in wallet found</Text>
-            )}
-            {walletId &&
-              !filterUtxoOnly.includes(walletId) &&
-              !wallet.error && <Text>Loading receive addresses...</Text>}
-            {wallet.error && (
-              <Text color="red" className="flex items-center flex-col gap-2">
-                {wallet.error}
-                <Button
-                  onClick={() => {
-                    actions.refreshWallet(wallet.id, 0, true);
+              <div className="flex gap-2 mt-2">
+                <TextField.Root
+                  className="flex-1"
+                  placeholder="Enter a Bitcoin address (bc1..., 1..., 3...)"
+                  value={newAddress}
+                  onChange={(e) => {
+                    setNewAddress(e.target.value);
+                    setAddressError(null);
                   }}
-                  variant="soft"
-                  size="1"
-                  color="red"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleAddManualAddress();
+                    }
+                  }}
+                />
+                <Button
+                  onClick={handleAddManualAddress}
+                  disabled={isAddingAddress || !newAddress.trim()}
                 >
-                  Try again
+                  <PlusIcon />
+                  Add
                 </Button>
+              </div>
+              {addressError && (
+                <Text size="1" color="red" className="mt-1">
+                  {addressError}
+                </Text>
+              )}
+            </div>
+            <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b dark:border-[#404040]">
+              <Text weight="bold" size="1">
+                Addresses ({receiveAddresses.length})
               </Text>
+            </div>
+            {receiveAddresses.map((address, index) => {
+              return (
+                <AddressRow
+                  key={index + address.address}
+                  address={address}
+                  isUtxoExpanded={isUtxoExpanded(address.address)}
+                  onClickExpandUtxo={handleToggleAddress(address.address)}
+                  separator={index < receiveAddresses.length - 1}
+                  wallets={useWalletRet}
+                  dimensions={dimensions}
+                  onClickRefresh={({ address }) => {
+                    actions.refreshAddresses({
+                      walletId: wallet.id,
+                      addresses: [address],
+                    });
+                  }}
+                  currency={wallet.settings.cur}
+                  onClickDelete={() =>
+                    handleRemoveManualAddress(address.address)
+                  }
+                />
+              );
+            })}
+            {receiveAddresses.length === 0 && (
+              <div className="h-48 flex flex-col items-center justify-center">
+                <Text color="gray">
+                  No addresses added yet. Add a Bitcoin address above.
+                </Text>
+              </div>
             )}
-          </div>
+          </>
         )}
-        <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b border-t dark:border-[#404040]">
-          <Popover
-            text={(classNames) => (
-              <Text weight="bold" size="1" className={classNames}>
-                Change Addresses
-              </Text>
-            )}
-            title=" Change Addresses"
-          >
-            Wallets have two types of addresses - receive and change. Receive
-            addresses are used to receive funds. You can have multiple receive
-            addresses in a wallet. Each address is unique and should only be
-            used once to protect your privacy. When you spend from an address,
-            the remaining funds are sent to a change address.
-          </Popover>
-        </div>
-        {changeAddresses.map((address, index) => {
-          return (
-            <AddressRow
-              key={index + address.address}
-              address={address}
-              isUtxoExpanded={isUtxoExpanded(address.address)}
-              onClickExpandUtxo={handleToggleAddress(address.address)}
-              separator={index < changeAddresses.length - 1}
-              wallets={useWalletRet}
-              dimensions={dimensions}
-              onClickRefresh={({ address }) => {
-                actions.refreshAddresses({
-                  walletId: wallet.id,
-                  addresses: [address],
-                });
-              }}
-              currency={wallet.settings.cur}
-            />
-          );
-        })}
-        {changeAddresses.length === 0 && (
-          <div className="h-48 flex flex-col items-center justify-center">
-            {walletId && filterUtxoOnly.includes(walletId) && (
-              <Text>No change UTXO's in wallet found</Text>
-            )}
-            {walletId &&
-              !filterUtxoOnly.includes(walletId) &&
-              !wallet.error && <Text>Loading change addresses...</Text>}
-            {wallet.error && (
-              <Text color="red" className="flex items-center flex-col gap-2">
-                {wallet.error}
-                <Button
-                  onClick={() => {
-                    actions.refreshWallet(wallet.id, 0, true);
+
+        {/* Standard (xpub) Wallet UI */}
+        {!wallet.isManualWallet && (
+          <>
+            <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b dark:border-[#404040]">
+              <Popover
+                text={(classNames) => (
+                  <Text weight="bold" size="1" className={classNames}>
+                    Receive Addresses
+                  </Text>
+                )}
+                title="Receive Addresses"
+              >
+                Wallets have two types of addresses - receive and change.
+                Receive addresses are used to receive funds. You can have
+                multiple receive addresses in a wallet. Each address is unique
+                and should only be used once to protect your privacy. When you
+                spend from an address, the remaining funds are sent to a change
+                address.
+              </Popover>
+            </div>
+            {receiveAddresses.map((address, index) => {
+              return (
+                <AddressRow
+                  key={index + address.address}
+                  address={address}
+                  isUtxoExpanded={isUtxoExpanded(address.address)}
+                  onClickExpandUtxo={handleToggleAddress(address.address)}
+                  separator={index < receiveAddresses.length - 1}
+                  wallets={useWalletRet}
+                  dimensions={dimensions}
+                  onClickRefresh={({ address }) => {
+                    actions.refreshAddresses({
+                      walletId: wallet.id,
+                      addresses: [address],
+                    });
                   }}
-                  variant="soft"
-                  size="1"
-                  color="red"
-                >
-                  Try again
-                </Button>
-              </Text>
+                  currency={wallet.settings.cur}
+                />
+              );
+            })}
+
+            {receiveAddresses.length === 0 && (
+              <div className="h-48 flex flex-col items-center justify-center">
+                {walletId && filterUtxoOnly.includes(walletId) && (
+                  <Text>No receive UTXO's in wallet found</Text>
+                )}
+                {walletId &&
+                  !filterUtxoOnly.includes(walletId) &&
+                  !wallet.error && <Text>Loading receive addresses...</Text>}
+                {wallet.error && (
+                  <Text
+                    color="red"
+                    className="flex items-center flex-col gap-2"
+                  >
+                    {wallet.error}
+                    <Button
+                      onClick={() => {
+                        actions.refreshWallet(wallet.id, 0, true);
+                      }}
+                      variant="soft"
+                      size="1"
+                      color="red"
+                    >
+                      Try again
+                    </Button>
+                  </Text>
+                )}
+              </div>
             )}
-          </div>
+            <div className="p-2 bg-gray-50 dark:bg-[#2a2a2a] border-b border-t dark:border-[#404040]">
+              <Popover
+                text={(classNames) => (
+                  <Text weight="bold" size="1" className={classNames}>
+                    Change Addresses
+                  </Text>
+                )}
+                title=" Change Addresses"
+              >
+                Wallets have two types of addresses - receive and change.
+                Receive addresses are used to receive funds. You can have
+                multiple receive addresses in a wallet. Each address is unique
+                and should only be used once to protect your privacy. When you
+                spend from an address, the remaining funds are sent to a change
+                address.
+              </Popover>
+            </div>
+            {changeAddresses.map((address, index) => {
+              return (
+                <AddressRow
+                  key={index + address.address}
+                  address={address}
+                  isUtxoExpanded={isUtxoExpanded(address.address)}
+                  onClickExpandUtxo={handleToggleAddress(address.address)}
+                  separator={index < changeAddresses.length - 1}
+                  wallets={useWalletRet}
+                  dimensions={dimensions}
+                  onClickRefresh={({ address }) => {
+                    actions.refreshAddresses({
+                      walletId: wallet.id,
+                      addresses: [address],
+                    });
+                  }}
+                  currency={wallet.settings.cur}
+                />
+              );
+            })}
+            {changeAddresses.length === 0 && (
+              <div className="h-48 flex flex-col items-center justify-center">
+                {walletId && filterUtxoOnly.includes(walletId) && (
+                  <Text>No change UTXO's in wallet found</Text>
+                )}
+                {walletId &&
+                  !filterUtxoOnly.includes(walletId) &&
+                  !wallet.error && <Text>Loading change addresses...</Text>}
+                {wallet.error && (
+                  <Text
+                    color="red"
+                    className="flex items-center flex-col gap-2"
+                  >
+                    {wallet.error}
+                    <Button
+                      onClick={() => {
+                        actions.refreshWallet(wallet.id, 0, true);
+                      }}
+                      variant="soft"
+                      size="1"
+                      color="red"
+                    >
+                      Try again
+                    </Button>
+                  </Text>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

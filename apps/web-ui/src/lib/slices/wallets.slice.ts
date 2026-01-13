@@ -16,10 +16,13 @@ import type { AppStartListening } from "../store/middleware/listener";
 import { RootState } from "../store";
 import { IAppAddressFilters } from "@root/types";
 
+export type WalletType = "xpub" | "manual";
+
 export interface Wallet {
   id: string;
   name: string;
   color: string;
+  walletType: WalletType;
   xpubs: string[];
   meta: {
     error?: string;
@@ -43,6 +46,7 @@ export interface Address {
   index: number;
   isChange: boolean;
   walletId: string;
+  manual?: boolean;
   details?: {
     data: AddressResponse;
     fulfilledTimeStamp: number;
@@ -186,6 +190,55 @@ export const walletsSlice = createSlice({
         wallet.meta[type].lastAddressIndex = currentValue;
       }
     },
+    addManualAddress(
+      state,
+      action: PayloadAction<{
+        walletId: string;
+        address: string;
+      }>
+    ) {
+      const wallet = state.entities[action.payload.walletId];
+      if (wallet && wallet.walletType === "manual") {
+        // Get the next index for manual addresses
+        const existingAddresses = Object.values(wallet.addresses.entities);
+        const maxIndex = existingAddresses.reduce(
+          (max, addr) => Math.max(max, addr?.index ?? -1),
+          -1
+        );
+        addressAdapter.upsertOne(wallet.addresses, {
+          id: action.payload.address,
+          walletId: wallet.id,
+          transactions: transactionAdapter.getInitialState(),
+          index: maxIndex + 1,
+          isChange: false,
+          manual: true,
+          status: "PENDING",
+        });
+      }
+    },
+    removeManualAddress(
+      state,
+      action: PayloadAction<{
+        walletId: string;
+        addressId: string;
+      }>
+    ) {
+      const wallet = state.entities[action.payload.walletId];
+      if (wallet && wallet.walletType === "manual") {
+        addressAdapter.removeOne(wallet.addresses, action.payload.addressId);
+
+        // Reindex remaining addresses to be sequential
+        const addresses = Object.values(wallet.addresses.entities)
+          .filter((addr): addr is Address => addr !== undefined)
+          .sort((a, b) => a.index - b.index);
+
+        addresses.forEach((addr, idx) => {
+          if (addr.index !== idx) {
+            wallet.addresses.entities[addr.id]!.index = idx;
+          }
+        });
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -326,6 +379,10 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
       const walletId = action.payload.id;
       const wallet = state.wallets.entities[walletId];
       if (wallet) {
+        // Skip xpub scanning for manual wallets
+        if (wallet.walletType === "manual") {
+          return;
+        }
         // just the first address
         const [address] = await Xpub.scanXpubs(wallet.xpubs, {
           start: 0,
@@ -525,6 +582,32 @@ export const addWalletListener = (startAppListening: AppStartListening) => {
       }
     },
   });
+
+  // Manual address listener - fetch address data when added
+  startAppListening({
+    actionCreator: walletsSlice.actions.addManualAddress,
+    effect: (action, listenerApi) => {
+      const { dispatch, getState } = listenerApi;
+      const { walletId, address } = action.payload;
+      const wallet = getState().wallets.entities[walletId];
+      if (wallet) {
+        const addressEntity = wallet.addresses.entities[address];
+        dispatch(
+          enqueueAction([
+            {
+              endpoint: "getAddress",
+              args: {
+                address,
+                walletId,
+                index: addressEntity?.index ?? 0,
+                isChange: false,
+              },
+            },
+          ])
+        );
+      }
+    },
+  });
 };
 
 ///////////////////////////
@@ -536,6 +619,8 @@ export const {
   incrementAddressIndex,
   trimAddresses,
   archiveWallet,
+  addManualAddress,
+  removeManualAddress,
 } = walletsSlice.actions;
 
 export const refreshAddresses = createAppAsyncThunk(
@@ -599,20 +684,23 @@ export const refreshWallet = createAppAsyncThunk(
 export const upsertWallet = createAppAsyncThunk(
   walletsSlice.actions.upsertWallet.type,
   async (
-    wallet: Pick<Wallet, "id" | "name" | "color" | "xpubs">,
+    wallet: Pick<Wallet, "id" | "name" | "color" | "xpubs"> &
+      Partial<Pick<Wallet, "walletType">>,
     { dispatch /*, getState*/ }
   ) => {
+    const walletType = wallet.walletType ?? "xpub";
     // add the initial wallet
     dispatch(
       walletsSlice.actions.upsertWallet({
         ...wallet,
+        walletType,
         meta: {
           refreshedAt: new Date().getTime(),
           change: {
-            lastAddressIndex: null,
+            lastAddressIndex: walletType === "manual" ? 0 : null,
           },
           receive: {
-            lastAddressIndex: null,
+            lastAddressIndex: walletType === "manual" ? 0 : null,
           },
         },
         addresses: addressAdapter.getInitialState(),

@@ -5,6 +5,7 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
   TriangleUpIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import { Utxo } from "@models/Utxo";
 import { Transaction } from "@models/Transaction";
@@ -32,6 +33,7 @@ type IAddressRow = {
   dimensions: IDimensions;
   onClickRefresh: ({ address }: { address: Utxo }) => void;
   currency: ICurrency;
+  onClickDelete?: () => void;
 };
 
 export const AddressRow = (prop: IAddressRow) => {
@@ -46,6 +48,7 @@ export const AddressRow = (prop: IAddressRow) => {
     dimensions,
     onClickRefresh,
     currency,
+    onClickDelete,
   } = prop;
 
   const bitcoinNodeUrl = useAppSelector(selectBaseNodeUrl);
@@ -106,7 +109,7 @@ export const AddressRow = (prop: IAddressRow) => {
               </IconButton>
             )}
           </div>
-          <div>
+          <div className="flex items-center gap-2">
             <Button
               title="Refresh"
               variant="outline"
@@ -118,6 +121,11 @@ export const AddressRow = (prop: IAddressRow) => {
                 {address.indexString}
               </Text>
             </Button>
+            {onClickDelete && (
+              <IconButton variant="outline" color="red" onClick={onClickDelete}>
+                <TrashIcon width="14" height="14" />
+              </IconButton>
+            )}
           </div>
           <div className="col-span-3 md:col-span-5 flex items-center justify-end truncate">
             <a

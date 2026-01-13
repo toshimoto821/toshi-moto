@@ -1,5 +1,12 @@
 import { nanoid } from "@reduxjs/toolkit";
-import { Flex, Text, TextField, Button, Dialog } from "@radix-ui/themes";
+import {
+  Flex,
+  Text,
+  TextField,
+  Button,
+  Dialog,
+  RadioGroup,
+} from "@radix-ui/themes";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Formik, Form, FieldArray } from "formik";
 import * as yup from "yup";
@@ -7,7 +14,7 @@ import { Wallet } from "@models/Wallet";
 import { Xpub } from "@models/Xpub";
 import { hexToRgb, parseRgb, rgbToHex } from "@root/lib/utils";
 import { useAppDispatch } from "@root/lib/hooks/store.hooks";
-import { upsertWallet } from "@root/lib/slices/wallets.slice";
+import { upsertWallet, type WalletType } from "@root/lib/slices/wallets.slice";
 import { type ImportResult } from "./ImportWallet";
 type WalletDetailsProps = {
   wallet?: Wallet;
@@ -19,6 +26,7 @@ type WalletFields = {
   id: string;
   name: string;
   color: string;
+  walletType: WalletType;
   xpubs: string[];
 };
 
@@ -33,26 +41,38 @@ const walletValidationSchema = yup.object().shape({
     .string()
     .required("Color is required")
     .matches(/^rgb\(\d+,\s*\d+,\s*\d+\)$/, "Color must be a valid RGB format"),
-  xpubs: yup
-    .array()
-    .of(
-      yup
-        .string()
-        .transform((value) =>
-          typeof value === "string" ? value.trim() : value
+  walletType: yup
+    .string()
+    .oneOf(["xpub", "manual"])
+    .required("Wallet type is required"),
+  xpubs: yup.array().when("walletType", {
+    is: "xpub",
+    then: (schema) =>
+      schema
+        .of(
+          yup
+            .string()
+            .transform((value) =>
+              typeof value === "string" ? value.trim() : value
+            )
+            .required("XPUB is required")
+            .test(
+              "is-valid-xpub",
+              "Invalid XPUB format",
+              async function (value) {
+                if (!value) return false;
+                try {
+                  return await Xpub.isValidXpub(value);
+                } catch {
+                  return false;
+                }
+              }
+            )
         )
-        .required("XPUB is required")
-        .test("is-valid-xpub", "Invalid XPUB format", async function (value) {
-          if (!value) return false;
-          try {
-            return await Xpub.isValidXpub(value);
-          } catch {
-            return false;
-          }
-        })
-    )
-    .min(1, "At least one XPUB is required")
-    .required("XPUBs are required"),
+        .min(1, "At least one XPUB is required")
+        .required("XPUBs are required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 export const WalletDetails = ({
@@ -67,22 +87,33 @@ export const WalletDetails = ({
     initialData.id = nanoid();
     initialData.name = importResult.name;
     initialData.color = importResult.color || "rgb(153, 204, 255)";
+    initialData.walletType = "xpub";
     initialData.xpubs = importResult.xpubs || [""];
   } else if (wallet) {
     initialData.id = wallet.id;
     initialData.name = wallet.name;
     initialData.color = wallet.color || "rgb(153, 204, 255)";
+    initialData.walletType = wallet.walletType || "xpub";
     initialData.xpubs = wallet.listXpubsStrings || [""];
   } else {
     initialData.id = nanoid();
     initialData.name = "";
     initialData.color = "rgb(153, 204, 255)";
+    initialData.walletType = "xpub";
     initialData.xpubs = [""];
   }
 
   const handleSubmit = async (values: WalletFields) => {
     try {
-      dispatch(upsertWallet(values));
+      dispatch(
+        upsertWallet({
+          id: values.id,
+          name: values.name,
+          color: values.color,
+          walletType: values.walletType,
+          xpubs: values.walletType === "xpub" ? values.xpubs : [],
+        })
+      );
       onClose(true);
     } catch (error) {
       console.error("Failed to save wallet:", error);
@@ -132,6 +163,33 @@ export const WalletDetails = ({
       }) => (
         <Form>
           <Flex direction="column" gap="3">
+            {!wallet && !importResult && (
+              <div>
+                <Text as="div" size="2" mb="2" weight="bold">
+                  Wallet Type
+                </Text>
+                <RadioGroup.Root
+                  value={values.walletType}
+                  onValueChange={(value) => setFieldValue("walletType", value)}
+                >
+                  <Flex gap="4">
+                    <Text as="label" size="2">
+                      <Flex gap="2" align="center">
+                        <RadioGroup.Item value="xpub" />
+                        Standard (xpub)
+                      </Flex>
+                    </Text>
+                    <Text as="label" size="2">
+                      <Flex gap="2" align="center">
+                        <RadioGroup.Item value="manual" />
+                        Manual (addresses only)
+                      </Flex>
+                    </Text>
+                  </Flex>
+                </RadioGroup.Root>
+              </div>
+            )}
+
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
                 Name
@@ -169,10 +227,11 @@ export const WalletDetails = ({
               )}
             </label>
 
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                XPUB Key
-              </Text>
+            {values.walletType === "xpub" && (
+              <label>
+                <Text as="div" size="2" mb="1" weight="bold">
+                  XPUB Key
+                </Text>
               <FieldArray name="xpubs">
                 {({ push, remove }) => (
                   <>
@@ -224,7 +283,18 @@ export const WalletDetails = ({
                   </>
                 )}
               </FieldArray>
-            </label>
+              </label>
+            )}
+
+            {values.walletType === "manual" && (
+              <div className="rounded-md bg-gray-100 p-3 dark:bg-gray-800">
+                <Text size="2" color="gray">
+                  You can add individual Bitcoin addresses after creating this
+                  wallet. Manual wallets don't support automatic address
+                  derivation.
+                </Text>
+              </div>
+            )}
           </Flex>
 
           <div className="mt-2 flex justify-end">
