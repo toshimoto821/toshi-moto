@@ -116,6 +116,18 @@ export class Wallet {
     return this._data.archived || false;
   }
 
+  get walletType() {
+    return this._data.walletType || "xpub";
+  }
+
+  get isManualWallet() {
+    return this.walletType === "manual";
+  }
+
+  get canDeriveAddresses() {
+    return !this.isManualWallet && this.xpubs.length > 0;
+  }
+
   get error() {
     return this._data.meta?.error || null;
   }

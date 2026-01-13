@@ -95,67 +95,76 @@ export const AddressFilterDropdown = (props: IAddressFilterDropdown) => {
               </DropdownMenu.Item>
             </DropdownMenu.SubContent>
           </DropdownMenu.Sub>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Sub>
-            <DropdownMenu.SubTrigger>Receive Addresses</DropdownMenu.SubTrigger>
-            <DropdownMenu.SubContent>
-              <DropdownMenu.Item
-                onSelect={() => {
-                  onClickLoadNextAddresses({ change: false });
-                }}
-              >
-                Next 10 Addresses
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                onSelect={() => {
-                  onClickLoadNextAddresses({
-                    change: false,
-                    incrementOrDecrement: 1,
-                  });
-                }}
-              >
-                Next Address
-              </DropdownMenu.Item>
+          {/* Only show address derivation options for xpub wallets */}
+          {wallet.canDeriveAddresses && (
+            <>
               <DropdownMenu.Separator />
-              <DropdownMenu.Item
-                onSelect={() => {
-                  onClickTrim({ change: false });
-                }}
-              >
-                Trim
-              </DropdownMenu.Item>
-            </DropdownMenu.SubContent>
-          </DropdownMenu.Sub>
-          <DropdownMenu.Sub>
-            <DropdownMenu.SubTrigger>Change Addresses</DropdownMenu.SubTrigger>
-            <DropdownMenu.SubContent>
-              <DropdownMenu.Item
-                onSelect={() => {
-                  onClickLoadNextAddresses({ change: true });
-                }}
-              >
-                Load Next 10
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                onSelect={() => {
-                  onClickLoadNextAddresses({
-                    change: true,
-                    incrementOrDecrement: 1,
-                  });
-                }}
-              >
-                Next Address
-              </DropdownMenu.Item>
-              <DropdownMenu.Separator />
-              <DropdownMenu.Item
-                onSelect={() => {
-                  onClickTrim({ change: true });
-                }}
-              >
-                Trim
-              </DropdownMenu.Item>
-            </DropdownMenu.SubContent>
-          </DropdownMenu.Sub>
+              <DropdownMenu.Sub>
+                <DropdownMenu.SubTrigger>
+                  Receive Addresses
+                </DropdownMenu.SubTrigger>
+                <DropdownMenu.SubContent>
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      onClickLoadNextAddresses({ change: false });
+                    }}
+                  >
+                    Next 10 Addresses
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      onClickLoadNextAddresses({
+                        change: false,
+                        incrementOrDecrement: 1,
+                      });
+                    }}
+                  >
+                    Next Address
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Separator />
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      onClickTrim({ change: false });
+                    }}
+                  >
+                    Trim
+                  </DropdownMenu.Item>
+                </DropdownMenu.SubContent>
+              </DropdownMenu.Sub>
+              <DropdownMenu.Sub>
+                <DropdownMenu.SubTrigger>
+                  Change Addresses
+                </DropdownMenu.SubTrigger>
+                <DropdownMenu.SubContent>
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      onClickLoadNextAddresses({ change: true });
+                    }}
+                  >
+                    Load Next 10
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      onClickLoadNextAddresses({
+                        change: true,
+                        incrementOrDecrement: 1,
+                      });
+                    }}
+                  >
+                    Next Address
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Separator />
+                  <DropdownMenu.Item
+                    onSelect={() => {
+                      onClickTrim({ change: true });
+                    }}
+                  >
+                    Trim
+                  </DropdownMenu.Item>
+                </DropdownMenu.SubContent>
+              </DropdownMenu.Sub>
+            </>
+          )}
 
           <DropdownMenu.Separator />
 

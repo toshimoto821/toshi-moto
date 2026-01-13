@@ -279,3 +279,21 @@ export const getQueryParams = (search?: string) => {
     return {};
   }
 };
+
+/**
+ * Basic sanity check for Bitcoin address format.
+ * Does minimal validation - the API will provide authoritative validation.
+ */
+export const isValidBitcoinAddress = (address: string): boolean => {
+  if (!address || typeof address !== "string") return false;
+
+  const trimmed = address.trim();
+
+  // Basic length check (shortest valid is ~26 chars, longest ~90)
+  if (trimmed.length < 26 || trimmed.length > 90) return false;
+
+  // Basic character check - alphanumeric only, no spaces or special chars
+  if (!/^[a-zA-Z0-9]+$/.test(trimmed)) return false;
+
+  return true;
+};
