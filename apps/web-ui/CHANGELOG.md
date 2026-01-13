@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.37.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.36.1...web-ui-1.37.0) (2026-01-13)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.37.0)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.37.0)|
+
+  
+
+
+### ✨ Features
+
+* **web-ui:** add manual wallet support without xpub ([b771c22](https://github.com/toshimoto821/toshi-moto/commit/b771c2279f7c95f465ac9569553d34d18795ab21))
+
 ## [1.36.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.36.0...web-ui-1.36.1) (2026-01-03)
 
   |      |     |
