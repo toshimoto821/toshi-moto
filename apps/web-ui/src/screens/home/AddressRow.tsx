@@ -109,11 +109,12 @@ export const AddressRow = (prop: IAddressRow) => {
               </IconButton>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 relative z-10">
             <Button
               title="Refresh"
               variant="outline"
-              size="2"
+              size="1"
+              className="sm:size-2"
               onClick={() => onClickRefresh({ address })}
               loading={address.isLoading}
             >
@@ -122,12 +123,17 @@ export const AddressRow = (prop: IAddressRow) => {
               </Text>
             </Button>
             {onClickDelete && (
-              <IconButton variant="outline" color="red" onClick={onClickDelete}>
-                <TrashIcon width="14" height="14" />
+              <IconButton
+                variant="outline"
+                color="red"
+                size="1"
+                onClick={onClickDelete}
+              >
+                <TrashIcon width="12" height="12" />
               </IconButton>
             )}
           </div>
-          <div className="col-span-3 md:col-span-5 flex items-center justify-end truncate">
+          <div className="col-span-3 md:col-span-5 flex items-center justify-end truncate overflow-hidden">
             <a
               className={cn(
                 "text-blue-500 hover:underline hover:cursor-pointer flex items-center font-mono text-xs",
