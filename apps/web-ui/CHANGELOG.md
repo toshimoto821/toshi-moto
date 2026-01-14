@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.37.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.37.0...web-ui-1.37.1) (2026-01-14)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.37.1)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.37.1)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* overflow of address on mobile ([d444234](https://github.com/toshimoto821/toshi-moto/commit/d4442342c53e14f84d16e4ebcf71a89524d8b4cd))
+
 ## [1.37.0](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.36.1...web-ui-1.37.0) (2026-01-13)
 
   |      |     |
