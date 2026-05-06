@@ -1,4 +1,17 @@
 # UI Changelog
+## [1.37.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.37.1...web-ui-1.37.2) (2026-05-06)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.37.2)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.37.2)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* route hosted mempool URL to m.toshimoto.dev reverse proxy ([e0d83f2](https://github.com/toshimoto821/toshi-moto/commit/e0d83f208f6caf5e41d73c466e8f8496cc7f5f33))
+
 ## [1.37.1](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.37.0...web-ui-1.37.1) (2026-01-14)
 
   |      |     |
