@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "",
   "main": "index.js",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "nx run-many --target=dev --projects=web-ui,api",
     "dev:ui": "nx run-many --target=dev --projects=web-ui",
