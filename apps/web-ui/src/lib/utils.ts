@@ -9,12 +9,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// on an umbrel, mempool runs on 3006
-
+// On Umbrel, mempool runs on the same host at :3006 — and that host can be
+// umbrel.local, a Tailscale IP, a .onion, etc. — so derive from window.location.
+// The hosted site (toshimoto.dev) ships the same Docker image but reverse
+// proxies mempool at m.toshimoto.dev, so fall through to VITE_BITCOIN_NODE_URL
+// for those hostnames.
 export const getBitcoinNodeUrl = () => {
   const { protocol, hostname } = window.location;
-  const umbrelUrl = `${protocol}//${hostname}:3006`;
-  return VITE_IS_UMBREL === "true" ? umbrelUrl : VITE_BITCOIN_NODE_URL_ENV;
+  const isHostedSite = hostname.endsWith(".toshimoto.dev");
+  if (VITE_IS_UMBREL === "true" && !isHostedSite) {
+    return `${protocol}//${hostname}:3006`;
+  }
+  return VITE_BITCOIN_NODE_URL_ENV;
 };
 
 // const VITE_BITCOIN_NODE_URL = getBitcoinNodeUrl();

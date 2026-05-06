@@ -84,7 +84,7 @@ jobs:
         run: npx nx run $PROJECT:docker
         env:
           VITE_TOSHI_MOTO_XPUB: ${{ secrets.VITE_TOSHI_MOTO_XPUB }}
-          VITE_BITCOIN_NODE_URL: http://umbrel.local:3006
+          VITE_BITCOIN_NODE_URL: https://m.toshimoto.dev
           VITE_IS_UMBREL: true
           VITE_REST_TIME_BETWEEN_REQUESTS: 0
           VITE_MAX_CONCURRENT_REQUESTS: 8
