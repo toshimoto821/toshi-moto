@@ -1,4 +1,18 @@
 # UI Changelog
+## [1.37.3](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.37.2...web-ui-1.37.3) (2026-06-18)
+
+  |      |     |
+  |  --- | --- |
+  |![Image 0](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-homepage-tags--fullpage--chromium/homepage.png?&projectId=673fc8a05aecc1e3059940e8&tag=1.37.3)|![Image 1](https://api.webshotarchive.com/api/image/path/dist/.playwright/screenshots/pages-onboarding-tags--fullpage--chromium/onboarding.png?projectId=673fc8a05aecc1e3059940e8&tag=1.37.3)|
+
+  
+
+
+### 🐞 Bug Fixes
+
+* **web-ui:** match e2e eslint glob from repo root so CI lint passes ([1d94b37](https://github.com/toshimoto821/toshi-moto/commit/1d94b37f9a394501aef1d650ffbef6e8c47eb49e))
+* **web-ui:** pick up new UTXOs to known addresses within the hour ([e7f5934](https://github.com/toshimoto821/toshi-moto/commit/e7f5934e612d1912a5c7f8d2f49382dbce9249ca)), closes [#331](https://github.com/toshimoto821/toshi-moto/issues/331)
+
 ## [1.37.2](https://github.com/toshimoto821/toshi-moto/compare/web-ui-1.37.1...web-ui-1.37.2) (2026-05-06)
 
   |      |     |
