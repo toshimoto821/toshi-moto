@@ -3,7 +3,11 @@ import nx from "@nx/eslint-plugin";
 import baseConfig from "../../eslint.config.js";
 
 export default [
-  playwright.configs["flat/recommended"],
+  // Playwright rules only apply to the e2e tests, not vitest unit specs.
+  {
+    ...playwright.configs["flat/recommended"],
+    files: ["e2e/**/*.{ts,tsx,js,jsx}"],
+  },
 
   ...baseConfig,
   ...nx.configs["flat/react"],
