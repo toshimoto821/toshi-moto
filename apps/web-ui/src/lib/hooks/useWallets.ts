@@ -173,7 +173,12 @@ export const useWallets = () => {
         })
       );
     },
-    refreshWallet(walletId: string, ttl = 1000 * 60 * 60 * 24, reset = false) {
+    // Auto-refresh (e.g. opening a wallet) re-fetches address data when the
+    // cache is older than this TTL. Kept to 1 hour so new deposits — including
+    // a second UTXO to an already-known address — show up without waiting up to
+    // a day, while still avoiding a re-fetch on every navigation. Callers that
+    // want to force a refresh pass ttl=0.
+    refreshWallet(walletId: string, ttl = 1000 * 60 * 60, reset = false) {
       dispatch(refreshWallet({ walletId, ttl, reset }));
     },
     refreshAddresses({
